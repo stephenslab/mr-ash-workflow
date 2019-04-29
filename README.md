@@ -1,2 +1,3 @@
 # dsc-mr-ash
-DSC for comparing the "multiple regression adaptive shrinkage" (mr-ash) method against published linear regression methods.
+
+DSC for evaluating the "multiple regression adaptive shrinkage" (mr-ash) method and other linear regression methods.
