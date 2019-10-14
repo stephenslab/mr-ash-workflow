@@ -355,10 +355,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreebee359c5e1cd4ae7d3b28caa653e6549621c1f82targetblankbee359ca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/bee359c5e1cd4ae7d3b28caa653e6549621c1f82" target="_blank">bee359c</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree8dc7015d0073d759f35720b1bf3a2068688906adtargetblank8dc7015a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/8dc7015d0073d759f35720b1bf3a2068688906ad" target="_blank">8dc7015</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreebee359c5e1cd4ae7d3b28caa653e6549621c1f82targetblankbee359ca" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree8dc7015d0073d759f35720b1bf3a2068688906adtargetblank8dc7015a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -409,6 +409,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/8dc7015d0073d759f35720b1bf3a2068688906ad/analysis/index.Rmd" target="_blank">8dc7015</a>
+</td>
+<td>
+Youngseok
+</td>
+<td>
+2019-10-14
+</td>
+<td>
+wflow_publish(“analysis/index.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/a7a31a3983dee49b49f0bb12889f8f14a19cec67/docs/index.html" target="_blank">a7a31a3</a>
+</td>
+<td>
+Youngseok
+</td>
+<td>
+2019-10-14
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -592,9 +626,19 @@ Start workflowr project.
 <div id="mr.ash-vs.all-other-methods." class="section level2">
 <h2>MR.ASH vs. all other methods.</h2>
 <p>This is to reproduce the results in the Experiment section. Throughout the studies, we will fix <span class="math inline">\(n = 500\)</span>.</p>
-<p>The default setting is (1) The number of coefficients <span class="math inline">\(p = 2000\)</span> (2) The number of nonzero coefficients <span class="math inline">\(s = 20\)</span> (sparsity) (3) Design: IndepGauss (4) Signal shape for nonzero coefficients: SparseNormal (5) PVE: 0.5</p>
+<p>The default setting is</p>
+<ol style="list-style-type: decimal">
+<li><p>The number of coefficients <span class="math inline">\(p = 2000\)</span></p></li>
+<li><p>The number of nonzero coefficients <span class="math inline">\(s = 20\)</span> (sparsity)</p></li>
+<li><p>Design: IndepGauss</p></li>
+<li><p>Signal shape for nonzero coefficients: SparseNormal</p></li>
+<li><p>PVE: 0.5</p></li>
+</ol>
 <p>We will change exactly one of the below and fix the rest.</p>
-<p><span class="math inline">\(p\)</span> Sparsity Design PVE</p>
+<p><span class="math inline">\(p\)</span></p>
+<p>Sparsity</p>
+<p>Design</p>
+<p>PVE</p>
 <div id="different-p" class="section level3">
 <h3>Different <span class="math inline">\(p\)</span></h3>
 <p><a href="Result4_Highdim.html">Result 4</a></p>
@@ -615,9 +659,7 @@ Start workflowr project.
 </div>
 <div id="realgenotype" class="section level4">
 <h4>RealGenotype</h4>
-<ol start="5" style="list-style-type: decimal">
-<li><a href="Result8_RealGenotype.html">Result 8</a></li>
-</ol>
+<p><a href="Result8_RealGenotype.html">Result 8</a></p>
 </div>
 </div>
 </div>
