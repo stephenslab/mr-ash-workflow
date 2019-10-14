@@ -29,7 +29,7 @@ which is a parametric form of $\lambda$ (and $\gamma$ if exists).
 
 2. [Result 2](Result2_Nonconvex.html)
 
-### MR.ASH vs. all other methods.
+## MR.ASH vs. all other methods.
 
 This is for Experiment section. We will change exactly one of the below and fix the rest.
 
@@ -37,20 +37,20 @@ Sparsity
 PVE
 Design
 
-#### Sparsity
+### Sparsity
 
 IndepGauss + SparseNormal, $n = 500$, $p = 1000$ and $s = 1,5,20,100,500,2000$.
 
 3. [Result 5](Result5_SparseSignal.html)
 
-#### Different PVE
+### Different PVE
 
-#### Different Design
+### Different Design
 
-##### LowdimIndepGauss + SuBogdanCandes
+#### LowdimIndepGauss + SuBogdanCandes
 
 4. [Result 7](Result7_LowdimIndepGauss.html)
 
-##### RealGenotype
+#### RealGenotype
 
 5. [Result 8](Result8_RealGenotype.html)
