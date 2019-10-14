@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Result1_Ridge</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">mr-ash-workflow</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Result1_Ridge</h1>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2019-10-13
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+</p>
+<p>
+<strong>Knit directory:</strong> <code>mr-ash-workflow/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.4.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20191007code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20191007)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20191007code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20191007)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree2368046272288f26a846dc711cc425de227ca2eetargetblank2368046a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/2368046272288f26a846dc711cc425de227ca2ee" target="_blank">2368046</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree2368046272288f26a846dc711cc425de227ca2eetargetblank2368046a" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+
+Untracked files:
+    Untracked:  .DS_Store
+    Untracked:  ETA_1_lambda.dat
+    Untracked:  ETA_1_parBayesB.dat
+    Untracked:  analysis/.DS_Store
+    Untracked:  backup/
+    Untracked:  code/method_wrapper.R
+    Untracked:  code/sim_wrapper.R
+    Untracked:  data/Thyroid.ENSG00000000971.RDS
+    Untracked:  data/Thyroid.ENSG00000004468.RDS
+    Untracked:  data/Thyroid.ENSG00000004777.RDS
+    Untracked:  data/Thyroid.ENSG00000007402.RDS
+    Untracked:  data/Thyroid.ENSG00000008441.RDS
+    Untracked:  data/Thyroid.ENSG00000008869.RDS
+    Untracked:  data/Thyroid.ENSG00000009954.RDS
+    Untracked:  data/Thyroid.ENSG00000010295.RDS
+    Untracked:  data/Thyroid.ENSG00000011638.RDS
+    Untracked:  data/Thyroid.ENSG00000016864.RDS
+    Untracked:  data/Thyroid.ENSG00000018280.RDS
+    Untracked:  data/Thyroid.ENSG00000019169.RDS
+    Untracked:  data/Thyroid.ENSG00000020922.RDS
+    Untracked:  data/Thyroid.ENSG00000026950.RDS
+    Untracked:  data/Thyroid.ENSG00000028839.RDS
+    Untracked:  data/Thyroid.ENSG00000031003.RDS
+    Untracked:  data/Thyroid.ENSG00000031823.RDS
+    Untracked:  data/Thyroid.ENSG00000033030.RDS
+    Untracked:  data/Thyroid.ENSG00000036054.RDS
+    Untracked:  data/Thyroid.ENSG00000044574.RDS
+    Untracked:  docs/.DS_Store
+    Untracked:  docs/figure/
+    Untracked:  lowdim_pve0.9.RDS
+    Untracked:  lowdim_pve0.9.RDS.backup
+    Untracked:  mu.dat
+    Untracked:  results/
+    Untracked:  subogdancandes.RDS
+    Untracked:  varE.dat
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+
+<p>
+These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
+</p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/2368046272288f26a846dc711cc425de227ca2ee/analysis/Result1_Ridge.Rmd" target="_blank">2368046</a>
+</td>
+<td>
+Youngseok
+</td>
+<td>
+2019-10-14
+</td>
+<td>
+wflow_publish(&quot;analysis/*.Rmd&quot;)
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+</div>
+</div>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>This .Rmd file is to plot results for the experiment MR.ASH versus Elastic Net (E-NET). However, for the comprehensive comparison, we also include results from all the other methods.</p>
+<ol style="list-style-type: decimal">
+<li><code>glmnet</code> R package: Ridge, Lasso, E-NET</li>
+<li><code>ncvreg</code> R package: SCAD, MCP</li>
+<li><code>L0Learn</code> R package: L0Learn</li>
+<li><code>BGLR</code> R package: BayesB, Blasso (Bayesian Lasso)</li>
+<li><code>susieR</code> R package: SuSiE (Sum of Single Effect)</li>
+<li><code>varbvs</code> R package: VarBVS (Variational Bayes Variable Selection)</li>
+</ol>
+<p>The experiment is based on the following simulation setting.</p>
+<div id="design-setting" class="section level3">
+<h3>Design setting</h3>
+<p>We sample the standard i.i.d. Gaussian measurement <span class="math inline">\(X_{ij} \sim N(0,1)\)</span> anda construct <span class="math inline">\(X \in \mathbb{R}^p\)</span> with <span class="math inline">\(n = 500\)</span> and <span class="math inline">\(p \in \{50,100,200,500,1000,2000\}\)</span>.</p>
+</div>
+<div id="signal-setting" class="section level3">
+<h3>Signal setting</h3>
+<p>We sample the i.i.d. normal coefficients <span class="math inline">\(\beta_j \sim N(0,\sigma_\beta^2)\)</span> for <span class="math inline">\(j = 1,\cdots,p\)</span>, or <span class="math inline">\(\beta \sim N(0,\sigma_\beta^2 I_p)\)</span>.</p>
+<p>This signal will be called <code>normal</code>.</p>
+</div>
+<div id="pve" class="section level3">
+<h3>PVE</h3>
+<p>Then we sample <span class="math inline">\(y = X\beta + \epsilon\)</span>, where <span class="math inline">\(\epsilon \sim N(0,\sigma^2 I_n)\)</span>.</p>
+<p>We fix PVE = 0.5, where PVE is the proportion of variance explained, defined by</p>
+<p><span class="math display">\[
+{\rm PVE} = \frac{\textrm{Var}(X\beta)}{\textrm{Var}(X\beta) + \sigma^2},
+\]</span> where <span class="math inline">\(\textrm{Var}(a)\)</span> denotes the sample variance of <span class="math inline">\(a\)</span> calculated using R function <code>var</code>. To this end, we set <span class="math inline">\(\sigma^2 = \textrm{Var}(X\beta)\)</span>.</p>
+</div>
+<div id="performance-measure" class="section level3">
+<h3>Performance Measure</h3>
+<p>The above two figures display the prediction error. The prediction error we define here is</p>
+<p><span class="math display">\[
+\textrm{Pred.Err}(\hat\beta;y_{\rm test}, X_{\rm test}) = \frac{\textrm{RMSE}}{\sigma} = \frac{\|y_{\rm test} - X_{\rm test} \hat\beta \|}{\sqrt{n}\sigma}
+\]</span> where <span class="math inline">\(y_{\rm test}\)</span> and <span class="math inline">\(X_{\rm test}\)</span> are test data sample in the same way. If <span class="math inline">\(\hat\beta\)</span> is fairly accurate, then we expect that <span class="math inline">\(\rm RMSE\)</span> is similar to <span class="math inline">\(\sigma\)</span>. Therefore in average <span class="math inline">\(\textrm{Pred.Err} \geq 1\)</span> and the smaller the better.</p>
+</div>
+</div>
+<div id="methods" class="section level2">
+<h2>Methods</h2>
+<p>In what follows, we briefly describe the comparison methods.</p>
+<div id="optimal-ridge" class="section level3">
+<h3>Optimal Ridge</h3>
+<p>Let us recall that we sample the i.i.d. normal coefficients <span class="math inline">\(\beta_j \sim N(0,\sigma_\beta^2)\)</span> for <span class="math inline">\(j = 1,\cdots,p\)</span>, or <span class="math inline">\(\beta \sim N(0,\sigma_\beta^2 I_p)\)</span>.</p>
+<p>We expect that in this simulation setting, the ridge regression with the optimal tuning parameter <span class="math inline">\(\lambda\)</span> will perform the best.</p>
+<p><span class="math display">\[
+p(\beta|y,X,\sigma^2) \propto p(y|X,\beta,\sigma^2) p(\beta) \propto \exp\left( - \frac{1}{2\sigma^2} \|y - X\beta\|_2^2 - \frac{1}{2\sigma_\beta^2} \|\beta\|_2^2 \right)
+\]</span></p>
+<p>This implies that <span class="math inline">\(p(\beta|y,X,\sigma^2)\)</span> is again a multivariate normal distribution and thus the posterior mode is equal to the posterior mean. Thus the optimal <span class="math inline">\(\lambda\)</span> is <span class="math inline">\(\sigma^2 / (n\sigma_\beta^2)\)</span>.</p>
+</div>
+<div id="elastic-net" class="section level3">
+<h3>Elastic Net</h3>
+<p>The <code>glmnet</code> R package provides an elastic net implementation. It seeks to minimize the following objective function.</p>
+<p><span class="math display">\[
+\frac{1}{2n} \| y - X\beta \|^2 + \lambda \left(\alpha \|\beta\|_1 + 0.5 (1 - \alpha) \|\beta\|_2^2 \right)
+\]</span></p>
+<p><span class="math inline">\(\lambda\)</span> and <span class="math inline">\(\alpha\)</span> are tuning parameters. For a fixed <span class="math inline">\(\alpha\)</span> in <span class="math inline">\(\{ 0.1 * (a-1) : a = 1,\cdots, 11\)</span>, we run <code>cv.glmnet</code> with the default setting to tune <span class="math inline">\(\lambda\)</span> by cross-validation. Then we select a best tuple of <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\lambda\)</span> that minimizes the cross-validation error.</p>
+</div>
+<div id="other-methods" class="section level3">
+<h3>Other methods</h3>
+<p>We also compare other methods implemented in R. The list of packages and methods is provided below.</p>
+<ol style="list-style-type: decimal">
+<li><code>ncvreg</code> R package: SCAD, MCP</li>
+<li><code>L0Learn</code> R package: L0Learn</li>
+<li><code>BGLR</code> R package: BayesB, Blasso (Bayesian Lasso)</li>
+<li><code>susieR</code> R package: SuSiE (Sum of Single Effect)</li>
+<li><code>varbvs</code> R package: VarBVS (Variational Bayes Variable Selection)</li>
+</ol>
+</div>
+<div id="packages-libraries" class="section level3">
+<h3>Packages / Libraries</h3>
+<p>A list of packages we have loaded is collapsed. Please click “code” to see the list.</p>
+<pre class="r"><code>library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(varbvs2); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
+source(&#39;code/method_wrapper.R&#39;)
+source(&#39;code/sim_wrapper.R&#39;)</code></pre>
+</div>
+</div>
+<div id="results" class="section level2">
+<h2>Results</h2>
+<p>The result is summarized below.</p>
+<pre class="r"><code>res_df       = readRDS(&quot;results/ridge_pve0.5.RDS&quot;)
+p_list       = c(50,100,200,500,1000,2000)
+method_list  = c(&quot;Mr.ASH&quot;,&quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,&quot;Ridge.opt&quot;)
+col          = gg_color_hue(11)
+sdat = data.frame()
+for (i in 1:6) {
+  sdat       = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred,20,12)),
+                                      time = colMeans(matrix(res_df[[i]]$time,20,12)),
+                                      p = p_list[i],
+                                      fit = method_list))
+}
+sdat$fit    = factor(sdat$fit, levels =  c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,
+                                           &quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,
+                                           &quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;,
+                                           &quot;Ridge.opt&quot;))
+sdat1       = sdat[sdat$fit %in% c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;Ridge.opt&quot;),]
+sdat2       = sdat[sdat$fit %in% c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,&quot;Ridge.opt&quot;),]
+sdat3       = sdat[sdat$fit %in% c(&quot;Mr.ASH&quot;,&quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;,&quot;Ridge.opt&quot;),]
+
+p1 = ggplot(sdat1) + geom_line(aes(x = p, y = pred, color = fit)) +
+  geom_point(aes(x = p, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(trans = &quot;log10&quot;, breaks = p_list) +
+  labs(y = &quot;predictior error (rmse / sigma)&quot;, x = &quot;number of coefficients (p)&quot;) +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = c(col[c(1,2,3,4)],&quot;gray50&quot;)) +
+  scale_shape_manual(values = c(19,17,24,25,15)) +
+  scale_y_continuous(trans = &quot;log10&quot;, limits = c(1.04,1.46), breaks = c(1.1,1.2,1.3,1.4))
+p2 = ggplot(sdat2) + geom_line(aes(x = p, y = pred, color = fit)) +
+  geom_point(aes(x = p, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(trans = &quot;log10&quot;, breaks = p_list) +
+  labs(y = &quot;&quot;, x = &quot;number of coefficients (p)&quot;) +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = c(col[c(1,2,5,6,7)],&quot;gray50&quot;)) +
+  scale_shape_manual(values = c(19,17,9,3,11,15)) +
+  scale_y_continuous(trans = &quot;log10&quot;, limits = c(1.04,1.46), breaks = c(1.1,1.2,1.3,1.4))
+p3 = ggplot(sdat3) + geom_line(aes(x = p, y = pred, color = fit)) +
+  geom_point(aes(x = p, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(trans = &quot;log10&quot;, breaks = p_list) +
+  labs(y = &quot;&quot;, x = &quot;number of coefficients (p)&quot;) +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = c(col[c(1,8,9,10,11)],&quot;gray50&quot;)) +
+  scale_shape_manual(values = c(19,4,5,7,8,15)) +
+  scale_y_continuous(trans = &quot;log10&quot;, limits = c(1.04,1.46), breaks = c(1.1,1.2,1.3,1.4))
+fig_main  = plot_grid(p1,p2,p3, nrow = 1, rel_widths = c(0.35,0.35,0.3))
+title     = ggdraw() + draw_label(&quot;Prediction Error (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
+subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + Normal, n = 500, p = 50,100,200,500,1000,2000, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 18) 
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
+fig</code></pre>
+<p><img src="figure/Result1_Ridge.Rmd/fig1-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>p4  = my.box(sdat[sdat$fit != &quot;Ridge.opt&quot;,], &quot;fit&quot;, &quot;time&quot;,
+             gg_color_hue(11)[c(1,3,7,10,6,9,11,2,4,5,8)]) +
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = &quot;none&quot;) +
+  scale_y_continuous(trans = &quot;log10&quot;)
+title     = ggdraw() + draw_label(&quot;Computation time (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
+subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + Normal, n = 500, p = 50,100,200,500,1000,2000, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 18) 
+p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
+fig_main  = plot_grid(p0,p4,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
+fig</code></pre>
+<p><img src="figure/Result1_Ridge.Rmd/fig2-1.png" width="1440" style="display: block; margin: auto;" /></p>
+</div>
+<div id="source-code" class="section level2">
+<h2>Source code</h2>
+<p>The source code will be popped up when you click <code>code</code> on the right side.</p>
+<pre class="r"><code>library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(varbvs2); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
+source(&#39;code/method_wrapper.R&#39;)
+source(&#39;code/sim_wrapper.R&#39;)
+tdat1        = list()
+n            = 500
+p_range      = c(50,100,200,500,1000,2000)
+method_list  = c(&quot;varbvs&quot;,&quot;bayesb&quot;,&quot;blasso&quot;,&quot;susie&quot;,&quot;enet&quot;,&quot;lasso&quot;,&quot;ridge&quot;,&quot;scad&quot;,&quot;mcp&quot;,&quot;l0learn&quot;)
+method_num   = length(method_list) + 2
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = c(&quot;mr.ash&quot;, method_list, &quot;ridge.opt&quot;)
+time         = matrix(0, iter_num, method_num); colnames(time) = c(&quot;mr.ash&quot;, method_list, &quot;ridge.opt&quot;)
+
+
+for (iter in 1:6) {
+p               = p_range[iter]
+for (i in 1:20) {
+  data          = simulate_data(n, p, s = p, seed = i, signal = &quot;normal&quot;, pve = 0.5)
+ 
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste(&quot;fit.&quot;,method_list[j],sep = &quot;&quot;))
+    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
+  }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 5 / 2^iter) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  
+  fit         = fit.ridge.opt(data$X, data$y, data$X.test, data$y.test, data$sigma, seed = i)
+  pred[i,method_num] = fit$rsse / data$sigma / sqrt(n)
+  time[i,method_num] = -Inf
+}
+tdat1[[iter]] = data.frame(pred = c(pred), time = c(time),
+                           fit = rep(c(&quot;mr.ash&quot;, method_list), each = 20))
+}</code></pre>
+</div>
+<div id="system-configuration" class="section level2">
+<h2>System Configuration</h2>
+<p>Click the below Session Info.</p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.5.3 (2019-03-11)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Mojave 10.14
+
+Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] varbvs_2.5-16 L0Learn_1.2.0 ncvreg_3.11-1 varbvs2_0.1-1 glmnet_2.0-18
+ [6] foreach_1.4.7 BGLR_1.0.8    susieR_0.8.0  cowplot_1.0.0 ggplot2_3.2.1
+[11] Matrix_1.2-17
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.2          RColorBrewer_1.1-2  plyr_1.8.4         
+ [4] compiler_3.5.3      pillar_1.4.2        git2r_0.26.1       
+ [7] workflowr_1.4.0     iterators_1.0.12    tools_3.5.3        
+[10] digest_0.6.21       evaluate_0.14       tibble_2.1.3       
+[13] gtable_0.3.0        lattice_0.20-38     pkgconfig_2.0.3    
+[16] rlang_0.4.0         yaml_2.2.0          xfun_0.9           
+[19] withr_2.1.2         stringr_1.4.0       dplyr_0.8.3        
+[22] knitr_1.25          fs_1.3.1            rprojroot_1.3-2    
+[25] grid_3.5.3          tidyselect_0.2.5    glue_1.3.1         
+[28] R6_2.4.0            rmarkdown_1.15      latticeExtra_0.6-28
+[31] reshape2_1.4.3      purrr_0.3.2         magrittr_1.5       
+[34] whisker_0.4         codetools_0.2-16    backports_1.1.4    
+[37] scales_1.0.0        htmltools_0.3.6     assertthat_0.2.1   
+[40] colorspace_1.4-1    nor1mix_1.3-0       stringi_1.4.3      
+[43] lazyeval_0.2.2      munsell_0.5.0       truncnorm_1.0-8    
+[46] crayon_1.3.4       </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
