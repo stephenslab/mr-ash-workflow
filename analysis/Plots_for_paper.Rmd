@@ -1,0 +1,189 @@
+---
+title: "Figures_for_the_paper"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This .Rmd documentation is to reproduce figures in the paper/manuscript.
+
+```{r, message = FALSE}
+library(ggplot2); library(cowplot)
+```
+
+## Popular shrinkage operators
+
+(1) Soft thresholding
+
+$$S_{{\rm soft}, \lambda}(b) = {\rm sign}(b) \max \{|b| - \lambda, 0\} = \left\{\begin{array}{ll}
+0, & |b| \leq \lambda \\
+b - \lambda, & b > \lambda \\
+b + \lambda, & b < -\lambda
+\end{array} \right.$$
+
+(2) Hard thresholding
+
+$$S_{{\rm hard}, \lambda}(b) = {\rm sign}(b) (\max \{|b|, \lambda\} - \lambda) = \left\{\begin{array}{ll}
+0, & |b| \leq \lambda \\
+b, & b > \lambda \\
+b, & b < -\lambda
+\end{array} \right.$$
+
+(3) SCAD (Smoothly Clipped Absolute Deviation)
+
+$$S_{{\rm scad}, \lambda, \gamma}(b) = \left\{\begin{array}{ll}
+S_{{\rm soft}, \lambda}(b), & |b| \leq 2 \lambda \\
+\frac{S_{{\rm soft}, \gamma\lambda/(\gamma - 1)}(b)}{1 - (1 / (\gamma - 1))}, & 2\lambda < |b| \leq \gamma \lambda \\
+b, & \gamma \lambda < |b|
+\end{array}\right.$$
+
+(4) MCP (Minimax Concave Penalty)
+
+$$S_{{\rm mcp}, \lambda, \gamma}(b) = \left\{\begin{array}{ll}
+\frac{S_{{\rm soft}, \lambda}(b)}{1 - (1 / (\gamma - 1))}, & |b| \leq \gamma \lambda \\
+b, & \gamma \lambda < |b|
+\end{array}\right.$$
+
+```{r}
+scad = function(b, lambda = 1, gamma = 3) {
+  b1 = pmax(abs(b) - lambda, 0) * sign(b) * (abs(b) <= 2 * lambda)
+  b2 = ((gamma-1) * b - sign(b) * gamma * lambda) / (gamma-2) * (abs(b) <= gamma * lambda) * (abs(b) > 2 * lambda)
+  b3 = b * (abs(b) > gamma * lambda)
+  return (b1+b2+b3)
+}
+
+mcp = function(b, lambda = 1, gamma = 2) {
+  b1 = pmax(abs(b) - lambda, 0) * sign(b) * (b <= gamma * lambda) * gamma / (gamma-1)
+  b2 = b * (abs(b) > gamma * lambda)
+  return (b1+b2)
+}
+
+softt = function(b, lambda = 1) {
+  return (pmax(abs(b) - lambda, 0) * sign(b))
+}
+
+hardt = function(b, lambda = 1) {
+  return (b * (abs(b) >= lambda))
+}
+```
+
+## MR.ASH shrinkage operator may resemble the popular shrinkage operators
+
+```{r fig1, fig.height=7, fig.width=15}
+postmean = function(b, pi, sa2 = 0:100, sigma2 = 1){
+  phi = outer(b^2, 1 / 2 / (1 + 1 / sa2) / sigma2);
+  phi = exp(phi - apply(phi, 1, max))
+  
+  phi = t(pi * t(phi) / sqrt(1 + sa2));
+  phi = phi / rowSums(phi);
+  out = c(colSums(t(phi) / (1 + 1 / sa2))) * b
+  return (out)
+}
+
+sa2 = 0:100; b = seq(0,10,0.001)
+
+pi = exp(-sa2)
+pi = pi / sum(pi)
+b_softt = postmean(b, pi)
+
+pi = double(101)
+pi[1] = 0.8; pi[101] = 0.2
+b_mcp = postmean(b, pi)
+
+pi = double(101)
+pi[1] = 0.6; pi[101] = 0.4
+b_hardt = postmean(b, pi, sa2 = sa2^5)
+
+pi = double(101)
+pi[1] = 0.5; pi[2:51] = 0.2/50; pi[101] = 0.3
+b_scad = postmean(b, pi, sa2 = sa2)
+df = data.frame(b = c(b,b,b,b), sb = c(b_softt, b_hardt, b_scad, b_mcp),
+                sb2 = c(softt(b, lambda = 1.43),
+                        hardt(b, lambda = 5),
+                        scad(b, lambda = 1, gamma = 4),
+                        mcp(b, lambda = 2)),
+                operator = rep(c("soft","hard","scad","mcp"), each = length(b)))
+df$operator = factor(df$operator, levels = c("soft","hard","scad","mcp"))
+
+p1 = ggplot(df) + geom_line(aes(x = b, y = sb, color = operator)) +
+  theme_cowplot(font_size = 14) + theme(axis.line = element_blank())
+p2 = ggplot(df) + geom_line(aes(x = b, y = sb2, color = operator)) +
+  theme_cowplot(font_size = 14) + theme(axis.line = element_blank())
+
+fig = plot_grid(p1,p2, nrow = 1)
+fig
+```
+
+```{r fig2, fig.height=7, fig.width=15}
+R.hardt = function(b, lambda = 1) {
+  out = b^2/2
+  out[b > lambda] = lambda^2/2
+  exp(-out)
+}
+
+R.softt = function(b, lambda = 1) {
+  out = lambda^2/2 + (b - lambda) * lambda
+  out[b <= lambda] = b[b <= lambda]^2/2
+  exp(-out)
+}
+
+R.scad = function(b, lambda = 1, gamma = 3) {
+  out = lambda^2/2 + (b - lambda) * lambda
+  out[b <= lambda] = b[b <= lambda]^2/2
+  out[b > 2 * lambda] = lambda^2 * 3/2 + (gamma - 2) * lambda^2/2 * 
+    (1 - (gamma - b[b > 2 * lambda] / lambda)^2 / (gamma - 2)^2)
+  out[b > gamma * lambda] = lambda^2 * 3/2 + (gamma - 2) * lambda^2/2
+  exp(-out)
+}
+
+R.mcp = function(b, lambda = 1, gamma = 2) {
+  out = lambda^2/2 + (gamma - 1) * lambda^2 / 2 * 
+  (1 - (gamma - b / lambda)^2 / (gamma - 1)^2)
+  out[b > gamma * lambda] = lambda^2 / 2 + (gamma - 1) * lambda^2 / 2 
+  out[b <= lambda] = b[b <= lambda]^2/2
+  exp(-out)
+}
+
+marginal_shape = function(b, lambda = 1, gamma = 2, operator = "ridge") {
+  if (operator == "ridge") {
+    return (exp(-lambda * b^2/2))
+  } else if (operator == "soft") {
+    out = b
+    out[b >= 0] = R.softt(b[b >= 0], lambda = lambda)
+    out[b < 0] = R.softt(-b[b < 0], lambda = lambda)
+    return (out)
+  } else if (operator == "hard") {
+    out = b
+    out[b >= 0] = R.hardt(b[b >= 0], lambda = lambda)
+    out[b < 0] = R.hardt(-b[b < 0], lambda = lambda)
+    return (out)
+  } else if (operator == "scad") {
+    out = b
+    out[b >= 0] = R.scad(b[b >= 0], lambda = lambda, gamma = gamma)
+    out[b < 0] = R.scad(-b[b < 0], lambda = lambda, gamma = gamma)
+    return (out)
+  } else if (operator == "mcp") {
+    out = b
+    out[b >= 0] = R.mcp(b[b >= 0], lambda = lambda, gamma = gamma)
+    out[b < 0] = R.mcp(-b[b < 0], lambda = lambda, gamma = gamma)
+    return (out)
+  }
+}
+
+b = seq(-5,5,0.001)
+df = data.frame(b = c(b,b,b,b,b), sb = c(marginal_shape(b, operator = "ridge"),
+                                         marginal_shape(b, operator = "soft"),
+                                         marginal_shape(b, operator = "hard"),
+                                         marginal_shape(b, operator = "scad"),
+                                         marginal_shape(b, operator = "mcp")),
+                operator = rep(c("normal","soft","hard","scad","mcp"), each = length(b)))
+df$operator = factor(df$operator, levels = c("normal","soft","hard","scad","mcp"))
+ggplot(df) + geom_line(aes(x = b, y = sb, color = operator)) +
+  theme_cowplot(font_size = 14) + theme(axis.line = element_blank())
+```

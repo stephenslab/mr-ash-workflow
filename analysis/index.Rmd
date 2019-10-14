@@ -58,6 +58,8 @@ PVE
 
 ### Different $p$
 
+IndepGauss + SparseNormal, $n = 500$, $p = 50, 500, 5000, 50000$ and $s = 20$.
+
 [Result 4](Result4_Highdim.html)
 
 ### Sparsity
@@ -69,6 +71,12 @@ IndepGauss + SparseNormal, $n = 500$, $p = 2000$ and $s = 1,5,20,100,500,2000$.
 ### Different PVE
 
 ### Different Design
+
+(1) LowdimIndepGauss
+
+(2) RealGenotype
+
+(3) 
 
 #### LowdimIndepGauss + SuBogdanCandes
 
