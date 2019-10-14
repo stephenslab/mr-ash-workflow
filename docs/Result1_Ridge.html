@@ -497,10 +497,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree6167c5adc673d511f8922631d1052abb6086c576targetblank6167c5aa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/6167c5adc673d511f8922631d1052abb6086c576" target="_blank">6167c5a</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree9f05c824739a3728aea27c81ca2aff70601a6d2atargetblank9f05c82a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/9f05c824739a3728aea27c81ca2aff70601a6d2a" target="_blank">9f05c82</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree6167c5adc673d511f8922631d1052abb6086c576targetblank6167c5aa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree9f05c824739a3728aea27c81ca2aff70601a6d2atargetblank9f05c82a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -513,32 +513,10 @@ Ignored files:
 Untracked files:
     Untracked:  .DS_Store
     Untracked:  .Rapp.history
-    Untracked:  analysis/.DS_Store
-    Untracked:  code/method_wrapper.R
-    Untracked:  code/sim_wrapper.R
-    Untracked:  data/Thyroid.ENSG00000000971.RDS
-    Untracked:  data/Thyroid.ENSG00000004468.RDS
-    Untracked:  data/Thyroid.ENSG00000004777.RDS
-    Untracked:  data/Thyroid.ENSG00000007402.RDS
-    Untracked:  data/Thyroid.ENSG00000008441.RDS
-    Untracked:  data/Thyroid.ENSG00000008869.RDS
-    Untracked:  data/Thyroid.ENSG00000009954.RDS
-    Untracked:  data/Thyroid.ENSG00000010295.RDS
-    Untracked:  data/Thyroid.ENSG00000011638.RDS
-    Untracked:  data/Thyroid.ENSG00000016864.RDS
-    Untracked:  data/Thyroid.ENSG00000018280.RDS
-    Untracked:  data/Thyroid.ENSG00000019169.RDS
-    Untracked:  data/Thyroid.ENSG00000020922.RDS
-    Untracked:  data/Thyroid.ENSG00000026950.RDS
-    Untracked:  data/Thyroid.ENSG00000028839.RDS
-    Untracked:  data/Thyroid.ENSG00000031003.RDS
-    Untracked:  data/Thyroid.ENSG00000031823.RDS
-    Untracked:  data/Thyroid.ENSG00000033030.RDS
-    Untracked:  data/Thyroid.ENSG00000036054.RDS
-    Untracked:  data/Thyroid.ENSG00000044574.RDS
-    Untracked:  docs/.DS_Store
-    Untracked:  docs/figure/Result4_Highdim.Rmd/
-    Untracked:  results/
+
+Unstaged changes:
+    Modified:   analysis/Result4_Highdim.Rmd
+    Modified:   analysis/index.Rmd
 
 </code></pre>
 <p>
@@ -577,6 +555,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/9f05c824739a3728aea27c81ca2aff70601a6d2a/analysis/Result1_Ridge.Rmd" target="_blank">9f05c82</a>
+</td>
+<td>
+Youngseok
+</td>
+<td>
+2019-10-14
+</td>
+<td>
+wflow_publish(“analysis/Result1_Ridge.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/70efed95d67446c0a9a30d7de9b112b05f1817d5/docs/Result1_Ridge.html" target="_blank">70efed9</a>
+</td>
+<td>
+Youngseok
+</td>
+<td>
+2019-10-14
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -792,7 +804,7 @@ Youngseok
 </div>
 </div>
 <pre class="r"><code>p4  = my.box(sdat[sdat$fit != &quot;Ridge.opt&quot;,], &quot;fit&quot;, &quot;time&quot;,
-             gg_color_hue(11)[c(1,3,7,10,6,9,11,2,4,5,8)]) +
+             gg_color_hue(11)) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = &quot;none&quot;) +
