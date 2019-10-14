@@ -31,15 +31,28 @@ which is a parametric form of $\lambda$ (and $\gamma$ if exists).
 
 ## MR.ASH vs. all other methods.
 
-This is for Experiment section. We will change exactly one of the below and fix the rest.
+This is to reproduce the results in the Experiment section.
+Throughout the studies, we will fix $n = 500$.
 
+The default setting is
+(1) The number of coefficients $p = 2000$
+(2) The number of nonzero coefficients $s = 20$ (sparsity)
+(3) Design: IndepGauss
+(4) Signal shape for nonzero coefficients: SparseNormal
+(5) PVE: 0.5
+
+We will change exactly one of the below and fix the rest.
+
+$p$
 Sparsity
-PVE
 Design
+PVE
+
+### Different $p$
 
 ### Sparsity
 
-IndepGauss + SparseNormal, $n = 500$, $p = 1000$ and $s = 1,5,20,100,500,2000$.
+IndepGauss + SparseNormal, $n = 500$, $p = 2000$ and $s = 1,5,20,100,500,2000$.
 
 3. [Result 5](Result5_SparseSignal.html)
 
