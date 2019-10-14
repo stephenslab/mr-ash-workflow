@@ -1,0 +1,199 @@
+---
+title: "Result3_SignalShape"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This .Rmd file is to plot results for the experiment MR.ASH and the comparison methods listed below.
+
+(1) `glmnet` R package: Ridge, Lasso, E-NET
+(2) `ncvreg` R package: SCAD, MCP
+(3) `L0Learn` R package: L0Learn
+(4) `BGLR` R package: BayesB, Blasso (Bayesian Lasso)
+(5) `susieR` R package: SuSiE (Sum of Single Effect)
+(6) `varbvs` R package: VarBVS (Variational Bayes Variable Selection)
+
+The experiment is based on the following simulation setting.
+
+### Design setting
+
+We use 20 real genotype matrices from GTEx consortium (https://gtexportal.org/home/).
+
+$n = 287$ and $p = 5732, 7659, 6857, 4012, 6356, 8683, 4076, 7178, 4847, 5141, 6535, 7537, 7263, 7011, 7468, 5020, 8760, 5995, 6440, 5456$. The number of coefficients $p$ varies from 4,012 to 8,760. The average size of $p$ is 6,401.3.
+
+Also, columns of $X$ are very highly correlated (even some are perfectly correlated).
+
+### Signal setting
+
+We will use the following 6 different signal settings with the same sparsity $s = 20$.
+
+(1) SparseLaplace: $\beta_j \sim \textrm{Laplace}(1)$ for $j \in J$ and $\beta_j = 0$ otherwise, where $J$ is a set of randomly $s$ indices in $\{1,\cdots,p\}$, chosen uniformly at random.
+
+(2) SparseT2: $\beta_j \sim \textrm{t}_2$ for $j \in J$ and $\beta_j = 0$ otherwise, where $J$ is a set of randomly $s$ indices in $\{1,\cdots,p\}$, chosen uniformly at random.
+
+(3) SparseT5: $\beta_j \sim \textrm{t}_5$ for $j \in J$ and $\beta_j = 0$ otherwise, where $J$ is a set of randomly $s$ indices in $\{1,\cdots,p\}$, chosen uniformly at random.
+
+(4) SparseNormal: $\beta_j \sim N(0,\sigma_\beta^2)$ for $j \in J$ and $\beta_j = 0$ otherwise, where $J$ is a set of randomly $s$ indices in $\{1,\cdots,p\}$, chosen uniformly at random.
+
+(5) SparseUniform: $\beta_j \sim \textrm{Unif}(0,1)$ for $j \in J$ and $\beta_j = 0$ otherwise, where $J$ is a set of randomly $s$ indices in $\{1,\cdots,p\}$, chosen uniformly at random.
+
+(6) SparseConstant: $\beta_j = 1$ for $j \in J$ and $\beta_j = 0$ otherwise, where $J$ is a set of randomly $s$ indices in $\{1,\cdots,p\}$, chosen uniformly at random.
+
+The following is the tail behaviors of the above signal generating probability distributions.
+
+```{r tail, message = FALSE}
+library(ggplot2); library(cowplot)
+x = seq(-100,100,0.01)
+dat = rbind(data.frame(x = x, y = dexp(abs(x), 1, log = TRUE) / 2, signal = "SparseLaplace"),
+            data.frame(x = x, y = dt(x, df = 2, log = TRUE), signal = "SparseT2"),
+            data.frame(x = x, y = dt(x, df = 5, log = TRUE), signal = "SparseT5"),
+            data.frame(x = x, y = dnorm(x, log = TRUE), signal = "SparseNormal"))
+ggplot(dat) + geom_line(aes(x = x, y = y, color = signal)) + 
+  coord_cartesian(ylim = c(-50,0)) + theme_cowplot(font_size = 14) +
+  theme(axis.line    = element_blank()) +
+  labs(x = "x", y = "logpdf(x)")
+```
+
+### PVE
+
+Then we sample $y = X\beta + \epsilon$, where $\epsilon \sim N(0,\sigma^2 I_n)$.
+
+We fix PVE = 0.99, where PVE is the proportion of variance explained, defined by
+
+$$
+{\rm PVE} = \frac{\textrm{Var}(X\beta)}{\textrm{Var}(X\beta) + \sigma^2},
+$$
+where $\textrm{Var}(a)$ denotes the sample variance of $a$ calculated using R function `var`. To this end, we set $\sigma^2 = \textrm{Var}(X\beta)$.
+
+When PVE is large, then it implies that the signal-to-noise ratio (SNR) is also large. Usually SNR is defined as
+
+$$
+{\rm SNR} = \frac{\textrm{Var}(X\beta)}{\sigma^2} = \frac{PVE}{1- PVE} = \frac{1}{(PVE)^{-1} - 1}
+$$
+Thus large PVE implies large SNR. When SNR is large, we expect that the cross-validated $\lambda$ and the VEB estimate $g$ are both fairly accurate, and thus one can directly compare the flexibility of the shrinkage operator.
+
+### Performance Measure
+
+The above two figures display the prediction error. The prediction error we define here is
+
+$$
+\textrm{Pred.Err}(\hat\beta;y_{\rm test}, X_{\rm test}) = \frac{\textrm{RMSE}}{\sigma} = \frac{\|y_{\rm test} - X_{\rm test} \hat\beta \|}{\sqrt{n}\sigma}
+$$
+
+where $y_{\rm test}$ and $X_{\rm test}$ are test data sample in the same way. If $\hat\beta$ is fairly accurate, then we expect that $\rm RMSE$ is similar to $\sigma$. Therefore in average $\textrm{Pred.Err} \geq 1$ and the smaller the better.
+
+### Packages / Libraries
+
+A list of packages we have loaded is collapsed. Please click "code" to see the list.
+
+```{r library, message = FALSE}
+library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(varbvs2); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
+source('code/method_wrapper.R')
+source('code/sim_wrapper.R')
+```
+
+## Results 
+
+```{r fig1, fig.height=13, fig.width=15}
+res_df       = readRDS("results/signalshape_pve0.99.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "VarBVS","BayesB","Blasso","SuSiE")
+col          = gg_color_hue(11)[c(1,3,7,10,6,9,11,2,4,5,8)]
+for (i in 1:6) {
+res_df[[i]]$fit   = rep(method_list, each = 20)
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
+                                            "SCAD","MCP","L0Learn",
+                                            "VarBVS","BayesB","Blasso","SuSiE"))
+some              = c(1,2,3,5,6,7)
+res_df[[i]] = res_df[[i]][res_df[[i]]$fit %in% method_level[some],]
+}
+pp = list()
+signal_name = c("SparseLaplace","SparseT2","SparseT5","SparseNormal","SparseUnif","SparseConst")
+for (i in 1:6) {
+  d       = res_df[[i]]
+  pp[[i]] = my.box(d, "fit", "pred", values = col[some]) +
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = "none") +
+  geom_hline(yintercept = median(d$pred[d$fit == "Mr.ASH"]), col = col[1],
+             linetype = "dotted", size = 1.5) +
+  scale_y_continuous(trans = "log10", breaks = c(1,1.2,1.4,1.6,1.8,2.0)) +
+  coord_cartesian(ylim = c(0.95,1.8))
+  subtitle  = ggdraw() + draw_label(paste(paste("Signal: ",signal_name[i], sep = ""),"", sep = ""),
+                                    fontface  = 'bold', size = 18)
+  pp[[i]]   = plot_grid(subtitle, pp[[i]], ncol = 1, rel_heights = c(0.06,0.95))
+}
+fig_main  = plot_grid(pp[[1]],pp[[2]],pp[[3]],pp[[4]],pp[[5]],pp[[6]], nrow = 2, rel_widths = c(0.3,0.3,0.3,0.3))
+title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: LowdimIndepGauss, n = 500, p = 2000, s = 20, pve = 0.99", fontface = 'bold', size = 18)
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.06,0.95))
+fig
+```
+
+```{r fig2, fig.height=7, fig.width=15}
+sdat = rbind(res_df[[1]], res_df[[2]], res_df[[3]], res_df[[4]], res_df[[5]], res_df[[6]])
+p1       = my.box(res_df[[1]], "fit", "time", values = gg_color_hue(11)[c(1,3,7,6,9,11,2,4,5,8)]) +
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = "none") +
+  scale_y_continuous(trans = "log10")
+p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
+fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.6,0.6,0.6))
+title     = ggdraw() + draw_label("Computation time (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + SparseSignals, n = 500, p = 2000, s = 20, pve = 0.99", fontface  = 'bold', size = 18) 
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
+fig
+```
+
+## Source code
+
+The source code will be popped up when you click `code` on the right side. 
+
+```{r code, eval = FALSE}
+tdat1        = list()
+n            = 500
+p            = 2000
+s            = 20
+signal_list  = c("lap","t2","t5","normal","unif","const")
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad","mcp","l0learn")
+method_num   = length(method_list) + 1
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = c("mr.ash", method_list)
+time         = matrix(0, iter_num, method_num); colnames(time) = c("mr.ash", method_list)
+
+for (iter in 1:6) {
+for (i in 1:20) {
+  data          = simulate_data(n, p, s = s, seed = i, signal = signal_list[iter], pve = 0.99)
+
+
+ 
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste("fit.",method_list[j],sep = ""))
+    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
+  }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 5 / sqrt(2)^(iter-1)) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+}
+}
+tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(c("mr.ash", method_list), each = 20))
+```
+
+## System Configuration
+
+Click the below Session Info.
