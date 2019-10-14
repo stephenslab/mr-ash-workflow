@@ -23,11 +23,11 @@ which is a parametric form of $\lambda$ (and $\gamma$ if exists).
 
 #### Performance of methods -- Ridge case
 
-1. [Result 1](Result1_Ridge.html)
+[Result 1](Result1_Ridge.html)
 
 #### Flexibility of convex/non-convex shrinkage operators (E-NET, SCAD, MCP, L0Learn) vs MR.ASH shrinkage operator.
 
-2. [Result 2](Result2_Nonconvex.html)
+[Result 2](Result2_Nonconvex.html)
 
 ## MR.ASH vs. all other methods.
 
@@ -50,11 +50,13 @@ PVE
 
 ### Different $p$
 
+[Result 4](Result4_Highdim.html)
+
 ### Sparsity
 
 IndepGauss + SparseNormal, $n = 500$, $p = 2000$ and $s = 1,5,20,100,500,2000$.
 
-3. [Result 5](Result5_SparseSignal.html)
+[Result 5](Result5_SparseSignal.html)
 
 ### Different PVE
 
@@ -62,7 +64,7 @@ IndepGauss + SparseNormal, $n = 500$, $p = 2000$ and $s = 1,5,20,100,500,2000$.
 
 #### LowdimIndepGauss + SuBogdanCandes
 
-4. [Result 7](Result7_LowdimIndepGauss.html)
+[Result 7](Result7_LowdimIndepGauss.html)
 
 #### RealGenotype
 
