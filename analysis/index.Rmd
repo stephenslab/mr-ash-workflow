@@ -8,4 +8,49 @@ editor_options:
   chunk_output_type: console
 ---
 
-Welcome to my research website.
+## Results
+
+### MR.ASH vs penalized linear regression
+
+This is for MR.ASH vs. penalized linear regression.
+
+Our story is 
+
+(1) the MR.ASH's shrinkage operator (from a normal mixture prior) is more flexible than other popular shrinkage operators,
+which is a parametric form of $\lambda$ (and $\gamma$ if exists).
+
+(2) VEB can do better than cross validation.
+
+#### Performance of methods -- Ridge case
+
+1. [Result 1](Result_1_Ridge.html)
+
+#### Flexibility of convex/non-convex shrinkage operators (E-NET, SCAD, MCP, L0Learn) vs MR.ASH shrinkage operator.
+
+2. [Result 2](Result2_Nonconvex.html)
+
+### MR.ASH vs. all other methods.
+
+This is for Experiment section. We will change exactly one of the below and fix the rest.
+
+Sparsity
+PVE
+Design
+
+#### Sparsity
+
+IndepGauss + SparseNormal, $n = 500$, $p = 1000$ and $s = 1,5,20,100,500,2000$.
+
+3. [Result 5](Result5_SparseSignal.html)
+
+#### Different PVE
+
+#### Different Design
+
+##### LowdimIndepGauss + SuBogdanCandes
+
+4. [Result 7](Result7_LowdimIndepGauss.html)
+
+##### RealGenotype
+
+5. [Result 8](Result8_RealGenotype.html)
