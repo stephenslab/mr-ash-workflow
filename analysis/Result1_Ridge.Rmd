@@ -163,7 +163,7 @@ fig
 
 ```{r fig2, fig.height=7, fig.width=15, fig.align = "center"}
 p4  = my.box(sdat[sdat$fit != "Ridge.opt",], "fit", "time",
-             gg_color_hue(11)[c(1,3,7,10,6,9,11,2,4,5,8)]) +
+             gg_color_hue(11)) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none") +
