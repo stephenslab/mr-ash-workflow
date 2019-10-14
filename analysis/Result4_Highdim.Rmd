@@ -70,7 +70,7 @@ source('code/sim_wrapper.R')
 
 The result is summarized below. 
 
-```{r fig1, fig.height=7, fig.width=15}
+```{r fig1, fig.height=10, fig.width=15}
 res_df       = readRDS("results/highdim_pve0.5.RDS")
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","SCAD","MCP","L0Learn")
 method_level = c("Mr.ASH","E-NET","Lasso",
@@ -98,7 +98,50 @@ p1 = ggplot(sdat) + geom_line(aes(x = p, y = pred, color = fit)) +
   scale_color_manual(values = col) +
   scale_shape_manual(values = shape) +
   scale_y_continuous(trans = "log10")
-p1
+
+title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + SparseNormal, n = 500, p = 50, 500, 5000, 50000, pve = 0.5", fontface  = 'bold', size = 18) 
+p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
+fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
+fig
+```
+
+```{r fig2, fig.height=10, fig.width=15}
+res_df       = readRDS("results/highdim_pve0.5.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso",
+                 "SCAD","MCP","L0Learn",
+                 "VarBVS","BayesB","Blasso","SuSiE")
+col          = gg_color_hue(11)[-8]
+shape        = c(19,4,5,7,8,17,24,25,9,3,11)[-8]
+p_list       = c(50,500,5000,50000)
+sdat         = data.frame()
+for (i in 1:4) {
+  sdat = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred, 20, 10)),
+                                time = colMeans(matrix(res_df[[i]]$time, 20, 10)),
+                                fit  = method_list,
+                                p = p_list[i]))
+}
+sdat$fit = factor(sdat$fit, levels = method_level)
+
+p1 = ggplot(sdat) + geom_line(aes(x = p, y = time, color = fit)) +
+  geom_point(aes(x = p, y = time, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(trans = "log10", breaks = p_list) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of coefficients (p)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10")
+
+title     = ggdraw() + draw_label("Computation time (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + SparseNormal, n = 500, p = 50, 500, 5000, 50000, pve = 0.5", fontface  = 'bold', size = 18) 
+p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
+fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
+fig
 ```
 
 ## Source code
@@ -136,3 +179,7 @@ for (i in 1:20) {
 tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(c("mr.ash", method_list), each = 20))
 }
 ```
+
+## System Configuration
+
+Click the below Session Info.
