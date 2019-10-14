@@ -23,7 +23,7 @@ which is a parametric form of $\lambda$ (and $\gamma$ if exists).
 
 #### Performance of methods -- Ridge case
 
-1. [Result 1](Result_1_Ridge.html)
+1. [Result 1](Result1_Ridge.html)
 
 #### Flexibility of convex/non-convex shrinkage operators (E-NET, SCAD, MCP, L0Learn) vs MR.ASH shrinkage operator.
 
