@@ -1,0 +1,170 @@
+---
+title: "Result6_PVE"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This .Rmd file is to plot results for the experiment MR.ASH and the comparison methods listed below.
+
+(1) `glmnet` R package: Ridge, Lasso, E-NET
+(2) `ncvreg` R package: SCAD, MCP
+(3) `L0Learn` R package: L0Learn
+(4) `BGLR` R package: BayesB, Blasso (Bayesian Lasso)
+(5) `susieR` R package: SuSiE (Sum of Single Effect)
+(6) `varbvs` R package: VarBVS (Variational Bayes Variable Selection)
+
+The experiment is based on the following simulation setting.
+
+### Design setting
+
+We sample the standard i.i.d. Gaussian measurement $X_{ij} \sim N(0,1)$ anda construct $X \in \mathbb{R}^p$ with $n = 500$ and $p = 50,500,5000,50000$.
+
+### Signal setting
+
+We sample the i.i.d. normal coefficients $\beta_j \sim N(0,\sigma_\beta^2)$ for $j \in J$ and $\beta_ j = 0$ otherwise, where $J$ is a set of randomly $s$ indices in $\{1,⋯,p\}$c hosen uniformly at random.
+
+This signal will be called `sparsenormal`.
+
+We will fix $s = 20$ throughout this experiment.
+
+### PVE
+
+Then we sample $y = X\beta + \epsilon$, where $\epsilon \sim N(0,\sigma^2 I_n)$.
+
+We fix PVE = 0.5, where PVE is the proportion of variance explained, defined by
+
+$$
+{\rm PVE} = \frac{\textrm{Var}(X\beta)}{\textrm{Var}(X\beta) + \sigma^2},
+$$
+where $\textrm{Var}(a)$ denotes the sample variance of $a$ calculated using R function `var`. To this end, we set $\sigma^2 = \textrm{Var}(X\beta)$.
+
+### Performance Measure
+
+The above two figures display the prediction error. The prediction error we define here is
+
+$$
+\textrm{Pred.Err}(\hat\beta;y_{\rm test}, X_{\rm test}) = \frac{\textrm{RMSE}}{\sigma} = \frac{\|y_{\rm test} - X_{\rm test} \hat\beta \|}{\sqrt{n}\sigma}
+$$
+where $y_{\rm test}$ and $X_{\rm test}$ are test data sample in the same way. If $\hat\beta$ is fairly accurate, then we expect that $\rm RMSE$ is similar to $\sigma$. Therefore in average $\textrm{Pred.Err} \geq 1$ and the smaller the better.
+
+### Packages / Libraries
+
+A list of packages we have loaded is collapsed. Please click "code" to see the list.
+
+```{r library, message = FALSE}
+library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(varbvs2); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
+source('code/method_wrapper.R')
+source('code/sim_wrapper.R')
+```
+
+## Results
+
+The result is summarized below. 
+
+```{r fig1, fig.height=10, fig.width=15}
+res_df       = readRDS("results/diffpve.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "VarBVS","BayesB","Blasso","SuSiE")
+col          = gg_color_hue(11)
+shape        = c(19,17,24,25,9,3,11,4,5,7,8)
+pve_list     = seq(0,0.9,0.1)
+sdat         = data.frame()
+for (i in 1:10) {
+  sdat = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred, 20, 11)),
+                                time = colMeans(matrix(res_df[[i]]$time, 20, 11)),
+                                fit  = method_list,
+                                pve  = pve_list[i]))
+}
+sdat$fit = factor(sdat$fit, levels = method_level)
+
+p1 = ggplot(sdat) + geom_line(aes(x = pve, y = pred, color = fit)) +
+  geom_point(aes(x = pve, y = pred, color = fit, shape = fit), size = 2.5) +
+  scale_x_continuous(breaks = pve_list) +
+  theme_cowplot(font_size = 14) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of coefficients (p)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10") +
+  coord_cartesian(ylim = c(1,1.5))
+
+title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + SparseNormal, n = 500, p = 50, 500, 5000, 50000, pve = 0.5", fontface  = 'bold', size = 18) 
+p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
+fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
+fig
+```
+
+```{r fig2, fig.height=10, fig.width=15}
+p1 = ggplot(sdat) + geom_line(aes(x = pve, y = time, color = fit)) +
+  geom_point(aes(x = pve, y = time, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(breaks = pve_list) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of coefficients (p)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10")
+
+title     = ggdraw() + draw_label("Computation time (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + SparseNormal, n = 500, p = 50, 500, 5000, 50000, pve = 0.5", fontface  = 'bold', size = 18) 
+p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
+fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
+fig
+```
+
+## Source code
+
+The source code will be popped up when you click `code` on the right side. 
+
+```{r code, eval = FALSE}
+tdat1        = list()
+n            = 500
+p            = 2000
+pve_range    = seq(0,1,0.1)
+s            = 20
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_num   = length(method_list) + 1
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = c("mr.ash", method_list)
+time         = matrix(0, iter_num, method_num); colnames(time) = c("mr.ash", method_list)
+
+
+for (iter in 1:10) {
+for (i in 1:20) {
+  data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = pve_range[iter])
+ 
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste("fit.",method_list[j],sep = ""))
+    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
+  }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+}
+tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(c("mr.ash", method_list), each = 20))
+}
+```
+
+## System Configuration
+
+Click the below Session Info.
