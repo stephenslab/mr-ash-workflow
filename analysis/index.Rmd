@@ -8,6 +8,10 @@ editor_options:
   chunk_output_type: console
 ---
 
+## Plots for the paper
+
+[Plots](Plots_for_paper.html)
+
 ## Results
 
 ### MR.ASH vs penalized linear regression
