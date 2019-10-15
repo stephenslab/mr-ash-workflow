@@ -80,12 +80,20 @@ simulate_data = function(n = NULL, p = NULL, s = NULL, seed = 1,
   
   # sample beta
   if (is.null(beta)) {
-    beta            = sample_beta(p,s,signal = signal)
+    if (pve == 0) {
+      beta          = double(p)
+    } else {
+      beta          = sample_beta(p,s,signal = signal)
+    }
   }
   
   # set sigma
   if (is.null(sigma)) {
-    sigma             = sqrt(var(c(X %*% beta)) * (1-pve) / pve)
+    if (pve == 0) {
+      sigma          = 1
+    } else {
+      sigma          = sqrt(var(c(X %*% beta)) * (1-pve) / pve)
+    }
   }
   
   # sample y and y.test
