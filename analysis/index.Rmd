@@ -29,7 +29,7 @@ which is a parametric form of $\lambda$ (and $\gamma$ if exists).
 
 [Result 2](Result2_Nonconvex.html)
 
-## MR.ASH vs. all other methods.
+### MR.ASH vs. all other methods.
 
 This is to reproduce the results in the Experiment section.
 Throughout the studies, we will fix $n = 500$.
@@ -46,6 +46,10 @@ The default setting is
 
 (5) PVE: 0.5
 
+(6) Update order: `increasing` or `1:p`
+
+(7) Initialization: `null` or a vector of zeros.
+
 We will change exactly one of the below and fix the rest.
 
 $p$
@@ -56,7 +60,9 @@ Design
 
 PVE
 
-### Different $p$
+The results will be provided below.
+
+### $p$
 
 IndepGauss + SparseNormal, $n = 500$, $p = 50, 500, 5000, 50000$ and $s = 20$.
 
@@ -70,13 +76,15 @@ IndepGauss + SparseNormal, $n = 500$, $p = 2000$ and $s = 1,5,20,100,500,2000$.
 
 ### Different PVE
 
+[Result 6](Result6_PVE.html)
+
 ### Different Design
 
 (1) LowdimIndepGauss
 
 (2) RealGenotype
 
-(3) 
+(3) Changepoint
 
 #### LowdimIndepGauss + SuBogdanCandes
 
@@ -85,3 +93,7 @@ IndepGauss + SparseNormal, $n = 500$, $p = 2000$ and $s = 1,5,20,100,500,2000$.
 #### RealGenotype
 
 [Result 8](Result8_RealGenotype.html)
+
+#### Changepoint
+
+[Result 9]
