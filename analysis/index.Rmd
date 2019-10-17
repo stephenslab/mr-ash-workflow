@@ -12,6 +12,8 @@ editor_options:
 
 [Plots](Plots_for_paper.html)
 
+---------------------
+
 ## Results for external comparison
 
 ### MR.ASH vs penalized linear regression
@@ -102,12 +104,16 @@ IndepGauss + SparseNormal, $n = 500$, $p = 2000$ and $s = 1,5,20,100,500,2000$.
 
 [Result 9]
 
+### When design $X$ is correlated
+
+[Results10](Result10_Correlation.html)
+
+--------------------
+
 ## Results for internal comparison
 
 ### MR.ASH update order
 
-[Results10](Result10_Correlation.html)
+[Results11](Result11_UpdateOrder.html)
 
 ### MR.ASH initialization
-
-[Results11](Result11_UpdateOrder.html)
