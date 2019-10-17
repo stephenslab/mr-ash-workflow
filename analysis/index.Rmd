@@ -104,9 +104,9 @@ IndepGauss + SparseNormal, $n = 500$, $p = 2000$ and $s = 1,5,20,100,500,2000$.
 
 [Result 9]
 
-### When design $X$ is correlated
+#### When design $X$ is correlated
 
-[Results10](Result10_Correlation.html)
+[Result 10](Result10_Correlation.html)
 
 --------------------
 
@@ -114,6 +114,10 @@ IndepGauss + SparseNormal, $n = 500$, $p = 2000$ and $s = 1,5,20,100,500,2000$.
 
 ### MR.ASH update order
 
-[Results11](Result11_UpdateOrder.html)
+[Result 11](Result11_UpdateOrder.html)
 
 ### MR.ASH initialization
+
+[Result 12](Result12_Initialization.html)
+
+
