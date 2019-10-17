@@ -12,7 +12,7 @@
 
 
 
-<title>Figures_for_the_paper</title>
+<title>Result10_Correlation</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -381,7 +381,7 @@ div.section {
 
 
 
-<h1 class="title toc-ignore">Figures_for_the_paper</h1>
+<h1 class="title toc-ignore">Result10_Correlation</h1>
 
 </div>
 
@@ -516,7 +516,6 @@ Untracked files:
     Untracked:  analysis/ETA_1_lambda.dat
     Untracked:  analysis/mu.dat
     Untracked:  analysis/varE.dat
-    Untracked:  docs/figure/Result10_Correlation.Rmd/
     Untracked:  docs/figure/Result11_UpdateOrder.Rmd/
     Untracked:  docs/figure/Result12_Initialization.Rmd/
     Untracked:  results/diffrho.RDS
@@ -526,11 +525,11 @@ Untracked files:
     Untracked:  results/updateorder_rho0.95.RDS
 
 Unstaged changes:
-    Modified:   ETA_1_lambda.dat
+    Deleted:    ETA_1_lambda.dat
     Deleted:    ETA_1_parBayesB.dat
     Deleted:    diffpve.RDS
-    Modified:   mu.dat
-    Modified:   varE.dat
+    Deleted:    mu.dat
+    Deleted:    varE.dat
 
 </code></pre>
 <p>
@@ -571,53 +570,19 @@ Message
 <tbody>
 <tr>
 <td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/fd5131c543b0b9ea49293be69dac55aaa4123aeb/docs/Plots_for_paper.html" target="_blank">fd5131c</a>
-</td>
-<td>
-Youngseok
-</td>
-<td>
-2019-10-15
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
 Rmd
 </td>
 <td>
-<a href="https://github.com/stephenslab/mr-ash-workflow/blob/1e3484c88d0e260c6920ba9440e13ded4f9fc840/analysis/Plots_for_paper.Rmd" target="_blank">1e3484c</a>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/2e3a7f5d60c040868fe6f63fadf927e20a98b940/analysis/Result10_Correlation.Rmd" target="_blank">2e3a7f5</a>
 </td>
 <td>
 Youngseok
 </td>
 <td>
-2019-10-14
+2019-10-17
 </td>
 <td>
-update for experiment with different p
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/1e3484c88d0e260c6920ba9440e13ded4f9fc840/docs/Plots_for_paper.html" target="_blank">1e3484c</a>
-</td>
-<td>
-Youngseok
-</td>
-<td>
-2019-10-14
-</td>
-<td>
-update for experiment with different p
+wflow_publish(&quot;analysis/*.Rmd&quot;)
 </td>
 </tr>
 </tbody>
@@ -629,248 +594,121 @@ update for experiment with different p
 </div>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>This .Rmd documentation is to reproduce figures in the paper/manuscript.</p>
-<pre class="r"><code>library(ggplot2); library(cowplot)</code></pre>
-</div>
-<div id="popular-shrinkage-operators" class="section level2">
-<h2>Popular shrinkage operators</h2>
+<p>This .Rmd file is to plot results for the experiment MR.ASH and the comparison methods listed below.</p>
 <ol style="list-style-type: decimal">
-<li>Soft thresholding</li>
+<li><code>glmnet</code> R package: Ridge, Lasso, E-NET</li>
+<li><code>ncvreg</code> R package: SCAD, MCP</li>
+<li><code>L0Learn</code> R package: L0Learn</li>
+<li><code>BGLR</code> R package: BayesB, Blasso (Bayesian Lasso)</li>
+<li><code>susieR</code> R package: SuSiE (Sum of Single Effect)</li>
+<li><code>varbvs</code> R package: VarBVS (Variational Bayes Variable Selection)</li>
 </ol>
-<p><span class="math display">\[S_{{\rm soft}, \lambda}(b) = {\rm sign}(b) \max \{|b| - \lambda, 0\} = \left\{\begin{array}{ll}
-0, &amp; |b| \leq \lambda \\
-b - \lambda, &amp; b &gt; \lambda \\
-b + \lambda, &amp; b &lt; -\lambda
-\end{array} \right.\]</span></p>
-<ol start="2" style="list-style-type: decimal">
-<li>Hard thresholding</li>
-</ol>
-<p><span class="math display">\[S_{{\rm hard}, \lambda}(b) = {\rm sign}(b) (\max \{|b|, \lambda\} - \lambda) = \left\{\begin{array}{ll}
-0, &amp; |b| \leq \lambda \\
-b, &amp; b &gt; \lambda \\
-b, &amp; b &lt; -\lambda
-\end{array} \right.\]</span></p>
-<ol start="3" style="list-style-type: decimal">
-<li>SCAD (Smoothly Clipped Absolute Deviation)</li>
-</ol>
-<p><span class="math display">\[S_{{\rm scad}, \lambda, \gamma}(b) = \left\{\begin{array}{ll}
-S_{{\rm soft}, \lambda}(b), &amp; |b| \leq 2 \lambda \\
-\frac{S_{{\rm soft}, \gamma\lambda/(\gamma - 1)}(b)}{1 - (1 / (\gamma - 1))}, &amp; 2\lambda &lt; |b| \leq \gamma \lambda \\
-b, &amp; \gamma \lambda &lt; |b|
-\end{array}\right.\]</span></p>
-<ol start="4" style="list-style-type: decimal">
-<li>MCP (Minimax Concave Penalty)</li>
-</ol>
-<p><span class="math display">\[S_{{\rm mcp}, \lambda, \gamma}(b) = \left\{\begin{array}{ll}
-\frac{S_{{\rm soft}, \lambda}(b)}{1 - (1 / (\gamma - 1))}, &amp; |b| \leq \gamma \lambda \\
-b, &amp; \gamma \lambda &lt; |b|
-\end{array}\right.\]</span></p>
-<pre class="r"><code>scad = function(b, lambda = 1, gamma = 3) {
-  b1 = pmax(abs(b) - lambda, 0) * sign(b) * (abs(b) &lt;= 2 * lambda)
-  b2 = ((gamma-1) * b - sign(b) * gamma * lambda) / (gamma-2) * (abs(b) &lt;= gamma * lambda) * (abs(b) &gt; 2 * lambda)
-  b3 = b * (abs(b) &gt; gamma * lambda)
-  return (b1+b2+b3)
-}
-
-mcp = function(b, lambda = 1, gamma = 2) {
-  b1 = pmax(abs(b) - lambda, 0) * sign(b) * (b &lt;= gamma * lambda) * gamma / (gamma-1)
-  b2 = b * (abs(b) &gt; gamma * lambda)
-  return (b1+b2)
-}
-
-softt = function(b, lambda = 1) {
-  return (pmax(abs(b) - lambda, 0) * sign(b))
-}
-
-hardt = function(b, lambda = 1) {
-  return (b * (abs(b) &gt;= lambda))
-}</code></pre>
+<p>The experiment is based on the following simulation setting.</p>
+<div id="design-setting" class="section level3">
+<h3>Design setting</h3>
+<p>We sample the standard i.i.d. Gaussian measurement <span class="math inline">\(X_{ij} \sim N(0,1)\)</span> anda construct <span class="math inline">\(X \in \mathbb{R}^p\)</span> with <span class="math inline">\(n = 500\)</span> and <span class="math inline">\(p = 2000\)</span>.</p>
 </div>
-<div id="mr.ash-shrinkage-operator-may-resemble-the-popular-shrinkage-operators" class="section level2">
-<h2>MR.ASH shrinkage operator may resemble the popular shrinkage operators</h2>
-<pre class="r"><code>postmean = function(b, pi, sa2 = 0:100, sigma2 = 1){
-  phi = outer(b^2, 1 / 2 / (1 + 1 / sa2) / sigma2);
-  phi = exp(phi - apply(phi, 1, max))
-  
-  phi = t(pi * t(phi) / sqrt(1 + sa2));
-  phi = phi / rowSums(phi);
-  out = c(colSums(t(phi) / (1 + 1 / sa2))) * b
-  return (out)
+<div id="signal-setting" class="section level3">
+<h3>Signal setting</h3>
+<p>We sample the i.i.d. normal coefficients <span class="math inline">\(\beta_j \sim N(0,\sigma_\beta^2)\)</span> for <span class="math inline">\(j \in J\)</span> and <span class="math inline">\(\beta_ j = 0\)</span> otherwise, where <span class="math inline">\(J\)</span> is a set of randomly <span class="math inline">\(s\)</span> indices in <span class="math inline">\(\{1,⋯,p\}\)</span>c hosen uniformly at random.</p>
+<p>This signal will be called <code>sparsenormal</code>.</p>
+<p>We will vary <span class="math inline">\(s = 1, 5, 20, 100, 500, 2000\)</span> throughout this experiment.</p>
+</div>
+<div id="pve" class="section level3">
+<h3>PVE</h3>
+<p>Then we sample <span class="math inline">\(y = X\beta + \epsilon\)</span>, where <span class="math inline">\(\epsilon \sim N(0,\sigma^2 I_n)\)</span>.</p>
+<p>We fix PVE = 0.5, where PVE is the proportion of variance explained, defined by</p>
+<p><span class="math display">\[
+{\rm PVE} = \frac{\textrm{Var}(X\beta)}{\textrm{Var}(X\beta) + \sigma^2},
+\]</span> where <span class="math inline">\(\textrm{Var}(a)\)</span> denotes the sample variance of <span class="math inline">\(a\)</span> calculated using R function <code>var</code>. To this end, we set <span class="math inline">\(\sigma^2 = \textrm{Var}(X\beta)\)</span>.</p>
+</div>
+<div id="performance-measure" class="section level3">
+<h3>Performance Measure</h3>
+<p>The above two figures display the prediction error. The prediction error we define here is</p>
+<p><span class="math display">\[
+\textrm{Pred.Err}(\hat\beta;y_{\rm test}, X_{\rm test}) = \frac{\textrm{RMSE}}{\sigma} = \frac{\|y_{\rm test} - X_{\rm test} \hat\beta \|}{\sqrt{n}\sigma}
+\]</span> where <span class="math inline">\(y_{\rm test}\)</span> and <span class="math inline">\(X_{\rm test}\)</span> are test data sample in the same way. If <span class="math inline">\(\hat\beta\)</span> is fairly accurate, then we expect that <span class="math inline">\(\rm RMSE\)</span> is similar to <span class="math inline">\(\sigma\)</span>. Therefore in average <span class="math inline">\(\textrm{Pred.Err} \geq 1\)</span> and the smaller the better.</p>
+</div>
+<div id="packages-libraries" class="section level3">
+<h3>Packages / Libraries</h3>
+<p>A list of packages we have loaded is collapsed. Please click “code” to see the list.</p>
+<pre class="r"><code>library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(varbvs2); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
+source(&#39;code/method_wrapper.R&#39;)
+source(&#39;code/sim_wrapper.R&#39;)</code></pre>
+</div>
+</div>
+<div id="results" class="section level2">
+<h2>Results</h2>
+<p>The result is summarized below.</p>
+<pre class="r"><code>res_df       = readRDS(&quot;results/diffrho.RDS&quot;)
+method_list  = c(&quot;Mr.ASH&quot;,&quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;)
+method_level = c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,
+                 &quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,
+                 &quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;)
+col          = gg_color_hue(11)[c(1,3,7,10,6,9,11,2,4,5,8)]
+rho_list     = c(0,0.3,0.6,0.9,0.95)
+for (i in 1:5) {
+res_df[[i]]$fit   = rep(method_list, each = 20)
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels =  c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,
+                                            &quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,
+                                            &quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;))
 }
-
-sa2 = 0:100; b = seq(0,10,0.001)
-
-pi = exp(-sa2)
-pi = pi / sum(pi)
-b_softt = postmean(b, pi)
-
-pi = double(101)
-pi[1] = 0.8; pi[101] = 0.2
-b_mcp = postmean(b, pi)
-
-pi = double(101)
-pi[1] = 0.6; pi[101] = 0.4
-b_hardt = postmean(b, pi, sa2 = sa2^5)
-
-pi = double(101)
-pi[1] = 0.5; pi[2:51] = 0.2/50; pi[101] = 0.3
-b_scad = postmean(b, pi, sa2 = sa2)
-df = data.frame(b = c(b,b,b,b), sb = c(b_softt, b_hardt, b_scad, b_mcp),
-                sb2 = c(softt(b, lambda = 1.43),
-                        hardt(b, lambda = 5),
-                        scad(b, lambda = 1, gamma = 4),
-                        mcp(b, lambda = 2)),
-                operator = rep(c(&quot;soft&quot;,&quot;hard&quot;,&quot;scad&quot;,&quot;mcp&quot;), each = length(b)))
-df$operator = factor(df$operator, levels = c(&quot;soft&quot;,&quot;hard&quot;,&quot;scad&quot;,&quot;mcp&quot;))
-
-p1 = ggplot(df) + geom_line(aes(x = b, y = sb, color = operator)) +
-  theme_cowplot(font_size = 14) + theme(axis.line = element_blank())
-p2 = ggplot(df) + geom_line(aes(x = b, y = sb2, color = operator)) +
-  theme_cowplot(font_size = 14) + theme(axis.line = element_blank())
-
-fig = plot_grid(p1,p2, nrow = 1)
+pp = list()
+for (i in 1:5) {
+  d       = res_df[[i]]
+  pp[[i]] = my.box(d, &quot;fit&quot;, &quot;pred&quot;, values = col) +
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = &quot;none&quot;) +
+  geom_hline(yintercept = median(d$pred[d$fit == &quot;Mr.ASH&quot;]), col = col[1],
+             linetype = &quot;dotted&quot;, size = 1.5) +
+  scale_y_continuous(trans = &quot;log10&quot;, breaks = c(1,1.2,1.4,1.6,1.8,2.0)) +
+  coord_cartesian(ylim = c(1,1.6))
+  subtitle  = ggdraw() + draw_label(paste(paste(&quot;rho = &quot;,rho_list[i], sep = &quot;&quot;),&quot;&quot;, sep = &quot;&quot;),
+                                    fontface  = &#39;bold&#39;, size = 18)
+  pp[[i]]   = plot_grid(subtitle, pp[[i]], ncol = 1, rel_heights = c(0.06,0.95))
+}
+fig_main  = plot_grid(pp[[2]],pp[[3]],pp[[4]],pp[[5]], nrow = 2, rel_widths = c(0.3,0.3,0.3,0.3))
+title     = ggdraw() + draw_label(&quot;Prediction Error (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
+subtitle  = ggdraw() + draw_label(&quot;Scenario: EquiCorrGauss + SparseNormal, n = 500, p = 2000, pve = 0.5&quot;, fontface = &#39;bold&#39;, size = 18)
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.06,0.95))
 fig</code></pre>
-<p><img src="figure/Plots_for_paper.Rmd/fig1-1.png" width="1440" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fig1-1">
-Past versions of fig1-1.png
-</button>
-</p>
-<div id="fig-fig1-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/mr-ash-workflow/blob/1e3484c88d0e260c6920ba9440e13ded4f9fc840/docs/figure/Plots_for_paper.Rmd/fig1-1.png" target="_blank">1e3484c</a>
-</td>
-<td>
-Youngseok
-</td>
-<td>
-2019-10-14
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>R.hardt = function(b, lambda = 1) {
-  out = b^2/2
-  out[b &gt; lambda] = lambda^2/2
-  exp(-out)
-}
+<p><img src="figure/Result10_Correlation.Rmd/fig1-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>tdat1        = list()
+n            = 500
+p            = 2000
+s            = 20
+rho_list     = c(0,0.3,0.6,0.9,0.95)
+method_list  = c(&quot;varbvs&quot;,&quot;bayesb&quot;,&quot;blasso&quot;,&quot;susie&quot;,&quot;enet&quot;,&quot;lasso&quot;,&quot;ridge&quot;,&quot;scad2&quot;,&quot;mcp2&quot;,&quot;l0learn&quot;)
+method_num   = length(method_list) + 1
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = c(&quot;mr.ash&quot;, method_list)
+time         = matrix(0, iter_num, method_num); colnames(time) = c(&quot;mr.ash&quot;, method_list)
 
-R.softt = function(b, lambda = 1) {
-  out = lambda^2/2 + (b - lambda) * lambda
-  out[b &lt;= lambda] = b[b &lt;= lambda]^2/2
-  exp(-out)
-}
 
-R.scad = function(b, lambda = 1, gamma = 3) {
-  out = lambda^2/2 + (b - lambda) * lambda
-  out[b &lt;= lambda] = b[b &lt;= lambda]^2/2
-  out[b &gt; 2 * lambda] = lambda^2 * 3/2 + (gamma - 2) * lambda^2/2 * 
-    (1 - (gamma - b[b &gt; 2 * lambda] / lambda)^2 / (gamma - 2)^2)
-  out[b &gt; gamma * lambda] = lambda^2 * 3/2 + (gamma - 2) * lambda^2/2
-  exp(-out)
-}
+for (iter in 1:5) {
+for (i in 1:20) {
+  data          = simulate_data(n, p, s = s, seed = i, signal = &quot;normal&quot;, rho = rho_list[iter],
+                                design = &quot;equicorrgauss&quot;, pve = 0.5)
 
-R.mcp = function(b, lambda = 1, gamma = 2) {
-  out = lambda^2/2 + (gamma - 1) * lambda^2 / 2 * 
-  (1 - (gamma - b / lambda)^2 / (gamma - 1)^2)
-  out[b &gt; gamma * lambda] = lambda^2 / 2 + (gamma - 1) * lambda^2 / 2 
-  out[b &lt;= lambda] = b[b &lt;= lambda]^2/2
-  exp(-out)
-}
 
-marginal_shape = function(b, lambda = 1, gamma = 2, operator = &quot;ridge&quot;) {
-  if (operator == &quot;ridge&quot;) {
-    return (exp(-lambda * b^2/2))
-  } else if (operator == &quot;soft&quot;) {
-    out = b
-    out[b &gt;= 0] = R.softt(b[b &gt;= 0], lambda = lambda)
-    out[b &lt; 0] = R.softt(-b[b &lt; 0], lambda = lambda)
-    return (out)
-  } else if (operator == &quot;hard&quot;) {
-    out = b
-    out[b &gt;= 0] = R.hardt(b[b &gt;= 0], lambda = lambda)
-    out[b &lt; 0] = R.hardt(-b[b &lt; 0], lambda = lambda)
-    return (out)
-  } else if (operator == &quot;scad&quot;) {
-    out = b
-    out[b &gt;= 0] = R.scad(b[b &gt;= 0], lambda = lambda, gamma = gamma)
-    out[b &lt; 0] = R.scad(-b[b &lt; 0], lambda = lambda, gamma = gamma)
-    return (out)
-  } else if (operator == &quot;mcp&quot;) {
-    out = b
-    out[b &gt;= 0] = R.mcp(b[b &gt;= 0], lambda = lambda, gamma = gamma)
-    out[b &lt; 0] = R.mcp(-b[b &lt; 0], lambda = lambda, gamma = gamma)
-    return (out)
+ 
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste(&quot;fit.&quot;,method_list[j],sep = &quot;&quot;))
+    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
   }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
 }
-
-b = seq(-5,5,0.001)
-df = data.frame(b = c(b,b,b,b,b), sb = c(marginal_shape(b, operator = &quot;ridge&quot;),
-                                         marginal_shape(b, operator = &quot;soft&quot;),
-                                         marginal_shape(b, operator = &quot;hard&quot;),
-                                         marginal_shape(b, operator = &quot;scad&quot;),
-                                         marginal_shape(b, operator = &quot;mcp&quot;)),
-                operator = rep(c(&quot;normal&quot;,&quot;soft&quot;,&quot;hard&quot;,&quot;scad&quot;,&quot;mcp&quot;), each = length(b)))
-df$operator = factor(df$operator, levels = c(&quot;normal&quot;,&quot;soft&quot;,&quot;hard&quot;,&quot;scad&quot;,&quot;mcp&quot;))
-ggplot(df) + geom_line(aes(x = b, y = sb, color = operator)) +
-  theme_cowplot(font_size = 14) + theme(axis.line = element_blank())</code></pre>
-<p><img src="figure/Plots_for_paper.Rmd/fig2-1.png" width="1440" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fig2-1">
-Past versions of fig2-1.png
-</button>
-</p>
-<div id="fig-fig2-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/mr-ash-workflow/blob/1e3484c88d0e260c6920ba9440e13ded4f9fc840/docs/figure/Plots_for_paper.Rmd/fig2-1.png" target="_blank">1e3484c</a>
-</td>
-<td>
-Youngseok
-</td>
-<td>
-2019-10-14
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(c(&quot;mr.ash&quot;, method_list), each = 20))
+}</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -894,19 +732,27 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] cowplot_1.0.0 ggplot2_3.2.1
+ [1] varbvs_2.5-16 L0Learn_1.2.0 ncvreg_3.11-1 varbvs2_0.1-1 glmnet_2.0-18
+ [6] foreach_1.4.7 BGLR_1.0.8    susieR_0.8.0  cowplot_1.0.0 ggplot2_3.2.1
+[11] Matrix_1.2-17
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.2       knitr_1.25       whisker_0.4      magrittr_1.5    
- [5] workflowr_1.4.0  tidyselect_0.2.5 munsell_0.5.0    colorspace_1.4-1
- [9] R6_2.4.0         rlang_0.4.0      dplyr_0.8.3      stringr_1.4.0   
-[13] tools_3.5.3      grid_3.5.3       gtable_0.3.0     xfun_0.9        
-[17] withr_2.1.2      git2r_0.26.1     htmltools_0.3.6  assertthat_0.2.1
-[21] yaml_2.2.0       lazyeval_0.2.2   rprojroot_1.3-2  digest_0.6.21   
-[25] tibble_2.1.3     crayon_1.3.4     purrr_0.3.2      fs_1.3.1        
-[29] glue_1.3.1       evaluate_0.14    rmarkdown_1.15   labeling_0.3    
-[33] stringi_1.4.3    pillar_1.4.2     compiler_3.5.3   scales_1.0.0    
-[37] backports_1.1.4  pkgconfig_2.0.3 </code></pre>
+ [1] Rcpp_1.0.2          RColorBrewer_1.1-2  plyr_1.8.4         
+ [4] compiler_3.5.3      pillar_1.4.2        git2r_0.26.1       
+ [7] workflowr_1.4.0     iterators_1.0.12    tools_3.5.3        
+[10] digest_0.6.21       evaluate_0.14       tibble_2.1.3       
+[13] gtable_0.3.0        lattice_0.20-38     pkgconfig_2.0.3    
+[16] rlang_0.4.0         yaml_2.2.0          xfun_0.9           
+[19] withr_2.1.2         stringr_1.4.0       dplyr_0.8.3        
+[22] knitr_1.25          fs_1.3.1            rprojroot_1.3-2    
+[25] grid_3.5.3          tidyselect_0.2.5    glue_1.3.1         
+[28] R6_2.4.0            rmarkdown_1.15      latticeExtra_0.6-28
+[31] reshape2_1.4.3      purrr_0.3.2         magrittr_1.5       
+[34] whisker_0.4         codetools_0.2-16    backports_1.1.4    
+[37] scales_1.0.0        htmltools_0.3.6     assertthat_0.2.1   
+[40] colorspace_1.4-1    nor1mix_1.3-0       stringi_1.4.3      
+[43] lazyeval_0.2.2      munsell_0.5.0       truncnorm_1.0-8    
+[46] crayon_1.3.4       </code></pre>
 </div>
 </div>
 
