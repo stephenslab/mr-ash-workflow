@@ -106,6 +106,96 @@ fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.
 fig
 ```
 
+```{r fig2, fig.height=7, fig.width=15}
+sdat         = data.frame()
+s_list       = c(1,5,20,100,500,2000)
+col          = gg_color_hue(11)
+shape        = c(19,17,24,25,9,3,11,4,5,7,8)
+for (i in 1:6) {
+  sdat = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred, 20, 11)),
+                                time = colMeans(matrix(res_df[[i]]$time, 20, 11)),
+                                fit  = method_list,
+                                s    = s_list[i]))
+}
+sdat$fit = factor(sdat$fit, levels = method_level)
+
+p1 = ggplot(sdat) + geom_line(aes(x = s, y = pred, color = fit)) +
+  geom_point(aes(x = s, y = pred, color = fit, shape = fit), size = 2.5) +
+  scale_x_continuous(breaks = s_list, trans = "log10") +
+  theme_cowplot(font_size = 14) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of coefficients (p)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10") +
+  coord_cartesian(ylim = c(1,1.5))
+title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + SparseNormal, n = 500, p = 2000, s = 1,5,20,100,500,2000, pve = 0.5", fontface  = 'bold', size = 18) 
+p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
+fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
+fig
+```
+
+```{r fig3, fig.height=7, fig.width=15}
+sdat         = data.frame()
+s_list       = c(1,5,20,100,500,2000)
+col          = gg_color_hue(11)
+shape        = c(19,17,24,25,9,3,11,4,5,7,8)
+for (i in 1:6) {
+  sdat = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred, 20, 11)),
+                                time = colMeans(matrix(res_df[[i]]$time, 20, 11)),
+                                fit  = method_list,
+                                s    = s_list[i]))
+}
+sdat$fit = factor(sdat$fit, levels = method_level)
+
+p2 = ggplot(sdat) + geom_line(aes(x = s, y = time, color = fit)) +
+  geom_point(aes(x = s, y = time, color = fit, shape = fit), size = 2.5) +
+  scale_x_continuous(breaks = s_list, trans = "log10") +
+  theme_cowplot(font_size = 14) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of coefficients (p)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10")
+title     = ggdraw() + draw_label("Computation Time (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + SparseNormal, n = 500, p = 2000, s = 1,5,20,100,500,2000, pve = 0.5", fontface  = 'bold', size = 18) 
+p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
+fig_main  = plot_grid(p0,p2,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
+fig
+```
+
+```{r fig4, fig.height=7, fig.width=15}
+sdat         = data.frame()
+s_list       = c(1,5,20,100,500,2000)
+col          = gg_color_hue(11)
+shape        = c(19,17,24,25,9,3,11,4,5,7,8)
+for (i in 1:6) {
+  sdat = rbind(sdat, data.frame(time = c(res_df[[i]]$time),
+                                fit  = rep(method_list,each = 20)))
+}
+sdat$fit = factor(sdat$fit, levels = method_level)
+
+p3 = my.box(sdat, "fit", "time", values = col) +
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = "none") +
+  scale_y_continuous(trans = "log10")
+  subtitle  = ggdraw() + draw_label(paste(paste("s = ",s_list[i], sep = ""),"", sep = ""),
+                                    fontface  = 'bold', size = 18)
+title     = ggdraw() + draw_label("Computation Time (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + SparseNormal, n = 500, p = 2000, s = 1,5,20,100,500,2000, pve = 0.5", fontface  = 'bold', size = 18) 
+p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
+fig_main  = plot_grid(p0,p3,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
+fig
+```
+
+
 ## Source code
 
 The source code will be popped up when you click `code` on the right side. 

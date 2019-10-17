@@ -1,0 +1,213 @@
+---
+title: "Result12_Initialization"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This .Rmd file is to plot results for the experiment MR.ASH and the comparison methods listed below.
+
+(1) `glmnet` R package: Ridge, Lasso, E-NET
+(2) `ncvreg` R package: SCAD, MCP
+(3) `L0Learn` R package: L0Learn
+(4) `BGLR` R package: BayesB, Blasso (Bayesian Lasso)
+(5) `susieR` R package: SuSiE (Sum of Single Effect)
+(6) `varbvs` R package: VarBVS (Variational Bayes Variable Selection)
+
+The experiment is based on the following simulation setting.
+
+### Design setting
+
+We use 20 real genotype matrices from GTEx consortium (https://gtexportal.org/home/).
+
+$n = 287$ and $p = 5732, 7659, 6857, 4012, 6356, 8683, 4076, 7178, 4847, 5141, 6535, 7537, 7263, 7011, 7468, 5020, 8760, 5995, 6440, 5456$. The number of coefficients $p$ varies from 4,012 to 8,760. The average size of $p$ is 6,401.3.
+
+Also, columns of $X$ are very highly correlated (even some are perfectly correlated).
+
+### Signal setting
+
+We sample the i.i.d. normal coefficients $\beta_j \sim N(0,\sigma_\beta^2)$ for $j \in J$ and $\beta_ j = 0$ otherwise, where $J$ is a set of randomly $s$ indices in $\{1,⋯,p\}$c hosen uniformly at random.
+
+This signal will be called `sparsenormal`.
+
+We fix $s = 20$ throughout this experiment.
+
+### PVE
+
+Then we sample $y = X\beta + \epsilon$, where $\epsilon \sim N(0,\sigma^2 I_n)$.
+
+We fix PVE = 0.5, where PVE is the proportion of variance explained, defined by
+
+$$
+{\rm PVE} = \frac{\textrm{Var}(X\beta)}{\textrm{Var}(X\beta) + \sigma^2},
+$$
+where $\textrm{Var}(a)$ denotes the sample variance of $a$ calculated using R function `var`. To this end, we set $\sigma^2 = \textrm{Var}(X\beta)$.
+
+### Performance Measure
+
+The above two figures display the prediction error. The prediction error we define here is
+
+$$
+\textrm{Pred.Err}(\hat\beta;y_{\rm test}, X_{\rm test}) = \frac{\textrm{RMSE}}{\sigma} = \frac{\|y_{\rm test} - X_{\rm test} \hat\beta \|}{\sqrt{n}\sigma}
+$$
+where $y_{\rm test}$ and $X_{\rm test}$ are test data sample in the same way. If $\hat\beta$ is fairly accurate, then we expect that $\rm RMSE$ is similar to $\sigma$. Therefore in average $\textrm{Pred.Err} \geq 1$ and the smaller the better.
+
+### Packages / Libraries
+
+A list of packages we have loaded is collapsed. Please click "code" to see the list.
+
+```{r library, message = FALSE}
+library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(varbvs2); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
+source('code/method_wrapper.R')
+source('code/sim_wrapper.R')
+```
+
+## Results 
+
+```{r fig1, fig.height=20, fig.width=15}
+sdat = readRDS("results/initialization1.RDS")
+sdat$fit = factor(sdat$order, levels = c("null.init + increasing.order",
+                                         "scad.init + increasing.order",
+                                         "lasso.init + increasing.order",
+                                         "lasso.init + lasso.pathorder",
+                                         "lasso.init + scad.pathorder",
+                                         "lasso.init + univar.absorder"))
+                 
+sdat$vobj = -sdat$vobj + sdat$vobj[1:20]
+
+p1 = my.box(sdat, "fit", "vobj", values = col) +
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = "none")
+subtitle  = ggdraw() + draw_label("Variational Objective", fontface  = 'bold', size = 18)
+p1 = plot_grid(subtitle, p1, ncol = 1, rel_heights = c(0.06,0.95))
+
+p2 = my.box(sdat, "fit", "pred", values = col) +
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = "none") +
+  scale_y_continuous(trans = "log10", breaks = c(1,1.1,1.2,1.3)) +
+  coord_cartesian(ylim = c(1,1.3))
+subtitle  = ggdraw() + draw_label("Prediction Error", fontface  = 'bold', size = 18)
+p2 = plot_grid(subtitle, p2, ncol = 1, rel_heights = c(0.06,0.95))
+
+p3 = my.box(sdat, "fit", "time", values = col) +
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = "none") +
+  scale_y_continuous(trans = "log10")
+subtitle  = ggdraw() + draw_label("Computation Time", fontface  = 'bold', size = 18)
+p3 = plot_grid(subtitle, p3, ncol = 1, rel_heights = c(0.06,0.95))
+
+p4 = my.box(sdat, "fit", "numiter", values = col) +
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = "none") +
+  scale_y_continuous(trans = "log10")
+subtitle  = ggdraw() + draw_label("Number of Iterations", fontface  = 'bold', size = 18)
+p4 = plot_grid(subtitle, p4, ncol = 1, rel_heights = c(0.06,0.95))
+  
+title     = ggdraw() + draw_label("Comparison of Update Orders (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: EquiCorrGauss + SparseNormal, n = 500, p = 2000, s = 20, pve = 0.5, rho = 0.95", fontface  = 'bold', size = 18) 
+
+fig_main  = plot_grid(p1,p2,p3,p4, nrow = 2, rel_widths = c(0.3,0.3,0.3))
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.06,0.06,0.95))
+fig
+```
+
+## Source Code
+
+```{r code, eval = FALSE}
+tdat1        = list()
+n            = 500
+p            = 2000
+s            = 20
+sa2          = (2^((0:19) / 20) - 1)^2
+method_list  = c("null.init + increasing.order","lasso.init + increasing.order",
+                 "scad.init + increasing.order",
+                 "lasso.init + lasso.pathorder", "lasso.init + scad.pathorder",
+                 "lasso.init + univar.absorder")
+method_num   = length(method_list)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list
+numiter      = matrix(0, iter_num, method_num); colnames(numiter) = method_list
+vobj         = matrix(0, iter_num, method_num); colnames(vobj) = method_list
+
+
+for (i in 1:iter_num) {
+  data          = simulate_data(n, p, s = s, seed = i, signal = "normal", rho = 0.95,
+                                design = "equicorrgauss", pve = 0.5)
+  X             = data$X
+  y             = data$y
+
+  fit.lasso        <- cv.glmnet(x = X, y = y, standardize = standardize)
+  fit.lasso$beta    = coef(fit.lasso)[-1]
+      
+  t.blasso          = system.time(
+  fit.blasso       <- BGLR(y, ETA = list(list(X = X, model="BL", standardize = standardize)),
+                           verbose = FALSE))
+  fit.blasso$beta   = c(fit.blasso$ETA[[1]]$b)
+  
+  
+
+  t.mrash1          = system.time(
+  fit.mrash1       <- mr_ash(X = X, y = y, sa2 = sa2,
+                             stepsize = 1, max.iter = 2000,
+                             standardize = standardize, beta.init = NULL,
+                             tol = list(epstol = 1e-12, convtol = 1e-8)))
+  t.mrash2          = system.time(
+  fit.mrash2       <- mr_ash(X = X, y = y, sa2 = sa2,
+                             stepsize = 1, max.iter = 2000,
+                             standardize = standardize, beta.init = fit.lasso$beta,
+                             tol = list(epstol = 1e-12, convtol = 1e-8)))
+  t.mrash3          = system.time(
+  fit.mrash3       <- mr_ash(X = X, y = y, sa2 = sa2,
+                             stepsize = 1, max.iter = 2000,
+                             standardize = standardize, beta.init = fit.scad$beta,
+                             tol = list(epstol = 1e-12, convtol = 1e-8)))
+  t.mrash4          = system.time(
+  fit.mrash4       <- mr_ash_order(X = X, y = y, sa2 = sa2,
+                                   stepsize = 1, max.iter = 2000,
+                                   standardize = standardize, beta.init = fit.lasso$beta,
+                                   order = "manual",
+                                   o = rep(lasso.pathorder, 2000),
+                                   tol = list(epstol = 1e-12, convtol = 1e-8)))
+  t.mrash5          = system.time(
+  fit.mrash5       <- mr_ash_order(X = X, y = y, sa2 = sa2,
+                                   stepsize = 1, max.iter = 2000,
+                                   standardize = standardize, beta.init = fit.lasso$beta,
+                                   order = "manual",
+                                   o = rep(scad.pathorder, 2000),
+                                   tol = list(epstol = 1e-12, convtol = 1e-8)))
+  t.mrash6          = system.time(
+  fit.mrash6       <- mr_ash_order(X = X, y = y, sa2 = sa2,
+                                   stepsize = 1, max.iter = 2000,
+                                   standardize = standardize, beta.init = fit.lasso$beta,
+                                   order = "manual",
+                                   o = rep(univar.absorder, 2000),
+                                   tol = list(epstol = 1e-12, convtol = 1e-8)))
+ 
+  for (j in 1:6) {
+    fit           = get(paste("fit.mrash",j,sep = ""))
+    pred[i,j]     = norm(data$y.test - predict(fit, data$X.test), '2') / sqrt(500) / data$sigma
+    numiter[i,j]  = fit$iter
+    vobj[i,j]     = fit$varobj[fit$iter]
+    time[i,j]     = get(paste("t.mrash",j,sep = ""))[3]
+  }
+  
+  print(c(pred[i,]))
+}
+
+tdat1 = data.frame(pred = c(pred), vobj = c(vobj), time = c(time),
+                   numiter = c(numiter),
+                   order = rep(method_list, each = 20))
+```
