@@ -1,0 +1,199 @@
+---
+title: "Result9_Changepoint"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r code, message = FALSE, warning = FALSE, eval= FALSE}
+library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(mr.ash); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
+filepath = "data"
+filelist = paste("data/", list.files(filepath, pattern = "*.RDS"), sep = "")
+source('code/method_wrapper.R')
+source('code/sim_wrapper.R')
+tdat1        = list()
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_num   = length(method_list) + 3
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num);
+colnames(pred) = c("mr.ash", method_list,"mr.ash.order","mr.ash.init")
+time         = matrix(0, iter_num, method_num);
+colnames(time) = c("mr.ash", method_list,"mr.ash.order","mr.ash.init")
+n            = 100 # must be even
+p            = n-1
+
+for (iter in 1:10) {
+for (i in 1:20) {
+  beta          = double(p)
+  beta[n/2 - iter] = 1
+  beta[n/2 + iter] = -1
+  data          = simulate_data(n = n, seed = i, beta = beta,
+                                design = "changepoint", filepath = filelist[i], snr = 10)
+  
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste("fit.",method_list[j],sep = ""))
+    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
+    
+    if (method_list[j] == "lasso") {
+      lasso.path.order = mr.ash:::path.order(fit$fit$glmnet.fit)
+      lasso.beta       = as.vector(coef(fit$fit))[-1]
+      lasso.time       = c(fit$t, fit$t2)
+    }
+  }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            update.order = lasso.path.order,
+                            sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+2] = fit$t + lasso.time[2]
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta,
+                            sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+3] = fit$t + lasso.time[1]
+  
+  print(c(pred[i,]))
+}
+tdat1[[iter]] = data.frame(pred = c(pred), time = c(time),
+                           fit = rep(c("mr.ash", method_list,"mr.ash.order","mr.ash.init"), each = 20))
+}
+```
+
+```{r code, message = FALSE, warning = FALSE, eval= FALSE}
+library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(mr.ash); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
+filepath = "data"
+filelist = paste("data/", list.files(filepath, pattern = "*.RDS"), sep = "")
+source('code/method_wrapper.R')
+source('code/sim_wrapper.R')
+tdat2        = list()
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_num   = length(method_list) + 3
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num);
+colnames(pred) = c("mr.ash", method_list,"mr.ash.order","mr.ash.init")
+time         = matrix(0, iter_num, method_num);
+colnames(time) = c("mr.ash", method_list,"mr.ash.order","mr.ash.init")
+
+for (iter in 1:1) {
+n            = 1000 # must be even
+p            = n-1
+for (i in 1:20) {
+  beta          = double(p)
+  beta[n/2]     = 1
+  data          = simulate_data(n = n, seed = i, beta = beta,
+                                design = "changepoint", filepath = filelist[i], snr = 1)
+  
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste("fit.",method_list[j],sep = ""))
+    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
+    
+    if (method_list[j] == "lasso") {
+      lasso.path.order = mr.ash:::path.order(fit$fit$glmnet.fit)
+      lasso.beta       = as.vector(coef(fit$fit))[-1]
+      lasso.time       = c(fit$t, fit$t2)
+    }
+  }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            update.order = lasso.path.order,
+                            sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+2] = fit$t + lasso.time[2]
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta,
+                            sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+3] = fit$t + lasso.time[1]
+  
+  print(c(pred[i,]))
+}
+tdat2[[iter]] = data.frame(pred = c(pred), time = c(time),
+                           fit = rep(c("mr.ash", method_list,"mr.ash.order","mr.ash.init"), each = 20))
+}
+```
+
+```{r fig1, fig.height=7, fig.width=15}
+res_df       = readRDS("results/changepoint1.RDS")
+sdat         = data.frame()
+for (i in 1:10) {
+  sdat = rbind(sdat, res_df[[i]])
+}
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "Mr.ASH.order", "Mr.ASH.init")
+sdat$fit     = rep(method_list, each = 20)
+sdat$fit     = factor(sdat$fit, levels =  c("Mr.ASH","Mr.ASH.order", "Mr.ASH.init",
+                                            "E-NET","Lasso","Ridge",
+                                            "SCAD","MCP","L0Learn",
+                                            "VarBVS","BayesB","Blasso","SuSiE"))
+col = c(gg_color_hue(11)[1], "grey1", "grey51",gg_color_hue(11)[2:11])
+p1 = my.box(sdat, "fit", "pred") + 
+  scale_color_manual(values = col) +
+  scale_fill_manual(values = col) +
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = "none") +
+  geom_hline(yintercept = median(sdat$pred[sdat$fit == "Mr.ASH"]), col = gg_color_hue(11)[1],
+             linetype = "dotted", size = 1.5) +
+  scale_y_continuous(trans = "log10") +
+  coord_cartesian(ylim = c(0.1, 1))
+p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
+fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
+title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: RealGenotype + SparseNormal, n = 287, p = 4012-8760, pve = 0.5", fontface  = 'bold', size = 18) 
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
+fig
+```
+
+```{r fig2, fig.height=7, fig.width=15}
+res_df       = readRDS("results/changepoint3.RDS")
+sdat         = res_df
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "Mr.ASH.order", "Mr.ASH.init")
+sdat$fit     = rep(method_list, each = 20)
+sdat$fit     = factor(sdat$fit, levels =  c("Mr.ASH","Mr.ASH.order", "Mr.ASH.init",
+                                            "E-NET","Lasso","Ridge",
+                                            "SCAD","MCP","L0Learn",
+                                            "VarBVS","BayesB","Blasso","SuSiE"))
+col = c(gg_color_hue(11)[1], "grey1", "grey51",gg_color_hue(11)[2:11])
+p1 = my.box(sdat, "fit", "pred") + 
+  scale_color_manual(values = col) +
+  scale_fill_manual(values = col) +
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = "none") +
+  geom_hline(yintercept = median(sdat$pred[sdat$fit == "Mr.ASH"]), col = gg_color_hue(11)[1],
+             linetype = "dotted", size = 1.5) +
+  scale_y_continuous(trans = "log10")
+p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
+fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
+title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: RealGenotype + SparseNormal, n = 287, p = 4012-8760, pve = 0.5", fontface  = 'bold', size = 18) 
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
+fig
+```
+
+
