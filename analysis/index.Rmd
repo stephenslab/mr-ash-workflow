@@ -16,9 +16,103 @@ editor_options:
 
 ## Results for external comparison
 
-### MR.ASH vs penalized linear regression
+This vignette is to plot results for the experiment MR.ASH and the comparison methods listed below.
 
-This is for MR.ASH vs. penalized linear regression.
+(1) `glmnet` R package: Ridge, Lasso, E-NET
+(2) `ncvreg` R package: SCAD, MCP
+(3) `L0Learn` R package: L0Learn
+(4) `BGLR` R package: BayesB, Blasso (Bayesian Lasso)
+(5) `susieR` R package: SuSiE (Sum of Single Effect)
+(6) `varbvs` R package: VarBVS (Variational Bayes Variable Selection)
+
+### Performance measure
+
+The prediction error we define here is
+$$
+\textrm{Pred.Err}(\hat\beta;y_{\rm test}, X_{\rm test}) = \frac{\textrm{RMSE}(\hat\beta;y_{\rm test} - X_{\rm test})}{\sigma} = \frac{\|y_{\rm test} - X_{\rm test} \hat\beta \|}{\sqrt{n}\sigma}
+$$
+where $y_{\rm test}$ and $X_{\rm test}$ are test data sample in the same way. If $\hat\beta$ is fairly accurate, then we expect that $\rm RMSE$ is similar to $\sigma$. Therefore in average $\textrm{Pred.Err} \geq 1$ and the smaller the better.
+
+Here RMSE is the root-mean-squared error, and 
+
+### Default setting
+
+Throughout the studies, the default setting is
+
+(1) The number of samples $n = 500$ and the number of coefficients $p = 2000$.
+(2) The number of nonzero coefficients $s = 20$ (sparsity)
+(3) Design: `IndepGauss`, i.e. $X_{ij} \sim N(0,1)$
+(4) Signal shape: `PointNormal`, i.e.
+$$
+\beta_j = \left\{ \begin{array}{ll} \textrm{a normal random sample }\sim N(0,1), & j \in S \\
+0, & j \notin S \end{array} \right.
+$$
+where $S$ is an index set of nonzero coefficients, sampled uniformly at random from $\{1,\cdots,p\}$. We define $s = |S|$ is a sparsity level. If $s$ is smaller, then we say the signal $\beta$ is sparser.
+
+(5) PVE (Proportion of Variance Explained): 0.5
+Given $X$ and $\beta$, we sample $y = X\beta + \epsilon$, where $\epsilon \sim N(0,\sigma^2 I_n)$. In this case, PVE is defined by
+$$
+{\rm PVE} = \frac{\textrm{Var}(X\beta)}{\textrm{Var}(X\beta) + \sigma^2},
+$$
+where $\textrm{Var}(a)$ denotes the sample variance of $a$ calculated using R function `var`. To this end, we set $\sigma^2 = \textrm{Var}(X\beta)$.
+(6) Update order: `increasing`, i.e. `(1,...,p) = 1:p` in this order.
+(7) Initialization: `null` i.e. a vector of zeros.
+
+## MR.ASH and the comparison methods
+
+### Some special cases
+
+(1) [Ridge case](Result1_Ridge.html).
+
+The ridge case is when the default setting applies to all but $s = p$.
+We observe that the relative performance is dependent on the value of $p$, but not on PVE. Thus we consider $p = 50,100,200,500,1000,2000$.
+
+The message here is MR.ASH performs reasonably well, and the only penalized linear regression method that outperforms Ridge with cross-validation. However, let us mention that Blasso (Bayesian Lasso) performs the best, which uses a non-sparse Laplace prior on $\beta$. Also, BayesB performs better than MR.ASH, which uses a spike-and-slab prior on $\beta$.
+
+(2) [Nonconvex case](Result2_Nonconvex.html).
+
+This experiment is to compare the flexibility of convex/non-convex shrinkage operators (E-NET, SCAD, MCP, L0Learn) vs MR.ASH shrinkage operator. The default setting applies to all but the signal shape and PVE = 0.99.
+
+The reason why we set PVE = 0.99 
+
+### Important parameters for high-dimensional regression settings
+
+(3) [High-dimensionality $p$](Result4_Highdim.html).
+
+(4) [Sparsity $s$](Result5_SparseSignal.html)
+
+(5) [PVE](Result6_PVE.html)
+
+### Performance on different design settings
+
+(6) [LowdimIndepGauss](Result7_LowdimIndepGauss.html)
+
+(7) [RealGenotype](Result8_RealGenotype.html)
+
+(8) [Changepoint]
+
+(9) [EquicorrGauss](Result10_Correlation.html)
+
+---------------------
+
+## Results for internal comparison
+
+[MR.ASH update order](Result11_UpdateOrder.html)
+
+A list of the update orders we consider is as follows.
+
+(1) `random`: In each outer loop iteration, we sample a permuation map $\xi:\{1,\cdots,p\} \to \{1,\cdots,p\}$ uniformly at random and run inner loop iterations with the order based on $\xi$.
+(2) `increasing`: $(1,\cdots,p)$, i.e. in each outer loop iteration, we update $q_1,q_2,\cdots,q_p$ in this order.
+(3) `lasso.pathorder`: we update $q_j$ prior to $q_{j'}$ when $\beta_j$ appears earlier than $\beta_{j'}$ in the lasso path. If ties occur, then `increasing` order applies to those ties.
+(4) `scad.pathorder`: we update $q_j$ prior to $q_{j'}$ when $\beta_j$ appears earlier than $\beta_{j'}$ in the scad path. If ties occur, then `increasing` order applies to those ties.
+(5) `lasso.absorder`: we update $q_j$ prior to $q_{j'}$ when the lasso solution satisfies $\hat\beta_j \geq \hat\beta_{j'}$. If ties occur, then `increasing` order applies to those ties.
+(6) `univar.absorder`: we update $q_j$ prior to $q_{j'}$ when the univariate linear regression solution satisfies $\hat\beta_j \geq \hat\beta_{j'}$. If ties occur, then `increasing` order applies to those ties.
+
+[MR.ASH initialization](Result12_Initialization.html)
+
+A list of the initializations we consider is as follows.
+
+---------------------
 
 Our story is 
 
@@ -26,98 +120,5 @@ Our story is
 which is a parametric form of $\lambda$ (and $\gamma$ if exists).
 
 (2) VEB can do better than cross validation.
-
-#### Performance of methods -- Ridge case
-
-[Result 1](Result1_Ridge.html)
-
-#### Flexibility of convex/non-convex shrinkage operators (E-NET, SCAD, MCP, L0Learn) vs MR.ASH shrinkage operator.
-
-[Result 2](Result2_Nonconvex.html)
-
-### MR.ASH vs. all other methods.
-
-This is to reproduce the results in the Experiment section.
-Throughout the studies, we will fix $n = 500$.
-
-The default setting is
-
-(1) The number of coefficients $p = 2000$
-
-(2) The number of nonzero coefficients $s = 20$ (sparsity)
-
-(3) Design: IndepGauss
-
-(4) Signal shape for nonzero coefficients: SparseNormal
-
-(5) PVE: 0.5
-
-(6) Update order: `increasing` or `1:p`
-
-(7) Initialization: `null` or a vector of zeros.
-
-We will change exactly one of the below and fix the rest.
-
-$p$
-
-Sparsity
-
-Design
-
-PVE
-
-The results will be provided below.
-
-### $p$
-
-IndepGauss + SparseNormal, $n = 500$, $p = 50, 500, 5000, 50000$ and $s = 20$.
-
-[Result 4](Result4_Highdim.html)
-
-### Sparsity
-
-IndepGauss + SparseNormal, $n = 500$, $p = 2000$ and $s = 1,5,20,100,500,2000$.
-
-[Result 5](Result5_SparseSignal.html)
-
-### Different PVE
-
-[Result 6](Result6_PVE.html)
-
-### Different Design
-
-(1) LowdimIndepGauss
-
-(2) RealGenotype
-
-(3) Changepoint
-
-#### LowdimIndepGauss + SuBogdanCandes
-
-[Result 7](Result7_LowdimIndepGauss.html)
-
-#### RealGenotype
-
-[Result 8](Result8_RealGenotype.html)
-
-#### Changepoint
-
-[Result 9]
-
-#### When design $X$ is correlated
-
-[Result 10](Result10_Correlation.html)
-
---------------------
-
-## Results for internal comparison
-
-### MR.ASH update order
-
-[Result 11](Result11_UpdateOrder.html)
-
-### MR.ASH initialization
-
-[Result 12](Result12_Initialization.html)
 
 

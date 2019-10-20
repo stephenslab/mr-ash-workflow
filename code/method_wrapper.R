@@ -9,8 +9,32 @@ fit.mr.ash = function(X, y, X.test, y.test, seed = 1, sa2 = (2^((0:19)/5) - 1)^2
   
   # run mr.ash
   t.mr.ash           = system.time(
-    fit.mr.ash        <- mr_ash(X = X, y = y, sa2 = sa2,
-                                stepsize = 1, max.iter = 2000,
+    fit.mr.ash        <- mr.ash(X = X, y = y, sa2 = sa2,
+                                max.iter = 2000,
+                                standardize = standardize,
+                                tol = list(epstol = 1e-12, convtol = 1e-8)))
+  
+  return (list(fit = fit.mr.ash, t = t.mr.ash[3],
+               rsse = norm(y.test - predict(fit.mr.ash, X.test), '2')))
+}
+
+#'
+#'
+#'
+#' MR.ASH
+fit.mr.ash2 = function(X, y, X.test, y.test, seed = 1,
+                       sa2 = (2^((0:19)/5) - 1)^2,
+                       beta.init = NULL,
+                       update.order = NULL) {
+  
+  
+  # set seed
+  set.seed(seed)
+  
+  # run mr.ash order
+  t.mr.ash           = system.time(
+    fit.mr.ash        <- mr.ash(X = X, y = y, sa2 = sa2, update.order = update.order,
+                                max.iter = 2000, beta.init = beta.init,
                                 standardize = standardize,
                                 tol = list(epstol = 1e-12, convtol = 1e-8)))
   
@@ -31,7 +55,9 @@ fit.lasso = function(X, y, X.test, y.test, seed = 1) {
   t.lasso           = system.time(
     fit.lasso        <- cv.glmnet(x = X, y = y, standardize = standardize))
   
-  return (list(fit = fit.lasso, t = t.lasso[3],
+  t.lasso2          = system.time(glmnet(x = X, y = y, standardize = standardize))
+  
+  return (list(fit = fit.lasso, t = t.lasso[3], t2 = t.lasso2[3],
                rsse = norm(y.test - predict(fit.lasso, newx = X.test, s = fit.lasso$lambda.1se), '2')))
 }
 

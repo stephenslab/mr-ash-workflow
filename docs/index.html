@@ -318,7 +318,7 @@ div.section {
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -327,7 +327,7 @@ div.section {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -336,10 +336,10 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-10-17
+<strong>Last updated:</strong> 2019-10-19
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 2 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 1 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>mr-ash-workflow/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -355,22 +355,22 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree897fd56e91c95129d40145d2eaeae9e132020612targetblank897fd56a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/897fd56e91c95129d40145d2eaeae9e132020612" target="_blank">897fd56</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree92022aff735b275529bceda4e6e3fceda96cf507targetblank92022afa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/92022aff735b275529bceda4e6e3fceda96cf507" target="_blank">92022af</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree897fd56e91c95129d40145d2eaeae9e132020612targetblank897fd56a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree92022aff735b275529bceda4e6e3fceda96cf507targetblank92022afa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -378,6 +378,28 @@ Great! You are using Git for version control. Tracking code development and conn
 <pre><code>
 Ignored files:
     Ignored:    .Rproj.user/
+
+Untracked files:
+    Untracked:  .DS_Store
+    Untracked:  ETA_1_lambda.dat
+    Untracked:  ETA_1_parBayesB.dat
+    Untracked:  data/.DS_Store
+    Untracked:  data/.Rapp.history
+    Untracked:  mu.dat
+    Untracked:  results/.Rapp.history
+    Untracked:  results/changepoint1.RDS
+    Untracked:  results/changepoint2.RDS
+    Untracked:  results/realgenotype.RDS
+    Untracked:  varE.dat
+
+Unstaged changes:
+    Modified:   analysis/Result6_PVE.Rmd
+    Modified:   analysis/Result8_RealGenotype.Rmd
+    Modified:   analysis/index.Rmd
+    Modified:   code/method_wrapper.R
+    Modified:   code/sim_wrapper.R
+    Modified:   data/Thyroid.ENSG00000000971.RDS
+    Modified:   data/Thyroid.ENSG00000031823.RDS
 
 </code></pre>
 <p>
@@ -416,6 +438,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/92022aff735b275529bceda4e6e3fceda96cf507/docs/index.html" target="_blank">92022af</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-17
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -838,93 +877,95 @@ Start workflowr project.
 </div>
 <div id="results-for-external-comparison" class="section level2">
 <h2>Results for external comparison</h2>
-<div id="mr.ash-vs-penalized-linear-regression" class="section level3">
-<h3>MR.ASH vs penalized linear regression</h3>
-<p>This is for MR.ASH vs. penalized linear regression.</p>
+<p>This vignette is to plot results for the experiment MR.ASH and the comparison methods listed below.</p>
+<ol style="list-style-type: decimal">
+<li><code>glmnet</code> R package: Ridge, Lasso, E-NET</li>
+<li><code>ncvreg</code> R package: SCAD, MCP</li>
+<li><code>L0Learn</code> R package: L0Learn</li>
+<li><code>BGLR</code> R package: BayesB, Blasso (Bayesian Lasso)</li>
+<li><code>susieR</code> R package: SuSiE (Sum of Single Effect)</li>
+<li><code>varbvs</code> R package: VarBVS (Variational Bayes Variable Selection)</li>
+</ol>
+<div id="performance-measure" class="section level3">
+<h3>Performance measure</h3>
+<p>The prediction error we define here is <span class="math display">\[
+\textrm{Pred.Err}(\hat\beta;y_{\rm test}, X_{\rm test}) = \frac{\textrm{RMSE}(\hat\beta;y_{\rm test} - X_{\rm test})}{\sigma} = \frac{\|y_{\rm test} - X_{\rm test} \hat\beta \|}{\sqrt{n}\sigma}
+\]</span> where <span class="math inline">\(y_{\rm test}\)</span> and <span class="math inline">\(X_{\rm test}\)</span> are test data sample in the same way. If <span class="math inline">\(\hat\beta\)</span> is fairly accurate, then we expect that <span class="math inline">\(\rm RMSE\)</span> is similar to <span class="math inline">\(\sigma\)</span>. Therefore in average <span class="math inline">\(\textrm{Pred.Err} \geq 1\)</span> and the smaller the better.</p>
+<p>Here RMSE is the root-mean-squared error, and</p>
+</div>
+<div id="default-setting" class="section level3">
+<h3>Default setting</h3>
+<p>Throughout the studies, the default setting is</p>
+<ol style="list-style-type: decimal">
+<li>The number of samples <span class="math inline">\(n = 500\)</span> and the number of coefficients <span class="math inline">\(p = 2000\)</span>.</li>
+<li>The number of nonzero coefficients <span class="math inline">\(s = 20\)</span> (sparsity)</li>
+<li>Design: <code>IndepGauss</code>, i.e. <span class="math inline">\(X_{ij} \sim N(0,1)\)</span></li>
+<li><p>Signal shape: <code>PointNormal</code>, i.e. <span class="math display">\[
+\beta_j = \left\{ \begin{array}{ll} \textrm{a normal random sample }\sim N(0,1), &amp; j \in S \\
+0, &amp; j \notin S \end{array} \right.
+\]</span> where <span class="math inline">\(S\)</span> is an index set of nonzero coefficients, sampled uniformly at random from <span class="math inline">\(\{1,\cdots,p\}\)</span>. We define <span class="math inline">\(s = |S|\)</span> is a sparsity level. If <span class="math inline">\(s\)</span> is smaller, then we say the signal <span class="math inline">\(\beta\)</span> is sparser.</p></li>
+<li>PVE (Proportion of Variance Explained): 0.5 Given <span class="math inline">\(X\)</span> and <span class="math inline">\(\beta\)</span>, we sample <span class="math inline">\(y = X\beta + \epsilon\)</span>, where <span class="math inline">\(\epsilon \sim N(0,\sigma^2 I_n)\)</span>. In this case, PVE is defined by <span class="math display">\[
+{\rm PVE} = \frac{\textrm{Var}(X\beta)}{\textrm{Var}(X\beta) + \sigma^2},
+\]</span> where <span class="math inline">\(\textrm{Var}(a)\)</span> denotes the sample variance of <span class="math inline">\(a\)</span> calculated using R function <code>var</code>. To this end, we set <span class="math inline">\(\sigma^2 = \textrm{Var}(X\beta)\)</span>.</li>
+<li>Update order: <code>increasing</code>, i.e. <code>(1,...,p) = 1:p</code> in this order.</li>
+<li><p>Initialization: <code>null</code> i.e. a vector of zeros.</p></li>
+</ol>
+</div>
+</div>
+<div id="mr.ash-and-the-comparison-methods" class="section level2">
+<h2>MR.ASH and the comparison methods</h2>
+<div id="some-special-cases" class="section level3">
+<h3>Some special cases</h3>
+<ol style="list-style-type: decimal">
+<li><a href="Result1_Ridge.html">Ridge case</a>.</li>
+</ol>
+<p>The ridge case is when the default setting applies to all but <span class="math inline">\(s = p\)</span>. We observe that the relative performance is dependent on the value of <span class="math inline">\(p\)</span>, but not on PVE. Thus we consider <span class="math inline">\(p = 50,100,200,500,1000,2000\)</span>.</p>
+<p>The message here is MR.ASH performs reasonably well, and the only penalized linear regression method that outperforms Ridge with cross-validation. However, let us mention that Blasso (Bayesian Lasso) performs the best, which uses a non-sparse Laplace prior on <span class="math inline">\(\beta\)</span>. Also, BayesB performs better than MR.ASH, which uses a spike-and-slab prior on <span class="math inline">\(\beta\)</span>.</p>
+<ol start="2" style="list-style-type: decimal">
+<li><a href="Result2_Nonconvex.html">Nonconvex case</a>.</li>
+</ol>
+<p>This experiment is to compare the flexibility of convex/non-convex shrinkage operators (E-NET, SCAD, MCP, L0Learn) vs MR.ASH shrinkage operator. The default setting applies to all but the signal shape and PVE = 0.99.</p>
+<p>The reason why we set PVE = 0.99</p>
+</div>
+<div id="important-parameters-for-high-dimensional-regression-settings" class="section level3">
+<h3>Important parameters for high-dimensional regression settings</h3>
+<ol start="3" style="list-style-type: decimal">
+<li><p><a href="Result4_Highdim.html">High-dimensionality <span class="math inline">\(p\)</span></a>.</p></li>
+<li><p><a href="Result5_SparseSignal.html">Sparsity <span class="math inline">\(s\)</span></a></p></li>
+<li><p><a href="Result6_PVE.html">PVE</a></p></li>
+</ol>
+</div>
+<div id="performance-on-different-design-settings" class="section level3">
+<h3>Performance on different design settings</h3>
+<ol start="6" style="list-style-type: decimal">
+<li><p><a href="Result7_LowdimIndepGauss.html">LowdimIndepGauss</a></p></li>
+<li><p><a href="Result8_RealGenotype.html">RealGenotype</a></p></li>
+<li><p>[Changepoint]</p></li>
+<li><p><a href="Result10_Correlation.html">EquicorrGauss</a></p></li>
+</ol>
+<hr />
+</div>
+</div>
+<div id="results-for-internal-comparison" class="section level2">
+<h2>Results for internal comparison</h2>
+<p><a href="Result11_UpdateOrder.html">MR.ASH update order</a></p>
+<p>A list of the update orders we consider is as follows.</p>
+<ol style="list-style-type: decimal">
+<li><code>random</code>: In each outer loop iteration, we sample a permuation map <span class="math inline">\(\xi:\{1,\cdots,p\} \to \{1,\cdots,p\}\)</span> uniformly at random and run inner loop iterations with the order based on <span class="math inline">\(\xi\)</span>.</li>
+<li><code>increasing</code>: <span class="math inline">\((1,\cdots,p)\)</span>, i.e. in each outer loop iteration, we update <span class="math inline">\(q_1,q_2,\cdots,q_p\)</span> in this order.</li>
+<li><code>lasso.pathorder</code>: we update <span class="math inline">\(q_j\)</span> prior to <span class="math inline">\(q_{j&#39;}\)</span> when <span class="math inline">\(\beta_j\)</span> appears earlier than <span class="math inline">\(\beta_{j&#39;}\)</span> in the lasso path. If ties occur, then <code>increasing</code> order applies to those ties.</li>
+<li><code>scad.pathorder</code>: we update <span class="math inline">\(q_j\)</span> prior to <span class="math inline">\(q_{j&#39;}\)</span> when <span class="math inline">\(\beta_j\)</span> appears earlier than <span class="math inline">\(\beta_{j&#39;}\)</span> in the scad path. If ties occur, then <code>increasing</code> order applies to those ties.</li>
+<li><code>lasso.absorder</code>: we update <span class="math inline">\(q_j\)</span> prior to <span class="math inline">\(q_{j&#39;}\)</span> when the lasso solution satisfies <span class="math inline">\(\hat\beta_j \geq \hat\beta_{j&#39;}\)</span>. If ties occur, then <code>increasing</code> order applies to those ties.</li>
+<li><code>univar.absorder</code>: we update <span class="math inline">\(q_j\)</span> prior to <span class="math inline">\(q_{j&#39;}\)</span> when the univariate linear regression solution satisfies <span class="math inline">\(\hat\beta_j \geq \hat\beta_{j&#39;}\)</span>. If ties occur, then <code>increasing</code> order applies to those ties.</li>
+</ol>
+<p><a href="Result12_Initialization.html">MR.ASH initialization</a></p>
+<p>A list of the initializations we consider is as follows.</p>
+<hr />
 <p>Our story is</p>
 <ol style="list-style-type: decimal">
 <li><p>the MR.ASH’s shrinkage operator (from a normal mixture prior) is more flexible than other popular shrinkage operators, which is a parametric form of <span class="math inline">\(\lambda\)</span> (and <span class="math inline">\(\gamma\)</span> if exists).</p></li>
 <li><p>VEB can do better than cross validation.</p></li>
 </ol>
-<div id="performance-of-methods-ridge-case" class="section level4">
-<h4>Performance of methods – Ridge case</h4>
-<p><a href="Result1_Ridge.html">Result 1</a></p>
-</div>
-<div id="flexibility-of-convexnon-convex-shrinkage-operators-e-net-scad-mcp-l0learn-vs-mr.ash-shrinkage-operator." class="section level4">
-<h4>Flexibility of convex/non-convex shrinkage operators (E-NET, SCAD, MCP, L0Learn) vs MR.ASH shrinkage operator.</h4>
-<p><a href="Result2_Nonconvex.html">Result 2</a></p>
-</div>
-</div>
-<div id="mr.ash-vs.all-other-methods." class="section level3">
-<h3>MR.ASH vs. all other methods.</h3>
-<p>This is to reproduce the results in the Experiment section. Throughout the studies, we will fix <span class="math inline">\(n = 500\)</span>.</p>
-<p>The default setting is</p>
-<ol style="list-style-type: decimal">
-<li><p>The number of coefficients <span class="math inline">\(p = 2000\)</span></p></li>
-<li><p>The number of nonzero coefficients <span class="math inline">\(s = 20\)</span> (sparsity)</p></li>
-<li><p>Design: IndepGauss</p></li>
-<li><p>Signal shape for nonzero coefficients: SparseNormal</p></li>
-<li><p>PVE: 0.5</p></li>
-<li><p>Update order: <code>increasing</code> or <code>1:p</code></p></li>
-<li><p>Initialization: <code>null</code> or a vector of zeros.</p></li>
-</ol>
-<p>We will change exactly one of the below and fix the rest.</p>
-<p><span class="math inline">\(p\)</span></p>
-<p>Sparsity</p>
-<p>Design</p>
-<p>PVE</p>
-<p>The results will be provided below.</p>
-</div>
-<div id="p" class="section level3">
-<h3><span class="math inline">\(p\)</span></h3>
-<p>IndepGauss + SparseNormal, <span class="math inline">\(n = 500\)</span>, <span class="math inline">\(p = 50, 500, 5000, 50000\)</span> and <span class="math inline">\(s = 20\)</span>.</p>
-<p><a href="Result4_Highdim.html">Result 4</a></p>
-</div>
-<div id="sparsity" class="section level3">
-<h3>Sparsity</h3>
-<p>IndepGauss + SparseNormal, <span class="math inline">\(n = 500\)</span>, <span class="math inline">\(p = 2000\)</span> and <span class="math inline">\(s = 1,5,20,100,500,2000\)</span>.</p>
-<p><a href="Result5_SparseSignal.html">Result 5</a></p>
-</div>
-<div id="different-pve" class="section level3">
-<h3>Different PVE</h3>
-<p><a href="Result6_PVE.html">Result 6</a></p>
-</div>
-<div id="different-design" class="section level3">
-<h3>Different Design</h3>
-<ol style="list-style-type: decimal">
-<li><p>LowdimIndepGauss</p></li>
-<li><p>RealGenotype</p></li>
-<li><p>Changepoint</p></li>
-</ol>
-<div id="lowdimindepgauss-subogdancandes" class="section level4">
-<h4>LowdimIndepGauss + SuBogdanCandes</h4>
-<p><a href="Result7_LowdimIndepGauss.html">Result 7</a></p>
-</div>
-<div id="realgenotype" class="section level4">
-<h4>RealGenotype</h4>
-<p><a href="Result8_RealGenotype.html">Result 8</a></p>
-</div>
-<div id="changepoint" class="section level4">
-<h4>Changepoint</h4>
-<p>[Result 9]</p>
-</div>
-<div id="when-design-x-is-correlated" class="section level4">
-<h4>When design <span class="math inline">\(X\)</span> is correlated</h4>
-<p><a href="Result10_Correlation.html">Result 10</a></p>
-<hr />
-</div>
-</div>
-</div>
-<div id="results-for-internal-comparison" class="section level2">
-<h2>Results for internal comparison</h2>
-<div id="mr.ash-update-order" class="section level3">
-<h3>MR.ASH update order</h3>
-<p><a href="Result11_UpdateOrder.html">Result 11</a></p>
-</div>
-<div id="mr.ash-initialization" class="section level3">
-<h3>MR.ASH initialization</h3>
-<p><a href="Result12_Initialization.html">Result 12</a></p>
-</div>
 </div>
 
 
