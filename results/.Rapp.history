@@ -1,0 +1,4 @@
+load("/Users/yosikim/git/mr-ash-workflow/results/realgenotype_pve0.5.RDS")
+a = readRDS("/Users/yosikim/git/mr-ash-workflow/results/realgenotype_pve0.5.RDS")
+a
+matrix(a$pred, 20, 11)
