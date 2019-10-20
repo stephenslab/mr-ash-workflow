@@ -17,18 +17,14 @@ sample_beta = function(p, s, s1 = 10, signal = "normal") {
     beta[sample(p,s)] = runif(s)
   } else if (signal == "const") {
     beta[sample(p,s)] = 1
-  } else if (signal == "const1") {
-    ind               = sample(p,s)
-    beta[ind]         = 0.1
-    beta[ind[1:s1]]   = 1
   } else if (signal == "subogdancandes") {
     ind               = sample(p,s)
     beta[ind]         = 0.1
     beta[ind[1:s1]]   = 1
   } else if (signal == "polygenic") {
     ind               = sample(p,s)
-    beta[ind]         = sqrt(p-s)
-    beta[-ind]        = sqrt(s)
+    beta[ind]         = 1
+    beta[ind[1]]      = sqrt(s)
   }
   
   return (beta)
@@ -39,10 +35,11 @@ sample_beta = function(p, s, s1 = 10, signal = "normal") {
 #'
 #' simulate data
 simulate_data = function(n = NULL, p = NULL, s = NULL, seed = 1,
-                         design = "indepgauss",
+                         design = "indepgauss", rho = 0,
                          filepath = NULL,
                          beta = NULL, signal = "normal",
-                         sigma = NULL, pve = 0.5, rho = 0) {
+                         sigma = NULL,
+                         pve = 0.5, snr = NULL) {
   
   # set seed
   set.seed(2010 + seed)
@@ -57,9 +54,8 @@ simulate_data = function(n = NULL, p = NULL, s = NULL, seed = 1,
     data              = readRDS(filepath);
     data              = list(X = scale(data$X))
     n                 = dim(data$X)[1] / 2
-    p                 = dim(data$X)[2]
   } else if (design == "changepoint") {
-    data$X            = list(X = zeros(0, n, n-1))
+    data              = list(X = matrix(0, n, n-1))
     for(j in 1:(n-1)) {
       for(i in (j+1):n) {
         data$X[i,j] = 1
@@ -77,6 +73,15 @@ simulate_data = function(n = NULL, p = NULL, s = NULL, seed = 1,
     X                 = data$X[train.index,]
     X.test            = data$X[test.index,]
   }
+  
+  # check whether X has trivial columns
+  var.X               = c(apply(X, 2, var))
+  ind                 = which(var.X / max(var.X) < 1 / n)
+  if (length(ind) > 0) {
+    X                 = X[,-ind]
+    X.test            = X.test[,-ind]
+  }
+  p                   = dim(X)[2]
   
   # sample beta
   if (is.null(beta)) {
@@ -96,10 +101,18 @@ simulate_data = function(n = NULL, p = NULL, s = NULL, seed = 1,
     }
   }
   
+  if (design == "changepoint") {
+    sigma            = max(abs(beta)) / snr
+  }
+  
   # sample y and y.test
   y                <- X %*% beta + sigma * rnorm(n)
   err.test          = sigma * rnorm(n)
-  y.test           <- X.test %*% beta + err.test
+  if (design == "changepoint") {
+    y.test           <- X.test %*% beta
+  } else {
+    y.test           <- X.test %*% beta + err.test
+  }
   
   return (list(X = X, X.test = X.test, y = y, y.test = y.test,
                sigma = sigma, beta = beta))
