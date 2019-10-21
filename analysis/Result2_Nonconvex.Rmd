@@ -116,7 +116,7 @@ n            = 500
 p            = 2000
 s            = 20
 signal_list  = c("lap","t2","t5","normal","unif","const")
-method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad","mcp","l0learn")
+method_list  = c("enet","lasso","scad","mcp","l0learn")
 method_num   = length(method_list) + 1
 iter_num     = 20
 pred         = matrix(0, iter_num, method_num); colnames(pred) = c("mr.ash", method_list)
@@ -136,12 +136,42 @@ for (i in 1:20) {
   }
  
   fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
-                           sa2 = (2^((0:19) / 5 / sqrt(2)^(iter-1)) - 1)^2)
+                           sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
 }
 }
 tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(c("mr.ash", method_list), each = 20))
+```
+
+```{r code2}
+# cross validation is fairly accurate
+data          = simulate_data(n, p, s = s, seed = 1, signal = signal_list[1], pve = 0.99)
+fit1          = fit.scad(data$X, data$y, data$X.test, data$y.test, seed = i)
+res1          = c(data$y.test) - predict(fit1$fit, X = data$X.test, lambda = fit1$fit$lambda)
+pred1         = sqrt(colMeans(res1^2)) / data$sigma
+
+fit2          = fit.mcp(data$X, data$y, data$X.test, data$y.test, seed = i)
+res2          = c(data$y.test) - predict(fit2$fit, X = data$X.test, lambda = fit2$fit$lambda)
+pred2         = sqrt(colMeans(res2^2)) / data$sigma
+
+fit3          = fit.enet(data$X, data$y, data$X.test, data$y.test, seed = i)
+res3          = c(data$y.test) - predict(fit3$fit, newx = data$X.test, s = fit3$fit$lambda)
+pred3         = sqrt(colMeans(res3^2))/ data$sigma
+
+# compare with mr.ash
+fit0          = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 10) - 1)^2)
+pred0         = fit0$rsse / data$sigma / sqrt(n)
+
+## thus mr.ash is better than the best
+print(c(mr.ash = pred0,
+        scad.best = as.numeric(pred1[which.min(pred1)]),
+        scad.cv = as.numeric(pred1[which.min(fit1$fit$cve)]),
+        mcp.best = as.numeric(pred2[which.min(pred2)]),
+        mcp.cv = as.numeric(pred2[which.min(fit2$fit$cve)]),
+        enet.best = as.numeric(pred3[which.min(pred3)]),
+        enet.cv = as.numeric(pred3[which.min(fit3$fit$cvm)])))
 ```
 
 ## System Configuration
