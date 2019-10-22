@@ -12,7 +12,7 @@
 
 
 
-<title>Result8_RealGenotype</title>
+<title>Result15_Estimation of Sigma</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -381,7 +381,7 @@ div.section {
 
 
 
-<h1 class="title toc-ignore">Result8_RealGenotype</h1>
+<h1 class="title toc-ignore">Result15_Estimation of Sigma</h1>
 
 </div>
 
@@ -520,9 +520,6 @@ Untracked files:
     Untracked:  docs/figure/Result9_Changepoint.Rmd/
     Untracked:  results/estsigma.RDS
 
-Unstaged changes:
-    Modified:   analysis/index.Rmd
-
 </code></pre>
 <p>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
@@ -534,376 +531,171 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
-
 <p>
-These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
+There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
 </p>
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-File
-</th>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-<th>
-Message
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/stephenslab/mr-ash-workflow/blob/3bab6f75fade72e33528e5b78341a97e14501c6f/analysis/Result8_RealGenotype.Rmd" target="_blank">3bab6f7</a>
-</td>
-<td>
-Youngseok Kim
-</td>
-<td>
-2019-10-20
-</td>
-<td>
-update experiments
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/79e1aab344e3ffb3f652b98f947b9f48412d8dbe/docs/Result8_RealGenotype.html" target="_blank">79e1aab</a>
-</td>
-<td>
-Youngseok
-</td>
-<td>
-2019-10-17
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/fd5131c543b0b9ea49293be69dac55aaa4123aeb/docs/Result8_RealGenotype.html" target="_blank">fd5131c</a>
-</td>
-<td>
-Youngseok
-</td>
-<td>
-2019-10-15
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/70efed95d67446c0a9a30d7de9b112b05f1817d5/docs/Result8_RealGenotype.html" target="_blank">70efed9</a>
-</td>
-<td>
-Youngseok
-</td>
-<td>
-2019-10-14
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/bd36a79ef72b36e8db260108451cc55488051029/docs/Result8_RealGenotype.html" target="_blank">bd36a79</a>
-</td>
-<td>
-Youngseok
-</td>
-<td>
-2019-10-14
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/stephenslab/mr-ash-workflow/blob/2368046272288f26a846dc711cc425de227ca2ee/analysis/Result8_RealGenotype.Rmd" target="_blank">2368046</a>
-</td>
-<td>
-Youngseok
-</td>
-<td>
-2019-10-14
-</td>
-<td>
-wflow_publish(&quot;analysis/*.Rmd&quot;)
-</td>
-</tr>
-</tbody>
-</table>
-</div>
 <hr>
 </div>
 </div>
 </div>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>The experiment is based on the following simulation setting.</p>
-<div id="design-setting" class="section level3">
-<h3>Design setting</h3>
-<p>We use 20 real genotype matrices from GTEx consortium (<a href="https://gtexportal.org/home/" class="uri">https://gtexportal.org/home/</a>).</p>
-<p><span class="math inline">\(n = 287\)</span> and <span class="math inline">\(p = 5732, 7659, 6857, 4012, 6356, 8683, 4076, 7178, 4847, 5141, 6535, 7537, 7263, 7011, 7468, 5020, 8760, 5995, 6440, 5456\)</span>. The number of coefficients <span class="math inline">\(p\)</span> varies from 4,012 to 8,760. The average size of <span class="math inline">\(p\)</span> is 6,401.3.</p>
-<p>Also, columns of <span class="math inline">\(X\)</span> are very highly correlated (even some are perfectly correlated).</p>
-</div>
-<div id="signal-setting" class="section level3">
-<h3>Signal setting</h3>
-<p>We sample the i.i.d. normal coefficients <span class="math inline">\(\beta_j \sim N(0,\sigma_\beta^2)\)</span> for <span class="math inline">\(j \in J\)</span> and <span class="math inline">\(\beta_ j = 0\)</span> otherwise, where <span class="math inline">\(J\)</span> is a set of randomly <span class="math inline">\(s\)</span> indices in <span class="math inline">\(\{1,⋯,p\}\)</span>c hosen uniformly at random.</p>
-<p>This signal will be called <code>sparsenormal</code>.</p>
-<p>We fix <span class="math inline">\(s = 20\)</span> throughout this experiment.</p>
-</div>
-<div id="pve" class="section level3">
-<h3>PVE</h3>
-<p>Then we sample <span class="math inline">\(y = X\beta + \epsilon\)</span>, where <span class="math inline">\(\epsilon \sim N(0,\sigma^2 I_n)\)</span>.</p>
-<p>We fix PVE = 0.5, where PVE is the proportion of variance explained, defined by</p>
+<p>This documentation is to analyze the effect of parametrization. Our convention is to write <span class="math inline">\(y\sim g\)</span> if <span class="math inline">\(g\)</span> is a probability density (with respect to a fixed measure). Let</p>
 <p><span class="math display">\[
-{\rm PVE} = \frac{\textrm{Var}(X\beta)}{\textrm{Var}(X\beta) + \sigma^2},
-\]</span> where <span class="math inline">\(\textrm{Var}(a)\)</span> denotes the sample variance of <span class="math inline">\(a\)</span> calculated using R function <code>var</code>. To this end, we set <span class="math inline">\(\sigma^2 = \textrm{Var}(X\beta)\)</span>.</p>
-</div>
-<div id="performance-measure" class="section level3">
-<h3>Performance Measure</h3>
-<p>The above two figures display the prediction error. The prediction error we define here is</p>
-<p><span class="math display">\[
-\textrm{Pred.Err}(\hat\beta;y_{\rm test}, X_{\rm test}) = \frac{\textrm{RMSE}}{\sigma} = \frac{\|y_{\rm test} - X_{\rm test} \hat\beta \|}{\sqrt{n}\sigma}
-\]</span></p>
-<p>where <span class="math inline">\(y_{\rm test}\)</span> and <span class="math inline">\(X_{\rm test}\)</span> are test data sample in the same way. If <span class="math inline">\(\hat\beta\)</span> is fairly accurate, then we expect that <span class="math inline">\(\rm RMSE\)</span> is similar to <span class="math inline">\(\sigma\)</span>. Therefore in average <span class="math inline">\(\textrm{Pred.Err} \geq 1\)</span> and the smaller the better.</p>
-</div>
-</div>
-<div id="methods" class="section level2">
-<h2>Methods</h2>
-<p>In what follows, we briefly describe the comparison methods.</p>
-<div id="l0learn" class="section level3">
-<h3>L0Learn</h3>
-<p><code>L0Learn</code> R package provides a fast coordinate descent algorithm for the best subset regression.</p>
-<p><a href="https://arxiv.org/abs/1803.01454">Fast Best Subset Selection: Coordinate Descent and Local Combinatorial Optimization Algorithms</a></p>
-</div>
-<div id="scad-mcp" class="section level3">
-<h3>SCAD, MCP</h3>
-<p><code>ncvreg</code> R package provides a fast coordinate descent algorithm for the non-convex penalized linear regression method with well-known penalty functions SCAD and MCP.</p>
-<p><a href="http://myweb.uiowa.edu/pbreheny/pdf/Breheny2011.pdf">Coordinate descent algorithms for nonconvex penalized regression, with applications to biological feature selection</a></p>
-</div>
-<div id="packages-libraries" class="section level3">
-<h3>Packages / Libraries</h3>
-<p>A list of packages we have loaded is collapsed. Please click “code” to see the list.</p>
-<pre class="r"><code>library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
-library(glmnet); library(varbvs2); library(ncvreg); library(L0Learn); library(varbvs);
-standardize = FALSE
-filepath = &quot;data&quot;
-filelist = paste(&quot;data/&quot;, list.files(filepath, pattern = &quot;*.RDS&quot;), sep = &quot;&quot;)
-source(&#39;code/method_wrapper.R&#39;)
-source(&#39;code/sim_wrapper.R&#39;)</code></pre>
-</div>
+g(\beta) = \sum_{k=1}^K \pi_k g_k(\beta)
+\]</span> is fixed and independent of <span class="math inline">\(\sigma^2\)</span>. Let’s simply consider the normal case when <span class="math inline">\(g_k = \mathcal{N}(0,\sigma_k^2)\)</span>.</p>
+<ol style="list-style-type: decimal">
+<li><p>Parametrization 1: This is what VARBVS uses. <span class="math display">\[
+y|X,\beta,\sigma^2 \sim \mathcal{N}(X\beta,\sigma^2 I_n),\quad \beta_j | g, \sigma^2 = \sum_{k=1}^K \pi_k \mathcal{N}(0,\sigma^2\sigma_k^2),  \quad q_j(\beta_j) = \sum_{k=1}^K \phi_{jk} \mathcal{N}(m_{jk},s_{jk}^2)
+\]</span> The update of <span class="math inline">\(\beta_j\)</span> is based on <span class="math display">\[
+q_j^* = \arg\min_{q_j} \frac{(X^T X)_{jj}}{2\sigma^2}\mathbb{E}_{q_j} (\beta_j - b_j)^2 + D_{KL}(q_j\|g)
+\]</span> which is a posterior of <span class="math display">\[
+b_j|\beta_j,\sigma^2 \sim \mathcal{N}(\beta_j,\sigma^2 / (X^T X)_{jj}),\quad \beta_j|g \sim \sum_k \pi_k \mathcal{N}(0,\sigma_k^2)
+\]</span> The update of <span class="math inline">\(\sigma^2\)</span> in this case is <span class="math display">\[
+\sigma^2 =
+\frac{\|y - {\bf X}\mu\|^2
+  + \sum_j ({\bf X}^T{\bf X})_{jj} \mathrm{Var}[\beta_j]
+  + \sum_j \sum_{k=2}^K \phi_{jk} (m_{jk}^2 + s_{jk}^2)/\sigma_k^2}
+ {n + \sum_j \sum_{k=2}^K \phi_{jk}} = \frac{\|y - {\bf X}\mu\|^2
+  + \sum_j ({\bf X}^T{\bf X})_{jj} (\sum_{k} \phi_{jk} (m_{jk}^2 + s_{jk}^2) - \mu_j^2)
+  + \sum_j \sum_{k=2}^K \phi_{jk} (m_{jk}^2 + s_{jk}^2)/\sigma_k^2}
+ {n + \sum_j \sum_{k=2}^K \phi_{jk}}.
+\]</span> This is the varbvsmix’s update of <span class="math inline">\(\sigma^2\)</span>. Compared to the update of Parametrization 2 below, it has additional <span class="math inline">\(s_{jk}^2\)</span> terms on the numerator and the <span class="math inline">\(\sum_j \sum_{k=2}^K \phi_{jk}\)</span> term on the denominator.</p></li>
+<li><p>Parametrization 2: <span class="math display">\[
+y|X,\beta,\sigma^2 \sim \mathcal{N}(X\beta,\sigma^2 I_n),\quad \beta_j | g, \sigma^2 = \sum_{k=1}^K \pi_k \mathcal{N}(0,\sigma^2\sigma_k^2), \quad q_j(\beta_j) = \sum_{k=1}^K \phi_{jk} \mathcal{N}(\mu_{jk},\sigma^2s_{jk}^2)
+\]</span> The update of <span class="math inline">\(\beta_j\)</span> is based on <span class="math display">\[
+q_j^* = \arg\min_{q_j} \frac{(X^T X)_{jj}}{2\sigma^2}\mathbb{E}_{q_j} (\beta_j - b_j)^2 + D_{KL}(q_j\|g)
+\]</span> which is a posterior of <span class="math display">\[
+b_j|\beta_j,\sigma^2 \sim \mathcal{N}(\beta_j,\sigma^2 / (X^T X)_{jj}),\quad \beta_j|g \sim \sum_k \pi_k \mathcal{N}(0,\sigma^2\sigma_k^2)
+\]</span> where <span class="math inline">\(b_j = \mathbb{E}_q \beta_j + (X^T X)_{jj}^{-1}(y - X\beta)\)</span>. The update of <span class="math inline">\(\sigma^2\)</span> in this case is <span class="math display">\[
+\sigma^2 =
+\frac{\|y - {\bf X}\mu\|^2
+  + \sum_j ({\bf X}^T{\bf X})_{jj} (\sum_{k} \phi_{jk} m_{jk}^2 - \mu_j^2)
+  + \sum_j \sum_{k=2}^K \phi_{jk} m_{jk}^2/\sigma_k^2}
+ {n}.
+\]</span> This can be reduced to <span class="math display">\[
+\sigma^2 =
+\frac{\|y - {\bf X}\mu\|^2
+  + \sum_j ({\bf X}^T{\bf X})_{jj} (b_j\mu_j - \mu_j^2)}
+ {n}.
+\]</span></p></li>
+<li><p>Parametrization 3: <span class="math display">\[
+y|X,\beta,\sigma^2 \sim \mathcal{N}(\sigma X\beta,\sigma^2 I_n),\quad \beta_j | g = \sum_{k=1}^K \pi_k \mathcal{N}(0,\sigma_k^2), \quad q_j(\beta_j) = \sum_{k=1}^K \phi_{jk} \mathcal{N}(\mu_{jk},s_{jk}^2)
+\]</span> The update of <span class="math inline">\(\beta_j\)</span> is based on <span class="math display">\[
+q_j^* = \arg\min_{q_j} \frac{(X^T X)_{jj}}{2\sigma^2}\mathbb{E}_{q_j} (\beta_j - b_j)^2 + D_{KL}(q_j\|g)
+\]</span> which is a posterior of <span class="math display">\[
+b_j|\beta_j,\sigma^2 \sim \mathcal{N}(\beta_j,1 / (X^T X)_{jj}),\quad \beta_j|g \sim \sum_k \pi_k \mathcal{N}(0,\sigma_k^2)
+\]</span> where <span class="math inline">\(b_j = \mathbb{E}_q \beta_j + (X^T X)_{jj}^{-1}(y / \sigma - X\beta)\)</span>. In this case, the update of <span class="math inline">\(\sigma^2\)</span> is <span class="math display">\[
+\sigma^2 = \arg\min_{\sigma} \frac{n}{2} \log(\sigma^2) + \frac{1}{2\sigma^2}\mathbb{E}_q \|y - \sigma X\beta \|^2 = \arg \min_\sigma \frac{n}{2} \log(\sigma^2) + \frac{1}{2\sigma^2} (y^T y - 2\sigma y^T X \mu) = \arg \min_\sigma A\log(\sigma^2) - \frac{2B}{\sigma} + \frac{C}{\sigma^2}
+\]</span> where <span class="math inline">\(A = n\)</span>, <span class="math inline">\(B = y^T X\mu\)</span> and <span class="math inline">\(C = y^T y\)</span>. Thus <span class="math inline">\(\sigma\)</span> is a solution to <span class="math display">\[
+2A \sigma^2 + 2B \sigma - 2C = 0 \iff \sigma = \frac{-B + \sqrt{B^2 + 4AC}}{2A} = \frac{-(y^T X\mu) + \sqrt{(y^T X\mu)^2 + 4n(y^T y)}}{2n}
+\]</span></p></li>
+</ol>
 </div>
 <div id="results" class="section level2">
 <h2>Results</h2>
-<p>The result is summarized below.</p>
-<pre class="r"><code>res_df       = readRDS(&quot;results/realgenotype.RDS&quot;)
-sdat         = res_df
-method_list  = c(&quot;Mr.ASH&quot;,&quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,
-                 &quot;Mr.ASH.order&quot;, &quot;Mr.ASH.init&quot;)
-sdat$fit     = rep(method_list, each = 20)
-sdat$fit     = factor(sdat$fit, levels =  c(&quot;Mr.ASH&quot;,&quot;Mr.ASH.order&quot;, &quot;Mr.ASH.init&quot;,
-                                            &quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,
-                                            &quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,
-                                            &quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;))
-
-col = c(gg_color_hue(11)[1], &quot;grey1&quot;, &quot;grey51&quot;,gg_color_hue(11)[2:11])
-p1 = my.box(sdat, &quot;fit&quot;, &quot;pred&quot;) + 
-  scale_color_manual(values = col) +
-  scale_fill_manual(values = col) +
-  theme(axis.line    = element_blank(),
-        axis.text.x  = element_text(angle = 45,hjust = 1),
-        legend.position = &quot;none&quot;) +
-  geom_hline(yintercept = median(sdat$pred[sdat$fit == &quot;Mr.ASH&quot;]), col = gg_color_hue(11)[1],
-             linetype = &quot;dotted&quot;, size = 1.5) +
-  scale_y_continuous(trans = &quot;log10&quot;, breaks = c(1,1.1,1.2,1.3,1.4,1.5))
-p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
-fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
-title     = ggdraw() + draw_label(&quot;Prediction Error (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
-subtitle  = ggdraw() + draw_label(&quot;Scenario: RealGenotype + SparseNormal, n = 287, p = 4012-8760, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 18) 
-fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
-fig</code></pre>
-<p><img src="figure/Result8_RealGenotype.Rmd/fig1-1.png" width="1440" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fig1-1">
-Past versions of fig1-1.png
-</button>
-</p>
-<div id="fig-fig1-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/mr-ash-workflow/blob/bd36a79ef72b36e8db260108451cc55488051029/docs/figure/Result8_RealGenotype.Rmd/fig1-1.png" target="_blank">bd36a79</a>
-</td>
-<td>
-Youngseok
-</td>
-<td>
-2019-10-14
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>p2 = my.box(sdat, &quot;fit&quot;, &quot;time&quot;, values = gg_color_hue(11)[c(1,3,7,10,6,9,11,2,4,5,8)]) +
-  theme(axis.line    = element_blank(),
-        axis.text.x  = element_text(angle = 45,hjust = 1),
-        legend.position = &quot;none&quot;) +
-  scale_y_continuous(trans = &quot;log10&quot;)
-fig_main  = plot_grid(p0,p2,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
-title     = ggdraw() + draw_label(&quot;Computation Time (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
-subtitle  = ggdraw() + draw_label(&quot;Scenario: RealGenotype + SparseNormal, n = 287, p = 4012-8760, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 18) 
-fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
-fig</code></pre>
-<p><img src="figure/Result8_RealGenotype.Rmd/fig2-1.png" width="1440" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fig2-1">
-Past versions of fig2-1.png
-</button>
-</p>
-<div id="fig-fig2-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/mr-ash-workflow/blob/bd36a79ef72b36e8db260108451cc55488051029/docs/figure/Result8_RealGenotype.Rmd/fig2-1.png" target="_blank">bd36a79</a>
-</td>
-<td>
-Youngseok
-</td>
-<td>
-2019-10-14
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div id="source-code" class="section level2">
-<h2>Source code</h2>
-<p>The source code will be popped up when you click <code>code</code> on the right side.</p>
-<pre class="r"><code>library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
-library(glmnet); library(mr.ash); library(ncvreg); library(L0Learn); library(varbvs);
+<pre class="r"><code>tdat = readRDS(&quot;results/estsigma.RDS&quot;)
+res = matrix(0,4,3)
+for (i in 1:4) {
+  res[i,] = colMeans(matrix(tdat[[i]]$sigma, 20, 3))
+}
+colnames(res) = c(&quot;original&quot;,&quot;Matthew&quot;,&quot;varbvsmix&quot;)
+rownames(res) = c(&quot;pve = 0.1&quot;,&quot;pve = 0.5&quot;,&quot;pve = 0.9&quot;,&quot;pve = 0.9999&quot;)
+print(&quot;average value of (sigma_est / sigma_true)&quot;)</code></pre>
+<pre><code>[1] &quot;average value of (sigma_est / sigma_true)&quot;</code></pre>
+<pre class="r"><code>res</code></pre>
+<pre><code>             original   Matthew varbvsmix
+pve = 0.1    1.061100 1.0610999  1.061073
+pve = 0.5    1.039929 1.0399285  1.039890
+pve = 0.9    1.003104 1.0030930  1.003073
+pve = 0.9999 1.081021 0.7813146  3.597446</code></pre>
+<pre class="r"><code>res = matrix(0,4,3)
+for (i in 1:4) {
+  res[i,] = colMeans(matrix(tdat[[i]]$rate, 20, 3))
+}
+colnames(res) = c(&quot;original&quot;,&quot;Matthew&quot;,&quot;varbvsmix&quot;)
+rownames(res) = c(&quot;pve = 0.1&quot;,&quot;pve = 0.5&quot;,&quot;pve = 0.9&quot;,&quot;pve = 0.9999&quot;)
+print(&quot;average value of min(sigma_est / sigma_true, sigma_true / sigma_est)&quot;)</code></pre>
+<pre><code>[1] &quot;average value of min(sigma_est / sigma_true, sigma_true / sigma_est)&quot;</code></pre>
+<pre class="r"><code>res</code></pre>
+<pre><code>              original   Matthew varbvsmix
+pve = 0.1    0.9269040 0.9269038 0.9269171
+pve = 0.5    0.9318945 0.9318945 0.9318989
+pve = 0.9    0.9291743 0.9291845 0.9292332
+pve = 0.9999 0.9247187 0.7813146 0.3561272</code></pre>
+<pre class="r"><code>res = matrix(0,4,3)
+for (i in 1:4) {
+  res[i,] = colMeans(matrix(tdat[[i]]$pred, 20, 3))
+}
+colnames(res) = c(&quot;original&quot;,&quot;Matthew&quot;,&quot;varbvsmix&quot;)
+rownames(res) = c(&quot;pve = 0.1&quot;,&quot;pve = 0.5&quot;,&quot;pve = 0.9&quot;,&quot;pve = 0.9999&quot;)
+print(&quot;prediction error (RMSE_test / sigma_true)&quot;)</code></pre>
+<pre><code>[1] &quot;prediction error (RMSE_test / sigma_true)&quot;</code></pre>
+<pre class="r"><code>res</code></pre>
+<pre><code>             original    Matthew varbvsmix
+pve = 0.1    1.040558   1.040652  1.040556
+pve = 0.5    1.059430   1.060562  1.059428
+pve = 0.9    1.035987   1.037942  1.036011
+pve = 0.9999 1.012091 112.557985  1.014590</code></pre>
+<pre class="r"><code>library(Matrix); library(ggplot2); library(cowplot); library(mr.ash); library(varbvs)
 standardize = FALSE
-filepath = &quot;data&quot;
-filelist = paste(&quot;data/&quot;, list.files(filepath, pattern = &quot;*.RDS&quot;), sep = &quot;&quot;)
 source(&#39;code/method_wrapper.R&#39;)
 source(&#39;code/sim_wrapper.R&#39;)
-tdat1        = list()
-method_list  = c(&quot;varbvs&quot;,&quot;bayesb&quot;,&quot;blasso&quot;,&quot;susie&quot;,&quot;enet&quot;,&quot;lasso&quot;,&quot;ridge&quot;,&quot;scad2&quot;,&quot;mcp2&quot;,&quot;l0learn&quot;)
-method_num   = length(method_list) + 3
-iter_num     = 20
-pred         = matrix(0, iter_num, method_num);
-colnames(pred) = c(&quot;mr.ash&quot;, method_list,&quot;mr.ash.order&quot;,&quot;mr.ash.init&quot;)
-time         = matrix(0, iter_num, method_num);
-colnames(time) = c(&quot;mr.ash&quot;, method_list,&quot;mr.ash.order&quot;,&quot;mr.ash.init&quot;)
-n            = 287
+n   = 500
+p   = 2000
+s   = 20
+sa2 = (2^((0:19)/5) - 1)^2
+K   = length(sa2)
+time = matrix(0,20,3)
+sigma = matrix(0,20,3)
+rate = matrix(0,20,3)
+pred = matrix(0,20,3)
+pve_list = c(0.1,0.5,0.9,0.9999)
+tdat = list()
 
+for (iter in 1:4) {
 for (i in 1:20) {
-  data          = simulate_data(s = 20, seed = i, signal = &quot;normal&quot;,
-                                design = &quot;realgenotype&quot;, filepath = filelist[i], pve = 0.5)
+  data          = simulate_data(n, p, s = s, seed = i, signal = &quot;normal&quot;,
+                                design = &quot;indepgauss&quot;, pve = pve_list[iter])
   
-  for (j in 1:length(method_list)) {
-    fit.method    = get(paste(&quot;fit.&quot;,method_list[j],sep = &quot;&quot;))
-    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
-    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
-    time[i,j+1]   = fit$t
-    
-    if (method_list[j] == &quot;lasso&quot;) {
-      lasso.path.order = mr.ash:::path.order(fit$fit$glmnet.fit)
-      lasso.beta       = as.vector(coef(fit$fit))[-1]
-      lasso.time       = c(fit$t, fit$t2)
-    }
-  }
- 
-  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
-                           sa2 = (2^((0:19) / 5) - 1)^2)
-  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
-  time[i,1]   = fit$t
-
-  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
-                            update.order = lasso.path.order,
-                            sa2 = (2^((0:19) / 5) - 1)^2)
-  pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
-  time[i,j+2] = fit$t + lasso.time[2]
+  #sigma.init = var(data$y)
+  sigma.init = data$sigma^2
   
-  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
-                            beta.init = lasso.beta,
-                            sa2 = (2^((0:19) / 5) - 1)^2)
-  pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
-  time[i,j+3] = fit$t + lasso.time[1]
+  t.mr.ash1           = system.time(
+    fit.mr.ash1        &lt;- mr.ash(X = data$X, y = data$y, sa2 = sa2, sigma2 = sigma.init,
+                                max.iter = 2000, min.iter = 1,
+                                standardize = standardize,
+                                tol = list(epstol = 1e-12, convtol = 1e-8)))
   
-  print(c(pred[i,]))
+  t.mr.ash2           = system.time(
+    fit.mr.ash2        &lt;- mr.ash(X = data$X, y = data$y, sa2 = sa2, method = &quot;em2&quot;,
+                                max.iter = 2000, min.iter = 1, sigma2 = sigma.init,
+                                standardize = standardize,
+                                tol = list(epstol = 1e-12, convtol = 1e-8)))
+  
+  t.varbvsmix         = system.time(
+    fit.varbvsmix      &lt;- varbvsmix(X = data$X, Z = NULL, y = data$y, sa = sa2,
+                                    mu = matrix(0, p, K), sigma = sigma.init,
+                                    alpha = matrix(1, p, K) / K, update.sa = FALSE,
+                                    update.sigma = TRUE, verbose = FALSE))
+  
+  pred1 = data$y.test - predict(fit.mr.ash1, data$X.test)
+  pred2 = data$y.test - data$X.test %*% fit.mr.ash2$beta * sqrt(fit.mr.ash2$sigma) - fit.mr.ash2$intercept
+  pred3 = data$y.test - data$X.test %*% c(rowSums(fit.varbvsmix$alpha * fit.varbvsmix$mu)) - fit.varbvsmix$mu.cov
+  
+  pred[i,] &lt;- c(norm(pred1, &#39;2&#39;), norm(pred2, &#39;2&#39;), norm(pred3, &#39;2&#39;)) / sqrt(n) / data$sigma
+  a = fit.mr.ash1$sigma / data$sigma^2
+  b = fit.mr.ash2$sigma / data$sigma^2
+  c = fit.varbvsmix$sigma / data$sigma^2
+  time[i,] = c(t.mr.ash1[3], t.mr.ash2[3], t.varbvsmix[3])
+  rate[i,] = c(&quot;caisa&quot; = min(a,1/a), &quot;new&quot; = min(b, 1/b), &quot;varbvsmix&quot; = min(c, 1/c))
+  sigma[i,] = c(a,b,c)
 }
-tdat1 = data.frame(pred = c(pred), time = c(time),
-                   fit = rep(c(&quot;mr.ash&quot;, method_list,&quot;mr.ash.order&quot;,&quot;mr.ash.init&quot;), each = 20))</code></pre>
-</div>
-<div id="system-configuration" class="section level2">
-<h2>System Configuration</h2>
-<p>Click the below Session Info.</p>
+tdat[[iter]] = data.frame(pred = c(pred), time = c(time), rate = c(rate), sigma = c(sigma),
+                          fit = c(&quot;caisa&quot;,&quot;new&quot;,&quot;varbvsmix&quot;))
+print(colMeans(pred))
+print(colMeans(rate))
+}</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -926,28 +718,12 @@ locale:
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
-other attached packages:
- [1] varbvs_2.5-16 L0Learn_1.2.0 ncvreg_3.11-1 varbvs2_0.1-1 glmnet_2.0-18
- [6] foreach_1.4.7 BGLR_1.0.8    susieR_0.8.0  cowplot_1.0.0 ggplot2_3.2.1
-[11] Matrix_1.2-17
-
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.2          RColorBrewer_1.1-2  plyr_1.8.4         
- [4] compiler_3.5.3      pillar_1.4.2        git2r_0.26.1       
- [7] workflowr_1.4.0     iterators_1.0.12    tools_3.5.3        
-[10] digest_0.6.21       evaluate_0.14       tibble_2.1.3       
-[13] gtable_0.3.0        lattice_0.20-38     pkgconfig_2.0.3    
-[16] rlang_0.4.0         yaml_2.2.0          xfun_0.9           
-[19] withr_2.1.2         stringr_1.4.0       dplyr_0.8.3        
-[22] knitr_1.25          fs_1.3.1            rprojroot_1.3-2    
-[25] grid_3.5.3          tidyselect_0.2.5    glue_1.3.1         
-[28] R6_2.4.0            rmarkdown_1.15      latticeExtra_0.6-28
-[31] reshape2_1.4.3      purrr_0.3.2         magrittr_1.5       
-[34] whisker_0.4         codetools_0.2-16    backports_1.1.4    
-[37] scales_1.0.0        htmltools_0.3.6     assertthat_0.2.1   
-[40] colorspace_1.4-1    nor1mix_1.3-0       stringi_1.4.3      
-[43] lazyeval_0.2.2      munsell_0.5.0       truncnorm_1.0-8    
-[46] crayon_1.3.4       </code></pre>
+ [1] workflowr_1.4.0 Rcpp_1.0.2      digest_0.6.21   rprojroot_1.3-2
+ [5] backports_1.1.4 git2r_0.26.1    magrittr_1.5    evaluate_0.14  
+ [9] stringi_1.4.3   fs_1.3.1        rmarkdown_1.15  tools_3.5.3    
+[13] stringr_1.4.0   glue_1.3.1      xfun_0.9        yaml_2.2.0     
+[17] compiler_3.5.3  htmltools_0.3.6 knitr_1.25     </code></pre>
 </div>
 </div>
 
