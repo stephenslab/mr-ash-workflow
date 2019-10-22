@@ -406,7 +406,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-10-17
+<strong>Last updated:</strong> 2019-10-21
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -497,10 +497,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree2e3a7f5d60c040868fe6f63fadf927e20a98b940targetblank2e3a7f5a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/2e3a7f5d60c040868fe6f63fadf927e20a98b940" target="_blank">2e3a7f5</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree506cf214cf386d7341133d796d8a5ab6825e6455targetblank506cf21a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/506cf214cf386d7341133d796d8a5ab6825e6455" target="_blank">506cf21</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree2e3a7f5d60c040868fe6f63fadf927e20a98b940targetblank2e3a7f5a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree506cf214cf386d7341133d796d8a5ab6825e6455targetblank506cf21a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -509,24 +509,16 @@ Great! You are using Git for version control. Tracking code development and conn
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/ETA_1_lambda.dat
+    Ignored:    analysis/ETA_1_parBayesB.dat
+    Ignored:    analysis/mu.dat
+    Ignored:    analysis/varE.dat
 
 Untracked files:
     Untracked:  .DS_Store
     Untracked:  .Rapp.history
-    Untracked:  docs/figure/Result10_Correlation.Rmd/
-    Untracked:  docs/figure/Result11_UpdateOrder.Rmd/
-    Untracked:  results/diffrho.RDS
-    Untracked:  results/initialization.RDS
-    Untracked:  results/initialization1.RDS
-    Untracked:  results/newupdateorder_rho0.95.RDS
-    Untracked:  results/updateorder_rho0.95.RDS
-
-Unstaged changes:
-    Deleted:    ETA_1_lambda.dat
-    Deleted:    ETA_1_parBayesB.dat
-    Deleted:    diffpve.RDS
-    Deleted:    mu.dat
-    Deleted:    varE.dat
+    Untracked:  docs/figure/Result9_Changepoint.Rmd/
+    Untracked:  results/estsigma.RDS
 
 </code></pre>
 <p>
@@ -565,6 +557,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/79e1aab344e3ffb3f652b98f947b9f48412d8dbe/docs/Result12_Initialization.html" target="_blank">79e1aab</a>
+</td>
+<td>
+Youngseok
+</td>
+<td>
+2019-10-17
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -689,6 +698,43 @@ fig_main  = plot_grid(p1,p2,p3,p4, nrow = 2, rel_widths = c(0.3,0.3,0.3))
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.06,0.06,0.95))
 fig</code></pre>
 <p><img src="figure/Result12_Initialization.Rmd/fig1-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fig1-1">
+Past versions of fig1-1.png
+</button>
+</p>
+<div id="fig-fig1-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/79e1aab344e3ffb3f652b98f947b9f48412d8dbe/docs/figure/Result12_Initialization.Rmd/fig1-1.png" target="_blank">79e1aab</a>
+</td>
+<td>
+Youngseok
+</td>
+<td>
+2019-10-17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div id="source-code" class="section level2">
 <h2>Source Code</h2>

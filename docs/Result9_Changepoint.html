@@ -12,7 +12,7 @@
 
 
 
-<title>Result5_SparseSignal</title>
+<title>Result9_Changepoint</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -381,7 +381,7 @@ div.section {
 
 
 
-<h1 class="title toc-ignore">Result5_SparseSignal</h1>
+<h1 class="title toc-ignore">Result9_Changepoint</h1>
 
 </div>
 
@@ -517,7 +517,6 @@ Ignored files:
 Untracked files:
     Untracked:  .DS_Store
     Untracked:  .Rapp.history
-    Untracked:  docs/figure/Result9_Changepoint.Rmd/
     Untracked:  results/estsigma.RDS
 
 Unstaged changes:
@@ -562,104 +561,19 @@ Message
 <tbody>
 <tr>
 <td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/79e1aab344e3ffb3f652b98f947b9f48412d8dbe/docs/Result5_SparseSignal.html" target="_blank">79e1aab</a>
-</td>
-<td>
-Youngseok
-</td>
-<td>
-2019-10-17
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
 Rmd
 </td>
 <td>
-<a href="https://github.com/stephenslab/mr-ash-workflow/blob/2e3a7f5d60c040868fe6f63fadf927e20a98b940/analysis/Result5_SparseSignal.Rmd" target="_blank">2e3a7f5</a>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/90a92acf1f6ebf9172aec91f2924621e0c0d6855/analysis/Result9_Changepoint.Rmd" target="_blank">90a92ac</a>
 </td>
 <td>
-Youngseok
+Youngseok Kim
 </td>
 <td>
-2019-10-17
+2019-10-20
 </td>
 <td>
-wflow_publish(&quot;analysis/*.Rmd&quot;)
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/fd5131c543b0b9ea49293be69dac55aaa4123aeb/docs/Result5_SparseSignal.html" target="_blank">fd5131c</a>
-</td>
-<td>
-Youngseok
-</td>
-<td>
-2019-10-15
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/70efed95d67446c0a9a30d7de9b112b05f1817d5/docs/Result5_SparseSignal.html" target="_blank">70efed9</a>
-</td>
-<td>
-Youngseok
-</td>
-<td>
-2019-10-14
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/bd36a79ef72b36e8db260108451cc55488051029/docs/Result5_SparseSignal.html" target="_blank">bd36a79</a>
-</td>
-<td>
-Youngseok
-</td>
-<td>
-2019-10-14
-</td>
-<td>
-Build site.
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/stephenslab/mr-ash-workflow/blob/2368046272288f26a846dc711cc425de227ca2ee/analysis/Result5_SparseSignal.Rmd" target="_blank">2368046</a>
-</td>
-<td>
-Youngseok
-</td>
-<td>
-2019-10-14
-</td>
-<td>
-wflow_publish(&quot;analysis/*.Rmd&quot;)
+update
 </td>
 </tr>
 </tbody>
@@ -669,354 +583,198 @@ wflow_publish(&quot;analysis/*.Rmd&quot;)
 </div>
 </div>
 </div>
-<div id="introduction" class="section level2">
-<h2>Introduction</h2>
-<p>This .Rmd file is to plot results for the experiment MR.ASH and the comparison methods listed below.</p>
-<ol style="list-style-type: decimal">
-<li><code>glmnet</code> R package: Ridge, Lasso, E-NET</li>
-<li><code>ncvreg</code> R package: SCAD, MCP</li>
-<li><code>L0Learn</code> R package: L0Learn</li>
-<li><code>BGLR</code> R package: BayesB, Blasso (Bayesian Lasso)</li>
-<li><code>susieR</code> R package: SuSiE (Sum of Single Effect)</li>
-<li><code>varbvs</code> R package: VarBVS (Variational Bayes Variable Selection)</li>
-</ol>
-<p>The experiment is based on the following simulation setting.</p>
-<div id="design-setting" class="section level3">
-<h3>Design setting</h3>
-<p>We sample the standard i.i.d. Gaussian measurement <span class="math inline">\(X_{ij} \sim N(0,1)\)</span> anda construct <span class="math inline">\(X \in \mathbb{R}^p\)</span> with <span class="math inline">\(n = 500\)</span> and <span class="math inline">\(p = 2000\)</span>.</p>
-</div>
-<div id="signal-setting" class="section level3">
-<h3>Signal setting</h3>
-<p>We sample the i.i.d. normal coefficients <span class="math inline">\(\beta_j \sim N(0,\sigma_\beta^2)\)</span> for <span class="math inline">\(j \in J\)</span> and <span class="math inline">\(\beta_ j = 0\)</span> otherwise, where <span class="math inline">\(J\)</span> is a set of randomly <span class="math inline">\(s\)</span> indices in <span class="math inline">\(\{1,⋯,p\}\)</span>c hosen uniformly at random.</p>
-<p>This signal will be called <code>sparsenormal</code>.</p>
-<p>We will vary <span class="math inline">\(s = 1, 5, 20, 100, 500, 2000\)</span> throughout this experiment.</p>
-</div>
-<div id="pve" class="section level3">
-<h3>PVE</h3>
-<p>Then we sample <span class="math inline">\(y = X\beta + \epsilon\)</span>, where <span class="math inline">\(\epsilon \sim N(0,\sigma^2 I_n)\)</span>.</p>
-<p>We fix PVE = 0.5, where PVE is the proportion of variance explained, defined by</p>
-<p><span class="math display">\[
-{\rm PVE} = \frac{\textrm{Var}(X\beta)}{\textrm{Var}(X\beta) + \sigma^2},
-\]</span> where <span class="math inline">\(\textrm{Var}(a)\)</span> denotes the sample variance of <span class="math inline">\(a\)</span> calculated using R function <code>var</code>. To this end, we set <span class="math inline">\(\sigma^2 = \textrm{Var}(X\beta)\)</span>.</p>
-</div>
-<div id="performance-measure" class="section level3">
-<h3>Performance Measure</h3>
-<p>The above two figures display the prediction error. The prediction error we define here is</p>
-<p><span class="math display">\[
-\textrm{Pred.Err}(\hat\beta;y_{\rm test}, X_{\rm test}) = \frac{\textrm{RMSE}}{\sigma} = \frac{\|y_{\rm test} - X_{\rm test} \hat\beta \|}{\sqrt{n}\sigma}
-\]</span> where <span class="math inline">\(y_{\rm test}\)</span> and <span class="math inline">\(X_{\rm test}\)</span> are test data sample in the same way. If <span class="math inline">\(\hat\beta\)</span> is fairly accurate, then we expect that <span class="math inline">\(\rm RMSE\)</span> is similar to <span class="math inline">\(\sigma\)</span>. Therefore in average <span class="math inline">\(\textrm{Pred.Err} \geq 1\)</span> and the smaller the better.</p>
-</div>
-<div id="packages-libraries" class="section level3">
-<h3>Packages / Libraries</h3>
-<p>A list of packages we have loaded is collapsed. Please click “code” to see the list.</p>
-<pre class="r"><code>library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
-library(glmnet); library(varbvs2); library(ncvreg); library(L0Learn); library(varbvs);
-standardize = FALSE
+<pre class="r"><code>library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);</code></pre>
+<pre><code>
+********************************************************</code></pre>
+<pre><code>Note: As of version 1.0.0, cowplot does not change the</code></pre>
+<pre><code>  default ggplot2 theme anymore. To recover the previous</code></pre>
+<pre><code>  behavior, execute:
+  theme_set(theme_cowplot())</code></pre>
+<pre><code>********************************************************</code></pre>
+<pre class="r"><code>library(glmnet); library(mr.ash); library(ncvreg); library(L0Learn); library(varbvs);</code></pre>
+<pre><code>Loading required package: foreach</code></pre>
+<pre><code>Loaded glmnet 2.0-18</code></pre>
+<pre class="r"><code>standardize = FALSE
+filepath = &quot;data&quot;
+filelist = paste(&quot;data/&quot;, list.files(filepath, pattern = &quot;*.RDS&quot;), sep = &quot;&quot;)
 source(&#39;code/method_wrapper.R&#39;)
 source(&#39;code/sim_wrapper.R&#39;)</code></pre>
-</div>
-</div>
-<div id="results" class="section level2">
-<h2>Results</h2>
-<p>The result is summarized below.</p>
-<pre class="r"><code>res_df       = readRDS(&quot;results/sparsesignal_pve0.5.RDS&quot;)
-method_list  = c(&quot;Mr.ASH&quot;,&quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;)
-method_level = c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,
-                 &quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,
-                 &quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;)
-col          = gg_color_hue(11)[c(1,3,7,10,6,9,11,2,4,5,8)]
-s_list       = c(1,5,20,100,500,2000)
-for (i in 1:6) {
-res_df[[i]]$fit   = rep(method_list, each = 20)
-res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels =  c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,
+<pre class="r"><code>res_df       = readRDS(&quot;results/changepoint1.RDS&quot;)
+sdat         = data.frame()
+for (i in 1:10) {
+  sdat = rbind(sdat, res_df[[i]])
+}
+method_list  = c(&quot;Mr.ASH&quot;,&quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,
+                 &quot;Mr.ASH.order&quot;, &quot;Mr.ASH.init&quot;)
+sdat$fit     = rep(method_list, each = 20)
+sdat$fit     = factor(sdat$fit, levels =  c(&quot;Mr.ASH&quot;,&quot;Mr.ASH.order&quot;, &quot;Mr.ASH.init&quot;,
+                                            &quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,
                                             &quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,
                                             &quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;))
-}
-pp = list()
-for (i in 1:6) {
-  d       = res_df[[i]]
-  pp[[i]] = my.box(d, &quot;fit&quot;, &quot;pred&quot;, values = col) +
+col = c(gg_color_hue(11)[1], &quot;grey1&quot;, &quot;grey51&quot;,gg_color_hue(11)[2:11])
+p1 = my.box(sdat, &quot;fit&quot;, &quot;pred&quot;) + 
+  scale_color_manual(values = col) +
+  scale_fill_manual(values = col) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = &quot;none&quot;) +
-  geom_hline(yintercept = median(d$pred[d$fit == &quot;Mr.ASH&quot;]), col = col[1],
+  geom_hline(yintercept = median(sdat$pred[sdat$fit == &quot;Mr.ASH&quot;]), col = gg_color_hue(11)[1],
              linetype = &quot;dotted&quot;, size = 1.5) +
-  scale_y_continuous(trans = &quot;log10&quot;, breaks = c(1,1.2,1.4,1.6,1.8,2.0)) +
-  coord_cartesian(ylim = c(1,1.8))
-  subtitle  = ggdraw() + draw_label(paste(paste(&quot;s = &quot;,s_list[i], sep = &quot;&quot;),&quot;&quot;, sep = &quot;&quot;),
-                                    fontface  = &#39;bold&#39;, size = 18)
-  pp[[i]]   = plot_grid(subtitle, pp[[i]], ncol = 1, rel_heights = c(0.06,0.95))
-}
-fig_main  = plot_grid(pp[[1]],pp[[2]],pp[[3]],pp[[4]],pp[[5]],pp[[6]], nrow = 3, rel_widths = c(0.3,0.3,0.3,0.3))
-title     = ggdraw() + draw_label(&quot;Prediction Error (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
-subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + SparseNormal, n = 500, p = 2000, pve = 0.5&quot;, fontface = &#39;bold&#39;, size = 18)
-fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.06,0.95))
-fig</code></pre>
-<p><img src="figure/Result5_SparseSignal.Rmd/fig1-1.png" width="1440" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fig1-1">
-Past versions of fig1-1.png
-</button>
-</p>
-<div id="fig-fig1-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/mr-ash-workflow/blob/bd36a79ef72b36e8db260108451cc55488051029/docs/figure/Result5_SparseSignal.Rmd/fig1-1.png" target="_blank">bd36a79</a>
-</td>
-<td>
-Youngseok
-</td>
-<td>
-2019-10-14
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>sdat         = data.frame()
-s_list       = c(1,5,20,100,500,2000)
-col          = gg_color_hue(11)
-shape        = c(19,17,24,25,9,3,11,4,5,7,8)
-for (i in 1:6) {
-  sdat = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred, 20, 11)),
-                                time = colMeans(matrix(res_df[[i]]$time, 20, 11)),
-                                fit  = method_list,
-                                s    = s_list[i]))
-}
-sdat$fit = factor(sdat$fit, levels = method_level)
-
-p1 = ggplot(sdat) + geom_line(aes(x = s, y = pred, color = fit)) +
-  geom_point(aes(x = s, y = pred, color = fit, shape = fit), size = 2.5) +
-  scale_x_continuous(breaks = s_list, trans = &quot;log10&quot;) +
-  theme_cowplot(font_size = 14) +
-  labs(y = &quot;predictior error (rmse / sigma)&quot;, x = &quot;number of coefficients (p)&quot;) +
-  theme(axis.line = element_blank(),
-        plot.title = element_text(hjust = 0.5)) +
-  scale_color_manual(values = col) +
-  scale_shape_manual(values = shape) +
   scale_y_continuous(trans = &quot;log10&quot;) +
-  coord_cartesian(ylim = c(1,1.5))
-title     = ggdraw() + draw_label(&quot;Prediction Error (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
-subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + SparseNormal, n = 500, p = 2000, s = 1,5,20,100,500,2000, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 18) 
-p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
+  coord_cartesian(ylim = c(0.1, 1))</code></pre>
+<pre><code>Scale for &#39;fill&#39; is already present. Adding another scale for &#39;fill&#39;,
+which will replace the existing scale.</code></pre>
+<pre class="r"><code>p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
 fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
+title     = ggdraw() + draw_label(&quot;Prediction Error (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
+subtitle  = ggdraw() + draw_label(&quot;Scenario: RealGenotype + SparseNormal, n = 287, p = 4012-8760, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 18) 
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
 fig</code></pre>
-<p><img src="figure/Result5_SparseSignal.Rmd/fig2-1.png" width="1440" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fig2-1">
-Past versions of fig2-1.png
-</button>
-</p>
-<div id="fig-fig2-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/mr-ash-workflow/blob/79e1aab344e3ffb3f652b98f947b9f48412d8dbe/docs/figure/Result5_SparseSignal.Rmd/fig2-1.png" target="_blank">79e1aab</a>
-</td>
-<td>
-Youngseok
-</td>
-<td>
-2019-10-17
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>sdat         = data.frame()
-s_list       = c(1,5,20,100,500,2000)
-col          = gg_color_hue(11)
-shape        = c(19,17,24,25,9,3,11,4,5,7,8)
-for (i in 1:6) {
-  sdat = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred, 20, 11)),
-                                time = colMeans(matrix(res_df[[i]]$time, 20, 11)),
-                                fit  = method_list,
-                                s    = s_list[i]))
+<p><img src="figure/Result9_Changepoint.Rmd/fig1-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>res_df       = readRDS(&quot;results/changepoint4.RDS&quot;)
+sdat         = data.frame()
+for (i in 1:10) {
+  sdat = rbind(sdat, res_df[[i]])
 }
-sdat$fit = factor(sdat$fit, levels = method_level)
-
-p2 = ggplot(sdat) + geom_line(aes(x = s, y = time, color = fit)) +
-  geom_point(aes(x = s, y = time, color = fit, shape = fit), size = 2.5) +
-  scale_x_continuous(breaks = s_list, trans = &quot;log10&quot;) +
-  theme_cowplot(font_size = 14) +
-  labs(y = &quot;predictior error (rmse / sigma)&quot;, x = &quot;number of coefficients (p)&quot;) +
-  theme(axis.line = element_blank(),
-        plot.title = element_text(hjust = 0.5)) +
+method_list  = c(&quot;Mr.ASH&quot;,&quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,
+                 &quot;Mr.ASH.order&quot;, &quot;Mr.ASH.init&quot;)
+sdat$fit     = rep(method_list, each = 20)
+sdat$fit     = factor(sdat$fit, levels =  c(&quot;Mr.ASH&quot;,&quot;Mr.ASH.order&quot;, &quot;Mr.ASH.init&quot;,
+                                            &quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,
+                                            &quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,
+                                            &quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;))
+col = c(gg_color_hue(11)[1], &quot;grey1&quot;, &quot;grey51&quot;,gg_color_hue(11)[2:11])
+p1 = my.box(sdat, &quot;fit&quot;, &quot;pred&quot;) + 
   scale_color_manual(values = col) +
-  scale_shape_manual(values = shape) +
-  scale_y_continuous(trans = &quot;log10&quot;)
-title     = ggdraw() + draw_label(&quot;Computation Time (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
-subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + SparseNormal, n = 500, p = 2000, s = 1,5,20,100,500,2000, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 18) 
-p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
-fig_main  = plot_grid(p0,p2,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
-fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
-fig</code></pre>
-<p><img src="figure/Result5_SparseSignal.Rmd/fig3-1.png" width="1440" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fig3-1">
-Past versions of fig3-1.png
-</button>
-</p>
-<div id="fig-fig3-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/mr-ash-workflow/blob/79e1aab344e3ffb3f652b98f947b9f48412d8dbe/docs/figure/Result5_SparseSignal.Rmd/fig3-1.png" target="_blank">79e1aab</a>
-</td>
-<td>
-Youngseok
-</td>
-<td>
-2019-10-17
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-<pre class="r"><code>sdat         = data.frame()
-s_list       = c(1,5,20,100,500,2000)
-col          = gg_color_hue(11)
-shape        = c(19,17,24,25,9,3,11,4,5,7,8)
-for (i in 1:6) {
-  sdat = rbind(sdat, data.frame(time = c(res_df[[i]]$time),
-                                fit  = rep(method_list,each = 20)))
-}
-sdat$fit = factor(sdat$fit, levels = method_level)
-
-p3 = my.box(sdat, &quot;fit&quot;, &quot;time&quot;, values = col) +
+  scale_fill_manual(values = col) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = &quot;none&quot;) +
-  scale_y_continuous(trans = &quot;log10&quot;)
-  subtitle  = ggdraw() + draw_label(paste(paste(&quot;s = &quot;,s_list[i], sep = &quot;&quot;),&quot;&quot;, sep = &quot;&quot;),
-                                    fontface  = &#39;bold&#39;, size = 18)
-title     = ggdraw() + draw_label(&quot;Computation Time (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
-subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + SparseNormal, n = 500, p = 2000, s = 1,5,20,100,500,2000, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 18) 
-p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
-fig_main  = plot_grid(p0,p3,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
+  geom_hline(yintercept = median(sdat$pred[sdat$fit == &quot;Mr.ASH&quot;]), col = gg_color_hue(11)[1],
+             linetype = &quot;dotted&quot;, size = 1.5) +
+  scale_y_continuous(trans = &quot;log10&quot;)</code></pre>
+<pre><code>Scale for &#39;fill&#39; is already present. Adding another scale for &#39;fill&#39;,
+which will replace the existing scale.</code></pre>
+<pre class="r"><code>p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
+fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
+title     = ggdraw() + draw_label(&quot;Prediction Error (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
+subtitle  = ggdraw() + draw_label(&quot;Scenario: RealGenotype + SparseNormal, n = 287, p = 4012-8760, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 18) 
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
 fig</code></pre>
-<p><img src="figure/Result5_SparseSignal.Rmd/fig4-1.png" width="1440" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fig4-1">
-Past versions of fig4-1.png
-</button>
-</p>
-<div id="fig-fig4-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/mr-ash-workflow/blob/79e1aab344e3ffb3f652b98f947b9f48412d8dbe/docs/figure/Result5_SparseSignal.Rmd/fig4-1.png" target="_blank">79e1aab</a>
-</td>
-<td>
-Youngseok
-</td>
-<td>
-2019-10-17
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div id="source-code" class="section level2">
-<h2>Source code</h2>
-<p>The source code will be popped up when you click <code>code</code> on the right side.</p>
-<pre class="r"><code>tdat1        = list()
-n            = 500
-p            = 2000
-s_range      = c(1,5,20,100,500,2000)
-method_list  = c(&quot;varbvs&quot;,&quot;bayesb&quot;,&quot;blasso&quot;,&quot;susie&quot;,&quot;enet&quot;,&quot;lasso&quot;,&quot;ridge&quot;,&quot;scad&quot;,&quot;mcp&quot;,&quot;l0learn&quot;)
-method_num   = length(method_list) + 1
+<p><img src="figure/Result9_Changepoint.Rmd/fig2-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(mr.ash); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
+filepath = &quot;data&quot;
+filelist = paste(&quot;data/&quot;, list.files(filepath, pattern = &quot;*.RDS&quot;), sep = &quot;&quot;)
+source(&#39;code/method_wrapper.R&#39;)
+source(&#39;code/sim_wrapper.R&#39;)
+tdat1        = list()
+method_list  = c(&quot;varbvs&quot;,&quot;bayesb&quot;,&quot;blasso&quot;,&quot;susie&quot;,&quot;enet&quot;,&quot;lasso&quot;,&quot;ridge&quot;,&quot;scad2&quot;,&quot;mcp2&quot;,&quot;l0learn&quot;)
+method_num   = length(method_list) + 3
 iter_num     = 20
-pred         = matrix(0, iter_num, method_num); colnames(pred) = c(&quot;mr.ash&quot;, method_list)
-time         = matrix(0, iter_num, method_num); colnames(time) = c(&quot;mr.ash&quot;, method_list)
+pred         = matrix(0, iter_num, method_num);
+colnames(pred) = c(&quot;mr.ash&quot;, method_list,&quot;mr.ash.order&quot;,&quot;mr.ash.init&quot;)
+time         = matrix(0, iter_num, method_num);
+colnames(time) = c(&quot;mr.ash&quot;, method_list,&quot;mr.ash.order&quot;,&quot;mr.ash.init&quot;)
+n            = 100 # must be even
+p            = n-1
 
-
-for (iter in 1:6) {
-s               = s_range[iter]
+for (iter in 1:10) {
 for (i in 1:20) {
-  data          = simulate_data(n, p, s = s, seed = i, signal = &quot;normal&quot;, pve = 0.5)
- 
+  beta          = double(p)
+  beta[n/2 - iter] = 1
+  beta[n/2 + iter] = -1
+  data          = simulate_data(n = n, seed = i, beta = beta,
+                                design = &quot;changepoint&quot;, filepath = filelist[i], snr = 10)
+  
   for (j in 1:length(method_list)) {
     fit.method    = get(paste(&quot;fit.&quot;,method_list[j],sep = &quot;&quot;))
     fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
     pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
     time[i,j+1]   = fit$t
+    
+    if (method_list[j] == &quot;lasso&quot;) {
+      lasso.path.order = mr.ash:::path.order(fit$fit$glmnet.fit)
+      lasso.beta       = as.vector(coef(fit$fit))[-1]
+      lasso.time       = c(fit$t, fit$t2)
+    }
   }
  
   fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
-                           sa2 = (2^((0:19) / 5 / sqrt(2)^(iter-1)) - 1)^2)
+                           sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
+
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            update.order = lasso.path.order,
+                            sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+2] = fit$t + lasso.time[2]
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta,
+                            sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+3] = fit$t + lasso.time[1]
+  
+  print(c(pred[i,]))
 }
-tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(c(&quot;mr.ash&quot;, method_list), each = 20))
+tdat1[[iter]] = data.frame(pred = c(pred), time = c(time),
+                           fit = rep(c(&quot;mr.ash&quot;, method_list,&quot;mr.ash.order&quot;,&quot;mr.ash.init&quot;), each = 20))
+}</code></pre>
+<pre class="r"><code>tdat2        = list()
+method_list  = c(&quot;varbvs&quot;,&quot;bayesb&quot;,&quot;blasso&quot;,&quot;susie&quot;,&quot;enet&quot;,&quot;lasso&quot;,&quot;ridge&quot;,&quot;scad2&quot;,&quot;mcp2&quot;,&quot;l0learn&quot;)
+method_num   = length(method_list) + 3
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num);
+colnames(pred) = c(&quot;mr.ash&quot;, method_list,&quot;mr.ash.order&quot;,&quot;mr.ash.init&quot;)
+time         = matrix(0, iter_num, method_num);
+colnames(time) = c(&quot;mr.ash&quot;, method_list,&quot;mr.ash.order&quot;,&quot;mr.ash.init&quot;)
+
+for (iter in 1:1) {
+n            = 1000 # must be even
+p            = n-1
+for (i in 1:20) {
+  beta          = double(p)
+  beta[n/2]     = 1
+  data          = simulate_data(n = n, seed = i, beta = beta,
+                                design = &quot;changepoint&quot;, filepath = filelist[i], snr = 1)
+  
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste(&quot;fit.&quot;,method_list[j],sep = &quot;&quot;))
+    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
+    
+    if (method_list[j] == &quot;lasso&quot;) {
+      lasso.path.order = mr.ash:::path.order(fit$fit$glmnet.fit)
+      lasso.beta       = as.vector(coef(fit$fit))[-1]
+      lasso.time       = c(fit$t, fit$t2)
+    }
+  }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            update.order = lasso.path.order,
+                            sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+2] = fit$t + lasso.time[2]
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta,
+                            sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+3] = fit$t + lasso.time[1]
+  
+  print(c(pred[i,]))
+}
+tdat2[[iter]] = data.frame(pred = c(pred), time = c(time),
+                           fit = rep(c(&quot;mr.ash&quot;, method_list,&quot;mr.ash.order&quot;,&quot;mr.ash.init&quot;), each = 20))
 }</code></pre>
 <br>
 <p>
@@ -1041,7 +799,7 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] varbvs_2.5-16 L0Learn_1.2.0 ncvreg_3.11-1 varbvs2_0.1-1 glmnet_2.0-18
+ [1] varbvs_2.5-16 L0Learn_1.2.0 ncvreg_3.11-1 mr.ash_0.1-2  glmnet_2.0-18
  [6] foreach_1.4.7 BGLR_1.0.8    susieR_0.8.0  cowplot_1.0.0 ggplot2_3.2.1
 [11] Matrix_1.2-17
 
@@ -1062,7 +820,6 @@ loaded via a namespace (and not attached):
 [40] colorspace_1.4-1    nor1mix_1.3-0       stringi_1.4.3      
 [43] lazyeval_0.2.2      munsell_0.5.0       truncnorm_1.0-8    
 [46] crayon_1.3.4       </code></pre>
-</div>
 </div>
 
 

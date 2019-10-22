@@ -7,6 +7,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -83,7 +84,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -244,18 +244,6 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
@@ -336,7 +324,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-10-19
+<strong>Last updated:</strong> 2019-10-21
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 1 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
@@ -346,7 +334,7 @@ div.section {
 </p>
 <p>
 This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
-  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.3.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.4.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
 </p>
 <hr>
 </div>
@@ -367,39 +355,31 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree92022aff735b275529bceda4e6e3fceda96cf507targetblank92022afa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/92022aff735b275529bceda4e6e3fceda96cf507" target="_blank">92022af</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree506cf214cf386d7341133d796d8a5ab6825e6455targetblank506cf21a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/506cf214cf386d7341133d796d8a5ab6825e6455" target="_blank">506cf21</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree92022aff735b275529bceda4e6e3fceda96cf507targetblank92022afa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree506cf214cf386d7341133d796d8a5ab6825e6455targetblank506cf21a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 </p>
 <pre><code>
 Ignored files:
+    Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    analysis/ETA_1_lambda.dat
+    Ignored:    analysis/ETA_1_parBayesB.dat
+    Ignored:    analysis/mu.dat
+    Ignored:    analysis/varE.dat
 
 Untracked files:
     Untracked:  .DS_Store
-    Untracked:  ETA_1_lambda.dat
-    Untracked:  ETA_1_parBayesB.dat
-    Untracked:  data/.DS_Store
-    Untracked:  data/.Rapp.history
-    Untracked:  mu.dat
-    Untracked:  results/.Rapp.history
-    Untracked:  results/changepoint1.RDS
-    Untracked:  results/changepoint2.RDS
-    Untracked:  results/realgenotype.RDS
-    Untracked:  varE.dat
+    Untracked:  .Rapp.history
+    Untracked:  docs/figure/Result9_Changepoint.Rmd/
+    Untracked:  results/estsigma.RDS
 
 Unstaged changes:
-    Modified:   analysis/Result6_PVE.Rmd
-    Modified:   analysis/Result8_RealGenotype.Rmd
     Modified:   analysis/index.Rmd
-    Modified:   code/method_wrapper.R
-    Modified:   code/sim_wrapper.R
-    Modified:   data/Thyroid.ENSG00000000971.RDS
-    Modified:   data/Thyroid.ENSG00000031823.RDS
 
 </code></pre>
 <p>
@@ -438,6 +418,57 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/585044e0c328e66cf49640c9b27dfe54fa5b0a7e/analysis/index.Rmd" target="_blank">585044e</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-21
+</td>
+<td>
+update
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/3bab6f75fade72e33528e5b78341a97e14501c6f/analysis/index.Rmd" target="_blank">3bab6f7</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-20
+</td>
+<td>
+update experiments
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/3bab6f75fade72e33528e5b78341a97e14501c6f/docs/index.html" target="_blank">3bab6f7</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-20
+</td>
+<td>
+update experiments
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -763,23 +794,6 @@ Build site.
 </tr>
 <tr>
 <td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/stephenslab/mr-ash-workflow/blob/6167c5adc673d511f8922631d1052abb6086c576/analysis/index.Rmd" target="_blank">6167c5a</a>
-</td>
-<td>
-Youngseok
-</td>
-<td>
-2019-10-14
-</td>
-<td>
-wflow_publish(&quot;analysis/*.Rmd&quot;)
-</td>
-</tr>
-<tr>
-<td>
 html
 </td>
 <td>
@@ -789,7 +803,7 @@ html
 Youngseok
 </td>
 <td>
-2019-10-13
+2019-10-14
 </td>
 <td>
 Build site.
@@ -806,7 +820,7 @@ Rmd
 Youngseok
 </td>
 <td>
-2019-10-13
+2019-10-14
 </td>
 <td>
 wflow_publish(“analysis/Index.Rmd”)
@@ -823,7 +837,7 @@ html
 Youngseok
 </td>
 <td>
-2019-10-13
+2019-10-14
 </td>
 <td>
 Build site.
@@ -840,7 +854,7 @@ Rmd
 Youngseok
 </td>
 <td>
-2019-10-13
+2019-10-14
 </td>
 <td>
 wflow_publish(&quot;analysis/*.Rmd&quot;)
@@ -857,7 +871,7 @@ Rmd
 Youngseok
 </td>
 <td>
-2019-10-07
+2019-10-08
 </td>
 <td>
 Start workflowr project.
@@ -925,7 +939,7 @@ Start workflowr project.
 <li><a href="Result2_Nonconvex.html">Nonconvex case</a>.</li>
 </ol>
 <p>This experiment is to compare the flexibility of convex/non-convex shrinkage operators (E-NET, SCAD, MCP, L0Learn) vs MR.ASH shrinkage operator. The default setting applies to all but the signal shape and PVE = 0.99.</p>
-<p>The reason why we set PVE = 0.99</p>
+<p>The reason why we set PVE = 0.99, the cross-validated solution of the method (E-NET, SCAD or MCP) acheives a nearly minimum prediction error on the solution path, i.e. the cross-validated solution is nearly the best the method can achieve. Thus we conclude that the cross-validation is fairly accurate.</p>
 </div>
 <div id="important-parameters-for-high-dimensional-regression-settings" class="section level3">
 <h3>Important parameters for high-dimensional regression settings</h3>
@@ -960,6 +974,8 @@ Start workflowr project.
 </ol>
 <p><a href="Result12_Initialization.html">MR.ASH initialization</a></p>
 <p>A list of the initializations we consider is as follows.</p>
+<p><a href="Result15_EstimationOfSigma.html">Parametrization</a></p>
+<p>An analysis for the update rule of <span class="math inline">\(\sigma^2\)</span>, based on different parametrizations of the model.</p>
 <hr />
 <p>Our story is</p>
 <ol style="list-style-type: decimal">
@@ -997,6 +1013,23 @@ $(document).ready(function () {
 
 
 </script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
