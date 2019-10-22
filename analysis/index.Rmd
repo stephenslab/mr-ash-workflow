@@ -89,7 +89,7 @@ The reason why we set PVE = 0.99, the cross-validated solution of the method (E-
 
 (7) [RealGenotype](Result8_RealGenotype.html)
 
-(8) [Changepoint]
+(8) [Changepoint](Results9_Changepoint.html)
 
 (9) [EquicorrGauss](Result10_Correlation.html)
 

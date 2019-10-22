@@ -58,7 +58,8 @@ fit.lasso = function(X, y, X.test, y.test, seed = 1) {
   t.lasso2          = system.time(glmnet(x = X, y = y, standardize = standardize))
   
   return (list(fit = fit.lasso, t = t.lasso[3], t2 = t.lasso2[3],
-               rsse = norm(y.test - predict(fit.lasso, newx = X.test, s = fit.lasso$lambda.1se), '2')))
+               rsse = norm(y.test - predict(fit.lasso, newx = X.test, s = fit.lasso$lambda.1se), '2'),
+               rsse2 = norm(y.test - predict(fit.lasso, newx = X.test, s = fit.lasso$lambda.min), '2')))
 }
 
 
@@ -76,7 +77,8 @@ fit.ridge = function(X, y, X.test, y.test, seed = 1) {
     fit.ridge        <- cv.glmnet(x = X, y = y, alpha = 0, standardize = standardize))
   
   return (list(fit = fit.ridge, t = t.ridge[3],
-               rsse = norm(y.test - predict(fit.ridge, newx = X.test, s = fit.ridge$lambda.1se), '2')))
+               rsse = norm(y.test - predict(fit.ridge, newx = X.test, s = fit.ridge$lambda.1se), '2'),
+               rsse2 = norm(y.test - predict(fit.ridge, newx = X.test, s = fit.ridge$lambda.min), '2')))
 }
 
 fit.ridge.opt = function(X, y, X.test, y.test, sigma, seed = 1) {
@@ -106,6 +108,7 @@ fit.enet = function(X, y, X.test, y.test, seed = 1, all = FALSE) {
   # store CV error
   cv.err            = double(11)
   rsse              = double(11)
+  rsse2             = double(11)
   time              = double(11)
   fit.enet          = list()
   
@@ -118,6 +121,8 @@ fit.enet = function(X, y, X.test, y.test, seed = 1, all = FALSE) {
     cv.err[j+1]     = fit.enet[[j+1]]$cvm[lambda.ind]
     rsse[j+1]       = norm(y.test - predict(fit.enet[[j+1]], newx = X.test,
                                             s = fit.enet[[j+1]]$lambda.1se), '2')
+    rsse2[j+1]      = norm(y.test - predict(fit.enet[[j+1]], newx = X.test,
+                                            s = fit.enet[[j+1]]$lambda.min), '2')
     time[j+1]       = as.numeric(t.enet[3])
   }
   
@@ -129,6 +134,7 @@ fit.enet = function(X, y, X.test, y.test, seed = 1, all = FALSE) {
   
   return (list(fit = fit.enet[[alpha.ind]], t = sum(time),
                rsse = rsse[alpha.ind],
+               rsse2 = rsse2[alpha.ind],
                alpha = (alpha.ind - 1) * 0.1))
 }
 
