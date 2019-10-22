@@ -112,6 +112,10 @@ A list of the update orders we consider is as follows.
 
 A list of the initializations we consider is as follows.
 
+[Parametrization](Result15_EstimationOfSigma.html)
+
+An analysis for the update rule of $\sigma^2$, based on different parametrizations of the model.
+
 ---------------------
 
 Our story is 
