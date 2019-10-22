@@ -84,8 +84,8 @@ source('code/sim_wrapper.R')
 
 The result is summarized below. 
 
-```{r fig1, fig.height=7, fig.width=15}
-res_df       = readRDS("../results/realgenotype.RDS")
+```{r fig1, fig.height=7, fig.width=15, warning = FALSE, message = FALSE}
+res_df       = readRDS("results/realgenotype.RDS")
 sdat         = res_df
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
                  "Mr.ASH.order", "Mr.ASH.init")
@@ -185,68 +185,6 @@ for (i in 1:20) {
   print(c(pred[i,]))
 }
 tdat1 = data.frame(pred = c(pred), time = c(time),
-                   fit = rep(c("mr.ash", method_list,"mr.ash.order","mr.ash.init"), each = 20))
-```
-
-```{r}
-setwd("..")
-library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
-library(glmnet); library(varbvs2); library(ncvreg); library(L0Learn); library(varbvs);
-library(mr.ash)
-standardize = FALSE
-filepath = "data"
-filelist = paste("data/", list.files(filepath, pattern = "*.RDS"), sep = "")
-source('code/method_wrapper.R')
-source('code/sim_wrapper.R')
-tdat2        = list()
-method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad","mcp","l0learn")
-method_num   = length(method_list) + 3
-iter_num     = 20
-pred         = matrix(0, iter_num, method_num);
-colnames(pred) = c("mr.ash", method_list,"mr.ash.order","mr.ash.init")
-time         = matrix(0, iter_num, method_num);
-colnames(time) = c("mr.ash", method_list,"mr.ash.order","mr.ash.init")
-n            = 287
-
-for (i in 1:20) {
-  data          = simulate_data(s = 100, seed = i, signal = "polygenic",
-                                design = "realgenotype", filepath = filelist[i], pve = 0.5)
-  
-  for (j in 1:length(method_list)) {
-    fit.method    = get(paste("fit.",method_list[j],sep = ""))
-    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
-    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
-    time[i,j+1]   = fit$t
-    
-    if (method_list[j] == "lasso") {
-      lasso.path.order = mr.ash:::path.order(fit$fit$glmnet.fit)
-      lasso.beta       = as.vector(coef(fit$fit))[-1]
-      lasso.time       = c(fit$t, fit$t2)
-    }
-  }
- 
-  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
-                           sa2 = (2^((0:19) / 10) - 1)^2)
-  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
-  time[i,1]   = fit$t
-  
-  print(c(fit$fit$pi), digits = 3)
-
-  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
-                            update.order = lasso.path.order,
-                            sa2 = (2^((0:19) / 10) - 1)^2)
-  pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
-  time[i,j+2] = fit$t + lasso.time[2]
-  
-  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
-                            beta.init = lasso.beta,
-                            sa2 = (2^((0:19) / 10) - 1)^2)
-  pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
-  time[i,j+3] = fit$t + lasso.time[1]
-  
-  print(c(pred[i,]), digits = 3)
-}
-tdat2 = data.frame(pred = c(pred), time = c(time),
                    fit = rep(c("mr.ash", method_list,"mr.ash.order","mr.ash.init"), each = 20))
 ```
 

@@ -9,7 +9,80 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r code, message = FALSE, warning = FALSE, eval= FALSE}
+```{r library}
+library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(mr.ash); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
+filepath = "data"
+filelist = paste("data/", list.files(filepath, pattern = "*.RDS"), sep = "")
+source('code/method_wrapper.R')
+source('code/sim_wrapper.R')
+```
+
+```{r fig1, fig.height=7, fig.width=15}
+res_df       = readRDS("results/changepoint1.RDS")
+sdat         = data.frame()
+for (i in 1:10) {
+  sdat = rbind(sdat, res_df[[i]])
+}
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "Mr.ASH.order", "Mr.ASH.init")
+sdat$fit     = rep(method_list, each = 20)
+sdat$fit     = factor(sdat$fit, levels =  c("Mr.ASH","Mr.ASH.order", "Mr.ASH.init",
+                                            "E-NET","Lasso","Ridge",
+                                            "SCAD","MCP","L0Learn",
+                                            "VarBVS","BayesB","Blasso","SuSiE"))
+col = c(gg_color_hue(11)[1], "grey1", "grey51",gg_color_hue(11)[2:11])
+p1 = my.box(sdat, "fit", "pred") + 
+  scale_color_manual(values = col) +
+  scale_fill_manual(values = col) +
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = "none") +
+  geom_hline(yintercept = median(sdat$pred[sdat$fit == "Mr.ASH"]), col = gg_color_hue(11)[1],
+             linetype = "dotted", size = 1.5) +
+  scale_y_continuous(trans = "log10") +
+  coord_cartesian(ylim = c(0.1, 1))
+p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
+fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
+title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: RealGenotype + SparseNormal, n = 287, p = 4012-8760, pve = 0.5", fontface  = 'bold', size = 18) 
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
+fig
+```
+
+```{r fig2, fig.height=7, fig.width=15}
+res_df       = readRDS("results/changepoint4.RDS")
+sdat         = data.frame()
+for (i in 1:10) {
+  sdat = rbind(sdat, res_df[[i]])
+}
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "Mr.ASH.order", "Mr.ASH.init")
+sdat$fit     = rep(method_list, each = 20)
+sdat$fit     = factor(sdat$fit, levels =  c("Mr.ASH","Mr.ASH.order", "Mr.ASH.init",
+                                            "E-NET","Lasso","Ridge",
+                                            "SCAD","MCP","L0Learn",
+                                            "VarBVS","BayesB","Blasso","SuSiE"))
+col = c(gg_color_hue(11)[1], "grey1", "grey51",gg_color_hue(11)[2:11])
+p1 = my.box(sdat, "fit", "pred") + 
+  scale_color_manual(values = col) +
+  scale_fill_manual(values = col) +
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = "none") +
+  geom_hline(yintercept = median(sdat$pred[sdat$fit == "Mr.ASH"]), col = gg_color_hue(11)[1],
+             linetype = "dotted", size = 1.5) +
+  scale_y_continuous(trans = "log10")
+p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
+fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
+title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: RealGenotype + SparseNormal, n = 287, p = 4012-8760, pve = 0.5", fontface  = 'bold', size = 18) 
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
+fig
+```
+
+```{r code2, message = FALSE, warning = FALSE, eval= FALSE}
 library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
 library(glmnet); library(mr.ash); library(ncvreg); library(L0Learn); library(varbvs);
 standardize = FALSE
@@ -74,13 +147,6 @@ tdat1[[iter]] = data.frame(pred = c(pred), time = c(time),
 ```
 
 ```{r code, message = FALSE, warning = FALSE, eval= FALSE}
-library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
-library(glmnet); library(mr.ash); library(ncvreg); library(L0Learn); library(varbvs);
-standardize = FALSE
-filepath = "data"
-filelist = paste("data/", list.files(filepath, pattern = "*.RDS"), sep = "")
-source('code/method_wrapper.R')
-source('code/sim_wrapper.R')
 tdat2        = list()
 method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
 method_num   = length(method_list) + 3
@@ -135,65 +201,3 @@ tdat2[[iter]] = data.frame(pred = c(pred), time = c(time),
                            fit = rep(c("mr.ash", method_list,"mr.ash.order","mr.ash.init"), each = 20))
 }
 ```
-
-```{r fig1, fig.height=7, fig.width=15}
-res_df       = readRDS("results/changepoint1.RDS")
-sdat         = data.frame()
-for (i in 1:10) {
-  sdat = rbind(sdat, res_df[[i]])
-}
-method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
-                 "Mr.ASH.order", "Mr.ASH.init")
-sdat$fit     = rep(method_list, each = 20)
-sdat$fit     = factor(sdat$fit, levels =  c("Mr.ASH","Mr.ASH.order", "Mr.ASH.init",
-                                            "E-NET","Lasso","Ridge",
-                                            "SCAD","MCP","L0Learn",
-                                            "VarBVS","BayesB","Blasso","SuSiE"))
-col = c(gg_color_hue(11)[1], "grey1", "grey51",gg_color_hue(11)[2:11])
-p1 = my.box(sdat, "fit", "pred") + 
-  scale_color_manual(values = col) +
-  scale_fill_manual(values = col) +
-  theme(axis.line    = element_blank(),
-        axis.text.x  = element_text(angle = 45,hjust = 1),
-        legend.position = "none") +
-  geom_hline(yintercept = median(sdat$pred[sdat$fit == "Mr.ASH"]), col = gg_color_hue(11)[1],
-             linetype = "dotted", size = 1.5) +
-  scale_y_continuous(trans = "log10") +
-  coord_cartesian(ylim = c(0.1, 1))
-p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
-fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
-title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
-subtitle  = ggdraw() + draw_label("Scenario: RealGenotype + SparseNormal, n = 287, p = 4012-8760, pve = 0.5", fontface  = 'bold', size = 18) 
-fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
-fig
-```
-
-```{r fig2, fig.height=7, fig.width=15}
-res_df       = readRDS("results/changepoint3.RDS")
-sdat         = res_df
-method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
-                 "Mr.ASH.order", "Mr.ASH.init")
-sdat$fit     = rep(method_list, each = 20)
-sdat$fit     = factor(sdat$fit, levels =  c("Mr.ASH","Mr.ASH.order", "Mr.ASH.init",
-                                            "E-NET","Lasso","Ridge",
-                                            "SCAD","MCP","L0Learn",
-                                            "VarBVS","BayesB","Blasso","SuSiE"))
-col = c(gg_color_hue(11)[1], "grey1", "grey51",gg_color_hue(11)[2:11])
-p1 = my.box(sdat, "fit", "pred") + 
-  scale_color_manual(values = col) +
-  scale_fill_manual(values = col) +
-  theme(axis.line    = element_blank(),
-        axis.text.x  = element_text(angle = 45,hjust = 1),
-        legend.position = "none") +
-  geom_hline(yintercept = median(sdat$pred[sdat$fit == "Mr.ASH"]), col = gg_color_hue(11)[1],
-             linetype = "dotted", size = 1.5) +
-  scale_y_continuous(trans = "log10")
-p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
-fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
-title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
-subtitle  = ggdraw() + draw_label("Scenario: RealGenotype + SparseNormal, n = 287, p = 4012-8760, pve = 0.5", fontface  = 'bold', size = 18) 
-fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
-fig
-```
-
-

@@ -144,7 +144,7 @@ for (i in 1:20) {
 tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(c("mr.ash", method_list), each = 20))
 ```
 
-```{r code2}
+```{r code2, eval = FALSE}
 # cross validation is fairly accurate
 data          = simulate_data(n, p, s = s, seed = 1, signal = signal_list[1], pve = 0.99)
 fit1          = fit.scad(data$X, data$y, data$X.test, data$y.test, seed = i)
