@@ -497,10 +497,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree19e91e7ce571da71e960e30da9b3d0c296eacbc1targetblank19e91e7a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/19e91e7ce571da71e960e30da9b3d0c296eacbc1" target="_blank">19e91e7</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreed0e5201e9130d5723b3afa96ff214df7f895ab74targetblankd0e5201a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/d0e5201e9130d5723b3afa96ff214df7f895ab74" target="_blank">d0e5201</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree19e91e7ce571da71e960e30da9b3d0c296eacbc1targetblank19e91e7a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreed0e5201e9130d5723b3afa96ff214df7f895ab74targetblankd0e5201a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -521,15 +521,6 @@ Ignored files:
 Untracked files:
     Untracked:  .DS_Store
     Untracked:  .Rapp.history
-
-Unstaged changes:
-    Modified:   analysis/Result15_EstimationOfSigma.Rmd
-    Modified:   analysis/Result1_Ridge.Rmd
-    Modified:   analysis/index.Rmd
-    Modified:   code/method_wrapper.R
-    Modified:   results/changepoint2.RDS
-    Deleted:    results/changepoint3.RDS
-    Deleted:    results/changepoint4.RDS
 
 </code></pre>
 <p>
@@ -568,6 +559,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/d0e5201e9130d5723b3afa96ff214df7f895ab74/analysis/Result9_Changepoint.Rmd" target="_blank">d0e5201</a>
+</td>
+<td>
+Youngseok
+</td>
+<td>
+2019-10-22
+</td>
+<td>
+wflow_publish(“analysis/Result9_Changepoint.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/cb9aac0ec2d4922d5ba8193987fbb2ef46e3bd95/docs/Result9_Changepoint.html" target="_blank">cb9aac0</a>
+</td>
+<td>
+Youngseok
+</td>
+<td>
+2019-10-22
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -626,18 +651,9 @@ update
 </div>
 </div>
 </div>
-<pre class="r"><code>library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);</code></pre>
-<pre><code>
-********************************************************</code></pre>
-<pre><code>Note: As of version 1.0.0, cowplot does not change the</code></pre>
-<pre><code>  default ggplot2 theme anymore. To recover the previous</code></pre>
-<pre><code>  behavior, execute:
-  theme_set(theme_cowplot())</code></pre>
-<pre><code>********************************************************</code></pre>
-<pre class="r"><code>library(glmnet); library(mr.ash); library(ncvreg); library(L0Learn); library(varbvs);</code></pre>
-<pre><code>Loading required package: foreach</code></pre>
-<pre><code>Loaded glmnet 2.0-18</code></pre>
-<pre class="r"><code>standardize = FALSE
+<pre class="r"><code>library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(mr.ash); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
 filepath = &quot;data&quot;
 filelist = paste(&quot;data/&quot;, list.files(filepath, pattern = &quot;*.RDS&quot;), sep = &quot;&quot;)
 source(&#39;code/method_wrapper.R&#39;)
@@ -664,10 +680,8 @@ p1 = my.box(sdat, &quot;fit&quot;, &quot;pred&quot;) +
   geom_hline(yintercept = median(sdat$pred[sdat$fit == &quot;Mr.ASH&quot;]), col = gg_color_hue(11)[1],
              linetype = &quot;dotted&quot;, size = 1.5) +
   scale_y_continuous(trans = &quot;log10&quot;) +
-  coord_cartesian(ylim = c(0.1, 1))</code></pre>
-<pre><code>Scale for &#39;fill&#39; is already present. Adding another scale for &#39;fill&#39;,
-which will replace the existing scale.</code></pre>
-<pre class="r"><code>p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
+  coord_cartesian(ylim = c(0.1, 1))
+p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
 fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
 title     = ggdraw() + draw_label(&quot;Prediction Error (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
 subtitle  = ggdraw() + draw_label(&quot;Scenario: RealGenotype + SparseNormal, n = 287, p = 4012-8760, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 18) 
@@ -762,6 +776,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/cb9aac0ec2d4922d5ba8193987fbb2ef46e3bd95/docs/figure/Result9_Changepoint.Rmd/fig2-1.png" target="_blank">cb9aac0</a>
+</td>
+<td>
+Youngseok
+</td>
+<td>
+2019-10-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/stephenslab/mr-ash-workflow/blob/7d6c1c84c7b26eff99781c65464cfcea54102022/docs/figure/Result9_Changepoint.Rmd/fig2-1.png" target="_blank">7d6c1c8</a>
