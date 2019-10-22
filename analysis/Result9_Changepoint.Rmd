@@ -9,7 +9,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r library}
+```{r library, warning = FALSE, message = FALSE}
 library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
 library(glmnet); library(mr.ash); library(ncvreg); library(L0Learn); library(varbvs);
 standardize = FALSE
@@ -19,7 +19,7 @@ source('code/method_wrapper.R')
 source('code/sim_wrapper.R')
 ```
 
-```{r fig1, fig.height=7, fig.width=15}
+```{r fig1, fig.height=7, fig.width=15, warning = FALSE, message = FALSE}
 res_df       = readRDS("results/changepoint1.RDS")
 sdat         = data.frame()
 for (i in 1:10) {
