@@ -51,10 +51,10 @@ fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.0
 fig
 ```
 
-```{r fig2, fig.height=7, fig.width=15}
-res_df       = readRDS("results/changepoint4.RDS")
+```{r fig2, fig.height=7, fig.width=15, warning = FALSE, message = FALSE}
+res_df       = readRDS("results/changepoint2.RDS")
 sdat         = data.frame()
-for (i in 1:10) {
+for (i in 1:1) {
   sdat = rbind(sdat, res_df[[i]])
 }
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
@@ -71,7 +71,7 @@ p1 = my.box(sdat, "fit", "pred") +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none") +
-  geom_hline(yintercept = median(sdat$pred[sdat$fit == "Mr.ASH"]), col = gg_color_hue(11)[1],
+  geom_hline(yintercept = median(sdat$pred[sdat$fit == "Mr.ASH.order"]), col = "grey1",
              linetype = "dotted", size = 1.5) +
   scale_y_continuous(trans = "log10")
 p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
@@ -155,15 +155,15 @@ pred         = matrix(0, iter_num, method_num);
 colnames(pred) = c("mr.ash", method_list,"mr.ash.order","mr.ash.init")
 time         = matrix(0, iter_num, method_num);
 colnames(time) = c("mr.ash", method_list,"mr.ash.order","mr.ash.init")
-
-for (iter in 1:1) {
 n            = 1000 # must be even
 p            = n-1
+
+for (iter in 1:1) {
 for (i in 1:20) {
   beta          = double(p)
   beta[n/2]     = 1
   data          = simulate_data(n = n, seed = i, beta = beta,
-                                design = "changepoint", filepath = filelist[i], snr = 1)
+                                design = "changepoint", snr = 1)
   
   for (j in 1:length(method_list)) {
     fit.method    = get(paste("fit.",method_list[j],sep = ""))
@@ -185,13 +185,13 @@ for (i in 1:20) {
 
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             update.order = lasso.path.order,
-                            sa2 = (2^((0:19) / 5) - 1)^2)
+                            sa2 = (2^((0:19) / 10) - 1)^2)
   pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+2] = fit$t + lasso.time[2]
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             beta.init = lasso.beta,
-                            sa2 = (2^((0:19) / 5) - 1)^2)
+                            sa2 = (2^((0:19) / 10) - 1)^2)
   pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+3] = fit$t + lasso.time[1]
   
