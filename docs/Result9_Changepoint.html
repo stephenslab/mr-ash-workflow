@@ -406,7 +406,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-10-21
+<strong>Last updated:</strong> 2019-10-22
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -497,10 +497,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree506cf214cf386d7341133d796d8a5ab6825e6455targetblank506cf21a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/506cf214cf386d7341133d796d8a5ab6825e6455" target="_blank">506cf21</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree19e91e7ce571da71e960e30da9b3d0c296eacbc1targetblank19e91e7a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/19e91e7ce571da71e960e30da9b3d0c296eacbc1" target="_blank">19e91e7</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree506cf214cf386d7341133d796d8a5ab6825e6455targetblank506cf21a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree19e91e7ce571da71e960e30da9b3d0c296eacbc1targetblank19e91e7a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -509,18 +509,27 @@ Great! You are using Git for version control. Tracking code development and conn
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    ETA_1_lambda.dat
+    Ignored:    ETA_1_parBayesB.dat
     Ignored:    analysis/ETA_1_lambda.dat
     Ignored:    analysis/ETA_1_parBayesB.dat
     Ignored:    analysis/mu.dat
     Ignored:    analysis/varE.dat
+    Ignored:    mu.dat
+    Ignored:    varE.dat
 
 Untracked files:
     Untracked:  .DS_Store
     Untracked:  .Rapp.history
-    Untracked:  results/estsigma.RDS
 
 Unstaged changes:
+    Modified:   analysis/Result15_EstimationOfSigma.Rmd
+    Modified:   analysis/Result1_Ridge.Rmd
     Modified:   analysis/index.Rmd
+    Modified:   code/method_wrapper.R
+    Modified:   results/changepoint2.RDS
+    Deleted:    results/changepoint3.RDS
+    Deleted:    results/changepoint4.RDS
 
 </code></pre>
 <p>
@@ -559,6 +568,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/19e91e7ce571da71e960e30da9b3d0c296eacbc1/analysis/Result9_Changepoint.Rmd" target="_blank">19e91e7</a>
+</td>
+<td>
+Youngseok
+</td>
+<td>
+2019-10-22
+</td>
+<td>
+wflow_publish(“analysis/Result9_Changepoint.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/7d6c1c84c7b26eff99781c65464cfcea54102022/docs/Result9_Changepoint.html" target="_blank">7d6c1c8</a>
+</td>
+<td>
+Youngseok
+</td>
+<td>
+2019-10-22
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -631,9 +674,46 @@ subtitle  = ggdraw() + draw_label(&quot;Scenario: RealGenotype + SparseNormal, n
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
 fig</code></pre>
 <p><img src="figure/Result9_Changepoint.Rmd/fig1-1.png" width="1440" style="display: block; margin: auto;" /></p>
-<pre class="r"><code>res_df       = readRDS(&quot;results/changepoint4.RDS&quot;)
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fig1-1">
+Past versions of fig1-1.png
+</button>
+</p>
+<div id="fig-fig1-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/7d6c1c84c7b26eff99781c65464cfcea54102022/docs/figure/Result9_Changepoint.Rmd/fig1-1.png" target="_blank">7d6c1c8</a>
+</td>
+<td>
+Youngseok
+</td>
+<td>
+2019-10-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>res_df       = readRDS(&quot;results/changepoint2.RDS&quot;)
 sdat         = data.frame()
-for (i in 1:10) {
+for (i in 1:1) {
   sdat = rbind(sdat, res_df[[i]])
 }
 method_list  = c(&quot;Mr.ASH&quot;,&quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,
@@ -650,18 +730,53 @@ p1 = my.box(sdat, &quot;fit&quot;, &quot;pred&quot;) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = &quot;none&quot;) +
-  geom_hline(yintercept = median(sdat$pred[sdat$fit == &quot;Mr.ASH&quot;]), col = gg_color_hue(11)[1],
+  geom_hline(yintercept = median(sdat$pred[sdat$fit == &quot;Mr.ASH.order&quot;]), col = &quot;grey1&quot;,
              linetype = &quot;dotted&quot;, size = 1.5) +
-  scale_y_continuous(trans = &quot;log10&quot;)</code></pre>
-<pre><code>Scale for &#39;fill&#39; is already present. Adding another scale for &#39;fill&#39;,
-which will replace the existing scale.</code></pre>
-<pre class="r"><code>p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
+  scale_y_continuous(trans = &quot;log10&quot;)
+p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
 fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
 title     = ggdraw() + draw_label(&quot;Prediction Error (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
 subtitle  = ggdraw() + draw_label(&quot;Scenario: RealGenotype + SparseNormal, n = 287, p = 4012-8760, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 18) 
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
 fig</code></pre>
 <p><img src="figure/Result9_Changepoint.Rmd/fig2-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fig2-1">
+Past versions of fig2-1.png
+</button>
+</p>
+<div id="fig-fig2-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/7d6c1c84c7b26eff99781c65464cfcea54102022/docs/figure/Result9_Changepoint.Rmd/fig2-1.png" target="_blank">7d6c1c8</a>
+</td>
+<td>
+Youngseok
+</td>
+<td>
+2019-10-22
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
 library(glmnet); library(mr.ash); library(ncvreg); library(L0Learn); library(varbvs);
 standardize = FALSE
@@ -731,15 +846,15 @@ pred         = matrix(0, iter_num, method_num);
 colnames(pred) = c(&quot;mr.ash&quot;, method_list,&quot;mr.ash.order&quot;,&quot;mr.ash.init&quot;)
 time         = matrix(0, iter_num, method_num);
 colnames(time) = c(&quot;mr.ash&quot;, method_list,&quot;mr.ash.order&quot;,&quot;mr.ash.init&quot;)
-
-for (iter in 1:1) {
 n            = 1000 # must be even
 p            = n-1
+
+for (iter in 1:1) {
 for (i in 1:20) {
   beta          = double(p)
   beta[n/2]     = 1
   data          = simulate_data(n = n, seed = i, beta = beta,
-                                design = &quot;changepoint&quot;, filepath = filelist[i], snr = 1)
+                                design = &quot;changepoint&quot;, snr = 1)
   
   for (j in 1:length(method_list)) {
     fit.method    = get(paste(&quot;fit.&quot;,method_list[j],sep = &quot;&quot;))
@@ -761,13 +876,13 @@ for (i in 1:20) {
 
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             update.order = lasso.path.order,
-                            sa2 = (2^((0:19) / 5) - 1)^2)
+                            sa2 = (2^((0:19) / 10) - 1)^2)
   pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+2] = fit$t + lasso.time[2]
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             beta.init = lasso.beta,
-                            sa2 = (2^((0:19) / 5) - 1)^2)
+                            sa2 = (2^((0:19) / 10) - 1)^2)
   pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+3] = fit$t + lasso.time[1]
   
