@@ -367,10 +367,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreea7cde525451cefae20ff91766e6da80b83002450targetblanka7cde52a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/a7cde525451cefae20ff91766e6da80b83002450" target="_blank">a7cde52</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreec7f87529c6c49c73c69b3f80fb6410bc21cd8908targetblankc7f8752a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/c7f87529c6c49c73c69b3f80fb6410bc21cd8908" target="_blank">c7f8752</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreea7cde525451cefae20ff91766e6da80b83002450targetblanka7cde52a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreec7f87529c6c49c73c69b3f80fb6410bc21cd8908targetblankc7f8752a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -398,7 +398,6 @@ Untracked files:
     Untracked:  results/sparsesignal.RDS
 
 Unstaged changes:
-    Modified:   analysis/Plots_for_paper.Rmd
     Modified:   analysis/Result5_SparseSignal.Rmd
     Modified:   analysis/Result6_PVE.Rmd
     Modified:   code/sim_wrapper.R
@@ -441,6 +440,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/c7f87529c6c49c73c69b3f80fb6410bc21cd8908/analysis/index.Rmd" target="_blank">c7f8752</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-23
+</td>
+<td>
+wflow_publish(“analysis/index.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/5eeac956159788d597fd8efd7e42bf97d3c9716e/docs/index.html" target="_blank">5eeac95</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-23
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1325,6 +1358,13 @@ Start workflowr project.
 <p>The reason why we set PVE = 0.99, the cross-validated solution of the method (E-NET, SCAD or MCP) acheives a nearly minimum prediction error on the solution path, i.e. the cross-validated solution is nearly the best the method can achieve. Thus we conclude that the cross-validation is fairly accurate. We have checked this by experiment.</p>
 <ul>
 <li>Result: <img src="figure/Result2_Nonconvex.Rmd/fig1-1.png" alt="fig2" /></li>
+</ul>
+<div class="figure">
+<img src="figure/Plots_for_paper/fig1-1.png" alt="fig3" />
+<p class="caption">fig3</p>
+</div>
+<ul>
+<li>Discussion: Clearly MR.ASH outperforms the other methods</li>
 </ul>
 </div>
 <div id="important-parameters-for-high-dimensional-regression-settings" class="section level3">
