@@ -52,7 +52,8 @@ method_level = c("Mr.ASH","E-NET","Lasso",
                  "SCAD","MCP","L0Learn",
                  "VarBVS","BayesB","Blasso","SuSiE")
 col          = gg_color_hue(13)[1:11][-4]
-shape        = c(19,4,5,7,8,17,24,25,9,3,11)[-8]
+#shape        = c(19,4,5,7,8,17,24,25,9,3,11)[-8]
+shape        = c(19,17,24,25,9,3,11,4,5,7,8)[-4]
 p_list       = c(50,500,5000,50000)
 sdat         = data.frame()
 for (i in 1:4) {
@@ -88,8 +89,6 @@ method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","SC
 method_level = c("Mr.ASH","E-NET","Lasso",
                  "SCAD","MCP","L0Learn",
                  "VarBVS","BayesB","Blasso","SuSiE")
-col          = gg_color_hue(13)[1:11][-4]
-shape        = c(19,17,24,25,9,3,11,4,5,7,8)[-8]
 p_list       = c(50,500,5000,50000)
 sdat         = data.frame()
 for (i in 1:4) {
