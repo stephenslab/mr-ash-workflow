@@ -77,9 +77,9 @@ This experiment is to compare the flexibility of convex/non-convex shrinkage ope
 
 The reason why we set PVE = 0.99, the cross-validated solution of the method (E-NET, SCAD or MCP) acheives a nearly minimum prediction error on the solution path, i.e. the cross-validated solution is nearly the best the method can achieve. Thus we conclude that the cross-validation is fairly accurate. We have checked this by experiment.
 
-- Result: ![](figure/Result2_Nonconvex.Rmd/fig1-1.png | width=100)
+- Result: ![](figure/Result2_Nonconvex.Rmd/fig1-1.png){:height="50%" width="50%"}
 
-![](figure/Plots_for_paper.Rmd/fig1-1.png | width=10)
+![](figure/Plots_for_paper.Rmd/fig1-1.png){:height="50%" width="50%"}
 
 - Discussion: Clearly MR.ASH is an overall winner, outperforming 
 
