@@ -120,6 +120,8 @@ p2 = ggplot(df) + geom_line(aes(x = b, y = sb2, color = operator)) +
   labs(y = "shrinakge of b (S(b))", title = "Well-known shrinkage/thresholding operator")
 
 fig = plot_grid(p1,p2, nrow = 1)
+title = ggdraw() + draw_label("MR.ASH Shrinkage operator may resemble the well-known shrinkage operators", fontface = 'bold', size = 20) 
+fig = plot_Grid(title, fig, rel_heights = c(0.06,0.95))
 fig
 ```
 
