@@ -1,0 +1,152 @@
+---
+title: "Result10_Correlation"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+The experiment is based on the following simulation setting.
+
+### Design setting
+
+We sample the equicorrelated Gaussian measurement $X_{ij} \sim N(0,\Sigma)$ where $\Sigma$ has diagonal entries $1$ and off-diagonal entries $\rho$. 
+
+The we construct $X \in \mathbb{R}^p$ with $n = 500$ and $p = 2000$.
+
+### Signal setting
+
+We sample the i.i.d. normal coefficients $\beta_j \sim N(0,\sigma_\beta^2)$ for $j \in J$ and $\beta_ j = 0$ otherwise, where $J$ is a set of randomly $s$ indices in $\{1,⋯,p\}$c hosen uniformly at random.
+
+This signal will be called `pointnormal`. We fix $s = 20$.
+
+### PVE
+
+We fix PVE = 0.5.
+
+### Packages / Libraries
+
+A list of packages we have loaded is collapsed. Please click "code" to see the list.
+
+```{r library, message = FALSE}
+library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(mr.ash); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
+source('code/method_wrapper.R')
+source('code/sim_wrapper.R')
+```
+
+## Results
+
+The result is summarized below. 
+
+```{r fig1, fig.height=13, fig.width=15}
+res_df       = readRDS("results/localcorr.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "Mr.ASH.order","Mr.ASH.init")
+method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "VarBVS","BayesB","Blasso","SuSiE")
+col          = gg_color_hue(13)[c(1,12,13,2:11)]
+rho_list     = c(0.3,0.6,0.9,0.95)
+for (i in 1:4) {
+res_df[[i]]$fit   = rep(method_list, each = 20)
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels =  method_level)
+}
+pp = list()
+for (i in 1:4) {
+  d       = res_df[[i]]
+  pp[[i]] = my.box2(d, "fit", "pred", cols = col) +
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = "none") +
+  geom_hline(yintercept = mean(d$pred[d$fit == "Mr.ASH.init"]), col = col[3],
+             linetype = "dotted", size = 1.5) +
+  scale_y_continuous(trans = "log10", breaks = c(1,1.2,1.4,1.6,1.8,2.0)) +
+  coord_cartesian(ylim = c(1,1.6))
+  subtitle  = ggdraw() + draw_label(paste(paste("rho = ",rho_list[i], sep = ""),"", sep = ""),
+                                    fontface  = 'bold', size = 18)
+  pp[[i]]   = plot_grid(subtitle, pp[[i]], ncol = 1, rel_heights = c(0.06,0.95))
+}
+fig_main  = plot_grid(pp[[1]],pp[[2]],pp[[3]],pp[[4]], nrow = 2, rel_widths = c(0.3,0.3,0.3,0.3))
+title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: EquiCorrGauss + SparseNormal, n = 500, p = 2000, pve = 0.5", fontface = 'bold', size = 18)
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.06,0.95))
+fig
+```
+
+## Source code
+
+The source code will be popped up when you click `code` on the right side. 
+
+```{r code, eval = FALSE}
+tdat1        = list()
+n            = 500
+p            = 2000
+s            = 20
+rho_list     = c(0.3,0.6,0.9,0.95)
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+
+for (iter in 1:4) {
+rho        = rho_list[iter]
+Sigma.sqrt = matrix(0,p,p)
+for (j in 0:round(-2/log(rho))) {
+  for (jj in 1:(p-j)) {
+    Sigma.sqrt[jj,jj+j] = rho^j
+    Sigma.sqrt[jj+j,jj] = rho^j
+  }
+}
+for (i in 1:20) {
+  data          = simulate_data(n, p, s = s, seed = i, signal = "normal", rho = rho,
+                                design = "localcorrgauss", Sigma.sqrt = Sigma.sqrt, pve = 0.5)
+ 
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste("fit.",method_list[j],sep = ""))
+    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
+    
+    if (method_list[j] == "lasso") {
+      lasso.path.order = mr.ash:::path.order(fit$fit$glmnet.fit)
+      lasso.beta       = as.vector(coef(fit$fit))[-1]
+      lasso.time       = c(fit$t, fit$t2)
+    }
+  }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            update.order = lasso.path.order,
+                            sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+2] = fit$t + lasso.time[2]
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta,
+                            sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+3] = fit$t + lasso.time[1]
+  
+  print(c(pred[i,]))
+}
+tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+}
+```
+
+## System Configuration
+
+Click the below Session Info.
