@@ -434,7 +434,7 @@ div.section {
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -443,7 +443,7 @@ div.section {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -455,7 +455,7 @@ div.section {
 <strong>Last updated:</strong> 2019-10-23
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>mr-ash-workflow/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -471,12 +471,12 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
@@ -531,10 +531,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree0bf8aa633c4ba2161924eb1442d9079f6536511dtargetblank0bf8aa6a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/0bf8aa633c4ba2161924eb1442d9079f6536511d" target="_blank">0bf8aa6</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreed75b2c977269475a43c68207bfe155e49b768337targetblankd75b2c9a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/d75b2c977269475a43c68207bfe155e49b768337" target="_blank">d75b2c9</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree0bf8aa633c4ba2161924eb1442d9079f6536511dtargetblank0bf8aa6a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreed75b2c977269475a43c68207bfe155e49b768337targetblankd75b2c9a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -562,6 +562,7 @@ Untracked files:
     Untracked:  results/sparsesignal.RDS
 
 Unstaged changes:
+    Modified:   analysis/Plots_for_paper.Rmd
     Modified:   analysis/Result5_SparseSignal.Rmd
     Modified:   analysis/Result6_PVE.Rmd
     Modified:   analysis/index.Rmd
@@ -605,6 +606,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/fabe6bc7bb0e4d2fe2e30a48e3a2cf8b9db6d909/docs/Plots_for_paper.html" target="_blank">fabe6bc</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-23
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -819,6 +837,8 @@ p2 = ggplot(df) + geom_line(aes(x = b, y = sb2, color = operator)) +
   labs(y = &quot;shrinakge of b (S(b))&quot;, title = &quot;Well-known shrinkage/thresholding operator&quot;)
 
 fig = plot_grid(p1,p2, nrow = 1)
+title = ggdraw() + draw_label(&quot;MR.ASH Shrinkage operator may resemble the well-known shrinkage operators&quot;, fontface = &#39;bold&#39;, size = 20) 
+fig = plot_grid(title, fig, rel_heights = c(0.06,0.95))
 fig</code></pre>
 <p><img src="figure/Plots_for_paper.Rmd/fig1-1.png" width="1440" style="display: block; margin: auto;" /></p>
 <p>
@@ -843,6 +863,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/fabe6bc7bb0e4d2fe2e30a48e3a2cf8b9db6d909/docs/figure/Plots_for_paper.Rmd/fig1-1.png" target="_blank">fabe6bc</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-23
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/stephenslab/mr-ash-workflow/blob/1e3484c88d0e260c6920ba9440e13ded4f9fc840/docs/figure/Plots_for_paper.Rmd/fig1-1.png" target="_blank">1e3484c</a>
@@ -946,6 +977,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/fabe6bc7bb0e4d2fe2e30a48e3a2cf8b9db6d909/docs/figure/Plots_for_paper.Rmd/fig2-1.png" target="_blank">fabe6bc</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-23
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/stephenslab/mr-ash-workflow/blob/1e3484c88d0e260c6920ba9440e13ded4f9fc840/docs/figure/Plots_for_paper.Rmd/fig2-1.png" target="_blank">1e3484c</a>
