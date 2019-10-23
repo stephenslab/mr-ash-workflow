@@ -97,7 +97,7 @@ p1       = my.box2(res_df[[1]], "fit", "time", cols = col[some]) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none") +
-  scale_y_continuous(trans = "log10")
+  scale_y_continuous(trans = "log10", breaks = c(0.5,1,2,5,10,20))
 p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
 fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.6,0.6,0.6))
 title     = ggdraw() + draw_label("Computation time (log-scale)", fontface = 'bold', size = 20) 
