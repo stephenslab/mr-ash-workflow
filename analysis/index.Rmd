@@ -79,9 +79,9 @@ The reason why we set PVE = 0.99, the cross-validated solution of the method (E-
 
 - Result: ![fig2](figure/Result2_Nonconvex.Rmd/fig1-1.png)
 
-![fig3](figure/Plots_for_paper/fig1-1.png)
+![fig3](figure/Plots_for_paper.Rmd/fig1-1.png)
 
-- Discussion: Clearly MR.ASH outperforms the other methods
+- Discussion: Clearly MR.ASH is an overall winner, outperforming 
 
 ### Important parameters for high-dimensional regression settings
 
