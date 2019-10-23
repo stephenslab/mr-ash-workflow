@@ -81,14 +81,14 @@ The reason why we set PVE = 0.99, the cross-validated solution of the method (E-
 
 This experiment is to compare performance of the methods when $p$ varies while the rest being fixed. 
 
-- Result:
+- Result: 
 
-- Discussion: since the theory says (e.g. [Slope meets Lasso: improved oracle bounds and
-optimality](https://arxiv.org/pdf/1605.08651.pdf) ) that the prediction error scales as $\sqrt{s\log(p/s)/n}$
+- Discussion: Since the theory says (e.g. [Slope meets Lasso: improved oracle bounds and
+optimality](https://arxiv.org/pdf/1605.08651.pdf) ) that the prediction error scales as $\sqrt{s\log(p/s)/n}$, and thus we can expect
 
 (4) [Sparsity $s$](Result5_SparseSignal.html).
 
-- Result:
+- Result: ![alt text](figure/Result1_Ridge.Rmd/fig1-1.png)
 
 - Discussion:
 
