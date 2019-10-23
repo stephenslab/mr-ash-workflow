@@ -531,10 +531,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreeaebbf7890bae442d91c2c4c038326334edd1baactargetblankaebbf78a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/aebbf7890bae442d91c2c4c038326334edd1baac" target="_blank">aebbf78</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree34bdc5c0c522fcf5cee55a7f3bc6b2cf32cd0932targetblank34bdc5ca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/34bdc5c0c522fcf5cee55a7f3bc6b2cf32cd0932" target="_blank">34bdc5c</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreeaebbf7890bae442d91c2c4c038326334edd1baactargetblankaebbf78a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree34bdc5c0c522fcf5cee55a7f3bc6b2cf32cd0932targetblank34bdc5ca" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -547,7 +547,6 @@ Ignored files:
     Ignored:    ETA_1_parBayesB.dat
     Ignored:    analysis/ETA_1_lambda.dat
     Ignored:    analysis/ETA_1_parBayesB.dat
-    Ignored:    analysis/figure/
     Ignored:    analysis/mu.dat
     Ignored:    analysis/varE.dat
     Ignored:    mu.dat
@@ -605,6 +604,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/34bdc5c0c522fcf5cee55a7f3bc6b2cf32cd0932/analysis/Result2_Nonconvex.Rmd" target="_blank">34bdc5c</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-23
+</td>
+<td>
+wflow_publish(“analysis/Result2_Nonconvex.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/2ab3881edc128c6635d0937815fd8904e7b7c68f/docs/Result2_Nonconvex.html" target="_blank">2ab3881</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-23
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -965,6 +998,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/2ab3881edc128c6635d0937815fd8904e7b7c68f/docs/figure/Result2_Nonconvex.Rmd/fig1-1.png" target="_blank">2ab3881</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-23
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/stephenslab/mr-ash-workflow/blob/3bab6f75fade72e33528e5b78341a97e14501c6f/docs/figure/Result2_Nonconvex.Rmd/fig1-1.png" target="_blank">3bab6f7</a>
 </td>
 <td>
@@ -994,7 +1038,7 @@ p1       = my.box2(res_df[[1]], &quot;fit&quot;, &quot;time&quot;, cols = col[so
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = &quot;none&quot;) +
-  scale_y_continuous(trans = &quot;log10&quot;)
+  scale_y_continuous(trans = &quot;log10&quot;, breaks = c(0.5,1,2,5,10,20))
 p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
 fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.6,0.6,0.6))
 title     = ggdraw() + draw_label(&quot;Computation time (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
@@ -1024,6 +1068,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/2ab3881edc128c6635d0937815fd8904e7b7c68f/docs/figure/Result2_Nonconvex.Rmd/fig2-1.png" target="_blank">2ab3881</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-23
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/stephenslab/mr-ash-workflow/blob/3bab6f75fade72e33528e5b78341a97e14501c6f/docs/figure/Result2_Nonconvex.Rmd/fig2-1.png" target="_blank">3bab6f7</a>
