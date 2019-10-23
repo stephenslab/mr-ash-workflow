@@ -531,10 +531,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree8e7e9704102c5c8c3fe806cfa227f4a0e4fdab58targetblank8e7e970a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/8e7e9704102c5c8c3fe806cfa227f4a0e4fdab58" target="_blank">8e7e970</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreec3d30a8bcf7e8a6a34e3c5ce9098fe3fd93a85adtargetblankc3d30a8a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/c3d30a8bcf7e8a6a34e3c5ce9098fe3fd93a85ad" target="_blank">c3d30a8</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree8e7e9704102c5c8c3fe806cfa227f4a0e4fdab58targetblank8e7e970a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreec3d30a8bcf7e8a6a34e3c5ce9098fe3fd93a85adtargetblankc3d30a8a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -600,6 +600,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/c3d30a8bcf7e8a6a34e3c5ce9098fe3fd93a85ad/analysis/Result1_Ridge.Rmd" target="_blank">c3d30a8</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-22
+</td>
+<td>
+wflow_publish(“analysis/Result1_Ridge.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/2443c8be7c362caccb515d63392cff9869739e3b/docs/Result1_Ridge.html" target="_blank">2443c8b</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-22
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -940,6 +974,17 @@ Date
 <tbody>
 <tr>
 <td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/2443c8be7c362caccb515d63392cff9869739e3b/docs/figure/Result1_Ridge.Rmd/fig1-1.png" target="_blank">2443c8b</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-22
+</td>
+</tr>
+<tr>
+<td>
 <a href="https://github.com/stephenslab/mr-ash-workflow/blob/bd36a79ef72b36e8db260108451cc55488051029/docs/figure/Result1_Ridge.Rmd/fig1-1.png" target="_blank">bd36a79</a>
 </td>
 <td>
@@ -960,7 +1005,8 @@ Youngseok
         legend.position = &quot;none&quot;) +
   scale_y_continuous(trans = &quot;log10&quot;)
 title     = ggdraw() + draw_label(&quot;Computation time (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
-subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + Normal, n = 500, p = 50,100,200,500,1000,2000, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 18) 
+subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + Normal, n = 500, p = 50,100,200,500,1000,2000, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 18) +
+  labs(y = &quot;computation time (sec)&quot;)
 p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
 fig_main  = plot_grid(p0,p4,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
@@ -988,6 +1034,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/2443c8be7c362caccb515d63392cff9869739e3b/docs/figure/Result1_Ridge.Rmd/fig2-1.png" target="_blank">2443c8b</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/stephenslab/mr-ash-workflow/blob/bd36a79ef72b36e8db260108451cc55488051029/docs/figure/Result1_Ridge.Rmd/fig2-1.png" target="_blank">bd36a79</a>
