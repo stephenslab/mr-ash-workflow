@@ -79,8 +79,12 @@ The reason why we set PVE = 0.99, the cross-validated solution of the method (E-
 
 (3) [High-dimensionality $p$](Result4_Highdim.html).
 
-This experiment is to compare performance of the methods when $p$ varies while the rest being fixed. Since the theory says (e.g. [Slope meets Lasso: improved oracle bounds and
-optimality](https://arxiv.org/pdf/1605.08651.pdf) ) that the prediction error scales 
+This experiment is to compare performance of the methods when $p$ varies while the rest being fixed. 
+
+(3-1) Result:
+
+(3-2) Discussion: since the theory says (e.g. [Slope meets Lasso: improved oracle bounds and
+optimality](https://arxiv.org/pdf/1605.08651.pdf) ) that the prediction error scales as $\sqrt{s\log(p/s)/n}$
 
 (4) [Sparsity $s$](Result5_SparseSignal.html).
 
