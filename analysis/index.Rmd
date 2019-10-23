@@ -67,7 +67,9 @@ where $\textrm{Var}(a)$ denotes the sample variance of $a$ calculated using R fu
 The ridge case is when the default setting applies to all but $s = p$.
 We observe that the relative performance is dependent on the value of $p$ (compared to $n$). Thus we consider $p = 50,100,200,500,1000,2000$ while $n = 500$ being fixed.
 
-The message here is MR.ASH performs reasonably well, and the only penalized linear regression method that outperforms Ridge with cross-validation. However, let us mention that Blasso (Bayesian Lasso) performs the best, which uses a non-sparse Laplace prior on $\beta$. Also, BayesB performs better than MR.ASH, which uses a spike-and-slab prior on $\beta$.
+- Result: ![fig1](figure/Result1_Ridge.Rmd/fig1-1.png)
+
+- Discussion: The message here is MR.ASH performs reasonably well, and the only penalized linear regression method that outperforms Ridge with cross-validation. However, let us mention that Blasso (Bayesian Lasso) performs the best, which uses a non-sparse Laplace prior on $\beta$. Also, BayesB performs better than MR.ASH, which uses a spike-and-slab prior on $\beta$.
 
 (2) [Nonconvex case](Result2_Nonconvex.html).
 
@@ -81,16 +83,12 @@ The reason why we set PVE = 0.99, the cross-validated solution of the method (E-
 
 This experiment is to compare performance of the methods when $p$ varies while the rest being fixed. 
 
-- Result: 
+- Result: ![fig3](figure/Result4_Highdim.Rmd/fig1-1.png)
 
 - Discussion: Since the theory says (e.g. [Slope meets Lasso: improved oracle bounds and
 optimality](https://arxiv.org/pdf/1605.08651.pdf) ) that the prediction error scales as $\sqrt{s\log(p/s)/n}$, and thus we can expect
 
 (4) [Sparsity $s$](Result5_SparseSignal.html).
-
-- Result: ![alt text](figure/Result1_Ridge.Rmd/fig1-1.png)
-
-- Discussion:
 
 (5) [PVE](Result6_PVE.html).
 
