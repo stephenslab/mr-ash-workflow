@@ -73,7 +73,7 @@ The result is summarized below.
 res_df       = readRDS("results/ridge_pve0.5.RDS")
 p_list       = c(50,100,200,500,1000,2000)
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn","Ridge.opt")
-col          = gg_color_hue(11)
+col          = gg_color_hue(13)[1:11]
 sdat = data.frame()
 for (i in 1:6) {
   sdat       = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred,20,12)),
@@ -127,8 +127,8 @@ fig
 ```
 
 ```{r fig2, fig.height=7, fig.width=15, fig.align = "center"}
-p4  = my.box(sdat[sdat$fit != "Ridge.opt",], "fit", "time",
-             gg_color_hue(11)) +
+p4  = my.box2(sdat[sdat$fit != "Ridge.opt",], "fit", "time",
+             gg_color_hue(13)[1:11]) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none") +
