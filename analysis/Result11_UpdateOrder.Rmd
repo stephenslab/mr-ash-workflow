@@ -85,15 +85,15 @@ source('code/sim_wrapper.R')
 sdat = readRDS("results/updateorder_rho0.95.RDS")
 sdat$fit = factor(sdat$order, levels = c("random","increasing","lasso.path",
                                          "scad.path","lasso.absorder","univar.absorder"))
-
-p1 = my.box(sdat, "fit", "vobj", values = col) +
+col = rev(c("skyblue","dodgerblue","limegreen","gold","orange","salmon"))
+p1 = my.box2(sdat, "fit", "vobj", cols = col) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none")
 subtitle  = ggdraw() + draw_label("Variational Objective", fontface  = 'bold', size = 18)
 p1 = plot_grid(subtitle, p1, ncol = 1, rel_heights = c(0.06,0.95))
 
-p2 = my.box(sdat, "fit", "pred", values = col) +
+p2 = my.box2(sdat, "fit", "pred", cols = col) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none") +
@@ -102,7 +102,7 @@ p2 = my.box(sdat, "fit", "pred", values = col) +
 subtitle  = ggdraw() + draw_label("Prediction Error", fontface  = 'bold', size = 18)
 p2 = plot_grid(subtitle, p2, ncol = 1, rel_heights = c(0.06,0.95))
 
-p3 = my.box(sdat, "fit", "time", values = col) +
+p3 = my.box2(sdat, "fit", "time", cols = col) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none") +
@@ -110,7 +110,7 @@ p3 = my.box(sdat, "fit", "time", values = col) +
 subtitle  = ggdraw() + draw_label("Computation Time", fontface  = 'bold', size = 18)
 p3 = plot_grid(subtitle, p3, ncol = 1, rel_heights = c(0.06,0.95))
 
-p4 = my.box(sdat, "fit", "numiter", values = col) +
+p4 = my.box2(sdat, "fit", "numiter", cols = col) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none") +
