@@ -79,6 +79,7 @@ The reason why we set PVE = 0.99, the cross-validated solution of the method (E-
 
 - Result: ![](figure/Result2_Nonconvex.Rmd/fig1-1.png&s=200)
 
+<img src=figure/Plots_for_paper.Rmd/fig1-1.pn width="100" height="100">
 ![](figure/Plots_for_paper.Rmd/fig1-1.png&s=200)
 
 - Discussion: Clearly MR.ASH is an overall winner, outperforming 
