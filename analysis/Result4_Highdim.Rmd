@@ -79,7 +79,7 @@ title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bo
 subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + SparseNormal, n = 500, p = 50, 500, 5000, 50000, pve = 0.5", fontface  = 'bold', size = 18) 
 p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
 fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
-fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.06,0.06,0.95))
 fig
 ```
 
@@ -103,7 +103,7 @@ p1 = ggplot(sdat) + geom_line(aes(x = p, y = time, color = fit)) +
   geom_point(aes(x = p, y = time, color = fit, shape = fit), size = 2.5) +
   theme_cowplot(font_size = 14) +
   scale_x_continuous(trans = "log10", breaks = p_list) +
-  labs(y = "predictior error (rmse / sigma)", x = "number of coefficients (p)") +
+  labs(y = "computation time (sec)", x = "number of coefficients (p)") +
   theme(axis.line = element_blank(),
         plot.title = element_text(hjust = 0.5)) +
   scale_color_manual(values = col) +
@@ -114,7 +114,7 @@ title     = ggdraw() + draw_label("Computation time (log-scale)", fontface = 'bo
 subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + SparseNormal, n = 500, p = 50, 500, 5000, 50000, pve = 0.5", fontface  = 'bold', size = 18) 
 p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
 fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
-fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.06,0.06,0.95))
 fig
 ```
 
