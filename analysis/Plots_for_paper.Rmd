@@ -112,9 +112,12 @@ df = data.frame(b = c(b,b,b,b), sb = c(b_softt, b_hardt, b_scad, b_mcp),
 df$operator = factor(df$operator, levels = c("soft","hard","scad","mcp"))
 
 p1 = ggplot(df) + geom_line(aes(x = b, y = sb, color = operator)) +
-  theme_cowplot(font_size = 14) + theme(axis.line = element_blank())
+  theme_cowplot(font_size = 14) + theme(axis.line = element_blank()) +
+  labs(y = "shrinakge of b (S(b))", title = "MR.ASH shrinkage operator")
 p2 = ggplot(df) + geom_line(aes(x = b, y = sb2, color = operator)) +
-  theme_cowplot(font_size = 14) + theme(axis.line = element_blank())
+  theme_cowplot(font_size = 14) + theme(axis.line = element_blank()) +
+  labs(title = "123")  +
+  labs(y = "shrinakge of b (S(b))", title = "Well-known shrinkage/thresholding operator")
 
 fig = plot_grid(p1,p2, nrow = 1)
 fig
