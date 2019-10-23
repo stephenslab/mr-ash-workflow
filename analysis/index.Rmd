@@ -90,7 +90,7 @@ This experiment is to compare performance of the methods when $p$ varies while t
 It shows that MR.ASH and VarBVS outperform well.
 
 - Discussion: Since the theory says (e.g. [Slope meets Lasso: improved oracle bounds and
-optimality](https://arxiv.org/pdf/1605.08651.pdf) ) that the prediction error scales as $\sqrt{s\log(p/s)/n}$, and thus we can expect that the prediction error increaese log-linearly in $p$. 
+optimality](https://arxiv.org/pdf/1605.08651.pdf) ) that the prediction error scales as $\sqrt{s\log(p/s)/n}$, and thus we can expect that the prediction error increaese log-linearly in $p$. One can check this in the above figure.
 
 Also, surprisingly 
 
