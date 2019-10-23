@@ -134,7 +134,8 @@ p4  = my.box2(sdat[sdat$fit != "Ridge.opt",], "fit", "time",
         legend.position = "none") +
   scale_y_continuous(trans = "log10")
 title     = ggdraw() + draw_label("Computation time (log-scale)", fontface = 'bold', size = 20) 
-subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + Normal, n = 500, p = 50,100,200,500,1000,2000, pve = 0.5", fontface  = 'bold', size = 18) 
+subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + Normal, n = 500, p = 50,100,200,500,1000,2000, pve = 0.5", fontface  = 'bold', size = 18) +
+  labs(y = "computation time (sec)")
 p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
 fig_main  = plot_grid(p0,p4,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
