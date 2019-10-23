@@ -531,10 +531,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree7d9e6ecf01147d3d9297f72e45adac578a11b990targetblank7d9e6eca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/7d9e6ecf01147d3d9297f72e45adac578a11b990" target="_blank">7d9e6ec</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree98f8b992c561e5576cd3dd9f800ff0337547e5batargetblank98f8b99a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/98f8b992c561e5576cd3dd9f800ff0337547e5ba" target="_blank">98f8b99</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree7d9e6ecf01147d3d9297f72e45adac578a11b990targetblank7d9e6eca" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree98f8b992c561e5576cd3dd9f800ff0337547e5batargetblank98f8b99a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -604,6 +604,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/98f8b992c561e5576cd3dd9f800ff0337547e5ba/analysis/Plots_for_paper.Rmd" target="_blank">98f8b99</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-23
+</td>
+<td>
+wflow_publish(“analysis/Plots_for_paper.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/380a854e6e7c8b48451de87aced03dc4a26765b1/docs/Plots_for_paper.html" target="_blank">380a854</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-23
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -870,7 +904,7 @@ p2 = ggplot(df) + geom_line(aes(x = b, y = sb2, color = operator)) +
 
 fig = plot_grid(p1,p2, nrow = 1)
 title = ggdraw() + draw_label(&quot;MR.ASH Shrinkage operator may resemble the well-known shrinkage operators&quot;, fontface = &#39;bold&#39;, size = 20) 
-fig = plot_grid(title, fig, rel_heights = c(0.06,0.95))
+fig = plot_grid(title, fig, nrow = 2, rel_heights = c(0.06,0.95))
 fig</code></pre>
 <p><img src="figure/Plots_for_paper.Rmd/fig1-1.png" width="1440" style="display: block; margin: auto;" /></p>
 <p>
