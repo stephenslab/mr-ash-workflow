@@ -59,7 +59,7 @@ method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ri
 method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
                  "SCAD","MCP","L0Learn",
                  "VarBVS","BayesB","Blasso","SuSiE")
-col          = gg_color_hue(11)
+col          = gg_color_hue(13)[1:11]
 for (i in 1:6) {
 res_df[[i]]$fit   = rep(method_list, each = 20)
 res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
@@ -72,7 +72,7 @@ pp = list()
 signal_name = c("SparseLaplace","SparseT2","SparseT5","SparseNormal","SparseUnif","SparseConst")
 for (i in 1:6) {
   d       = res_df[[i]]
-  pp[[i]] = my.box(d, "fit", "pred", values = col[some]) +
+  pp[[i]] = my.box2(d, "fit", "pred", cols = col[some], shapes = 1:6) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none") +
@@ -84,7 +84,7 @@ for (i in 1:6) {
                                     fontface  = 'bold', size = 18)
   pp[[i]]   = plot_grid(subtitle, pp[[i]], ncol = 1, rel_heights = c(0.06,0.95))
 }
-fig_main  = plot_grid(pp[[1]],pp[[2]],pp[[3]],pp[[4]],pp[[5]],pp[[6]], nrow = 2, rel_widths = c(0.3,0.3,0.3,0.3))
+fig_main  = plot_grid(pp[[2]],pp[[3]],pp[[1]],pp[[4]],pp[[5]],pp[[6]], nrow = 2, rel_widths = c(0.3,0.3,0.3,0.3))
 title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
 subtitle  = ggdraw() + draw_label("Scenario: LowdimIndepGauss, n = 500, p = 2000, s = 20, pve = 0.99", fontface = 'bold', size = 18)
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.06,0.95))
@@ -93,7 +93,7 @@ fig
 
 ```{r fig2, fig.height=7, fig.width=15}
 sdat = rbind(res_df[[1]], res_df[[2]], res_df[[3]], res_df[[4]], res_df[[5]], res_df[[6]])
-p1       = my.box(res_df[[1]], "fit", "time", values = gg_color_hue(11)[c(1,3,7,6,9,11,2,4,5,8)]) +
+p1       = my.box2(res_df[[1]], "fit", "time", cols = col[some]) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none") +
