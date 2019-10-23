@@ -367,10 +367,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree9fec1c905f13880587a995125dde4ba1aaac32d7targetblank9fec1c9a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/9fec1c905f13880587a995125dde4ba1aaac32d7" target="_blank">9fec1c9</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreea7cde525451cefae20ff91766e6da80b83002450targetblanka7cde52a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/a7cde525451cefae20ff91766e6da80b83002450" target="_blank">a7cde52</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree9fec1c905f13880587a995125dde4ba1aaac32d7targetblank9fec1c9a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreea7cde525451cefae20ff91766e6da80b83002450targetblanka7cde52a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -398,6 +398,7 @@ Untracked files:
     Untracked:  results/sparsesignal.RDS
 
 Unstaged changes:
+    Modified:   analysis/Plots_for_paper.Rmd
     Modified:   analysis/Result5_SparseSignal.Rmd
     Modified:   analysis/Result6_PVE.Rmd
     Modified:   code/sim_wrapper.R
@@ -440,6 +441,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/a7cde525451cefae20ff91766e6da80b83002450/analysis/index.Rmd" target="_blank">a7cde52</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-23
+</td>
+<td>
+wflow_publish(“analysis/index.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/b835c0f9d89761b05f716428ced7e38b173181d0/docs/index.html" target="_blank">b835c0f</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-23
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1303,7 +1338,7 @@ Start workflowr project.
 </ul>
 <p>It shows that MR.ASH and VarBVS outperform well.</p>
 <ul>
-<li>Discussion: Since the theory says (e.g. <a href="https://arxiv.org/pdf/1605.08651.pdf">Slope meets Lasso: improved oracle bounds and optimality</a> ) that the prediction error scales as <span class="math inline">\(\sqrt{s\log(p/s)/n}\)</span>, and thus we can expect that the prediction error increaese log-linearly in <span class="math inline">\(p\)</span>.</li>
+<li>Discussion: Since the theory says (e.g. <a href="https://arxiv.org/pdf/1605.08651.pdf">Slope meets Lasso: improved oracle bounds and optimality</a> ) that the prediction error scales as <span class="math inline">\(\sqrt{s\log(p/s)/n}\)</span>, and thus we can expect that the prediction error increaese log-linearly in <span class="math inline">\(p\)</span>. One can check this in the above figure.</li>
 </ul>
 <p>Also, surprisingly</p>
 <ol start="4" style="list-style-type: decimal">
