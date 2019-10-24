@@ -69,7 +69,8 @@ We observe that the relative performance is dependent on the value of $p$ (compa
 
 - Result: 
 
-![fig1](figure/Result1_Ridge.Rmd/fig1-1.png)
+<img align=center src=figure/Result1_Ridge.Rmd/fig1-1.png width="500" height="500">
+
 
 - Discussion: The message here is MR.ASH performs reasonably well, and the only penalized linear regression method that outperforms Ridge with cross-validation. However, let us mention that Blasso (Bayesian Lasso) performs the best, which uses a non-sparse Laplace prior on $\beta$. Also, BayesB performs better than MR.ASH, which uses a spike-and-slab prior on $\beta$.
 
