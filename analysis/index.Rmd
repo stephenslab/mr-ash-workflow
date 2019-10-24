@@ -67,7 +67,9 @@ where $\textrm{Var}(a)$ denotes the sample variance of $a$ calculated using R fu
 The ridge case is when the default setting applies to all but $s = p$.
 We observe that the relative performance is dependent on the value of $p$ (compared to $n$). Thus we consider $p = 50,100,200,500,1000,2000$ while $n = 500$ being fixed.
 
-- Result: ![fig1](figure/Result1_Ridge.Rmd/fig1-1.png)
+- Result: 
+
+![fig1](figure/Result1_Ridge.Rmd/fig1-1.png)
 
 - Discussion: The message here is MR.ASH performs reasonably well, and the only penalized linear regression method that outperforms Ridge with cross-validation. However, let us mention that Blasso (Bayesian Lasso) performs the best, which uses a non-sparse Laplace prior on $\beta$. Also, BayesB performs better than MR.ASH, which uses a spike-and-slab prior on $\beta$.
 
@@ -77,11 +79,13 @@ This experiment is to compare the flexibility of convex/non-convex shrinkage ope
 
 The reason why we set PVE = 0.99, the cross-validated solution of the method (E-NET, SCAD or MCP) acheives a nearly minimum prediction error on the solution path, i.e. the cross-validated solution is nearly the best the method can achieve. Thus we conclude that the cross-validation is fairly accurate. We have checked this by experiment.
 
-- Result: <img src=figure/Result2_Nonconvex.Rmd/fig1-1.png width="500" height="500">
+- Result: 
+
+<img src=figure/Result2_Nonconvex.Rmd/fig1-1.png width="500" height="500">
 
 <img src=figure/Plots_for_paper.Rmd/fig1-1.png width="500" height="500">
 
-- Discussion: Clearly MR.ASH is an overall winner, outperforming 
+- Discussion: Clearly MR.ASH is an overall winner, outperforming all the other methods. Flexibility of MR.ASH Gaussian mixture prior is illustrated well in the above figure.
 
 ### Important parameters for high-dimensional regression settings
 
@@ -89,7 +93,9 @@ The reason why we set PVE = 0.99, the cross-validated solution of the method (E-
 
 This experiment is to compare performance of the methods when $p$ varies while the rest being fixed. 
 
-- Result: ![fig3](figure/Result4_Highdim.Rmd/fig1-1.png)
+- Result: 
+
+<img src=figure/Result4_Highdim.Rmd/fig1-1.png width="500" height="500">
 
 It shows that MR.ASH and VarBVS outperform well.
 
