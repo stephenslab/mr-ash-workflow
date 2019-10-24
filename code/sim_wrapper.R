@@ -38,7 +38,7 @@ simulate_data = function(n = NULL, p = NULL, s = NULL, seed = 1,
                          design = "indepgauss", rho = 0,
                          filepath = NULL,
                          beta = NULL, signal = "normal",
-                         sigma = NULL,
+                         sigma = NULL, Sigma.sqrt = NULL,
                          pve = 0.5, snr = NULL) {
   
   # set seed
@@ -50,6 +50,8 @@ simulate_data = function(n = NULL, p = NULL, s = NULL, seed = 1,
   } else if (design == "equicorrgauss") {
     data              = list(X = matrix(rnorm(n*2*p), n*2, p))
     data$X           <- rnorm(dim(data$X)[1]) * sqrt(rho) + data$X * sqrt(1-rho)
+  } else if (design == "localcorrgauss") {
+    data              = list(X = rmvnorm(2 * n, sigma = Sigma.sqrt))
   } else if (design == "realgenotype") {
     data              = readRDS(filepath);
     data              = list(X = scale(data$X))
@@ -124,16 +126,33 @@ simulate_data = function(n = NULL, p = NULL, s = NULL, seed = 1,
 #' Plotting routines
 
 ## function for boxplot
-my.box <- function (dat, x, y,
-                    values = c(1,2,0,3,4,5)) {
+my.box <- function (dat, x, y, cols = gg_color_hue(13),
+                    shapes = 1:15) {
   return(ggplot(dat,aes_string(x = x, y = y, fill = "fit")) +
-           scale_shape_manual(values = values) +
+           scale_shape_manual(values = shapes) +
            geom_boxplot(alpha = 0.1, aes(color = fit), outlier.alpha = 0) +
            scale_alpha_manual(values = 0.1) +
-           scale_fill_discrete(guide = "none") +
+           scale_fill_manual(values = cols, guide = "none") +
+           scale_color_manual(values = cols, guide = "none") +
            labs(x           = "") +
            theme_cowplot(font_size = 14))
 }
+
+## function for boxplot2
+my.box2 <- function (dat, x, y, cols = gg_color_hue(13),
+                    shapes = 1:15) {
+  return(ggplot(dat,aes_string(x = x, y = y, fill = "fit")) +
+           scale_shape_manual(values = shapes) +
+           stat_summary(fun.y= mean, colour= cols, geom="point", 
+                        shape = 18, size = 3) + 
+           geom_boxplot(alpha = 0.1, aes(color = fit), outlier.alpha = 0) +
+           scale_alpha_manual(values = 0.1) +
+           scale_fill_manual(values = cols, guide = "none") +
+           scale_color_manual(values = cols, guide = "none") +
+           labs(x           = "") +
+           theme_cowplot(font_size = 14))
+}
+
 
 ## function for line
 my.line <- function (dat, x, y, cols = NULL,
