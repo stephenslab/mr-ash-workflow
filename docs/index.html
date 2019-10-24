@@ -367,10 +367,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree5f6d6e3fa657ae3a012d30f15993ac70f8b8dcfetargetblank5f6d6e3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/5f6d6e3fa657ae3a012d30f15993ac70f8b8dcfe" target="_blank">5f6d6e3</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreee9e17ffe33a497018a9e2f62da6667c3d723cedftargetblanke9e17ffa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/e9e17ffe33a497018a9e2f62da6667c3d723cedf" target="_blank">e9e17ff</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree5f6d6e3fa657ae3a012d30f15993ac70f8b8dcfetargetblank5f6d6e3a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreee9e17ffe33a497018a9e2f62da6667c3d723cedftargetblanke9e17ffa" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -440,6 +440,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/e9e17ffe33a497018a9e2f62da6667c3d723cedf/analysis/index.Rmd" target="_blank">e9e17ff</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-23
+</td>
+<td>
+wflow_publish(“analysis/index.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/1458fd639b063bd0d3e0563bd005728c3664c154/docs/index.html" target="_blank">1458fd6</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-23
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1724,7 +1758,7 @@ Start workflowr project.
 <ul>
 <li>Result:</li>
 </ul>
-<p><img align=center src=figure/Result1_Ridge.Rmd/fig1-1.png width="500" height="500"></p>
+<p><img align="center" src=figure/Result1_Ridge.Rmd/fig1-1.png width="500" height="500"></p>
 <ul>
 <li>Discussion: The message here is MR.ASH performs reasonably well, and the only penalized linear regression method that outperforms Ridge with cross-validation. However, let us mention that Blasso (Bayesian Lasso) performs the best, which uses a non-sparse Laplace prior on <span class="math inline">\(\beta\)</span>. Also, BayesB performs better than MR.ASH, which uses a spike-and-slab prior on <span class="math inline">\(\beta\)</span>.</li>
 </ul>
@@ -1736,7 +1770,7 @@ Start workflowr project.
 <ul>
 <li>Result:</li>
 </ul>
-<p><img src=figure/Result2_Nonconvex.Rmd/fig1-1.png width="500" height="500"></p>
+<p><img align="center" src=figure/Result2_Nonconvex.Rmd/fig1-1.png width="500" height="500"></p>
 <p><img src=figure/Plots_for_paper.Rmd/fig1-1.png width="500" height="500"></p>
 <ul>
 <li>Discussion: Clearly MR.ASH is an overall winner, outperforming all the other methods. Flexibility of MR.ASH Gaussian mixture prior is illustrated well in the above figure.</li>
