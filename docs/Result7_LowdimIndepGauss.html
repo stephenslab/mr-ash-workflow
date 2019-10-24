@@ -7,7 +7,6 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -88,6 +87,7 @@ code {
 }
 img {
   max-width:100%;
+  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -248,12 +248,56 @@ $(document).ready(function () {
 }
 </style>
 
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
 <!-- code folding -->
 <style type="text/css">
 .code-folding-btn { margin-bottom: 4px; }
 </style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <style type="text/css">
 
@@ -302,6 +346,8 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -388,7 +434,7 @@ div.section {
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -397,7 +443,7 @@ div.section {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -406,17 +452,17 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-10-21
+<strong>Last updated:</strong> 2019-10-23
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>mr-ash-workflow/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
 </p>
 <p>
 This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
-  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.4.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.3.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
 </p>
 <hr>
 </div>
@@ -425,12 +471,12 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
@@ -485,22 +531,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreee7fd58bacd2cd150d316b9d8d5df1fee0bfd0093targetblanke7fd58ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/e7fd58bacd2cd150d316b9d8d5df1fee0bfd0093" target="_blank">e7fd58b</a> </a>
 </p>
 </div>
-<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
-<div class="panel-body">
-<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
-</div>
-</div>
-</div>
-<div class="panel panel-default">
-<div class="panel-heading">
-<p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree506cf214cf386d7341133d796d8a5ab6825e6455targetblank506cf21a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/506cf214cf386d7341133d796d8a5ab6825e6455" target="_blank">506cf21</a> </a>
-</p>
-</div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree506cf214cf386d7341133d796d8a5ab6825e6455targetblank506cf21a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreee7fd58bacd2cd150d316b9d8d5df1fee0bfd0093targetblanke7fd58ba" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -509,19 +543,25 @@ Great! You are using Git for version control. Tracking code development and conn
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
+    Ignored:    ETA_1_lambda.dat
+    Ignored:    ETA_1_parBayesB.dat
     Ignored:    analysis/ETA_1_lambda.dat
     Ignored:    analysis/ETA_1_parBayesB.dat
     Ignored:    analysis/mu.dat
     Ignored:    analysis/varE.dat
+    Ignored:    mu.dat
+    Ignored:    varE.dat
 
 Untracked files:
     Untracked:  .DS_Store
-    Untracked:  .Rapp.history
-    Untracked:  docs/figure/Result9_Changepoint.Rmd/
-    Untracked:  results/estsigma.RDS
 
 Unstaged changes:
+    Modified:   analysis/Result10_Correlation.Rmd
+    Modified:   analysis/Result13_LocalCorrelation.Rmd
+    Modified:   analysis/Result7_LowdimIndepGauss.Rmd
+    Modified:   analysis/Result8_RealGenotype.Rmd
     Modified:   analysis/index.Rmd
+    Modified:   results/subogdancandes.RDS
 
 </code></pre>
 <p>
@@ -560,6 +600,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/7d6c1c84c7b26eff99781c65464cfcea54102022/docs/Result7_LowdimIndepGauss.html" target="_blank">7d6c1c8</a>
+</td>
+<td>
+Youngseok
+</td>
+<td>
+2019-10-21
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -622,7 +679,7 @@ html
 Youngseok
 </td>
 <td>
-2019-10-14
+2019-10-13
 </td>
 <td>
 Build site.
@@ -639,7 +696,7 @@ Rmd
 Youngseok
 </td>
 <td>
-2019-10-14
+2019-10-13
 </td>
 <td>
 wflow_publish(&quot;analysis/*.Rmd&quot;)
@@ -654,15 +711,6 @@ wflow_publish(&quot;analysis/*.Rmd&quot;)
 </div>
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>This .Rmd file is to plot results for the experiment MR.ASH and the comparison methods listed below.</p>
-<ol style="list-style-type: decimal">
-<li><code>glmnet</code> R package: Ridge, Lasso, E-NET</li>
-<li><code>ncvreg</code> R package: SCAD, MCP</li>
-<li><code>L0Learn</code> R package: L0Learn</li>
-<li><code>BGLR</code> R package: BayesB, Blasso (Bayesian Lasso)</li>
-<li><code>susieR</code> R package: SuSiE (Sum of Single Effect)</li>
-<li><code>varbvs</code> R package: VarBVS (Variational Bayes Variable Selection)</li>
-</ol>
 <p>The experiment is based on the following simulation setting.</p>
 <div id="design-setting" class="section level3">
 <h3>Design setting</h3>
@@ -676,20 +724,7 @@ wflow_publish(&quot;analysis/*.Rmd&quot;)
 </div>
 <div id="pve" class="section level3">
 <h3>PVE</h3>
-<p>Then we sample <span class="math inline">\(y = X\beta + \epsilon\)</span>, where <span class="math inline">\(\epsilon \sim N(0,\sigma^2 I_n)\)</span>.</p>
-<p>PVE is the proportion of variance explained, defined by</p>
-<p><span class="math display">\[
-{\rm PVE} = \frac{\textrm{Var}(X\beta)}{\textrm{Var}(X\beta) + \sigma^2},
-\]</span></p>
-<p>where <span class="math inline">\(\textrm{Var}(a)\)</span> denotes the sample variance of <span class="math inline">\(a\)</span> calculated using R function <code>var</code>. To this end, we set <span class="math inline">\(\sigma^2 = \textrm{Var}(X\beta)\)</span>.</p>
 <p>We do not fix PVE, but it will be extremely large since <span class="math inline">\(M\)</span> is large compared to <span class="math inline">\(\sigma^2 = 1\)</span>.</p>
-</div>
-<div id="performance-measure" class="section level3">
-<h3>Performance Measure</h3>
-<p>The above two figures display the prediction error. The prediction error we define here is</p>
-<p><span class="math display">\[
-\textrm{Pred.Err}(\hat\beta;y_{\rm test}, X_{\rm test}) = \frac{\textrm{RMSE}}{\sigma} = \frac{\|y_{\rm test} - X_{\rm test} \hat\beta \|}{\sqrt{n}\sigma}
-\]</span> where <span class="math inline">\(y_{\rm test}\)</span> and <span class="math inline">\(X_{\rm test}\)</span> are test data sample in the same way. If <span class="math inline">\(\hat\beta\)</span> is fairly accurate, then we expect that <span class="math inline">\(\rm RMSE\)</span> is similar to <span class="math inline">\(\sigma\)</span>. Therefore in average <span class="math inline">\(\textrm{Pred.Err} \geq 1\)</span> and the smaller the better.</p>
 </div>
 <div id="packages-libraries" class="section level3">
 <h3>Packages / Libraries</h3>
@@ -705,27 +740,29 @@ source(&#39;code/sim_wrapper.R&#39;)</code></pre>
 <h2>Results</h2>
 <p>The result is summarized below.</p>
 <pre class="r"><code>res_df       = readRDS(&quot;results/subogdancandes.RDS&quot;)
-method_list  = c(&quot;Mr.ASH&quot;,&quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;)
+method_list  = c(&quot;Mr.ASH&quot;,&quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,
+                 &quot;Mr.ASH.order&quot;,&quot;Mr.ASH.init&quot;)
+method_level = c(&quot;Mr.ASH&quot;,&quot;Mr.ASH.order&quot;,&quot;Mr.ASH.init&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,
+                 &quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,
+                 &quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;)
+col          = gg_color_hue(13)[c(1,12,13,2:11)]
 for (i in 1:2) {
 res_df[[i]]$fit   = rep(method_list, each = 20)
-res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels =  c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,
-                                            &quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,
-                                            &quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;))
-res_df[[i]] = res_df[[i]][res_df[[i]]$fit != &quot;Ridge&quot;,]
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels =  method_level)
 }
 
-p1 = my.box(res_df[[1]], &quot;fit&quot;, &quot;pred&quot;, values = gg_color_hue(11)[c(1,3,7,6,9,11,2,4,5,8)]) +
+p1 = my.box2(res_df[[1]], &quot;fit&quot;, &quot;pred&quot;, cols = col) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = &quot;none&quot;) +
-  geom_hline(yintercept = median(res_df[[1]]$pred[res_df[[1]]$fit == &quot;Mr.ASH&quot;]), col = gg_color_hue(11)[1],
+  geom_hline(yintercept = mean(res_df[[1]]$pred[res_df[[1]]$fit == &quot;Mr.ASH&quot;]), col = gg_color_hue(11)[1],
              linetype = &quot;dotted&quot;, size = 1.5) +
   scale_y_continuous(trans = &quot;log10&quot;)
-p2 = my.box(res_df[[2]], &quot;fit&quot;, &quot;pred&quot;, values = gg_color_hue(11)[c(1,3,7,6,9,11,2,4,5,8)]) +
+p2 = my.box2(res_df[[2]], &quot;fit&quot;, &quot;pred&quot;, cols = col) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = &quot;none&quot;) +
-  geom_hline(yintercept = median(res_df[[2]]$pred[res_df[[2]]$fit == &quot;Mr.ASH&quot;]), col = gg_color_hue(11)[1],
+  geom_hline(yintercept = mean(res_df[[2]]$pred[res_df[[2]]$fit == &quot;Mr.ASH&quot;]), col = gg_color_hue(11)[1],
              linetype = &quot;dotted&quot;, size = 1.5) +
   scale_y_continuous(trans = &quot;log10&quot;)
 subtitle  = ggdraw() + draw_label(&quot;Scenario: SuBogdanCandes, n = 1010, p = 1000, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 18) 
@@ -768,19 +805,19 @@ Date
 Youngseok
 </td>
 <td>
-2019-10-14
+2019-10-13
 </td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
-<pre class="r"><code>p1 = my.box(res_df[[1]], &quot;fit&quot;, &quot;time&quot;, values = gg_color_hue(11)[c(1,3,7,6,9,11,2,4,5,8)]) +
+<pre class="r"><code>p1 = my.box2(res_df[[1]], &quot;fit&quot;, &quot;time&quot;, cols = col) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = &quot;none&quot;) +
   scale_y_continuous(trans = &quot;log10&quot;)
-p2 = my.box(res_df[[2]], &quot;fit&quot;, &quot;time&quot;, values = gg_color_hue(11)[c(1,3,7,6,9,11,2,4,5,8)]) +
+p2 = my.box2(res_df[[2]], &quot;fit&quot;, &quot;time&quot;, cols = col) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = &quot;none&quot;) +
@@ -825,7 +862,7 @@ Date
 Youngseok
 </td>
 <td>
-2019-10-14
+2019-10-13
 </td>
 </tr>
 </tbody>
@@ -837,10 +874,12 @@ n            = 1010
 p            = 1000
 s_list       = c(20,100)
 method_list  = c(&quot;varbvs&quot;,&quot;bayesb&quot;,&quot;blasso&quot;,&quot;susie&quot;,&quot;enet&quot;,&quot;lasso&quot;,&quot;ridge&quot;,&quot;scad2&quot;,&quot;mcp2&quot;,&quot;l0learn&quot;)
-method_num   = length(method_list) + 1
+method_list2 = c(&quot;mr.ash&quot;, method_list, &quot;mr.ash.order&quot;, &quot;mr.ash.init&quot;)
+method_num   = length(method_list2)
 iter_num     = 20
-pred         = matrix(0, iter_num, method_num); colnames(pred) = c(&quot;mr.ash&quot;, method_list)
-time         = matrix(0, iter_num, method_num); colnames(time) = c(&quot;mr.ash&quot;, method_list)
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
 
 
 for (iter in 1:2) {
@@ -859,19 +898,36 @@ for (i in 1:20) {
     fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
     pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
     time[i,j+1]   = fit$t
+      if (method_list[j] == &quot;lasso&quot;) {
+      lasso.path.order = mr.ash:::path.order(fit$fit$glmnet.fit)
+      lasso.beta       = as.vector(coef(fit$fit))[-1]
+      lasso.time       = c(fit$t, fit$t2)
+    }
   }
  
   fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
                            sa2 = (2^((0:19)) - 1)^2)
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
-  print(c(fit$fit$pi), digits = 3)
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            update.order = lasso.path.order,
+                            sa2 = (2^((0:19)) - 1)^2)
+  pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+2] = fit$t + lasso.time[2]
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta,
+                            sa2 = (2^((0:19)) - 1)^2)
+  pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+3] = fit$t + lasso.time[1]
+  
 }
 print(&quot;----&quot;)
 print(pred)
 print(time)
 print(&quot;----&quot;)
-tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(c(&quot;mr.ash&quot;, method_list), each = 20))
+tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
 }</code></pre>
 </div>
 <div id="system-configuration" class="section level2">
@@ -887,7 +943,7 @@ tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(c(&quot;mr.
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 3.5.3 (2019-03-11)
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
-Running under: macOS Mojave 10.14
+Running under: macOS High Sierra 10.13.3
 
 Matrix products: default
 BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
@@ -900,27 +956,27 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
- [1] varbvs_2.5-16 L0Learn_1.2.0 ncvreg_3.11-1 varbvs2_0.1-1 glmnet_2.0-18
- [6] foreach_1.4.7 BGLR_1.0.8    susieR_0.8.0  cowplot_1.0.0 ggplot2_3.2.1
+ [1] varbvs_2.6-5  L0Learn_1.1.0 ncvreg_3.11-1 varbvs2_0.1-1 glmnet_2.0-16
+ [6] foreach_1.4.4 BGLR_1.0.8    susieR_0.7.1  cowplot_0.9.4 ggplot2_3.2.1
 [11] Matrix_1.2-17
 
 loaded via a namespace (and not attached):
  [1] Rcpp_1.0.2          RColorBrewer_1.1-2  plyr_1.8.4         
- [4] compiler_3.5.3      pillar_1.4.2        git2r_0.26.1       
- [7] workflowr_1.4.0     iterators_1.0.12    tools_3.5.3        
-[10] digest_0.6.21       evaluate_0.14       tibble_2.1.3       
-[13] gtable_0.3.0        lattice_0.20-38     pkgconfig_2.0.3    
-[16] rlang_0.4.0         yaml_2.2.0          xfun_0.9           
+ [4] compiler_3.5.3      pillar_1.3.1        git2r_0.25.2       
+ [7] workflowr_1.3.0     iterators_1.0.10    tools_3.5.3        
+[10] digest_0.6.18       evaluate_0.13       tibble_2.1.1       
+[13] gtable_0.3.0        lattice_0.20-38     pkgconfig_2.0.2    
+[16] rlang_0.4.0         yaml_2.2.0          xfun_0.6           
 [19] withr_2.1.2         stringr_1.4.0       dplyr_0.8.3        
-[22] knitr_1.25          fs_1.3.1            rprojroot_1.3-2    
+[22] knitr_1.22          fs_1.3.0            rprojroot_1.3-2    
 [25] grid_3.5.3          tidyselect_0.2.5    glue_1.3.1         
-[28] R6_2.4.0            rmarkdown_1.15      latticeExtra_0.6-28
+[28] R6_2.4.0            rmarkdown_1.12      latticeExtra_0.6-28
 [31] reshape2_1.4.3      purrr_0.3.2         magrittr_1.5       
-[34] whisker_0.4         codetools_0.2-16    backports_1.1.4    
-[37] scales_1.0.0        htmltools_0.3.6     assertthat_0.2.1   
-[40] colorspace_1.4-1    nor1mix_1.3-0       stringi_1.4.3      
-[43] lazyeval_0.2.2      munsell_0.5.0       truncnorm_1.0-8    
-[46] crayon_1.3.4       </code></pre>
+[34] whisker_0.3-2       codetools_0.2-16    backports_1.1.4    
+[37] scales_1.0.0        htmltools_0.4.0     assertthat_0.2.1   
+[40] colorspace_1.4-1    labeling_0.3        nor1mix_1.2-3      
+[43] stringi_1.4.3       lazyeval_0.2.2      munsell_0.5.0      
+[46] truncnorm_1.0-8     crayon_1.3.4       </code></pre>
 </div>
 </div>
 
@@ -954,54 +1010,6 @@ $(document).ready(function () {
 });
 
 
-</script>
-
-<!-- tabsets -->
-
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
-<!-- code folding -->
-<script>
-$(document).ready(function () {
-  window.initializeCodeFolding("hide" === "show");
-});
-</script>
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

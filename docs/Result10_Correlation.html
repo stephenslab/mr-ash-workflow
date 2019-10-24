@@ -434,7 +434,7 @@ div.section {
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -443,7 +443,7 @@ div.section {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -452,10 +452,10 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-10-22
+<strong>Last updated:</strong> 2019-10-23
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>mr-ash-workflow/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -471,12 +471,12 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
@@ -531,10 +531,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree51ec7d24f3e0c088bf8967d71033c2ae29bf81eetargetblank51ec7d2a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/51ec7d24f3e0c088bf8967d71033c2ae29bf81ee" target="_blank">51ec7d2</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreee7fd58bacd2cd150d316b9d8d5df1fee0bfd0093targetblanke7fd58ba"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/e7fd58bacd2cd150d316b9d8d5df1fee0bfd0093" target="_blank">e7fd58b</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree51ec7d24f3e0c088bf8967d71033c2ae29bf81eetargetblank51ec7d2a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreee7fd58bacd2cd150d316b9d8d5df1fee0bfd0093targetblanke7fd58ba" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -554,16 +554,13 @@ Ignored files:
 
 Untracked files:
     Untracked:  .DS_Store
-    Untracked:  analysis/Result13_LocalCorrelation.Rmd
-    Untracked:  docs/figure/Result13_LocalCorrelation.Rmd/
-    Untracked:  results/equicorr.RDS
-    Untracked:  results/localcorr.RDS
-    Untracked:  results/localcorr.REDS
 
 Unstaged changes:
-    Modified:   analysis/Result11_UpdateOrder.Rmd
+    Modified:   analysis/Result10_Correlation.Rmd
+    Modified:   analysis/Result13_LocalCorrelation.Rmd
+    Modified:   analysis/Result7_LowdimIndepGauss.Rmd
+    Modified:   analysis/Result8_RealGenotype.Rmd
     Modified:   analysis/index.Rmd
-    Modified:   code/sim_wrapper.R
 
 </code></pre>
 <p>
@@ -602,6 +599,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/665504aa1ef353b56d457fa7a37b3f8f143e75fc/docs/Result10_Correlation.html" target="_blank">665504a</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-22
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 html
@@ -717,9 +731,9 @@ for (i in 1:4) {
                                     fontface  = &#39;bold&#39;, size = 18)
   pp[[i]]   = plot_grid(subtitle, pp[[i]], ncol = 1, rel_heights = c(0.06,0.95))
 }
-fig_main  = plot_grid(pp[[1]],pp[[2]],pp[[3]],pp[[4]], nrow = 2, rel_widths = c(0.3,0.3,0.3,0.3))
+fig_main  = plot_grid(pp[[1]],pp[[2]],pp[[3]], nrow = 1, rel_widths = c(0.3,0.3,0.3,0.3))
 title     = ggdraw() + draw_label(&quot;Prediction Error (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
-subtitle  = ggdraw() + draw_label(&quot;Scenario: EquiCorrGauss + SparseNormal, n = 500, p = 2000, pve = 0.5&quot;, fontface = &#39;bold&#39;, size = 18)
+subtitle  = ggdraw() + draw_label(&quot;Scenario: LocalCorrGauss + SparseNormal, n = 500, p = 2000, pve = 0.5&quot;, fontface = &#39;bold&#39;, size = 18)
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.06,0.95))
 fig</code></pre>
 <p><img src="figure/Result10_Correlation.Rmd/fig1-1.png" width="1440" style="display: block; margin: auto;" /></p>
@@ -745,6 +759,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/665504aa1ef353b56d457fa7a37b3f8f143e75fc/docs/figure/Result10_Correlation.Rmd/fig1-1.png" target="_blank">665504a</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-22
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/stephenslab/mr-ash-workflow/blob/79e1aab344e3ffb3f652b98f947b9f48412d8dbe/docs/figure/Result10_Correlation.Rmd/fig1-1.png" target="_blank">79e1aab</a>

@@ -73,9 +73,9 @@ for (i in 1:4) {
                                     fontface  = 'bold', size = 18)
   pp[[i]]   = plot_grid(subtitle, pp[[i]], ncol = 1, rel_heights = c(0.06,0.95))
 }
-fig_main  = plot_grid(pp[[1]],pp[[2]],pp[[3]],pp[[4]], nrow = 2, rel_widths = c(0.3,0.3,0.3,0.3))
+fig_main  = plot_grid(pp[[1]],pp[[2]],pp[[3]], nrow = 1, rel_widths = c(0.3,0.3,0.3,0.3))
 title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
-subtitle  = ggdraw() + draw_label("Scenario: EquiCorrGauss + SparseNormal, n = 500, p = 2000, pve = 0.5", fontface = 'bold', size = 18)
+subtitle  = ggdraw() + draw_label("Scenario: LocalCorrGauss + SparseNormal, n = 500, p = 2000, pve = 0.5", fontface = 'bold', size = 18)
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.06,0.95))
 fig
 ```
