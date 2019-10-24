@@ -99,7 +99,8 @@ This experiment is to compare performance of the methods when $p$ varies while t
 - Result: 
 
 <p align="center">
-| <img src=figure/Result4_Highdim.Rmd/fig1-1.png width="500" height="500"> | <img src=figure/Result4_Highdim.Rmd/fig2-1.png width="500" height="500"> |
+<img src=figure/Result4_Highdim.Rmd/fig1-1.png width="500" height="500">
+<img src=figure/Result4_Highdim.Rmd/fig2-1.png width="500" height="500">
 </p>
 
 
@@ -109,6 +110,16 @@ optimality](https://arxiv.org/pdf/1605.08651.pdf) ) that the prediction error sc
 Also, the computation time of MR.ASH scales linearly in $\log p$.
 
 (4) [Sparsity $s$](Result5_SparseSignal.html).
+
+- Result:
+
+<p align="center">
+<img src=figure/Result5_SparseSignal.Rmd/fig3-1.png width="500" height="500">
+<img src=figure/Result5_SparseSignal.Rmd/fig4-1..png width="500" height="500">
+</p>
+
+
+- Discussion:
 
 (5) [PVE](Result6_PVE.html).
 
