@@ -107,7 +107,7 @@ This experiment is to compare performance of the methods when $p$ varies while t
 - Discussion: It shows that MR.ASH and VarBVS outperform well. Since the theory says (e.g. [Slope meets Lasso: improved oracle bounds and
 optimality](https://arxiv.org/pdf/1605.08651.pdf) ) that the prediction error scales as $\sqrt{s\log(p/s)/n}$, and thus we can expect that the prediction error increaese log-linearly in $p$. One can check this in the above figure.
 
-Also, the computation time of MR.ASH scales linearly in $\log p$.
+Also, the computation time of MR.ASH scales linearly in $\log p$. We conclude that BayesB and Blasso do not scale well for large $p$.
 
 (4) [Sparsity $s$](Result5_SparseSignal.html).
 
@@ -118,22 +118,28 @@ Also, the computation time of MR.ASH scales linearly in $\log p$.
 <img src=figure/Result5_SparseSignal.Rmd/fig4-1.png width="500" height="500">
 </p>
 
-- Discussion: For 
+- Discussion: Mr.ASH does well in sparse setting. VARBVS shows very similar performance compared to Mr.ASH. BayesB performs reasonably well for all cases, hence very balanced. Blasso does very well in non-sparse setting.
 
-| Method   | Mr.ASH   | E-NET    | Lasso    | Ridge    | SCAD | MCP | L0Learn | VARBVS | BayesB | Blasso | SuSie |
-|----------|----------|----------|----------|----------|------|-----|---------|--------|--------|--------|-------|
-| s = 1    | 1.007570 | 1.006124 | 1.005799 | 1.061976 |      |     |         |        |        |        |       |
-| s = 5    |          |          |          |          |      |     |         |        |        |        |       |
-| s = 20   |          |          |          |          |      |     |         |        |        |        |       |
-| s = 100  |          |          |          |          |      |     |         |        |        |        |       |
-| s = 500  |          |          |          |          |      |     |         |        |        |        |       |
-| s = 2000 |          |          |          |          |      |     |         |        |        |        |       |
+| Method   | Mr.ASH | VARBVS | BayesB   | Blasso     | Susie | E-NET | Lasso | Ridge | SCAD | MCP  | L0Learn |
+|----------|--------|--------|----------|------------|-------|-------|-------|-------|------|------|---------|
+| s = 1    | 1.01   | 1.01   | 1.01     | 1.06       | 1.01  | 1.03  | 1.04  | 1.40  | 1.01 | 1.01 | 1.02    |
+| s = 5    | 1.02   | 1.02   | 1.02     | 1.11       | 1.02  | 1.08  | 1.08  | 1.43  | 1.03 | 1.02 | 1.03    |
+| s = 20   | 1.06   | 1.06   | 1.07     | 1.20       | 1.09  | 1.13  | 1.14  | 1.41  | 1.08 | 1.07 | 1.07    |
+| s = 100  | 1.28   | 1.28   | 1.28     | 1.33       | 1.35  | 1.30  | 1.31  | 1.39  | 1.27 | 1.27 | 1.34    |
+| s = 500  | 1.38   | 1.39   | 1.37     | 1.37       | 1.40  | 1.40  | 1.40  | 1.40  | 1.40 | 1.40 | 1.43    |
+| s = 2000 | 1.42   | 1.43   | 1.40     | 1.39       | 1.43  | 1.43  | 1.44  | 1.43  | 1.44 | 1.44 | 1.45    |
+| Average  | sparse | sparse | balanced | non-sparse |       |       |       |       |      |      |         |
 
 (5) [PVE](Result6_PVE.html).
 
 - Result:
 
-- Discussion:
+<p align="center">
+<img src=figure/Result6_PVE.Rmd/fig1-1.png width="500" height="500">
+<img src=figure/Result6_PVE.Rmd/fig2-1.png width="500" height="500">
+</p>
+
+- Discussion: MR.ASH outperforms for all the PVEs. However this experiment setting is favorable for MR.ASH. Thus we can just conclude, for safety, that the relative performance does not depend very much on PVE, but Ridge, SuSiE and Blasso suffer for high PVE.
 
 ### Performance on different design settings
 
@@ -144,6 +150,16 @@ Also, the computation time of MR.ASH scales linearly in $\log p$.
 (8) [Changepoint](Result9_Changepoint.html)
 
 (9) [EquicorrGauss](Result10_Correlation.html)
+
+| Method                            | Mr.ASH | Mr.ASH.order | MR.ASH.init | VARBVS | BayesB | Blasso | SuSiE | E-NET | Lasso | Ridge | SCAD  | MCP   | L0Learn |
+|-----------------------------------|--------|--------------|-------------|--------|--------|--------|-------|-------|-------|-------|-------|-------|---------|
+| LowdimIndepGauss + SuBogdanCandes | 1.012  | 1.012        | 1.012       | 1.012  | 2.315  | 46.19  | 1.012 | 94.60 | 96.82 | 2680  | 1.012 | 1.012 | 1.230   |
+| RealGenotype + PointNormal        | 1.160  | 1.145        | 1.154       | 1.177  | 1.258  | 1.189  | 1.157 | 1.180 | 1.199 | 1.254 | 1.154 | 1.162 | 1.194   |
+| EquiCorrGauss + PointNormal       | 1.119  | 1.126        | 1.080       | 1.142  | 1.219  | 1.144  | 1.154 | 1.097 | 1.103 | 1.189 | 1.078 | 1.080 | 1.101   |
+| LocalCorrGauss + PointNormal      | 1.092  | 1.083        | 1.076       | 1.096  | 1.144  | 1.193  | 1.098 | 1.119 | 1.128 | 1.270 | 1.078 | 1.076 | 1.082   |
+| Changepoint + BigSuddenChange     | 2.885  | 1.450        | 1.103       | 5.086  | 1.890  | 3.636  | 9.518 | 3.991 | 5.320 | 9.810 | 1.765 | 1.956 | 2.346   |
+| Changepoint + OneSmallChange      | 2.195  | 1.168        | 1.272       | 1.742  | 8.864  | 4.442  | 1.203 | 3.776 | 4.255 | 6.622 | 1.478 | 2.246 | 3.004   |
+| Computation time                  | 2.218  | 3.166        | 5.944       | 3.445  | 3.583  | 4.001  | 1.808 | 51.50 | 4.670 | 5.567 | 7.538 | 6.884 | 10.95   |
 
 ---------------------
 
@@ -177,4 +193,18 @@ which is a parametric form of $\lambda$ (and $\gamma$ if exists).
 
 (2) VEB can do better than cross validation.
 
+----------------------
 
+## Brief Summary of Comparison Methods
+
+### L0Learn
+
+`L0Learn` R package provides a fast coordinate descent algorithm for the best subset regression.
+
+[Fast Best Subset Selection: Coordinate Descent and Local Combinatorial Optimization Algorithms](https://arxiv.org/abs/1803.01454)
+
+### SCAD, MCP
+
+`ncvreg` R package provides a fast coordinate descent algorithm for the non-convex penalized linear regression method with well-known penalty functions SCAD and MCP.
+
+[Coordinate descent algorithms for nonconvex penalized regression, with applications to biological feature selection](http://myweb.uiowa.edu/pbreheny/pdf/Breheny2011.pdf)
