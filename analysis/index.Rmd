@@ -115,7 +115,7 @@ Also, the computation time of MR.ASH scales linearly in $\log p$.
 
 <p align="center">
 <img src=figure/Result5_SparseSignal.Rmd/fig3-1.png width="500" height="500">
-<img src=figure/Result5_SparseSignal.Rmd/fig4-1..png width="500" height="500">
+<img src=figure/Result5_SparseSignal.Rmd/fig4-1.png width="500" height="500">
 </p>
 
 
