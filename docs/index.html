@@ -367,10 +367,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree4c49871a8e675c7bb37189eb5208cd1bfeee5a9ftargetblank4c49871a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/4c49871a8e675c7bb37189eb5208cd1bfeee5a9f" target="_blank">4c49871</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree67178cededfc8ff13ae2220668caea24adc9385ftargetblank67178cea"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/67178cededfc8ff13ae2220668caea24adc9385f" target="_blank">67178ce</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree4c49871a8e675c7bb37189eb5208cd1bfeee5a9ftargetblank4c49871a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree67178cededfc8ff13ae2220668caea24adc9385ftargetblank67178cea" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -398,7 +398,6 @@ Untracked files:
     Untracked:  results/sparsesignal.RDS
 
 Unstaged changes:
-    Modified:   analysis/Result5_SparseSignal.Rmd
     Modified:   analysis/Result6_PVE.Rmd
     Modified:   code/sim_wrapper.R
     Modified:   docs/.DS_Store
@@ -440,6 +439,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/67178cededfc8ff13ae2220668caea24adc9385f/analysis/index.Rmd" target="_blank">67178ce</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-23
+</td>
+<td>
+wflow_publish(“analysis/index.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/46a6d538696f407b9e68c8420f2b83db642c81cd/docs/index.html" target="_blank">46a6d53</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-23
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1925,15 +1958,26 @@ Start workflowr project.
 <li>Result:</li>
 </ul>
 <p align="center">
-<div class="line-block"><img src=figure/Result4_Highdim.Rmd/fig1-1.png width="500" height="500"> | <img src=figure/Result4_Highdim.Rmd/fig2-1.png width="500" height="500"> |</div>
+<img src=figure/Result4_Highdim.Rmd/fig1-1.png width="500" height="500"> <img src=figure/Result4_Highdim.Rmd/fig2-1.png width="500" height="500">
 </p>
 <ul>
 <li>Discussion: It shows that MR.ASH and VarBVS outperform well. Since the theory says (e.g. <a href="https://arxiv.org/pdf/1605.08651.pdf">Slope meets Lasso: improved oracle bounds and optimality</a> ) that the prediction error scales as <span class="math inline">\(\sqrt{s\log(p/s)/n}\)</span>, and thus we can expect that the prediction error increaese log-linearly in <span class="math inline">\(p\)</span>. One can check this in the above figure.</li>
 </ul>
 <p>Also, the computation time of MR.ASH scales linearly in <span class="math inline">\(\log p\)</span>.</p>
 <ol start="4" style="list-style-type: decimal">
-<li><p><a href="Result5_SparseSignal.html">Sparsity <span class="math inline">\(s\)</span></a>.</p></li>
-<li><p><a href="Result6_PVE.html">PVE</a>.</p></li>
+<li><a href="Result5_SparseSignal.html">Sparsity <span class="math inline">\(s\)</span></a>.</li>
+</ol>
+<ul>
+<li>Result:</li>
+</ul>
+<p align="center">
+<img src=figure/Result5_SparseSignal.Rmd/fig3-1.png width="500" height="500"> <img src=figure/Result5_SparseSignal.Rmd/fig4-1..png width="500" height="500">
+</p>
+<ul>
+<li>Discussion:</li>
+</ul>
+<ol start="5" style="list-style-type: decimal">
+<li><a href="Result6_PVE.html">PVE</a>.</li>
 </ol>
 <ul>
 <li><p>Result:</p></li>
