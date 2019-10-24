@@ -367,10 +367,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree2c0dc4f84bd5464366869fa91e15ac5a12a37d7ftargetblank2c0dc4fa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/2c0dc4f84bd5464366869fa91e15ac5a12a37d7f" target="_blank">2c0dc4f</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree75d105c28633742769ff7726f49adb783fa504bbtargetblank75d105ca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/75d105c28633742769ff7726f49adb783fa504bb" target="_blank">75d105c</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree2c0dc4f84bd5464366869fa91e15ac5a12a37d7ftargetblank2c0dc4fa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree75d105c28633742769ff7726f49adb783fa504bbtargetblank75d105ca" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -428,6 +428,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/75d105c28633742769ff7726f49adb783fa504bb/analysis/index.Rmd" target="_blank">75d105c</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-23
+</td>
+<td>
+wflow_publish(“analysis/index.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/32d0091108064045e5e21258c7db8d295f31a694/docs/index.html" target="_blank">32d0091</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-23
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -2065,8 +2099,112 @@ Start workflowr project.
 <img src=figure/Result5_SparseSignal.Rmd/fig2-1.png width="500" height="500"> <img src=figure/Result5_SparseSignal.Rmd/fig4-1.png width="500" height="500">
 </p>
 <ul>
-<li>Discussion: For | — | | 1.007570 | 1.006124 | 1.005799 1.061976 1.006140 1.033331 1.040706 1.402156 1.008038 1.010529 1.022907 |</li>
+<li>Discussion: For</li>
 </ul>
+<table>
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>Mr.ASH</th>
+<th>E-NET</th>
+<th>Lasso</th>
+<th>Ridge</th>
+<th>SCAD</th>
+<th>MCP</th>
+<th>L0Learn</th>
+<th>VARBVS</th>
+<th>BayesB</th>
+<th>Blasso</th>
+<th>SuSie</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>s = 1</td>
+<td>1.007570</td>
+<td>1.006124</td>
+<td>1.005799</td>
+<td>1.061976</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>s = 5</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>s = 20</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>s = 100</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>s = 500</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>s = 2000</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 <ol start="5" style="list-style-type: decimal">
 <li><a href="Result6_PVE.html">PVE</a>.</li>
 </ol>
