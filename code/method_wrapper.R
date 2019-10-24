@@ -207,7 +207,10 @@ fit.scad2 = function(X, y, X.test, y.test, seed = 1) {
   t.scad            = system.time(
     fit.scad       <- cv.ncvreg(X, y, penalty = "SCAD", nfolds = 10))
   
-  return (list(fit = fit.scad, t = t.scad[3], rsse = norm(y.test - predict(fit.scad, X.test), '2')))
+  t.scad2           = system.time(ncvreg(X, y, penalty = "SCAD"))
+  
+  return (list(fit = fit.scad, t = t.scad[3], rsse = norm(y.test - predict(fit.scad, X.test), '2'),
+               t2 = t.scad2[3]))
 }
 
 #'
@@ -222,8 +225,10 @@ fit.mcp2 = function(X, y, X.test, y.test, seed = 1) {
   # run MCP
   t.mcp           = system.time(
     fit.mcp      <- cv.ncvreg(X, y, penalty = "MCP", nfolds = 10))
+  t.mcp2          = system.time(ncvreg(X, y, penalty = "MCP"))
   
-  return (list(fit = fit.mcp, t = t.mcp[3], rsse = norm(y.test - predict(fit.mcp, X.test), '2')))
+  return (list(fit = fit.mcp, t = t.mcp[3], rsse = norm(y.test - predict(fit.mcp, X.test), '2'),
+               t2 = t.mcp2[3]))
 }
 
 

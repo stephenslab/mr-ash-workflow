@@ -151,7 +151,7 @@ Also, the computation time of MR.ASH scales linearly in $\log p$. We conclude th
 
 (9) [EquicorrGauss](Result10_Correlation.html)
 
-| Method                            | Mr.ASH | Mr.ASH.order | MR.ASH.init | VARBVS | BayesB | Blasso | SuSiE | E-NET | Lasso | Ridge | SCAD  | MCP   | L0Learn |
+| Method                            | Mr.ASH | Mr.ASH.order | MR.ASH.init | VARBVS | BayesB | Blasso | SuSiE | ENET | Lasso | Ridge | SCAD  | MCP   | L0Learn |
 |-----------------------------------|--------|--------------|-------------|--------|--------|--------|-------|-------|-------|-------|-------|-------|---------|
 | LowdimIndepGauss + SuBogdanCandes | **1.012**  | **1.012**        | **1.012**       | **1.012**  | 2.315  | 46.19  | **1.012** | 94.60 | 96.82 | 2680  | **1.012** | **1.012** | 1.230   |
 | RealGenotype + PointNormal        | 1.160  | **1.145**        | 1.154       | 1.177  | 1.258  | 1.189  | 1.157 | 1.180 | 1.199 | 1.254 | 1.154 | 1.162 | 1.194   |
