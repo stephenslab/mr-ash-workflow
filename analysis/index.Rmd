@@ -69,8 +69,9 @@ We observe that the relative performance is dependent on the value of $p$ (compa
 
 - Result: 
 
+<p align="center">
 <img align="center" src=figure/Result1_Ridge.Rmd/fig1-1.png width="500" height="500">
-
+</p>
 
 - Discussion: The message here is MR.ASH performs reasonably well, and the only penalized linear regression method that outperforms Ridge with cross-validation. However, let us mention that Blasso (Bayesian Lasso) performs the best, which uses a non-sparse Laplace prior on $\beta$. Also, BayesB performs better than MR.ASH, which uses a spike-and-slab prior on $\beta$.
 
@@ -83,10 +84,9 @@ The reason why we set PVE = 0.99, the cross-validated solution of the method (E-
 - Result: 
 
 <p align="center">
-<img align="center" src=figure/Result2_Nonconvex.Rmd/fig1-1.png width="500" height="500">
+<img src=figure/Result2_Nonconvex.Rmd/fig1-1.png width="500" height="500">
+<img src=figure/Plots_for_paper.Rmd/fig1-1.png width="500" height="500">
 </p>
-
-<img align="center" src=figure/Plots_for_paper.Rmd/fig1-1.png width="500" height="500">
 
 - Discussion: Clearly MR.ASH is an overall winner, outperforming all the other methods. Flexibility of MR.ASH Gaussian mixture prior is illustrated well in the above figure.
 
