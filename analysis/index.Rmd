@@ -118,7 +118,9 @@ Also, the computation time of MR.ASH scales linearly in $\log p$.
 <img src=figure/Result5_SparseSignal.Rmd/fig4-1.png width="500" height="500">
 </p>
 
-- Discussion:
+- Discussion: For 
+| --- |
+| 1.007570 | 1.006124 | 1.005799 1.061976 1.006140 1.033331 1.040706 1.402156 1.008038 1.010529 1.022907 |
 
 (5) [PVE](Result6_PVE.html).
 
