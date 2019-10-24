@@ -11,15 +11,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-This .Rmd file is to plot results for the experiment MR.ASH and the comparison methods listed below.
-
-(1) `glmnet` R package: Ridge, Lasso, E-NET
-(2) `ncvreg` R package: SCAD, MCP
-(3) `L0Learn` R package: L0Learn
-(4) `BGLR` R package: BayesB, Blasso (Bayesian Lasso)
-(5) `susieR` R package: SuSiE (Sum of Single Effect)
-(6) `varbvs` R package: VarBVS (Variational Bayes Variable Selection)
-
 The experiment is based on the following simulation setting.
 
 ### Design setting
@@ -36,26 +27,7 @@ $M = 1000$ is very large positive constant, and we fix $\sigma^2 = 1$.
 
 ### PVE
 
-Then we sample $y = X\beta + \epsilon$, where $\epsilon \sim N(0,\sigma^2 I_n)$.
-
-PVE is the proportion of variance explained, defined by
-
-$$
-{\rm PVE} = \frac{\textrm{Var}(X\beta)}{\textrm{Var}(X\beta) + \sigma^2},
-$$
-
-where $\textrm{Var}(a)$ denotes the sample variance of $a$ calculated using R function `var`. To this end, we set $\sigma^2 = \textrm{Var}(X\beta)$.
-
 We do not fix PVE, but it will be extremely large since $M$ is large compared to $\sigma^2 = 1$.
-
-### Performance Measure
-
-The above two figures display the prediction error. The prediction error we define here is
-
-$$
-\textrm{Pred.Err}(\hat\beta;y_{\rm test}, X_{\rm test}) = \frac{\textrm{RMSE}}{\sigma} = \frac{\|y_{\rm test} - X_{\rm test} \hat\beta \|}{\sqrt{n}\sigma}
-$$
-where $y_{\rm test}$ and $X_{\rm test}$ are test data sample in the same way. If $\hat\beta$ is fairly accurate, then we expect that $\rm RMSE$ is similar to $\sigma$. Therefore in average $\textrm{Pred.Err} \geq 1$ and the smaller the better.
 
 ### Packages / Libraries
 
@@ -75,27 +47,29 @@ The result is summarized below.
 
 ```{r fig1, fig.height=7, fig.width=15}
 res_df       = readRDS("results/subogdancandes.RDS")
-method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "Mr.ASH.order","Mr.ASH.init")
+method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "VarBVS","BayesB","Blasso","SuSiE")
+col          = gg_color_hue(13)[c(1,12,13,2:11)]
 for (i in 1:2) {
 res_df[[i]]$fit   = rep(method_list, each = 20)
-res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
-                                            "SCAD","MCP","L0Learn",
-                                            "VarBVS","BayesB","Blasso","SuSiE"))
-res_df[[i]] = res_df[[i]][res_df[[i]]$fit != "Ridge",]
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels =  method_level)
 }
 
-p1 = my.box(res_df[[1]], "fit", "pred", values = gg_color_hue(11)[c(1,3,7,6,9,11,2,4,5,8)]) +
+p1 = my.box2(res_df[[1]], "fit", "pred", cols = col) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none") +
-  geom_hline(yintercept = median(res_df[[1]]$pred[res_df[[1]]$fit == "Mr.ASH"]), col = gg_color_hue(11)[1],
+  geom_hline(yintercept = mean(res_df[[1]]$pred[res_df[[1]]$fit == "Mr.ASH"]), col = gg_color_hue(11)[1],
              linetype = "dotted", size = 1.5) +
   scale_y_continuous(trans = "log10")
-p2 = my.box(res_df[[2]], "fit", "pred", values = gg_color_hue(11)[c(1,3,7,6,9,11,2,4,5,8)]) +
+p2 = my.box2(res_df[[2]], "fit", "pred", cols = col) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none") +
-  geom_hline(yintercept = median(res_df[[2]]$pred[res_df[[2]]$fit == "Mr.ASH"]), col = gg_color_hue(11)[1],
+  geom_hline(yintercept = mean(res_df[[2]]$pred[res_df[[2]]$fit == "Mr.ASH"]), col = gg_color_hue(11)[1],
              linetype = "dotted", size = 1.5) +
   scale_y_continuous(trans = "log10")
 subtitle  = ggdraw() + draw_label("Scenario: SuBogdanCandes, n = 1010, p = 1000, pve = 0.5", fontface  = 'bold', size = 18) 
@@ -110,12 +84,12 @@ fig
 ```
 
 ```{r fig2, fig.height=7, fig.width=15}
-p1 = my.box(res_df[[1]], "fit", "time", values = gg_color_hue(11)[c(1,3,7,6,9,11,2,4,5,8)]) +
+p1 = my.box2(res_df[[1]], "fit", "time", cols = col) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none") +
   scale_y_continuous(trans = "log10")
-p2 = my.box(res_df[[2]], "fit", "time", values = gg_color_hue(11)[c(1,3,7,6,9,11,2,4,5,8)]) +
+p2 = my.box2(res_df[[2]], "fit", "time", cols = col) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none") +
@@ -137,10 +111,12 @@ n            = 1010
 p            = 1000
 s_list       = c(20,100)
 method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
-method_num   = length(method_list) + 1
+method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
+method_num   = length(method_list2)
 iter_num     = 20
-pred         = matrix(0, iter_num, method_num); colnames(pred) = c("mr.ash", method_list)
-time         = matrix(0, iter_num, method_num); colnames(time) = c("mr.ash", method_list)
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
 
 
 for (iter in 1:2) {
@@ -159,19 +135,36 @@ for (i in 1:20) {
     fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
     pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
     time[i,j+1]   = fit$t
+      if (method_list[j] == "lasso") {
+      lasso.path.order = mr.ash:::path.order(fit$fit$glmnet.fit)
+      lasso.beta       = as.vector(coef(fit$fit))[-1]
+      lasso.time       = c(fit$t, fit$t2)
+    }
   }
  
   fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
                            sa2 = (2^((0:19)) - 1)^2)
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
-  print(c(fit$fit$pi), digits = 3)
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            update.order = lasso.path.order,
+                            sa2 = (2^((0:19)) - 1)^2)
+  pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+2] = fit$t + lasso.time[2]
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta,
+                            sa2 = (2^((0:19)) - 1)^2)
+  pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+3] = fit$t + lasso.time[1]
+  
 }
 print("----")
 print(pred)
 print(time)
 print("----")
-tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(c("mr.ash", method_list), each = 20))
+tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
 }
 ```
 
