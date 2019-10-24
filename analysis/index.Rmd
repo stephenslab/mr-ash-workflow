@@ -98,14 +98,16 @@ This experiment is to compare performance of the methods when $p$ varies while t
 
 - Result: 
 
+<p align="center">
 <img align="center" src=figure/Result4_Highdim.Rmd/fig1-1.png width="500" height="500">
+<img align="center" src=figure/Result4_Highdim.Rmd/fig2-1.png width="500" height="500">
+</p>
 
-It shows that MR.ASH and VarBVS outperform well.
 
-- Discussion: Since the theory says (e.g. [Slope meets Lasso: improved oracle bounds and
+- Discussion: It shows that MR.ASH and VarBVS outperform well. Since the theory says (e.g. [Slope meets Lasso: improved oracle bounds and
 optimality](https://arxiv.org/pdf/1605.08651.pdf) ) that the prediction error scales as $\sqrt{s\log(p/s)/n}$, and thus we can expect that the prediction error increaese log-linearly in $p$. One can check this in the above figure.
 
-Also, surprisingly 
+Also, the computation time of MR.ASH scales linearly in $\log p$.
 
 (4) [Sparsity $s$](Result5_SparseSignal.html).
 
