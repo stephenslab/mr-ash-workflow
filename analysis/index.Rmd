@@ -82,9 +82,11 @@ The reason why we set PVE = 0.99, the cross-validated solution of the method (E-
 
 - Result: 
 
+<p align="center">
 <img align="center" src=figure/Result2_Nonconvex.Rmd/fig1-1.png width="500" height="500">
+</p>
 
-<img src=figure/Plots_for_paper.Rmd/fig1-1.png width="500" height="500">
+<img align="center" src=figure/Plots_for_paper.Rmd/fig1-1.png width="500" height="500">
 
 - Discussion: Clearly MR.ASH is an overall winner, outperforming all the other methods. Flexibility of MR.ASH Gaussian mixture prior is illustrated well in the above figure.
 
@@ -96,7 +98,7 @@ This experiment is to compare performance of the methods when $p$ varies while t
 
 - Result: 
 
-<img src=figure/Result4_Highdim.Rmd/fig1-1.png width="500" height="500">
+<img align="center" src=figure/Result4_Highdim.Rmd/fig1-1.png width="500" height="500">
 
 It shows that MR.ASH and VarBVS outperform well.
 
