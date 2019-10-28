@@ -182,17 +182,14 @@ for (i in 1:20) {
   }
  
   fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
-                           sa2 = (2^((0:19) / 5 / 2^iter) - 1)^2)
+                           sa2 = (2^((0:19) / 20) - 1)^2)
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
   
   fit         = fit.ridge.opt(data$X, data$y, data$X.test, data$y.test, data$sigma, seed = i)
   pred[i,method_num] = fit$rsse / data$sigma / sqrt(n)
   time[i,method_num] = -Inf
-  cat(i," ")
 }
-cat("\n")
-print(c(colMeans(pred)))
 tdat1[[iter]] = data.frame(pred = c(pred), time = c(time),
                            fit = rep(method_list2, each = 20))
 }
