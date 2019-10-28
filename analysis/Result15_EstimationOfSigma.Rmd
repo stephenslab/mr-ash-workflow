@@ -32,10 +32,7 @@ $$
 \frac{\|y - {\bf X}\mu\|^2
       + \sum_j ({\bf X}^T{\bf X})_{jj} \mathrm{Var}[\beta_j]
       + \sum_j \sum_{k=2}^K \phi_{jk} (m_{jk}^2 + s_{jk}^2)/\sigma_k^2}
-     {n + \sum_j \sum_{k=2}^K \phi_{jk}} = \frac{\|y - {\bf X}\mu\|^2
-      + \sum_j ({\bf X}^T{\bf X})_{jj} (\sum_{k} \phi_{jk} (m_{jk}^2 + s_{jk}^2) - \mu_j^2)
-      + \sum_j \sum_{k=2}^K \phi_{jk} (m_{jk}^2 + s_{jk}^2)/\sigma_k^2}
-     {n + \sum_j \sum_{k=2}^K \phi_{jk}}.
+     {n + \sum_j \sum_{k=2}^K \phi_{jk}}
 $$
 This is the varbvsmix's update of $\sigma^2$. Compared to the update of Parametrization 2 below, it has additional $s_{jk}^2$ terms on the numerator and the $\sum_j \sum_{k=2}^K \phi_{jk}$ term on the denominator.
 
@@ -141,13 +138,75 @@ pred = matrix(0,20,3)
 pve_list = c(0.1,0.5,0.9,0.9999)
 tdat = list()
 
-for (iter in 4) {
-for (i in 1:3) {
+for (iter in 1:4) {
+for (i in 1:20) {
   data          = simulate_data(n, p, s = s, seed = i, signal = "normal",
                                 design = "indepgauss", pve = pve_list[iter])
   
   #sigma.init = var(data$y)
   sigma.init = data$sigma^2
+  
+  t.mr.ash1           = system.time(
+    fit.mr.ash1        <- mr.ash(X = data$X, y = data$y, sa2 = sa2, sigma2 = sigma.init,
+                                max.iter = 100, min.iter = 1,
+                                standardize = standardize,
+                                tol = list(epstol = 1e-12, convtol = 1e-8)))
+  
+  t.mr.ash2           = system.time(
+    fit.mr.ash2        <- mr.ash(X = data$X, y = data$y, sa2 = sa2, method = "em2",
+                                max.iter = 100, min.iter = 1, sigma2 = sigma.init,
+                                standardize = standardize,
+                                tol = list(epstol = 1e-12, convtol = 1e-8)))
+  
+  t.varbvsmix         = system.time(
+    fit.varbvsmix      <- varbvsmix(X = data$X, Z = NULL, y = data$y, sa = sa2,
+                                    mu = matrix(0, p, K), sigma = sigma.init,
+                                    alpha = matrix(1, p, K) / K, update.sa = FALSE,
+                                    update.sigma = TRUE, verbose = FALSE))
+  
+  pred1 = data$y.test - predict(fit.mr.ash1, data$X.test)
+  pred2 = data$y.test - data$X.test %*% fit.mr.ash2$beta * sqrt(fit.mr.ash2$sigma) - fit.mr.ash2$intercept
+  pred3 = data$y.test - data$X.test %*% c(rowSums(fit.varbvsmix$alpha * fit.varbvsmix$mu)) - fit.varbvsmix$mu.cov
+  
+  pred[i,] <- c(norm(pred1, '2'), norm(pred2, '2'), norm(pred3, '2')) / sqrt(n) / data$sigma
+  a = fit.mr.ash1$sigma / data$sigma^2
+  b = fit.mr.ash2$sigma / data$sigma^2
+  c = fit.varbvsmix$sigma / data$sigma^2
+  time[i,] = c(t.mr.ash1[3], t.mr.ash2[3], t.varbvsmix[3])
+  rate[i,] = c("caisa" = min(a,1/a), "new" = min(b, 1/b), "varbvsmix" = min(c, 1/c))
+  sigma[i,] = c(a,b,c)
+}
+tdat[[iter]] = data.frame(pred = c(pred), time = c(time), rate = c(rate), sigma = c(sigma),
+                          fit = c("caisa","new","varbvsmix"))
+print(colMeans(pred))
+print(colMeans(rate))
+}
+```
+
+```{r code2, eval = FALSE, message = FALSE, warning = FALSE}
+setwd("..")
+library(Matrix); library(ggplot2); library(cowplot); library(mr.ash); library(varbvs)
+standardize = FALSE
+source('code/method_wrapper.R')
+source('code/sim_wrapper.R')
+n   = 500
+p   = 2000
+s   = 20
+sa2 = (2^((0:19)/5) - 1)^2
+K   = length(sa2)
+time = matrix(0,20,3)
+sigma = matrix(0,20,3)
+rate = matrix(0,20,3)
+pred = matrix(0,20,3)
+pve_list = c(0.1,0.5,0.9,0.9999)
+tdat = list()
+
+for (iter in 4) {
+for (i in 1:20) {
+  data          = simulate_data(n, p, s = s, seed = i, signal = "normal", rho = 0,
+                                design = "equicorrgauss", pve = pve_list[iter])
+  
+  sigma.init = var(data$y)
   
   t.mr.ash1           = system.time(
     fit.mr.ash1        <- mr.ash(X = data$X, y = data$y, sa2 = sa2, sigma2 = sigma.init,

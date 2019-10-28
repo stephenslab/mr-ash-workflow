@@ -35,7 +35,7 @@ A list of packages we have loaded is collapsed. Please click "code" to see the l
 
 ```{r library, message = FALSE}
 library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
-library(glmnet); library(varbvs2); library(ncvreg); library(L0Learn); library(varbvs);
+library(glmnet); library(mr.ash); library(ncvreg); library(L0Learn); library(varbvs);
 standardize = FALSE
 source('code/method_wrapper.R')
 source('code/sim_wrapper.R')
@@ -187,16 +187,16 @@ for (iter in 1:6) {
 s               = s_range[iter]
 for (i in 1:20) {
   data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.5)
- 
+   
   for (j in 1:length(method_list)) {
     fit.method    = get(paste("fit.",method_list[j],sep = ""))
     fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
     pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
     time[i,j+1]   = fit$t
   }
- 
+
   fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
-                           sa2 = (2^((0:19) / 5 / sqrt(2)^(iter-1)) - 1)^2)
+                           sa2 = (2^((0:19) / 20) - 1)^2)
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
 }

@@ -145,7 +145,7 @@ pred         = matrix(0, iter_num, method_num); colnames(pred) = c("mr.ash", met
 time         = matrix(0, iter_num, method_num); colnames(time) = c("mr.ash", method_list)
 
 
-for (iter in 1:10) {
+for (iter in 1:9) {
 for (i in 1:20) {
   data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = pve_range[iter])
  

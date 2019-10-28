@@ -35,7 +35,7 @@ A list of packages we have loaded is collapsed. Please click "code" to see the l
 
 ```{r library, message = FALSE}
 library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
-library(glmnet); library(mr.ash); library(ncvreg); library(L0Learn); library(varbvs);
+library(glmnet); library(mr.ash); library(ncvreg); library(L0Learn); library(varbvs); library(mvtnorm)
 standardize = FALSE
 source('code/method_wrapper.R')
 source('code/sim_wrapper.R')
@@ -85,12 +85,14 @@ fig
 The source code will be popped up when you click `code` on the right side. 
 
 ```{r code, eval = FALSE}
+setwd("..")
 tdat1        = list()
 n            = 500
 p            = 2000
 s            = 20
 rho_list     = c(0.3,0.6,0.9,0.95,0.99)
 method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_list = c("lasso")
 method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
 method_num   = length(method_list2)
 iter_num     = 20
@@ -98,7 +100,7 @@ pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
 time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
 
 
-for (iter in 5) {
+for (iter in 4) {
 rho        = rho_list[iter]
 Sigma.sqrt = matrix(0,p,p)
 for (j in 0:round(-2/log(rho))) {
