@@ -1,12 +1,13 @@
 # A DSC for evaluating prediction accuracy of linear regression
 # methods in different scenarios.
 DSC:
+  R_libs:    glmnet, varbvs >= 2.6-3
   lib_path:  functions
   exec_path: modules/simulate,
              modules/fit,
              modules/predict,
              modules/score
-  replicate: 20
+  replicate: 4
   define:
     simulate: sparse_normal, sparse_t
   run: simulate
@@ -49,3 +50,17 @@ sparse_t: sparse_t.R
   $ytest: out$y.test
   $beta:  out$beta
   $sigma: out$sigma
+
+# fit modules
+# ===========
+# A "fit" module fits a linear regression model to the provided
+# training data, X and y.
+
+# Compute a fully-factorized variational approximation for Bayesian
+# variable selection in linear regression ("varbvs").
+varbvs: varbvs.R
+  X:          $X
+  y:          $y
+  $intercept: out$mu
+  $beta_est:  out$beta
+  $model:     out$fit
