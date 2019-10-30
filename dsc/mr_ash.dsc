@@ -10,7 +10,8 @@ DSC:
   replicate: 4
   define:
     simulate: sparse_normal, sparse_t
-  run: simulate
+    fit:      varbvs
+  run: simulate * fit
 
 # simulate modules
 # ================
@@ -28,8 +29,8 @@ sparse_normal: sparse_normal.R
   p:      2000
   s:      1, 5, 20, 100, 500, 2000
   pve:    0.5
-  $X:     out$train$X
-  $y:     out$train$y
+  $X:     out$X
+  $y:     out$y
   $Xtest: out$X.test
   $ytest: out$y.test
   $beta:  out$beta
@@ -44,8 +45,8 @@ sparse_t: sparse_t.R
   p:      2000
   s:      1, 5, 20, 100, 500, 2000
   pve:    0.5
-  $X:     out$train$X
-  $y:     out$train$y
+  $X:     out$X
+  $y:     out$y
   $Xtest: out$X.test
   $ytest: out$y.test
   $beta:  out$beta
