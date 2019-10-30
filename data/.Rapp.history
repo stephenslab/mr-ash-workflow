@@ -1,3 +1,0 @@
-load("/Users/yosikim/git/mr-ash-workflow/data/Thyroid.ENSG00000031823.RDS")
-load("/Users/yosikim/git/mr-ash-workflow/data/Thyroid.ENSG00000000971.RDS")
-load("/Users/yosikim/git/mr-ash-workflow/data/Thyroid.ENSG00000056487.RDS")
