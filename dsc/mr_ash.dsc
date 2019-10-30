@@ -8,7 +8,7 @@ DSC:
              modules/score
   replicate: 20
   define:
-    simulate: sparse_normal
+    simulate: sparse_normal, sparse_t
   run: simulate
 
 # simulate modules
