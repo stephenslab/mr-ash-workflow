@@ -5,10 +5,9 @@ navbar:
   left:
   - text: Home
     href: index.html
-  - text: About
-    href: about.html
-  - text: License
-    href: license.html
+  right:
+    - text: source
+      href: https://github.com/stephenslab/mr-ash-workflow
 output:
   workflowr::wflow_html:
     toc: yes
