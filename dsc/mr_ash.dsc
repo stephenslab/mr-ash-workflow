@@ -33,3 +33,19 @@ sparse_normal: sparse_normal.R
   $ytest: out$y.test
   $beta:  out$beta
   $sigma: out$sigma
+
+# Simulate the linear regression coefficients such that the s nonzero
+# coefficients are drawn from the t distrubution with 2 degrees of
+# freedom. The residual variance is controlled to achieve the target
+# PVE.
+sparse_t: sparse_t.R
+  n:      500
+  p:      2000
+  s:      1, 5, 20, 100, 500, 2000
+  pve:    0.5
+  $X:     out$train$X
+  $y:     out$train$y
+  $Xtest: out$X.test
+  $ytest: out$y.test
+  $beta:  out$beta
+  $sigma: out$sigma
