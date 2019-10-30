@@ -1,43 +1,12 @@
-# Simulate a (possibly sparse) vector of regression coefficients.
-sample_beta = function(p, s, s1 = 10, signal = "normal") {
-  beta = double(p)
-  if (signal == "t2") {
-    beta[sample(p,s)] = rt(s, df = 2)
-  } else if (signal == "t5") {
-    beta[sample(p,s)] = rt(s, df = 5)
-  } else if (signal == "lap") {
-    beta[sample(p,s)] = rexp(s) * sign(rnorm(s))
-  } else if (signal == "normal") {
-    beta[sample(p,s)] = rnorm(s)
-  } else if (signal == "unif") {
-    beta[sample(p,s)] = runif(s)
-  } else if (signal == "const") {
-    beta[sample(p,s)] = 1
-  } else if (signal == "subogdancandes") {
-    ind               = sample(p,s)
-    beta[ind]         = 0.1
-    beta[ind[1:s1]]   = 1
-  } else if (signal == "polygenic") {
-    ind               = sample(p,s)
-    beta[ind]         = 1
-    beta[ind[1]]      = sqrt(s)
-  }
-  
-  return (beta)
-}
-
 # Simulate training and test data from linear regression model y = Xb
 # + e, where e is i.i.d. normal with zero mean and standard deviation
 # "sigma". The outputs are the data (X, X.test), the outcomes (y,
 # y.test), and the regression coefficients (beta) and residual
 # s.d. (sigma) used to simulate the outcomes.
-simulate_data = function(n = NULL, p = NULL, s = NULL, seed = 1,
-                         design = "indepgauss", rho = 0, filepath = NULL,
-                         beta = NULL, signal = "normal", sigma = NULL,
-                         Sigma.sqrt = NULL, pve = 0.5, snr = NULL) {
-  
-  # Set seed.
-  set.seed(2010 + seed)
+simulate_data = function(n = NULL, p = NULL, s = NULL, design = "indepgauss",
+                         rho = 0, filepath = NULL, beta = NULL,
+                         signal = "normal", sigma = NULL, Sigma.sqrt = NULL,
+                         pve = 0.5, snr = NULL) {
   
   # Determine the simulation design.
   if (design == "indepgauss") {
@@ -86,7 +55,7 @@ simulate_data = function(n = NULL, p = NULL, s = NULL, seed = 1,
     if (pve == 0) {
       beta          = double(p)
     } else {
-      beta          = sample_beta(p,s,signal = signal)
+      beta          = simulate_beta(p,s,signal = signal)
     }
   } else if (pve == 0)
     beta = double(p)  
@@ -116,3 +85,32 @@ simulate_data = function(n = NULL, p = NULL, s = NULL, seed = 1,
   return (list(X = X, X.test = X.test, y = y, y.test = y.test,
                sigma = sigma, beta = beta))
 }
+
+# Simulate a (possibly sparse) vector of regression coefficients.
+simulate_beta = function(p, s, s1 = 10, signal = "normal") {
+  beta = double(p)
+  if (signal == "t2") {
+    beta[sample(p,s)] = rt(s, df = 2)
+  } else if (signal == "t5") {
+    beta[sample(p,s)] = rt(s, df = 5)
+  } else if (signal == "lap") {
+    beta[sample(p,s)] = rexp(s) * sign(rnorm(s))
+  } else if (signal == "normal") {
+    beta[sample(p,s)] = rnorm(s)
+  } else if (signal == "unif") {
+    beta[sample(p,s)] = runif(s)
+  } else if (signal == "const") {
+    beta[sample(p,s)] = 1
+  } else if (signal == "subogdancandes") {
+    ind               = sample(p,s)
+    beta[ind]         = 0.1
+    beta[ind[1:s1]]   = 1
+  } else if (signal == "polygenic") {
+    ind               = sample(p,s)
+    beta[ind]         = 1
+    beta[ind[1]]      = sqrt(s)
+  }
+  
+  return (beta)
+}
+
