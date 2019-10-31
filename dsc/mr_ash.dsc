@@ -7,7 +7,7 @@ DSC:
              modules/fit,
              modules/predict,
              modules/score
-  replicate: 1
+  replicate: 4
   define:
     simulate: sparse_normal, sparse_t
     fit:      varbvs, lasso
@@ -60,13 +60,13 @@ sparse_t: sparse_t.R
 # Fit a Lasso model using glmnet. The penalty strength ("lambda") is
 # estimated via cross-validation.
 lasso: lasso.R
-  standardize: FALSE
-  lambda:      lambda.min, lambda.1se
-  X:           $X
-  y:           $y
-  $intercept:  out$mu
-  $beta_est:   out$beta
-  $model:      out
+  standardize:       FALSE
+  lambda_est_method: "lambda.min", "lambda.1se"
+  X:                 $X
+  y:                 $y
+  $intercept:        out$mu
+  $beta_est:         out$beta
+  $model:            out
   
 # Compute a fully-factorized variational approximation for Bayesian
 # variable selection in linear regression ("varbvs").
