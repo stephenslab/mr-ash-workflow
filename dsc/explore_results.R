@@ -6,6 +6,8 @@ library(cowplot)
 dsc <- dscquery("mr_ash",
                 targets = c("simulate","simulate.s","simulate.sigma",
                             "fit","fit.lambda_est_method","score.err"))
+
+# Prepare the data for plotting.
 rows <- which(is.na(dsc$fit.lambda_est_method))
 dsc$fit.lambda_est_method[rows] <- ""
 dsc <- transform(dsc,fit = paste(fit,fit.lambda_est_method))
