@@ -10,8 +10,10 @@ DSC:
   replicate: 4
   define:
     simulate: sparse_normal, sparse_t
-    fit:      varbvs, lasso
-  run: simulate * fit
+    fit:      lasso, varbvs
+    predict:  predict_linear
+    score:    rsse
+  run: simulate * fit * predict * score
 
 # simulate modules
 # ================
@@ -76,3 +78,30 @@ varbvs: varbvs.R
   $intercept: out$mu
   $beta_est:  out$beta
   $model:     out$fit
+
+# predict modules
+# ===============
+# A "predict" module takes as input a fitted model (or the parameters
+# of this fitted model) and an n x p matrix of observations, X, and
+# returns a vector of length n containing the outcomes predicted by
+# the fitted model.
+
+# Predict outcomes from a fitted linear regression model.
+predict_linear: predict_linear.R
+  X:         $Xtest
+  intercept: $intercept
+  beta:      $beta_est
+  $yest:     y
+
+# score modules
+# =============
+# A "score" module takes as input a vector of predicted outcomes and a
+# vector of true outcomes, and outputs a summary statistic that can be
+# used to evaluate accuracy of the predictions.
+
+# Compute the square root of the sum of squared errors summarizing the
+# differences between the predicted outcomes and the true outcomes.
+rsse: rsse.R
+  y:    $ytest
+  yest: $yest
+  $err: err
