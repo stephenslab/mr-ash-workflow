@@ -159,7 +159,7 @@ pred3         = sqrt(colMeans(res3^2))/ data$sigma
 
 # compare with mr.ash
 fit0          = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
-                           sa2 = (2^((0:19) / 5) - 1)^2)
+                           sa2 = (2^((0:19) / 20) - 1)^2)
 pred0         = fit0$rsse / data$sigma / sqrt(n)
 
 ## thus mr.ash is better than the best
