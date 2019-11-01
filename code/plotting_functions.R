@@ -1,6 +1,12 @@
 # Plotting routines
 # -----------------
 
+
+#'
+#'
+#'
+#' Plotting routines
+
 ## function for boxplot
 my.box <- function (dat, x, y, cols = gg_color_hue(13),
                     shapes = 1:15) {
