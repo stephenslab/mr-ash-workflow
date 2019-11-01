@@ -25,3 +25,15 @@ fit_varbvs = function(X, y) {
   b = drop(coef(fit)[,"averaged"])
   return(list(fit = fit,mu = b[1],beta = b[-1],timing = timing))
 }
+
+# Fit a fully-factorized variational approxition for Bayesian variable
+# selection in linear regression, with scale-mixture-of-normals
+# ("adaptive shrinkage") priors on the regression coefficients.
+fit_mr_ash = function(X, y, standardize = FALSE, sa2 = (2^((0:19)/5) - 1)^2) {
+  timing = system.time(
+    fit <- mr.ash(X = X, y = y, sa2 = sa2, max.iter = 2000,
+                  standardize = standardize,
+                  tol = list(epstol = 1e-12, convtol = 1e-8)))
+  b = coef(fit)
+  return(list(fit = fit,mu = b[1],beta = b[-1],timing = timing))
+}
