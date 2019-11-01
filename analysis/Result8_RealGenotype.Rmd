@@ -98,8 +98,9 @@ fig
 The source code will be popped up when you click `code` on the right side. 
 
 ```{r code, message = FALSE, warning = FALSE, eval= FALSE}
+setwd("..")
 library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
-library(glmnet); library(mr.ash); library(ncvreg); library(L0Learn); library(varbvs);
+library(glmnet); library(mr.ash.alpha); library(ncvreg); library(L0Learn); library(varbvs);
 standardize = FALSE
 filepath = "data"
 filelist = paste("data/", list.files(filepath, pattern = "*.RDS"), sep = "")
@@ -114,10 +115,11 @@ colnames(pred) = c("mr.ash", method_list,"mr.ash.order","mr.ash.init")
 time         = matrix(0, iter_num, method_num);
 colnames(time) = c("mr.ash", method_list,"mr.ash.order","mr.ash.init")
 n            = 287
+sa2          = (2^((0:19) / 20) - 1)^2
 
 for (i in 1:20) {
   data          = simulate_data(s = 20, seed = i, signal = "normal",
-                                design = "realgenotype", filepath = filelist[i], pve = 0.5)
+                                design = "realgenotype", filepath = filelist[i], pve = 0.2)
   
   for (j in 1:length(method_list)) {
     fit.method    = get(paste("fit.",method_list[j],sep = ""))
@@ -133,19 +135,19 @@ for (i in 1:20) {
   }
  
   fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
-                           sa2 = (2^((0:19) / 5) - 1)^2)
+                           sa2 = sa2)
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
 
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             update.order = lasso.path.order,
-                            sa2 = (2^((0:19) / 5) - 1)^2)
+                            sa2 = sa2)
   pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+2] = fit$t + lasso.time[2]
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             beta.init = lasso.beta,
-                            sa2 = (2^((0:19) / 5) - 1)^2)
+                            sa2 = sa2)
   pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+3] = fit$t + lasso.time[1]
   
