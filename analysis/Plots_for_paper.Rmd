@@ -14,7 +14,11 @@ knitr::opts_chunk$set(echo = TRUE)
 This .Rmd documentation is to reproduce figures in the paper/manuscript.
 
 ```{r, message = FALSE}
-library(ggplot2); library(cowplot)
+library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(mr.ash.alpha); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
+source('code/method_wrapper.R')
+source('code/sim_wrapper.R')
 ```
 
 ## Popular shrinkage operators
@@ -191,4 +195,40 @@ df = data.frame(b = c(b,b,b,b,b), sb = c(marginal_shape(b, operator = "ridge"),
 df$operator = factor(df$operator, levels = c("normal","soft","hard","scad","mcp"))
 ggplot(df) + geom_line(aes(x = b, y = sb, color = operator)) +
   theme_cowplot(font_size = 14) + theme(axis.line = element_blank())
+```
+
+```{r fig3, fig.height=7, fig.width=15}
+res_df       = readRDS("results/ridge_pve0.5.RDS")
+p_list       = c(50,100,200,500,1000,2000)
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn","Ridge.opt")
+col          = gg_color_hue(13)[1:11]
+sdat = data.frame()
+for (i in 1:6) {
+  sdat       = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred,20,12)),
+                                      time = colMeans(matrix(res_df[[i]]$time,20,12)),
+                                      p = p_list[i],
+                                      fit = method_list))
+}
+shape       = c(19,17,24,25,9,3,11,4,5,7,8)
+sdat$fit    = factor(sdat$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
+                                           "SCAD","MCP","L0Learn",
+                                           "VarBVS","BayesB","Blasso","SuSiE",
+                                           "Ridge.opt"))
+sdat1       = sdat[sdat$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn","Ridge.opt"),]
+
+p1 = ggplot(sdat1) + geom_line(aes(x = p, y = pred, color = fit)) +
+  geom_point(aes(x = p, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(trans = "log10", breaks = p_list) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of coefficients (p)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = c(col[1:7],"gray50")) +
+  scale_shape_manual(values = c(shape[1:7],15)) +
+  scale_y_continuous(trans = "log10", limits = c(1.04,1.46), breaks = c(1.1,1.2,1.3,1.4))
+fig_main  = p1
+title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + Normal, n = 500, p = 50,100,200,500,1000,2000, pve = 0.5", fontface  = 'bold', size = 18) 
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
+fig
 ```
