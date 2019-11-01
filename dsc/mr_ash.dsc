@@ -10,7 +10,7 @@ DSC:
   replicate: 4
   define:
     simulate: sparse_normal, sparse_t
-    fit:      ridge, lasso, varbvs, mr_ash
+    fit:      ridge, lasso, elastic_net, varbvs, mr_ash
     predict:  predict_linear
     score:    rsse
   run: simulate * fit * predict * score
@@ -81,6 +81,20 @@ lasso: lasso.R
   y:                 $y
   $intercept:        out$mu
   $beta_est:         out$beta
+  $timing:           out$timing
+  $model:            out$fit
+
+# Fit an Elastic Net model to the data, and estimate the Elastic Net
+# parameters (penalty strength, "lambda", and mixing parameter,
+# "alpha") using cross-validation.
+elastic_net: elastic_net.R
+  standardize:       FALSE
+  lambda_est_method: "lambda.min", "lambda.1se"
+  X:                 $X
+  y:                 $y
+  $intercept:        out$mu
+  $beta_est:         out$beta
+  $alpha:            out$alpha
   $timing:           out$timing
   $model:            out$fit
   
