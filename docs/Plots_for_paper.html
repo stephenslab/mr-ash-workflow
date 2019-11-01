@@ -527,10 +527,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreea2a2df49812e3b3ad9b81860fb43127d9258b6bctargetblanka2a2df4a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/a2a2df49812e3b3ad9b81860fb43127d9258b6bc" target="_blank">a2a2df4</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreeebfcea0cc584d2ceed5edbb444ada82fe2b41843targetblankebfcea0a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/ebfcea0cc584d2ceed5edbb444ada82fe2b41843" target="_blank">ebfcea0</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreea2a2df49812e3b3ad9b81860fb43127d9258b6bctargetblanka2a2df4a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreeebfcea0cc584d2ceed5edbb444ada82fe2b41843targetblankebfcea0a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -543,6 +543,7 @@ Ignored files:
     Ignored:    ETA_1_parBayesB.dat
     Ignored:    analysis/ETA_1_lambda.dat
     Ignored:    analysis/ETA_1_parBayesB.dat
+    Ignored:    analysis/figure/
     Ignored:    analysis/mu.dat
     Ignored:    analysis/varE.dat
     Ignored:    mu.dat
@@ -593,6 +594,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/ebfcea0cc584d2ceed5edbb444ada82fe2b41843/analysis/Plots_for_paper.Rmd" target="_blank">ebfcea0</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-31
+</td>
+<td>
+wflow_publish(“analysis/Plots_for_paper.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/e145090a8a92786448421b4ca55583241f8247b1/docs/Plots_for_paper.html" target="_blank">e145090</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-31
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1429,10 +1464,48 @@ p1 = ggplot(sdat) + geom_line(aes(x = s, y = pred, color = fit)) +
   coord_cartesian(ylim = c(1,1.45))
 title     = ggdraw() + draw_label(&quot;Prediction Error (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
 subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + SparseNormal, n = 500, p = 2000, s = 1,5,20,100,500,2000, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 18) 
-fig_main  = p1
+p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
+fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.8,0.3))
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.06,0.06,0.95))
 fig</code></pre>
 <p><img src="figure/Plots_for_paper.Rmd/fig5-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fig5-1">
+Past versions of fig5-1.png
+</button>
+</p>
+<div id="fig-fig5-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/e145090a8a92786448421b4ca55583241f8247b1/docs/figure/Plots_for_paper.Rmd/fig5-1.png" target="_blank">e145090</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-31
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>res_df       = readRDS(&quot;results/diffpve.RDS&quot;)
 method_list  = c(&quot;Mr.ASH&quot;,&quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;)
 method_level = c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,
@@ -1465,10 +1538,83 @@ p1 = ggplot(sdat) + geom_line(aes(x = pve, y = pred, color = fit)) +
 title     = ggdraw() + draw_label(&quot;Prediction Error (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
 subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + SparseNormal, n = 500, p = 2000, pve = 0 - 0.9&quot;, fontface  = &#39;bold&#39;, size = 18) 
 p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
-fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
+fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.8,0.3))
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.06,0.06,0.95))
 fig</code></pre>
 <p><img src="figure/Plots_for_paper.Rmd/fig6-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fig6-1">
+Past versions of fig6-1.png
+</button>
+</p>
+<div id="fig-fig6-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/e145090a8a92786448421b4ca55583241f8247b1/docs/figure/Plots_for_paper.Rmd/fig6-1.png" target="_blank">e145090</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-31
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>res_df       = readRDS(&quot;results/highdim_pve0.5.RDS&quot;)
+method_list  = c(&quot;Mr.ASH&quot;,&quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;)
+method_level = c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,
+                 &quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,
+                 &quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;)
+col          = gg_color_hue(13)[1:11][-4]
+shape        = c(19,17,24,25,9,3,11,4,5,7,8)[-4]
+p_list       = c(50,500,5000,50000)
+sdat         = data.frame()
+for (i in 1:4) {
+  sdat = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred, 20, 10)),
+                                time = colMeans(matrix(res_df[[i]]$time, 20, 10)),
+                                fit  = method_list,
+                                p = p_list[i]))
+}
+sdat$fit = factor(sdat$fit, levels = method_level)
+
+p1 = ggplot(sdat) + geom_line(aes(x = p, y = pred, color = fit)) +
+  geom_point(aes(x = p, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(trans = &quot;log10&quot;, breaks = p_list) +
+  labs(y = &quot;predictior error (rmse / sigma)&quot;, x = &quot;number of coefficients (p)&quot;) +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = &quot;log10&quot;, breaks = c(1,1.1,1.2,1.3,1.4)) +
+  coord_cartesian(ylim = c(1,sqrt(2)))
+
+title     = ggdraw() + draw_label(&quot;Prediction Error (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
+subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + SparseNormal, n = 500, p = 50, 500, 5000, 50000, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 18) 
+p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
+fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.8,0.3))
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.06,0.06,0.95))
+fig</code></pre>
+<p><img src="figure/Plots_for_paper.Rmd/fig7-1.png" width="1440" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
