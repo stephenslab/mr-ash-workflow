@@ -98,12 +98,13 @@ varbvs: varbvs.R
 # selection in linear regression, with scale-mixture-of-normals
 # ("adaptive shrinkage") priors on the regression coefficients.
 mr_ash: mr_ash.R
-  X:          $X
-  y:          $y
-  $intercept: out$mu
-  $beta_est:  out$beta
-  $timing:    out$timing
-  $model:     out$fit
+  standardize: FALSE
+  X:           $X
+  y:           $y
+  $intercept:  out$mu
+  $beta_est:   out$beta
+  $timing:     out$timing
+  $model:      out$fit
 
 # predict modules
 # ===============

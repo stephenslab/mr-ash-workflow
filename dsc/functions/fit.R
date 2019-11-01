@@ -31,9 +31,9 @@ fit_varbvs = function(X, y) {
 # ("adaptive shrinkage") priors on the regression coefficients.
 fit_mr_ash = function(X, y, standardize = FALSE, sa2 = (2^((0:19)/5) - 1)^2) {
   timing = system.time(
-    fit <- mr.ash(X = X, y = y, sa2 = sa2, max.iter = 2000,
-                  standardize = standardize,
-                  tol = list(epstol = 1e-12, convtol = 1e-8)))
+    fit <- mr.ash.alpha::mr.ash(X = X, y = y, sa2 = sa2, max.iter = 2000,
+                                tol = list(epstol = 1e-12, convtol = 1e-8),
+                                standardize = standardize))
   b = coef(fit)
   return(list(fit = fit,mu = b[1],beta = b[-1],timing = timing))
 }
