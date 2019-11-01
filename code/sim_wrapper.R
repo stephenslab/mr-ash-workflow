@@ -50,6 +50,11 @@ simulate_data = function(n = NULL, p = NULL, s = NULL, seed = 1,
   } else if (design == "equicorrgauss") {
     data              = list(X = matrix(rnorm(n*2*p), n*2, p))
     data$X           <- rnorm(dim(data$X)[1]) * sqrt(rho) + data$X * sqrt(1-rho)
+  } else if (design == "identity") {
+    data              = list(X = diag(n))
+  } else if (design == "orthogonal") {
+    cat("'2n' must be smaller than p\n")
+    data              = list(X = qr.Q(qr(matrix(rnorm(n*2*p), n*2, p))))
   } else if (design == "localcorrgauss") {
     data              = list(X = rmvnorm(2 * n, sigma = Sigma.sqrt))
   } else if (design == "realgenotype") {
@@ -66,7 +71,7 @@ simulate_data = function(n = NULL, p = NULL, s = NULL, seed = 1,
   }
   
   # sample X and X.test
-  if (design == "changepoint") {
+  if ((design == "changepoint") || (design == "identity")) {
     X               = data$X
     X.test          = data$X
   } else {
