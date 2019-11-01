@@ -1,7 +1,4 @@
-#'
-#'
-#'
-#' sample possibly sparse beta
+# sample possibly sparse beta
 sample_beta = function(p, s, s1 = 10, signal = "normal") {
   
   beta              = double(p)
@@ -30,10 +27,7 @@ sample_beta = function(p, s, s1 = 10, signal = "normal") {
   return (beta)
 }
 
-#'
-#'
-#'
-#' simulate data
+# simulate data
 simulate_data = function(n = NULL, p = NULL, s = NULL, seed = 1,
                          design = "indepgauss", rho = 0,
                          filepath = NULL,
