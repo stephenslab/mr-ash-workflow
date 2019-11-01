@@ -122,23 +122,24 @@ res
 ```
 
 ```{r code, eval = FALSE, message = FALSE, warning = FALSE}
-library(Matrix); library(ggplot2); library(cowplot); library(mr.ash); library(varbvs)
+setwd("..")
+library(Matrix); library(ggplot2); library(cowplot); library(mr.ash.alpha); library(varbvs)
 standardize = FALSE
 source('code/method_wrapper.R')
 source('code/sim_wrapper.R')
-n   = 500
-p   = 2000
+n   = 100
+p   = 1000
 s   = 20
-sa2 = (2^((0:19)/5) - 1)^2
+sa2 = (2^((0:19)/20) - 1)^2
 K   = length(sa2)
 time = matrix(0,20,3)
 sigma = matrix(0,20,3)
 rate = matrix(0,20,3)
 pred = matrix(0,20,3)
-pve_list = c(0.1,0.5,0.9,0.9999)
+pve_list = c(0.0001,0.1,0.5,0.9,0.9999)
 tdat = list()
 
-for (iter in 1:4) {
+for (iter in 5) {
 for (i in 1:20) {
   data          = simulate_data(n, p, s = s, seed = i, signal = "normal",
                                 design = "indepgauss", pve = pve_list[iter])
@@ -148,13 +149,13 @@ for (i in 1:20) {
   
   t.mr.ash1           = system.time(
     fit.mr.ash1        <- mr.ash(X = data$X, y = data$y, sa2 = sa2, sigma2 = sigma.init,
-                                max.iter = 100, min.iter = 1,
+                                max.iter = 2000, min.iter = 1,
                                 standardize = standardize,
                                 tol = list(epstol = 1e-12, convtol = 1e-8)))
   
   t.mr.ash2           = system.time(
-    fit.mr.ash2        <- mr.ash(X = data$X, y = data$y, sa2 = sa2, method = "em2",
-                                max.iter = 100, min.iter = 1, sigma2 = sigma.init,
+    fit.mr.ash2        <- mr.ash(X = data$X, y = data$y, sa2 = sa2, method = "em3",
+                                max.iter = 2000, min.iter = 1, sigma2 = sigma.init,
                                 standardize = standardize,
                                 tol = list(epstol = 1e-12, convtol = 1e-8)))
   
@@ -185,14 +186,14 @@ print(colMeans(rate))
 
 ```{r code2, eval = FALSE, message = FALSE, warning = FALSE}
 setwd("..")
-library(Matrix); library(ggplot2); library(cowplot); library(mr.ash); library(varbvs)
+library(Matrix); library(ggplot2); library(cowplot); library(mr.ash.alpha); library(varbvs)
 standardize = FALSE
 source('code/method_wrapper.R')
 source('code/sim_wrapper.R')
-n   = 500
-p   = 2000
+n   = 100
+p   = 100
 s   = 20
-sa2 = (2^((0:19)/5) - 1)^2
+sa2 = (2^((0:19)) - 1)^2
 K   = length(sa2)
 time = matrix(0,20,3)
 sigma = matrix(0,20,3)
@@ -215,7 +216,7 @@ for (i in 1:20) {
                                 tol = list(epstol = 1e-12, convtol = 1e-8)))
   
   t.mr.ash2           = system.time(
-    fit.mr.ash2        <- mr.ash(X = data$X, y = data$y, sa2 = sa2, method = "em2",
+    fit.mr.ash2        <- mr.ash(X = data$X, y = data$y, sa2 = sa2, method = "em3",
                                 max.iter = 100, min.iter = 1, sigma2 = sigma.init,
                                 standardize = standardize,
                                 tol = list(epstol = 1e-12, convtol = 1e-8)))
@@ -230,7 +231,7 @@ for (i in 1:20) {
   pred2 = data$y.test - data$X.test %*% fit.mr.ash2$beta * sqrt(fit.mr.ash2$sigma) - fit.mr.ash2$intercept
   pred3 = data$y.test - data$X.test %*% c(rowSums(fit.varbvsmix$alpha * fit.varbvsmix$mu)) - fit.varbvsmix$mu.cov
   
-  pred[i,] <- c(norm(pred1, '2'), norm(pred2, '2'), norm(pred3, '2')) / sqrt(n) / data$sigma
+  print(pred[i,] <- c(norm(pred1, '2'), norm(pred2, '2'), norm(pred3, '2')) / sqrt(n) / data$sigma)
   a = fit.mr.ash1$sigma / data$sigma^2
   b = fit.mr.ash2$sigma / data$sigma^2
   c = fit.varbvsmix$sigma / data$sigma^2
