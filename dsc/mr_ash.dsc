@@ -1,7 +1,7 @@
 # A DSC for evaluating prediction accuracy of linear regression
 # methods in different scenarios.
 DSC:
-  R_libs:    glmnet, varbvs >= 2.6-3
+  R_libs:    mr.ash.alpha, glmnet, varbvs >= 2.6-3
   lib_path:  functions
   exec_path: modules/simulate,
              modules/fit,
@@ -10,7 +10,7 @@ DSC:
   replicate: 4
   define:
     simulate: sparse_normal, sparse_t
-    fit:      ridge, lasso, varbvs
+    fit:      ridge, lasso, varbvs, mr_ash
     predict:  predict_linear
     score:    rsse
   run: simulate * fit * predict * score
@@ -87,6 +87,17 @@ lasso: lasso.R
 # Compute a fully-factorized variational approximation for Bayesian
 # variable selection in linear regression ("varbvs").
 varbvs: varbvs.R
+  X:          $X
+  y:          $y
+  $intercept: out$mu
+  $beta_est:  out$beta
+  $timing:    out$timing
+  $model:     out$fit
+
+# Fit a fully-factorized variational approxition for Bayesian variable
+# selection in linear regression, with scale-mixture-of-normals
+# ("adaptive shrinkage") priors on the regression coefficients.
+mr_ash: mr_ash.R
   X:          $X
   y:          $y
   $intercept: out$mu
