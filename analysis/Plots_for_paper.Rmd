@@ -229,6 +229,75 @@ p1 = ggplot(sdat1) + geom_line(aes(x = p, y = pred, color = fit)) +
 fig_main  = p1
 title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
 subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + Normal, n = 500, p = 50,100,200,500,1000,2000, pve = 0.5", fontface  = 'bold', size = 18) 
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.06,0.06,0.95))
+fig
+```
+
+```{r fig4, fig.height=11, fig.width=15}
+res_df       = readRDS("results/signalshape_pve0.99.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "VarBVS","BayesB","Blasso","SuSiE")
+col          = gg_color_hue(13)[1:11]
+for (i in 1:6) {
+res_df[[i]]$fit   = rep(method_list, each = 20)
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
+                                            "SCAD","MCP","L0Learn",
+                                            "VarBVS","BayesB","Blasso","SuSiE"))
+some              = c(1,2,3,5,6,7)
+res_df[[i]] = res_df[[i]][res_df[[i]]$fit %in% method_level[some],]
+}
+pp = list()
+signal_name = c("SparseLaplace","SparseT2","SparseT5","SparseNormal","SparseUnif","SparseConst")
+for (i in 1:6) {
+  d       = res_df[[i]]
+  pp[[i]] = my.box2(d, "fit", "pred", cols = col[some], shapes = 1:6) +
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = "none") +
+  geom_hline(yintercept = mean(d$pred[d$fit == "Mr.ASH"]), col = col[1],
+             linetype = "dotted", size = 1.5) +
+  scale_y_continuous(trans = "log10", breaks = c(1,1.2,1.4,1.6,1.8,2.0)) +
+  coord_cartesian(ylim = c(0.95,1.8))
+  subtitle  = ggdraw() + draw_label(paste(paste("Signal: ",signal_name[i], sep = ""),"", sep = ""),
+                                    fontface  = 'bold', size = 18)
+  pp[[i]]   = plot_grid(subtitle, pp[[i]], ncol = 1, rel_heights = c(0.06,0.95))
+}
+fig_main  = plot_grid(pp[[2]],pp[[3]],pp[[1]],pp[[4]],pp[[5]],pp[[6]], nrow = 2, rel_widths = c(0.3,0.3,0.3,0.3))
+title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: LowdimIndepGauss, n = 500, p = 2000, s = 20, pve = 0.99", fontface = 'bold', size = 18)
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.03,0.04,0.95))
+fig
+```
+
+```{r, fig.height=7, fig.width=15}
+res_df       = readRDS("results/sparsesignal.RDS")
+sdat         = data.frame()
+s_list       = c(1,5,20,100,500,2000)
+col          = gg_color_hue(13)[1:11]
+shape        = c(19,17,24,25,9,3,11,4,5,7,8)
+for (i in 1:6) {
+  sdat = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred, 20, 11)),
+                                time = colMeans(matrix(res_df[[i]]$time, 20, 11)),
+                                fit  = method_list,
+                                s    = s_list[i]))
+}
+sdat$fit = factor(sdat$fit, levels = method_level)
+
+p2 = ggplot(sdat) + geom_line(aes(x = s, y = time, color = fit)) +
+  geom_point(aes(x = s, y = time, color = fit, shape = fit), size = 2.5) +
+  scale_x_continuous(breaks = s_list, trans = "log10") +
+  theme_cowplot(font_size = 14) +
+  labs(y = "computation time (sec)", x = "number of nonzero coefficients (s)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10")
+title     = ggdraw() + draw_label("Computation Time (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + SparseNormal, n = 500, p = 2000, s = 1,5,20,100,500,2000, pve = 0.5", fontface  = 'bold', size = 18) 
+fig_main  = p2
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
 fig
 ```
