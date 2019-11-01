@@ -527,10 +527,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreeebfcea0cc584d2ceed5edbb444ada82fe2b41843targetblankebfcea0a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/ebfcea0cc584d2ceed5edbb444ada82fe2b41843" target="_blank">ebfcea0</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree7a3e682d6e244693def77345d528873aa2cdd55dtargetblank7a3e682a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/7a3e682d6e244693def77345d528873aa2cdd55d" target="_blank">7a3e682</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreeebfcea0cc584d2ceed5edbb444ada82fe2b41843targetblankebfcea0a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree7a3e682d6e244693def77345d528873aa2cdd55dtargetblank7a3e682a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -543,7 +543,6 @@ Ignored files:
     Ignored:    ETA_1_parBayesB.dat
     Ignored:    analysis/ETA_1_lambda.dat
     Ignored:    analysis/ETA_1_parBayesB.dat
-    Ignored:    analysis/figure/
     Ignored:    analysis/mu.dat
     Ignored:    analysis/varE.dat
     Ignored:    mu.dat
@@ -594,6 +593,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/7a3e682d6e244693def77345d528873aa2cdd55d/analysis/Plots_for_paper.Rmd" target="_blank">7a3e682</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-31
+</td>
+<td>
+wflow_publish(“analysis/Plots_for_paper.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/d1401c1e29d2f13e73a0e0d3dca3fe4af6d3d8a9/docs/Plots_for_paper.html" target="_blank">d1401c1</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-31
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1466,7 +1499,7 @@ title     = ggdraw() + draw_label(&quot;Prediction Error (log-scale)&quot;, font
 subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + SparseNormal, n = 500, p = 2000, s = 1,5,20,100,500,2000, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 18) 
 p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
 fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.8,0.3))
-fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.06,0.06,0.95))
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.03,0.04,0.95))
 fig</code></pre>
 <p><img src="figure/Plots_for_paper.Rmd/fig5-1.png" width="1440" style="display: block; margin: auto;" /></p>
 <p>
@@ -1491,6 +1524,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/d1401c1e29d2f13e73a0e0d3dca3fe4af6d3d8a9/docs/figure/Plots_for_paper.Rmd/fig5-1.png" target="_blank">d1401c1</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-31
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/stephenslab/mr-ash-workflow/blob/e145090a8a92786448421b4ca55583241f8247b1/docs/figure/Plots_for_paper.Rmd/fig5-1.png" target="_blank">e145090</a>
@@ -1539,7 +1583,7 @@ title     = ggdraw() + draw_label(&quot;Prediction Error (log-scale)&quot;, font
 subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + SparseNormal, n = 500, p = 2000, pve = 0 - 0.9&quot;, fontface  = &#39;bold&#39;, size = 18) 
 p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
 fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.8,0.3))
-fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.06,0.06,0.95))
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.03,0.04,0.95))
 fig</code></pre>
 <p><img src="figure/Plots_for_paper.Rmd/fig6-1.png" width="1440" style="display: block; margin: auto;" /></p>
 <p>
@@ -1564,6 +1608,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/d1401c1e29d2f13e73a0e0d3dca3fe4af6d3d8a9/docs/figure/Plots_for_paper.Rmd/fig6-1.png" target="_blank">d1401c1</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-31
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/stephenslab/mr-ash-workflow/blob/e145090a8a92786448421b4ca55583241f8247b1/docs/figure/Plots_for_paper.Rmd/fig6-1.png" target="_blank">e145090</a>
@@ -1612,9 +1667,46 @@ title     = ggdraw() + draw_label(&quot;Prediction Error (log-scale)&quot;, font
 subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + SparseNormal, n = 500, p = 50, 500, 5000, 50000, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 18) 
 p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
 fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.8,0.3))
-fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.06,0.06,0.95))
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.03,0.04,0.95))
 fig</code></pre>
 <p><img src="figure/Plots_for_paper.Rmd/fig7-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fig7-1">
+Past versions of fig7-1.png
+</button>
+</p>
+<div id="fig-fig7-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/d1401c1e29d2f13e73a0e0d3dca3fe4af6d3d8a9/docs/figure/Plots_for_paper.Rmd/fig7-1.png" target="_blank">d1401c1</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-31
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
