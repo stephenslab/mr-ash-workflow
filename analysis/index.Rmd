@@ -70,7 +70,7 @@ We observe that the relative performance is dependent on the value of $p$ (compa
 - Result: 
 
 <p align="center">
-<img align="center" src=figure/Result1_Ridge.Rmd/fig1-1.png width="500" height="500">
+<img align="center" src=figure/Result1_Ridge.Rmd/fig1-1.png width="1000" height="500">
 </p>
 
 - Discussion: The message here is MR.ASH performs reasonably well, and the only penalized linear regression method that outperforms Ridge with cross-validation. However, let us mention that Blasso (Bayesian Lasso) performs the best, which uses a non-sparse Laplace prior on $\beta$. Also, BayesB performs better than MR.ASH, which uses a spike-and-slab prior on $\beta$.
@@ -84,8 +84,8 @@ The reason why we set PVE = 0.99, the cross-validated solution of the method (E-
 - Result: 
 
 <p align="center">
-<img src=figure/Result2_Nonconvex.Rmd/fig1-1.png width="500" height="500">
-<img src=figure/Plots_for_paper.Rmd/fig1-1.png width="500" height="500">
+<img src=figure/Result2_Nonconvex.Rmd/fig1-1.png width="1000" height="500">
+<img src=figure/Plots_for_paper.Rmd/fig1-1.png width="1000" height="500">
 </p>
 
 - Discussion: Clearly MR.ASH is an overall winner, outperforming all the other methods. Flexibility of MR.ASH Gaussian mixture prior is illustrated well in the above figure.
@@ -99,8 +99,8 @@ This experiment is to compare performance of the methods when $p$ varies while t
 - Result: 
 
 <p align="center">
-<img src=figure/Result4_Highdim.Rmd/fig1-1.png width="500" height="500">
-<img src=figure/Result4_Highdim.Rmd/fig2-1.png width="500" height="500">
+<img src=figure/Result4_Highdim.Rmd/fig1-1.png width="1000" height="500">
+<img src=figure/Result4_Highdim.Rmd/fig2-1.png width="1000" height="500">
 </p>
 
 
@@ -114,8 +114,8 @@ Also, the computation time of MR.ASH scales linearly in $\log p$. We conclude th
 - Result:
 
 <p align="center">
-<img src=figure/Result5_SparseSignal.Rmd/fig2-1.png width="500" height="500">
-<img src=figure/Result5_SparseSignal.Rmd/fig4-1.png width="500" height="500">
+<img src=figure/Result5_SparseSignal.Rmd/fig2-1.png width="1000" height="500">
+<img src=figure/Result5_SparseSignal.Rmd/fig4-1.png width="1000" height="500">
 </p>
 
 - Discussion: Mr.ASH does well in sparse setting. VARBVS shows very similar performance compared to Mr.ASH. BayesB performs reasonably well for all cases, hence very balanced. Blasso does very well in non-sparse setting.
@@ -135,8 +135,8 @@ Also, the computation time of MR.ASH scales linearly in $\log p$. We conclude th
 - Result:
 
 <p align="center">
-<img src=figure/Result6_PVE.Rmd/fig1-1.png width="500" height="500">
-<img src=figure/Result6_PVE.Rmd/fig2-1.png width="500" height="500">
+<img src=figure/Result6_PVE.Rmd/fig1-1.png width="1000" height="500">
+<img src=figure/Result6_PVE.Rmd/fig2-1.png width="1000" height="500">
 </p>
 
 - Discussion: MR.ASH outperforms for all the PVEs. However this experiment setting is favorable for MR.ASH. Thus we can just conclude, for safety, that the relative performance does not depend very much on PVE, but Ridge, SuSiE and Blasso suffer for high PVE.
