@@ -1,9 +1,17 @@
+# Fit a ridge regression model to the data, and estimate the penalty
+# strength (i.e., the normal prior on the regression coefficients)
+# using cross-validation.
+fit_ridge = function(X, y, lambda = c("lambda.min", "lambda.1se"),
+                     standardize = FALSE)
+  fit_lasso(X,y,lambda,standardize,0)
+
 # Fit a Lasso model to the data, and estimate the penalty strength
 # (lambda) using cross-validation.
 fit_lasso = function(X, y, lambda = c("lambda.min", "lambda.1se"),
-                     standardize = FALSE) {
+                     standardize = FALSE, alpha = 1) {
   timing = system.time(
-    fit <- glmnet::cv.glmnet(x = X, y = y, standardize = standardize))
+    fit <- glmnet::cv.glmnet(x = X, y = y, standardize = standardize,
+                             alpha = 1))
   b = drop(coef(fit,s = fit[[lambda]]))
   return(list(fit = fit,mu = b[1],beta = b[-1],timing = timing))
 }

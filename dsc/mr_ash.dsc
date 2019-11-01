@@ -10,7 +10,7 @@ DSC:
   replicate: 4
   define:
     simulate: sparse_normal, sparse_t
-    fit:      lasso, varbvs
+    fit:      ridge, lasso, varbvs
     predict:  predict_linear
     score:    rsse
   run: simulate * fit * predict * score
@@ -59,6 +59,19 @@ sparse_t: sparse_t.R
 # A "fit" module fits a linear regression model to the provided
 # training data, X and y.
 
+# Fit a ridge regression model using glmnet. The penalty strength
+# (i.e., the normal prior on the coefficients) is estimated using
+# cross-validation.
+ridge: ridge.R
+  standardize:       FALSE
+  lambda_est_method: "lambda.min", "lambda.1se"
+  X:                 $X
+  y:                 $y
+  $intercept:        out$mu
+  $beta_est:         out$beta
+  $timing:           out$timing
+  $model:            out$fit
+
 # Fit a Lasso model using glmnet. The penalty strength ("lambda") is
 # estimated via cross-validation.
 lasso: lasso.R
@@ -68,7 +81,8 @@ lasso: lasso.R
   y:                 $y
   $intercept:        out$mu
   $beta_est:         out$beta
-  $model:            out
+  $timing:           out$timing
+  $model:            out$fit
   
 # Compute a fully-factorized variational approximation for Bayesian
 # variable selection in linear regression ("varbvs").
@@ -77,6 +91,7 @@ varbvs: varbvs.R
   y:          $y
   $intercept: out$mu
   $beta_est:  out$beta
+  $timing:    out$timing
   $model:     out$fit
 
 # predict modules
