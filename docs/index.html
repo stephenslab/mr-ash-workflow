@@ -7,7 +7,6 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -84,6 +83,7 @@ code {
 }
 img {
   max-width:100%;
+  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -244,6 +244,18 @@ $(document).ready(function () {
 }
 </style>
 
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
 <!-- code folding -->
 
 
@@ -320,7 +332,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-10-30
+<strong>Last updated:</strong> 2019-10-31
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 2 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -330,7 +342,7 @@ div.section {
 </p>
 <p>
 This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
-  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.4.0.9002). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.3.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
 </p>
 <hr>
 </div>
@@ -351,16 +363,35 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree9c9e1a37db58236c8ec9ad7a1a584bf1ef872ac8targetblank9c9e1a3a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/9c9e1a37db58236c8ec9ad7a1a584bf1ef872ac8" target="_blank">9c9e1a3</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree48b4de27f7ab96273dac42ddc2d3b9256c0917batargetblank48b4de2a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/48b4de27f7ab96273dac42ddc2d3b9256c0917ba" target="_blank">48b4de2</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree9c9e1a37db58236c8ec9ad7a1a584bf1ef872ac8targetblank9c9e1a3a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree48b4de27f7ab96273dac42ddc2d3b9256c0917batargetblank48b4de2a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 </p>
 <pre><code>
-working directory clean
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    ETA_1_lambda.dat
+    Ignored:    ETA_1_parBayesB.dat
+    Ignored:    analysis/ETA_1_lambda.dat
+    Ignored:    analysis/ETA_1_parBayesB.dat
+    Ignored:    analysis/mu.dat
+    Ignored:    analysis/varE.dat
+    Ignored:    mu.dat
+    Ignored:    varE.dat
+
+Untracked files:
+    Untracked:  .DS_Store
+    Untracked:  docs/.DS_Store
+    Untracked:  docs/figure/.DS_Store
+
+Unstaged changes:
+    Modified:   analysis/Result2_Nonconvex.Rmd
+
 </code></pre>
 <p>
 Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
@@ -403,6 +434,40 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/48b4de27f7ab96273dac42ddc2d3b9256c0917ba/analysis/index.Rmd" target="_blank">48b4de2</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-31
+</td>
+<td>
+wflow_publish(“analysis/index.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/b3ea205728a7f21ca33e684e9f6b7085e2ca94b8/docs/index.html" target="_blank">b3ea205</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2019-10-30
+</td>
+<td>
+Re-built home page with “source” link in navigation bar.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/stephenslab/mr-ash-workflow/blob/5ca88f2bf6abf3fb5105e2adb2bb7623921a718a/analysis/index.Rmd" target="_blank">5ca88f2</a>
 </td>
 <td>
@@ -426,7 +491,7 @@ html
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 Build site.
@@ -443,7 +508,7 @@ Rmd
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 wflow_publish(“analysis/index.Rmd”)
@@ -460,7 +525,7 @@ html
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 Build site.
@@ -477,7 +542,7 @@ Rmd
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 wflow_publish(“analysis/index.Rmd”)
@@ -494,7 +559,7 @@ html
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 Build site.
@@ -511,7 +576,7 @@ Rmd
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 wflow_publish(“analysis/index.Rmd”)
@@ -528,7 +593,7 @@ html
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 Build site.
@@ -545,7 +610,7 @@ Rmd
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 wflow_publish(“analysis/index.Rmd”)
@@ -562,7 +627,7 @@ html
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 Build site.
@@ -579,7 +644,7 @@ Rmd
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 wflow_publish(“analysis/index.Rmd”)
@@ -596,7 +661,7 @@ html
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 Build site.
@@ -613,7 +678,7 @@ Rmd
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 wflow_publish(“analysis/index.Rmd”)
@@ -630,7 +695,7 @@ html
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 Build site.
@@ -647,7 +712,7 @@ Rmd
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 wflow_publish(“analysis/index.Rmd”)
@@ -664,7 +729,7 @@ html
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 Build site.
@@ -681,7 +746,7 @@ Rmd
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 wflow_publish(“analysis/index.Rmd”)
@@ -698,7 +763,7 @@ html
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 Build site.
@@ -715,7 +780,7 @@ Rmd
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 wflow_publish(“analysis/index.Rmd”)
@@ -732,7 +797,7 @@ html
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 Build site.
@@ -749,7 +814,7 @@ Rmd
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 wflow_publish(“analysis/index.Rmd”)
@@ -766,7 +831,7 @@ html
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 Build site.
@@ -783,7 +848,7 @@ Rmd
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 wflow_publish(“analysis/index.Rmd”)
@@ -800,7 +865,7 @@ html
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 Build site.
@@ -817,7 +882,7 @@ Rmd
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 wflow_publish(“analysis/index.Rmd”)
@@ -834,7 +899,7 @@ html
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 Build site.
@@ -851,7 +916,7 @@ Rmd
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 wflow_publish(“analysis/index.Rmd”)
@@ -868,7 +933,7 @@ html
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 Build site.
@@ -885,7 +950,7 @@ Rmd
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 wflow_publish(“analysis/index.Rmd”)
@@ -902,7 +967,7 @@ html
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 Build site.
@@ -919,7 +984,7 @@ Rmd
 Youngseok Kim
 </td>
 <td>
-2019-10-24
+2019-10-23
 </td>
 <td>
 wflow_publish(“analysis/index.Rmd”)
@@ -1582,7 +1647,7 @@ html
 Youngseok
 </td>
 <td>
-2019-10-22
+2019-10-21
 </td>
 <td>
 Build site.
@@ -1599,7 +1664,7 @@ Rmd
 Youngseok
 </td>
 <td>
-2019-10-22
+2019-10-21
 </td>
 <td>
 wflow_publish(“analysis/index.Rmd”)
@@ -1616,7 +1681,7 @@ html
 Youngseok
 </td>
 <td>
-2019-10-22
+2019-10-21
 </td>
 <td>
 Build site.
@@ -1857,7 +1922,7 @@ Youngseok
 2019-10-15
 </td>
 <td>
-wflow_publish(“analysis/*.Rmd“)
+wflow_publish(&quot;analysis/*.Rmd&quot;)
 </td>
 </tr>
 <tr>
@@ -1871,7 +1936,7 @@ Rmd
 Youngseok
 </td>
 <td>
-2019-10-15
+2019-10-14
 </td>
 <td>
 update for experiment with different p
@@ -1888,7 +1953,7 @@ html
 Youngseok
 </td>
 <td>
-2019-10-15
+2019-10-14
 </td>
 <td>
 Build site.
@@ -1905,7 +1970,7 @@ Rmd
 Youngseok
 </td>
 <td>
-2019-10-15
+2019-10-14
 </td>
 <td>
 wflow_publish(“analysis/index.Rmd”)
@@ -1922,7 +1987,7 @@ html
 Youngseok
 </td>
 <td>
-2019-10-15
+2019-10-14
 </td>
 <td>
 Build site.
@@ -1939,7 +2004,7 @@ Rmd
 Youngseok
 </td>
 <td>
-2019-10-15
+2019-10-14
 </td>
 <td>
 wflow_publish(“analysis/index.Rmd”)
@@ -2010,7 +2075,7 @@ Youngseok
 2019-10-14
 </td>
 <td>
-wflow_publish(“analysis/*.Rmd“)
+wflow_publish(&quot;analysis/*.Rmd&quot;)
 </td>
 </tr>
 <tr>
@@ -2024,7 +2089,7 @@ html
 Youngseok
 </td>
 <td>
-2019-10-14
+2019-10-13
 </td>
 <td>
 Build site.
@@ -2041,7 +2106,7 @@ Rmd
 Youngseok
 </td>
 <td>
-2019-10-14
+2019-10-13
 </td>
 <td>
 wflow_publish(“analysis/Index.Rmd”)
@@ -2058,7 +2123,7 @@ html
 Youngseok
 </td>
 <td>
-2019-10-14
+2019-10-13
 </td>
 <td>
 Build site.
@@ -2075,10 +2140,10 @@ Rmd
 Youngseok
 </td>
 <td>
-2019-10-14
+2019-10-13
 </td>
 <td>
-wflow_publish(“analysis/*.Rmd“)
+wflow_publish(&quot;analysis/*.Rmd&quot;)
 </td>
 </tr>
 <tr>
@@ -2092,7 +2157,7 @@ Rmd
 Youngseok
 </td>
 <td>
-2019-10-08
+2019-10-07
 </td>
 <td>
 Start workflowr project.
@@ -2159,7 +2224,7 @@ Start workflowr project.
 <li>Result:</li>
 </ul>
 <p align="center">
-<img align="center" src=figure/Result1_Ridge.Rmd/fig1-1.png width="500" height="500">
+<img align="center" src=figure/Result1_Ridge.Rmd/fig1-1.png width="1000" height="500">
 </p>
 <ul>
 <li>Discussion: The message here is MR.ASH performs reasonably well, and the only penalized linear regression method that outperforms Ridge with cross-validation. However, let us mention that Blasso (Bayesian Lasso) performs the best, which uses a non-sparse Laplace prior on <span class="math inline">\(\beta\)</span>. Also, BayesB performs better than MR.ASH, which uses a spike-and-slab prior on <span class="math inline">\(\beta\)</span>.</li>
@@ -2173,7 +2238,7 @@ Start workflowr project.
 <li>Result:</li>
 </ul>
 <p align="center">
-<img src=figure/Result2_Nonconvex.Rmd/fig1-1.png width="500" height="500"> <img src=figure/Plots_for_paper.Rmd/fig1-1.png width="500" height="500">
+<img src=figure/Result2_Nonconvex.Rmd/fig1-1.png width="1000" height="500"> <img src=figure/Plots_for_paper.Rmd/fig1-1.png width="1000" height="500">
 </p>
 <ul>
 <li>Discussion: Clearly MR.ASH is an overall winner, outperforming all the other methods. Flexibility of MR.ASH Gaussian mixture prior is illustrated well in the above figure.</li>
@@ -2189,7 +2254,7 @@ Start workflowr project.
 <li>Result:</li>
 </ul>
 <p align="center">
-<img src=figure/Result4_Highdim.Rmd/fig1-1.png width="500" height="500"> <img src=figure/Result4_Highdim.Rmd/fig2-1.png width="500" height="500">
+<img src=figure/Result4_Highdim.Rmd/fig1-1.png width="1000" height="500"> <img src=figure/Result4_Highdim.Rmd/fig2-1.png width="1000" height="500">
 </p>
 <ul>
 <li>Discussion: It shows that MR.ASH and VarBVS outperform well. Since the theory says (e.g. <a href="https://arxiv.org/pdf/1605.08651.pdf">Slope meets Lasso: improved oracle bounds and optimality</a> ) that the prediction error scales as <span class="math inline">\(\sqrt{s\log(p/s)/n}\)</span>, and thus we can expect that the prediction error increaese log-linearly in <span class="math inline">\(p\)</span>. One can check this in the above figure.</li>
@@ -2202,7 +2267,7 @@ Start workflowr project.
 <li>Result:</li>
 </ul>
 <p align="center">
-<img src=figure/Result5_SparseSignal.Rmd/fig2-1.png width="500" height="500"> <img src=figure/Result5_SparseSignal.Rmd/fig4-1.png width="500" height="500">
+<img src=figure/Result5_SparseSignal.Rmd/fig2-1.png width="1000" height="500"> <img src=figure/Result5_SparseSignal.Rmd/fig4-1.png width="1000" height="500">
 </p>
 <ul>
 <li>Discussion: Mr.ASH does well in sparse setting. VARBVS shows very similar performance compared to Mr.ASH. BayesB performs reasonably well for all cases, hence very balanced. Blasso does very well in non-sparse setting.</li>
@@ -2332,7 +2397,7 @@ Start workflowr project.
 <li>Result:</li>
 </ul>
 <p align="center">
-<img src=figure/Result6_PVE.Rmd/fig1-1.png width="500" height="500"> <img src=figure/Result6_PVE.Rmd/fig2-1.png width="500" height="500">
+<img src=figure/Result6_PVE.Rmd/fig1-1.png width="1000" height="500"> <img src=figure/Result6_PVE.Rmd/fig2-1.png width="1000" height="500">
 </p>
 <ul>
 <li>Discussion: MR.ASH outperforms for all the PVEs. However this experiment setting is favorable for MR.ASH. Thus we can just conclude, for safety, that the relative performance does not depend very much on PVE, but Ridge, SuSiE and Blasso suffer for high PVE.</li>
@@ -2348,19 +2413,19 @@ Start workflowr project.
 </ol>
 <table style="width:100%;">
 <colgroup>
-<col width="22%" />
+<col width="24%" />
 <col width="5%" />
 <col width="9%" />
 <col width="8%" />
 <col width="5%" />
 <col width="5%" />
 <col width="5%" />
-<col width="5%" />
-<col width="5%" />
-<col width="5%" />
-<col width="5%" />
-<col width="5%" />
-<col width="5%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
 <col width="6%" />
 </colgroup>
 <thead>
@@ -2582,23 +2647,6 @@ $(document).ready(function () {
 
 
 </script>
-
-<!-- tabsets -->
-
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
-<!-- code folding -->
-
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
