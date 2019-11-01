@@ -35,7 +35,7 @@ A list of packages we have loaded is collapsed. Please click "code" to see the l
 
 ```{r library, message = FALSE}
 library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
-library(glmnet); library(varbvs2); library(ncvreg); library(L0Learn); library(varbvs);
+library(glmnet); library(mr.ash.alpha); library(ncvreg); library(L0Learn); library(varbvs);
 standardize = FALSE
 source('code/method_wrapper.R')
 source('code/sim_wrapper.R')
@@ -109,9 +109,9 @@ fig
 tdat1        = list()
 n            = 1010
 p            = 1000
-s_list       = c(20,100)
+s            = 20
 method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
-method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
+method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init","enet2","lasso2","ridge2")
 method_num   = length(method_list2)
 iter_num     = 20
 pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
@@ -119,13 +119,12 @@ time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
 
 
 
-for (iter in 1:2) {
-  s               = s_list[iter]
+for (iter in 1) {
 for (i in 1:20) {
   set.seed(2010 + i)
   beta            = double(p)
   ind             = sample(p,s)
-  M               = 1000
+  M               = 5
   beta[ind]       = 1/M
   beta[ind[1:10]] = M
   data            = simulate_data(n, p, s = s, seed = i, beta = beta, sigma = 1)
@@ -135,35 +134,38 @@ for (i in 1:20) {
     fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
     pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
     time[i,j+1]   = fit$t
-      if (method_list[j] == "lasso") {
-      lasso.path.order = mr.ash:::path.order(fit$fit$glmnet.fit)
+    if (method_list[j] == "lasso") {
+      lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
       lasso.beta       = as.vector(coef(fit$fit))[-1]
       lasso.time       = c(fit$t, fit$t2)
+    }
+    
+    if (method_list[j] == "lasso") {
+      pred[i,method_num - 1] = fit$rsse2 / data$sigma / sqrt(n)
+    } else if (method_list[j] == "enet") {
+      pred[i,method_num - 2] = fit$rsse2 / data$sigma / sqrt(n)
+    } else if (method_list[j] == "ridge") {
+      pred[i,method_num]     = fit$rsse2 / data$sigma / sqrt(n)
     }
   }
  
   fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
-                           sa2 = (2^((0:19)) - 1)^2)
+                           sa2 = (2^((0:19) / 2) - 1)^2)
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             update.order = lasso.path.order,
-                            sa2 = (2^((0:19)) - 1)^2)
+                            sa2 = (2^((0:19) / 2) - 1)^2)
   pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+2] = fit$t + lasso.time[2]
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             beta.init = lasso.beta,
-                            sa2 = (2^((0:19)) - 1)^2)
+                            sa2 = (2^((0:19) / 2) - 1)^2)
   pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+3] = fit$t + lasso.time[1]
-  
 }
-print("----")
-print(pred)
-print(time)
-print("----")
 tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
 }
 ```
