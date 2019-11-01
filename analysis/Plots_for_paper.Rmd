@@ -117,11 +117,11 @@ df$operator = factor(df$operator, levels = c("soft","hard","scad","mcp"))
 
 p1 = ggplot(df) + geom_line(aes(x = b, y = sb, color = operator)) +
   theme_cowplot(font_size = 14) + theme(axis.line = element_blank()) +
-  labs(y = "shrinakge of b (S(b))", title = "MR.ASH shrinkage operator")
+  labs(y = "shrinakge of b (S(b))", title = "MR.ASH shrinkage operators")
 p2 = ggplot(df) + geom_line(aes(x = b, y = sb2, color = operator)) +
   theme_cowplot(font_size = 14) + theme(axis.line = element_blank()) +
   labs(title = "123")  +
-  labs(y = "shrinakge of b (S(b))", title = "Well-known shrinkage/thresholding operator")
+  labs(y = "shrinakge of b (S(b))", title = "Well-known shrinkage/thresholding operators")
 
 fig = plot_grid(p1,p2, nrow = 1)
 title = ggdraw() + draw_label("MR.ASH Shrinkage operator may resemble the well-known shrinkage operators", fontface = 'bold', size = 20) 
