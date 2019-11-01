@@ -394,15 +394,11 @@ div.tocify {
         <li>
   <a href="index.html">Home</a>
 </li>
-<li>
-  <a href="about.html">About</a>
-</li>
-<li>
-  <a href="license.html">License</a>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://github.com/stephenslab/mr-ash-workflow">source</a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -452,7 +448,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-10-23
+<strong>Last updated:</strong> 2019-10-31
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -531,10 +527,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree98f8b992c561e5576cd3dd9f800ff0337547e5batargetblank98f8b99a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/98f8b992c561e5576cd3dd9f800ff0337547e5ba" target="_blank">98f8b99</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree5d383c586f6786d3438538138ade88b197db5336targetblank5d383c5a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/5d383c586f6786d3438538138ade88b197db5336" target="_blank">5d383c5</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree98f8b992c561e5576cd3dd9f800ff0337547e5batargetblank98f8b99a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree5d383c586f6786d3438538138ade88b197db5336targetblank5d383c5a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -554,18 +550,12 @@ Ignored files:
 
 Untracked files:
     Untracked:  .DS_Store
-    Untracked:  backup
+    Untracked:  docs/.DS_Store
     Untracked:  docs/figure/.DS_Store
-    Untracked:  results/equicorr.RDS
-    Untracked:  results/localcorr.RDS
-    Untracked:  results/localcorr.REDS
-    Untracked:  results/sparsesignal.RDS
 
 Unstaged changes:
-    Modified:   analysis/Result5_SparseSignal.Rmd
-    Modified:   analysis/Result6_PVE.Rmd
+    Modified:   analysis/Result1_Ridge.Rmd
     Modified:   code/sim_wrapper.R
-    Modified:   docs/.DS_Store
 
 </code></pre>
 <p>
@@ -604,6 +594,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/5d383c586f6786d3438538138ade88b197db5336/analysis/Plots_for_paper.Rmd" target="_blank">5d383c5</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-31
+</td>
+<td>
+wflow_publish(“analysis/Plots_for_paper.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/66726909d9d89ed7935e64082a60c8773ad03cab/docs/Plots_for_paper.html" target="_blank">6672690</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-23
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -801,7 +825,11 @@ update for experiment with different p
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
 <p>This .Rmd documentation is to reproduce figures in the paper/manuscript.</p>
-<pre class="r"><code>library(ggplot2); library(cowplot)</code></pre>
+<pre class="r"><code>library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(mr.ash.alpha); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
+source(&#39;code/method_wrapper.R&#39;)
+source(&#39;code/sim_wrapper.R&#39;)</code></pre>
 </div>
 <div id="popular-shrinkage-operators" class="section level2">
 <h2>Popular shrinkage operators</h2>
@@ -929,6 +957,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/66726909d9d89ed7935e64082a60c8773ad03cab/docs/figure/Plots_for_paper.Rmd/fig1-1.png" target="_blank">6672690</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-23
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/stephenslab/mr-ash-workflow/blob/5e5d9a179f538f64e61b2395b638db684fae5e20/docs/figure/Plots_for_paper.Rmd/fig1-1.png" target="_blank">5e5d9a1</a>
@@ -1080,6 +1119,40 @@ Youngseok
 </table>
 </div>
 </div>
+<pre class="r"><code>res_df       = readRDS(&quot;results/ridge_pve0.5.RDS&quot;)
+p_list       = c(50,100,200,500,1000,2000)
+method_list  = c(&quot;Mr.ASH&quot;,&quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,&quot;Ridge.opt&quot;)
+col          = gg_color_hue(13)[1:11]
+sdat = data.frame()
+for (i in 1:6) {
+  sdat       = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred,20,12)),
+                                      time = colMeans(matrix(res_df[[i]]$time,20,12)),
+                                      p = p_list[i],
+                                      fit = method_list))
+}
+shape       = c(19,17,24,25,9,3,11,4,5,7,8)
+sdat$fit    = factor(sdat$fit, levels =  c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,
+                                           &quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,
+                                           &quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;,
+                                           &quot;Ridge.opt&quot;))
+sdat1       = sdat[sdat$fit %in% c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,&quot;Ridge.opt&quot;),]
+
+p1 = ggplot(sdat1) + geom_line(aes(x = p, y = pred, color = fit)) +
+  geom_point(aes(x = p, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(trans = &quot;log10&quot;, breaks = p_list) +
+  labs(y = &quot;predictior error (rmse / sigma)&quot;, x = &quot;number of coefficients (p)&quot;) +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = c(col[1:7],&quot;gray50&quot;)) +
+  scale_shape_manual(values = c(shape[1:7],15)) +
+  scale_y_continuous(trans = &quot;log10&quot;, limits = c(1.04,1.46), breaks = c(1.1,1.2,1.3,1.4))
+fig_main  = p1
+title     = ggdraw() + draw_label(&quot;Prediction Error (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
+subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + Normal, n = 500, p = 50,100,200,500,1000,2000, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 18) 
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
+fig</code></pre>
+<p><img src="figure/Plots_for_paper.Rmd/fig3-1.png" width="1440" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -1103,19 +1176,28 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] cowplot_0.9.4 ggplot2_3.2.1
+ [1] varbvs_2.6-5       L0Learn_1.1.0      ncvreg_3.11-1     
+ [4] mr.ash.alpha_0.1-2 glmnet_2.0-16      foreach_1.4.4     
+ [7] BGLR_1.0.8         susieR_0.7.1       cowplot_0.9.4     
+[10] ggplot2_3.2.1      Matrix_1.2-17     
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.2       knitr_1.22       whisker_0.3-2    magrittr_1.5    
- [5] workflowr_1.3.0  tidyselect_0.2.5 munsell_0.5.0    colorspace_1.4-1
- [9] R6_2.4.0         rlang_0.4.0      dplyr_0.8.3      stringr_1.4.0   
-[13] tools_3.5.3      grid_3.5.3       gtable_0.3.0     xfun_0.6        
-[17] withr_2.1.2      git2r_0.25.2     htmltools_0.4.0  assertthat_0.2.1
-[21] yaml_2.2.0       lazyeval_0.2.2   rprojroot_1.3-2  digest_0.6.18   
-[25] tibble_2.1.1     crayon_1.3.4     purrr_0.3.2      fs_1.3.0        
-[29] glue_1.3.1       evaluate_0.13    rmarkdown_1.12   labeling_0.3    
-[33] stringi_1.4.3    compiler_3.5.3   pillar_1.3.1     scales_1.0.0    
-[37] backports_1.1.4  pkgconfig_2.0.2 </code></pre>
+ [1] Rcpp_1.0.2          RColorBrewer_1.1-2  plyr_1.8.4         
+ [4] compiler_3.5.3      pillar_1.3.1        git2r_0.25.2       
+ [7] workflowr_1.3.0     iterators_1.0.10    tools_3.5.3        
+[10] digest_0.6.18       evaluate_0.13       tibble_2.1.1       
+[13] gtable_0.3.0        lattice_0.20-38     pkgconfig_2.0.2    
+[16] rlang_0.4.0         yaml_2.2.0          xfun_0.6           
+[19] withr_2.1.2         stringr_1.4.0       dplyr_0.8.3        
+[22] knitr_1.22          fs_1.3.0            rprojroot_1.3-2    
+[25] grid_3.5.3          tidyselect_0.2.5    glue_1.3.1         
+[28] R6_2.4.0            rmarkdown_1.12      latticeExtra_0.6-28
+[31] reshape2_1.4.3      purrr_0.3.2         magrittr_1.5       
+[34] whisker_0.3-2       codetools_0.2-16    backports_1.1.4    
+[37] scales_1.0.0        htmltools_0.4.0     assertthat_0.2.1   
+[40] colorspace_1.4-1    labeling_0.3        nor1mix_1.2-3      
+[43] stringi_1.4.3       lazyeval_0.2.2      munsell_0.5.0      
+[46] truncnorm_1.0-8     crayon_1.3.4       </code></pre>
 </div>
 </div>
 
