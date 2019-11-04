@@ -1,0 +1,179 @@
+---
+title: "Result3_SignalShape"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+### Signal setting
+
+We will use the following 6 different signal settings with the same sparsity $s = 20$.
+
+(1) SparseLaplace: $\beta_j \sim \textrm{Laplace}(1)$ for $j \in J$ and $\beta_j = 0$ otherwise, where $J$ is a set of randomly $s$ indices in $\{1,\cdots,p\}$, chosen uniformly at random.
+(2) SparseT2: $\beta_j \sim \textrm{t}_2$ for $j \in J$ and $\beta_j = 0$ otherwise, where $J$ is a set of randomly $s$ indices in $\{1,\cdots,p\}$, chosen uniformly at random.
+(3) SparseT5: $\beta_j \sim \textrm{t}_5$ for $j \in J$ and $\beta_j = 0$ otherwise, where $J$ is a set of randomly $s$ indices in $\{1,\cdots,p\}$, chosen uniformly at random.
+(4) SparseNormal: $\beta_j \sim N(0,\sigma_\beta^2)$ for $j \in J$ and $\beta_j = 0$ otherwise, where $J$ is a set of randomly $s$ indices in $\{1,\cdots,p\}$, chosen uniformly at random.
+(5) SparseUniform: $\beta_j \sim \textrm{Unif}(0,1)$ for $j \in J$ and $\beta_j = 0$ otherwise, where $J$ is a set of randomly $s$ indices in $\{1,\cdots,p\}$, chosen uniformly at random.
+(6) SparseConstant: $\beta_j = 1$ for $j \in J$ and $\beta_j = 0$ otherwise, where $J$ is a set of randomly $s$ indices in $\{1,\cdots,p\}$, chosen uniformly at random.
+
+The following is the tail behaviors of the above signal generating probability distributions.
+
+```{r tail, message = FALSE}
+library(ggplot2); library(cowplot)
+x = seq(-100,100,0.01)
+dat = rbind(data.frame(x = x, y = dexp(abs(x), 1, log = TRUE) / 2, signal = "SparseLaplace"),
+            data.frame(x = x, y = dt(x, df = 2, log = TRUE), signal = "SparseT2"),
+            data.frame(x = x, y = dt(x, df = 5, log = TRUE), signal = "SparseT5"),
+            data.frame(x = x, y = dnorm(x, log = TRUE), signal = "SparseNormal"))
+ggplot(dat) + geom_line(aes(x = x, y = y, color = signal)) + 
+  coord_cartesian(ylim = c(-50,0)) + theme_cowplot(font_size = 14) +
+  theme(axis.line    = element_blank()) +
+  labs(x = "x", y = "logpdf(x)")
+```
+
+### PVE
+
+### Packages / Libraries
+
+A list of packages we have loaded is collapsed. Please click "code" to see the list.
+
+```{r library, message = FALSE}
+library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(mr.ash.alpha); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
+source('code/method_wrapper.R')
+source('code/sim_wrapper.R')
+```
+
+## Results 
+
+```{r fig1, fig.height=13, fig.width=15}
+res_df       = readRDS("../results/signalshape25.RDS")
+method_list  = c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+col          = gg_color_hue(13)[1:11]
+x_range      = 2^(c(1,2,4,5,3,6,7,8) - 1)
+df           = data.frame()
+for (i in 1:8) {
+res_df[[i]]       = res_df[[i]][1:140,]
+res_df[[i]]$fit   = rep(method_list, each = 20)
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_level)
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 7))),
+                                         df   = x_range[i],
+                                         fit  = method_list))
+}
+df$fit = factor(df$fit, levels = method_level)
+col   = gg_color_hue(7)[1:7]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,1)[1:7]
+p1    = ggplot(df) + geom_line(aes(x = df, y = pred, color = fit)) +
+  geom_point(aes(x = df, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(trans = "log10", breaks = c(1,2,4,8,16,32,64,128),
+                     labels = c("t (df=1)","t (df=2)","Laplace","t (df=4)","t (df=8)",
+                                "Normal","Uniform","Constant")) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of nonzero coefficients (s)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 45,hjust = 1)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(1,1.1,1.2,1.3,1.4)) +
+  coord_cartesian(ylim = c(1,sqrt(2)))
+fig_main = p1
+title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 1000, p = 500, s = 200, pve = 0.5", fontface  = 'bold', size = 18) 
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.03,0.03,0.95))
+```
+
+## Source code
+
+The source code will be popped up when you click `code` on the right side. 
+
+```{r code, eval = FALSE}
+tdat1        = list()
+n            = 1000
+p            = 500
+s            = 200
+method_list  = c("enet","lasso","ridge","scad2","mcp2","l0learn")
+method_list2 = c("mr.ash", method_list, "enet2","lasso2","ridge2")
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+for (iter in 8) {
+  df           = c(1,2,4,8)
+  signal_shape = c("lap","normal","unif","const")
+for (i in 1:20) {
+  
+  if (iter <= 4) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = "t", df = df[iter], pve = 0.5)
+  } else if (iter > 4) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = signal_shape[iter - 4], pve = 0.5)
+  }
+
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste("fit.",method_list[j],sep = ""))
+    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
+    
+    if (method_list[j] == "lasso") {
+      pred[i,method_num - 1] = fit$rsse2 / data$sigma / sqrt(n)
+    } else if (method_list[j] == "enet") {
+      pred[i,method_num - 2] = fit$rsse2 / data$sigma / sqrt(n)
+    } else if (method_list[j] == "ridge") {
+      pred[i,method_num - 0] = fit$rsse2 / data$sigma / sqrt(n)
+    }
+  }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  print(c(fit$fit$pi))
+  print(c(pred[i,]), digits = 4)
+}
+  tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+}
+```
+
+```{r code2, eval = FALSE}
+# cross validation is fairly accurate
+data          = simulate_data(n, p, s = s, seed = 1, signal = signal_list[1], pve = 0.99)
+fit1          = fit.scad(data$X, data$y, data$X.test, data$y.test, seed = i)
+res1          = c(data$y.test) - predict(fit1$fit, X = data$X.test, lambda = fit1$fit$lambda)
+pred1         = sqrt(colMeans(res1^2)) / data$sigma
+
+fit2          = fit.mcp(data$X, data$y, data$X.test, data$y.test, seed = i)
+res2          = c(data$y.test) - predict(fit2$fit, X = data$X.test, lambda = fit2$fit$lambda)
+pred2         = sqrt(colMeans(res2^2)) / data$sigma
+
+fit3          = fit.enet(data$X, data$y, data$X.test, data$y.test, seed = i)
+res3          = c(data$y.test) - predict(fit3$fit, newx = data$X.test, s = fit3$fit$lambda)
+pred3         = sqrt(colMeans(res3^2))/ data$sigma
+
+# compare with mr.ash
+fit0          = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 20) - 1)^2)
+pred0         = fit0$rsse / data$sigma / sqrt(n)
+
+## thus mr.ash is better than the best
+print(c(mr.ash = pred0,
+        scad.best = as.numeric(pred1[which.min(pred1)]),
+        scad.cv = as.numeric(pred1[which.min(fit1$fit$cve)]),
+        mcp.best = as.numeric(pred2[which.min(pred2)]),
+        mcp.cv = as.numeric(pred2[which.min(fit2$fit$cve)]),
+        enet.best = as.numeric(pred3[which.min(pred3)]),
+        enet.cv = as.numeric(pred3[which.min(fit3$fit$cvm)])))
+```
+
+## System Configuration
+
+Click the below Session Info.

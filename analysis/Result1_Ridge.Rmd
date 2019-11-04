@@ -147,7 +147,6 @@ fig
 The source code will be popped up when you click `code` on the right side. 
 
 ```{r code, eval = FALSE}
-setwd("..")
 library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
 library(glmnet); library(mr.ash.alpha); library(ncvreg); library(L0Learn); library(varbvs);
 standardize = FALSE
