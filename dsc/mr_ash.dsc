@@ -7,7 +7,7 @@ DSC:
              modules/fit,
              modules/predict,
              modules/score
-  replicate: 4
+  replicate: 20
   define:
     simulate: sparse_normal, sparse_t
     fit:      ridge, lasso, elastic_net, varbvs, mr_ash
@@ -18,14 +18,12 @@ DSC:
 # simulate modules
 # ================
 # A "simulate" module generates a training and test data set used to
-# evaluate each of the linear regression models. Each training and
-# test data set should include an n x p matrix X and a vector y of
-# length n, where n is the number of samples, and p is the number of
-# candidate predictors.
+# evaluate each of the linear regression models.
 
 # Simulate the linear regression coefficients such that the s nonzero
-# coefficients are drawn from the normally distributed with zero
-# mean. The residual variance is controlled to achieve the target PVE.
+# coefficients are drawn from a normal distribution with zero mean.
+# The residual variance is controlled to achieve the target proportion
+# of variance explained (PVE).
 sparse_normal: sparse_normal.R
   n:      500
   p:      2000
@@ -39,9 +37,9 @@ sparse_normal: sparse_normal.R
   $sigma: out$sigma
 
 # Simulate the linear regression coefficients such that the s nonzero
-# coefficients are drawn from the t distrubution with 2 degrees of
+# coefficients are drawn from a t distrubution with 2 degrees of
 # freedom. The residual variance is controlled to achieve the target
-# PVE.
+# proportion of variance explained (PVE).
 sparse_t: sparse_t.R
   n:      500
   p:      2000
@@ -122,6 +120,7 @@ mr_ash: mr_ash.R
 
 # predict modules
 # ===============
+
 # A "predict" module takes as input a fitted model (or the parameters
 # of this fitted model) and an n x p matrix of observations, X, and
 # returns a vector of length n containing the outcomes predicted by
