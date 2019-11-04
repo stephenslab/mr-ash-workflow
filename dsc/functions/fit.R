@@ -26,7 +26,7 @@ fit_elastic_net = function(X, y, lambda = c("lambda.min", "lambda.1se"),
   cv.err = double(n)
   timing = system.time(
     for (i in 1:n) {
-      out[[i]]   = fit_lasso(X, y, lambda, standardize, alpha[i])
+      out[[i]]   = fit_glmnet(X, y, lambda, standardize, alpha[i])
       fit        = out[[i]]$fit
       lambda.ind = which(fit$lambda == fit$lambda.1se)
       cv.err[i]  = fit$cvm[lambda.ind]
