@@ -2,10 +2,12 @@
 #'
 #'
 #' sample possibly sparse beta
-sample_beta = function(p, s, s1 = 10, signal = "normal") {
+sample_beta = function(p, s, s1 = 10, df = 1, signal = "normal") {
   
   beta              = double(p)
-  if (signal == "t2") {
+  if (signal == "t") {
+    beta[sample(p,s)] = rt(s, df = df)
+  } else if (signal == "t2") {
     beta[sample(p,s)] = rt(s, df = 2)
   } else if (signal == "t5") {
     beta[sample(p,s)] = rt(s, df = 5)
@@ -36,7 +38,7 @@ sample_beta = function(p, s, s1 = 10, signal = "normal") {
 #' simulate data
 simulate_data = function(n = NULL, p = NULL, s = NULL, seed = 1,
                          design = "indepgauss", rho = 0,
-                         filepath = NULL,
+                         filepath = NULL, df = 1,
                          beta = NULL, signal = "normal",
                          sigma = NULL, Sigma.sqrt = NULL,
                          pve = 0.5, snr = NULL) {
@@ -95,7 +97,7 @@ simulate_data = function(n = NULL, p = NULL, s = NULL, seed = 1,
     if (pve == 0) {
       beta          = double(p)
     } else {
-      beta          = sample_beta(p,s,signal = signal)
+      beta          = sample_beta(p,s,signal = signal,df=df)
     }
   }
   
