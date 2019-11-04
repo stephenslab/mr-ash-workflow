@@ -7,12 +7,13 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 <meta name="author" content="Youngseok Kim and Peter Carbonetto" />
 
 
-<title>Explore results of mr_ash DSC</title>
+<title>Explore DSC results</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -73,9 +74,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -89,7 +88,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -99,6 +97,9 @@ img {
 }
 button.code-folding-btn:focus {
   outline: none;
+}
+summary {
+  display: list-item;
 }
 </style>
 
@@ -114,7 +115,6 @@ body {
   padding-top: 56px;
   margin-top: -56px;
 }
-
 .section h2 {
   padding-top: 56px;
   margin-top: -56px;
@@ -134,6 +134,43 @@ body {
 .section h6 {
   padding-top: 56px;
   margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
 }
 </style>
 
@@ -155,47 +192,65 @@ $(document).ready(function () {
 });
 </script>
 
-
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-</script>
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
 
 <!-- code folding -->
 
 
-
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -244,8 +299,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -254,6 +307,16 @@ div.tocify {
 
 
 </style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
@@ -303,8 +366,8 @@ div.section {
 
 
 
-<h1 class="title toc-ignore">Explore results of mr_ash DSC</h1>
-<h4 class="author"><em>Youngseok Kim and Peter Carbonetto</em></h4>
+<h1 class="title toc-ignore">Explore DSC results</h1>
+<h4 class="author">Youngseok Kim and Peter Carbonetto</h4>
 
 </div>
 
@@ -420,27 +483,20 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreea1f2f5d6de7b047ffb0ba611fca296a0d0c0d022targetblanka1f2f5da"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/a1f2f5d6de7b047ffb0ba611fca296a0d0c0d022" target="_blank">a1f2f5d</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreeff306496bfabb816756d1e8195c4a9f382bb54d6targetblankff30649a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/ff306496bfabb816756d1e8195c4a9f382bb54d6" target="_blank">ff30649</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreea1f2f5d6de7b047ffb0ba611fca296a0d0c0d022targetblanka1f2f5da" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreeff306496bfabb816756d1e8195c4a9f382bb54d6targetblankff30649a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 </p>
 <pre><code>
-Ignored files:
-    Ignored:    .sos/
-    Ignored:    analysis/.sos/
-    Ignored:    dsc/.sos/
-    Ignored:    dsc/mr_ash.html
-    Ignored:    dsc/mr_ash/
-
 Untracked files:
     Untracked:  .gitattributes
-
-Unstaged changes:
-    Modified:   dsc/explore_results.R
+    Untracked:  dsc/.sos/
+    Untracked:  dsc/mr_ash.html
+    Untracked:  dsc/mr_ash/
 
 </code></pre>
 <p>
@@ -484,6 +540,57 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/ff306496bfabb816756d1e8195c4a9f382bb54d6/analysis/explore_dsc_results.Rmd" target="_blank">ff30649</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2019-11-04
+</td>
+<td>
+wflow_publish(“analysis/explore_dsc_results.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/6ba51d4774aee5a554a674ba4a1233d992424ed0/analysis/explore_dsc_results.Rmd" target="_blank">6ba51d4</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2019-11-04
+</td>
+<td>
+Minor edit to explore_dsc_results analysis.
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/1c4ff0708fa5312b8a27d57d5a984b586db0a399/docs/explore_dsc_results.html" target="_blank">1c4ff07</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2019-11-04
+</td>
+<td>
+First commit of explore_dsc_results page.
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/stephenslab/mr-ash-workflow/blob/a1f2f5d6de7b047ffb0ba611fca296a0d0c0d022/analysis/explore_dsc_results.Rmd" target="_blank">a1f2f5d</a>
 </td>
 <td>
@@ -515,7 +622,7 @@ library(cowplot)</code></pre>
 <div id="import-dsc-results" class="section level2">
 <h2>Import DSC results</h2>
 <p>Use function “dscquery” from the dscrutils package to extract the main results of the DSC. (In practice, since this query can be slow when the DSC contains a large number of results, it is better to call “dscquery” once, save the data frame, then load it in R when it needed.)</p>
-<pre class="r"><code>dsc &lt;- dscquery(&quot;dsc/mr_ash&quot;,verbose = TRUE,
+<pre class="r"><code>dsc &lt;- dscquery(&quot;dsc/mr_ash&quot;,
                 targets = c(&quot;simulate&quot;,&quot;simulate.s&quot;,&quot;simulate.sigma&quot;,
                             &quot;fit&quot;,&quot;fit.lambda_est_method&quot;,&quot;fit.timing&quot;,
                             &quot;score.err&quot;))
@@ -533,6 +640,27 @@ nrow(dsc)
 </div>
 <div id="inspect-dsc-results" class="section level2">
 <h2>Inspect DSC results</h2>
+<pre class="r"><code>pdat &lt;- subset(dsc,
+               simulate.s == 100 &amp;
+               is.element(fit,c(&quot;ridge&quot;,&quot;lasso&quot;,&quot;elastic_net&quot;)))
+ggplot(pdat,aes(x = fit.lambda_est_method,y = score.err)) +
+  geom_boxplot(color = &quot;black&quot;,outlier.size = 1,width = 0.5) +
+  facet_wrap(~fit,nrow = 1,scales = &quot;free&quot;) +
+  theme_cowplot(font_size = 12) +
+  theme(axis.text.x = element_text(angle = 45,hjust = 1)) +
+  labs(x = &quot;&quot;)</code></pre>
+<p><img src="figure/explore_dsc_results.Rmd/unnamed-chunk-1-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>Summarize the prediction error separately for each setting of “s”, the number of simulated effects.</p>
+<pre class="r"><code>pdat &lt;- subset(dsc,
+               fit.lambda_est_method == &quot;lambda.min&quot; |
+               is.na(fit.lambda_est_method))
+ggplot(pdat,aes(x = fit,y = score.err,fill = fit)) +
+  geom_boxplot(color = &quot;black&quot;,outlier.size = 1,width = 0.85) +
+  facet_wrap(~simulate.s,nrow = 2,scales = &quot;free&quot;) +
+  theme_cowplot(font_size = 12) +
+  theme(axis.text.x = element_text(angle = 45,hjust = 1)) +
+  labs(x = &quot;method&quot;,y = &quot;rsse&quot;)</code></pre>
+<p><img src="figure/explore_dsc_results.Rmd/unnamed-chunk-2-1.png" width="768" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -541,34 +669,39 @@ nrow(dsc)
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
 <pre class="r"><code>sessionInfo()
-# R version 3.5.1 (2018-07-02)
-# Platform: x86_64-pc-linux-gnu (64-bit)
-# Running under: Scientific Linux 7.4 (Nitrogen)
+# R version 3.4.3 (2017-11-30)
+# Platform: x86_64-apple-darwin15.6.0 (64-bit)
+# Running under: macOS High Sierra 10.13.6
 # 
 # Matrix products: default
-# BLAS/LAPACK: /software/openblas-0.2.19-el7-x86_64/lib/libopenblas_haswellp-r0.2.19.so
+# BLAS: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRblas.0.dylib
+# LAPACK: /Library/Frameworks/R.framework/Versions/3.4/Resources/lib/libRlapack.dylib
 # 
 # locale:
-# [1] C
+# [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 # 
 # attached base packages:
 # [1] tools     stats     graphics  grDevices utils     datasets  methods  
 # [8] base     
 # 
 # other attached packages:
-# [1] cowplot_0.9.4    ggplot2_3.1.1    dscrutils_0.3.11
+# [1] cowplot_0.9.4    ggplot2_3.2.0    dscrutils_0.3.11
 # 
 # loaded via a namespace (and not attached):
-#  [1] Rcpp_1.0.2       compiler_3.5.1   pillar_1.3.1     later_0.7.5     
-#  [5] git2r_0.26.1     plyr_1.8.4       workflowr_1.5.0  digest_0.6.18   
-#  [9] evaluate_0.12    tibble_2.1.1     gtable_0.2.0     pkgconfig_2.0.2 
-# [13] rlang_0.4.0      yaml_2.2.0       withr_2.1.2      stringr_1.3.1   
-# [17] dplyr_0.8.0.1    knitr_1.20       fs_1.3.1         rprojroot_1.3-2 
-# [21] grid_3.5.1       tidyselect_0.2.5 glue_1.3.0       R6_2.3.0        
-# [25] rmarkdown_1.10   purrr_0.3.2      magrittr_1.5     whisker_0.3-2   
-# [29] backports_1.1.2  scales_1.0.0     promises_1.0.1   htmltools_0.3.6 
-# [33] assertthat_0.2.0 colorspace_1.3-2 httpuv_1.4.5     stringi_1.2.4   
-# [37] lazyeval_0.2.1   munsell_0.5.0    crayon_1.3.4</code></pre>
+#  [1] Rcpp_1.0.1        compiler_3.4.3    pillar_1.3.1     
+#  [4] later_0.8.0       git2r_0.26.1.9001 plyr_1.8.4       
+#  [7] workflowr_1.5.0   digest_0.6.18     evaluate_0.13    
+# [10] tibble_2.1.1      gtable_0.2.0      pkgconfig_2.0.2  
+# [13] rlang_0.3.1       yaml_2.2.0        xfun_0.7         
+# [16] withr_2.1.2.9000  stringr_1.4.0     dplyr_0.8.0.1    
+# [19] knitr_1.23        fs_1.2.7          rprojroot_1.3-2  
+# [22] grid_3.4.3        tidyselect_0.2.5  glue_1.3.1       
+# [25] R6_2.4.0          rmarkdown_1.16    purrr_0.2.5      
+# [28] magrittr_1.5      whisker_0.3-2     backports_1.1.2  
+# [31] scales_0.5.0      promises_1.0.1    htmltools_0.3.6  
+# [34] assertthat_0.2.1  colorspace_1.4-0  httpuv_1.5.0     
+# [37] labeling_0.3      stringi_1.4.3     lazyeval_0.2.1   
+# [40] munsell_0.4.3     crayon_1.3.4</code></pre>
 </div>
 </div>
 
@@ -602,6 +735,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
