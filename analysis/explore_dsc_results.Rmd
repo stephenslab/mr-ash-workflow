@@ -34,7 +34,7 @@ the DSC contains a large number of results, it is better to call
 needed.)
 
 ```{r query-dsc-results, eval=FALSE}
-dsc <- dscquery("dsc/mr_ash",verbose = TRUE,
+dsc <- dscquery("dsc/mr_ash",
                 targets = c("simulate","simulate.s","simulate.sigma",
                             "fit","fit.lambda_est_method","fit.timing",
                             "score.err"))
