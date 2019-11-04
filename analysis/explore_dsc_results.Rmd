@@ -1,0 +1,59 @@
+---
+title: "Explore results of mr_ash DSC"
+author: "Youngseok Kim and Peter Carbonetto"
+site: workflowr::wflow_site
+output: workflowr::wflow_html
+---
+
+*Add text here.*
+
+```{r knitr, echo=FALSE}
+knitr::opts_chunk$set(comment = "#",results = "hold",collapse = TRUE,
+                      fig.align = "center")
+```
+
+Load packages
+-------------
+
+Load a few packages used in the analysis below.
+
+```{r load-pkgs, warning=FALSE, message=FALSE}
+library(tools)
+library(dscrutils)
+library(ggplot2)
+library(cowplot)
+```
+
+Import DSC results
+------------------
+
+Use function "dscquery" from the dscrutils package to extract the main
+results of the DSC. (In practice, since this query can be slow when
+the DSC contains a large number of results, it is better to call
+"dscquery" once, save the data frame, then load it in R when it
+needed.)
+
+```{r query-dsc-results, eval=FALSE}
+dsc <- dscquery("dsc/mr_ash",verbose = TRUE,
+                targets = c("simulate","simulate.s","simulate.sigma",
+                            "fit","fit.lambda_est_method","fit.timing",
+                            "score.err"))
+dsc <- transform(dsc,
+                 simulate              = factor(simulate),
+                 simulate.s            = factor(simulate.s),
+                 fit                   = factor(fit),
+                 fit.lambda_est_method = factor(fit.lambda_est_method))
+save(list = "dsc",file = "results/dsc.RData")
+resaveRdaFiles("results/dsc.RData")
+```
+
+The "dsc" data frame should contain results for 1,920 separate runs
+("pipelines").
+
+```{r load-dsc-results}
+load("results/dsc.RData")
+nrow(dsc)
+```
+
+Inspect DSC results
+-------------------
