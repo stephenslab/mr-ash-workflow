@@ -120,7 +120,6 @@ mr_ash: mr_ash.R
 
 # predict modules
 # ===============
-
 # A "predict" module takes as input a fitted model (or the parameters
 # of this fitted model) and an n x p matrix of observations, X, and
 # returns a vector of length n containing the outcomes predicted by
