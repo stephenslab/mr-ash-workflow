@@ -67,5 +67,5 @@ fit_mr_ash = function(X, y, standardize = FALSE, sa2 = (2^((0:19)/5) - 1)^2) {
                                 tol = list(epstol = 1e-12, convtol = 1e-8),
                                 standardize = standardize))
   b = coef(fit)
-  return(list(fit = fit, mu = b[1], beta = b[-1], timing = timing["elasped"]))
+  return(list(fit = fit, mu = b[1], beta = b[-1], timing = timing["elapsed"]))
 }
