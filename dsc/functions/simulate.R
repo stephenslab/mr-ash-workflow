@@ -110,7 +110,6 @@ simulate_beta = function(p, s, s1 = 10, signal = "normal") {
     beta[ind]         = 1
     beta[ind[1]]      = sqrt(s)
   }
-  
   return (beta)
 }
 
