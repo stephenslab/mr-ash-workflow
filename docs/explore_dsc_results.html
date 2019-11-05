@@ -483,10 +483,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreeff306496bfabb816756d1e8195c4a9f382bb54d6targetblankff30649a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/ff306496bfabb816756d1e8195c4a9f382bb54d6" target="_blank">ff30649</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree7bb0bd68fbeaad96b34817a1cf6e04fa2a710ed4targetblank7bb0bd6a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/7bb0bd68fbeaad96b34817a1cf6e04fa2a710ed4" target="_blank">7bb0bd6</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreeff306496bfabb816756d1e8195c4a9f382bb54d6targetblankff30649a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree7bb0bd68fbeaad96b34817a1cf6e04fa2a710ed4targetblank7bb0bd6a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -535,6 +535,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/7bb0bd68fbeaad96b34817a1cf6e04fa2a710ed4/analysis/explore_dsc_results.Rmd" target="_blank">7bb0bd6</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2019-11-05
+</td>
+<td>
+wflow_publish(“analysis/explore_dsc_results.Rmd”)
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/278bfc88f7e107930d3048630cdda04996c7a263/docs/explore_dsc_results.html" target="_blank">278bfc8</a>
+</td>
+<td>
+Peter Carbonetto
+</td>
+<td>
+2019-11-04
+</td>
+<td>
+Added a couple plots to the explore_dsc_results analysis.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -610,7 +644,7 @@ wflow_publish(“analysis/explore_dsc_results.Rmd”, view = FALSE, verbose
 </div>
 </div>
 </div>
-<p><em>Add text here.</em></p>
+<p>This brief analysis is intended mainly to illustrate how to use the DSC results to compare the performance of different methods for linear regression, and in particular the new multiple regression adaptive shrinkage (“mr. ash”) method.</p>
 <div id="load-packages" class="section level2">
 <h2>Load packages</h2>
 <p>Load a few packages used in the analysis below.</p>
@@ -621,7 +655,7 @@ library(cowplot)</code></pre>
 </div>
 <div id="import-dsc-results" class="section level2">
 <h2>Import DSC results</h2>
-<p>Use function “dscquery” from the dscrutils package to extract the main results of the DSC. (In practice, since this query can be slow when the DSC contains a large number of results, it is better to call “dscquery” once, save the data frame, then load it in R when it needed.)</p>
+<p>Use function “dscquery” from the dscrutils package to extract the main results of the DSC. (In practice, since this query can be slow when the DSC contains a large number of results, it is better to call <code>dscquery</code> once, save the resulting data frame, then load the data frame in subsequent R sessions.)</p>
 <pre class="r"><code>dsc &lt;- dscquery(&quot;dsc/mr_ash&quot;,
                 targets = c(&quot;simulate&quot;,&quot;simulate.s&quot;,&quot;simulate.sigma&quot;,
                             &quot;fit&quot;,&quot;fit.lambda_est_method&quot;,&quot;fit.timing&quot;,
@@ -633,13 +667,14 @@ dsc &lt;- transform(dsc,
                  fit.lambda_est_method = factor(fit.lambda_est_method))
 save(list = &quot;dsc&quot;,file = &quot;results/dsc.RData&quot;)
 resaveRdaFiles(&quot;results/dsc.RData&quot;)</code></pre>
-<p>The “dsc” data frame should contain results for 1,920 separate runs (“pipelines”).</p>
+<p>The data frame should contain results for 1,920 separate runs (“pipelines”).</p>
 <pre class="r"><code>load(&quot;results/dsc.RData&quot;)
 nrow(dsc)
 # [1] 1920</code></pre>
 </div>
 <div id="inspect-dsc-results" class="section level2">
 <h2>Inspect DSC results</h2>
+<p>First, we check whether the method for selecting the penalty strength parameter via cross-validation has any impact on the performance of the glmnet methods:</p>
 <pre class="r"><code>pdat &lt;- subset(dsc,
                simulate.s == 100 &amp;
                is.element(fit,c(&quot;ridge&quot;,&quot;lasso&quot;,&quot;elastic_net&quot;)))
@@ -649,18 +684,28 @@ ggplot(pdat,aes(x = fit.lambda_est_method,y = score.err)) +
   theme_cowplot(font_size = 12) +
   theme(axis.text.x = element_text(angle = 45,hjust = 1)) +
   labs(x = &quot;&quot;)</code></pre>
-<p><img src="figure/explore_dsc_results.Rmd/unnamed-chunk-1-1.png" width="768" style="display: block; margin: auto;" /></p>
-<p>Summarize the prediction error separately for each setting of “s”, the number of simulated effects.</p>
+<p><img src="figure/explore_dsc_results.Rmd/plot-lambda-est-method-vs-error-1.png" width="720" style="display: block; margin: auto;" /></p>
+<p>Using <code>lambda.min</code> appears to offer a very slight improvement, at least for <code>simulate.s = 100</code>. (We should check for other settings of <code>simulate.s</code> as well.)</p>
+<p>In light of this, we use the <code>lambda.min</code> results for subsequent comparisons. The following plot compares the prediction accuracy of all methods, separately for each setting of <code>simulate.s</code>:</p>
 <pre class="r"><code>pdat &lt;- subset(dsc,
                fit.lambda_est_method == &quot;lambda.min&quot; |
                is.na(fit.lambda_est_method))
 ggplot(pdat,aes(x = fit,y = score.err,fill = fit)) +
-  geom_boxplot(color = &quot;black&quot;,outlier.size = 1,width = 0.85) +
+  geom_boxplot(color = &quot;black&quot;,outlier.size = 1,width = 0.6) +
   facet_wrap(~simulate.s,nrow = 2,scales = &quot;free&quot;) +
   theme_cowplot(font_size = 12) +
   theme(axis.text.x = element_text(angle = 45,hjust = 1)) +
   labs(x = &quot;method&quot;,y = &quot;rsse&quot;)</code></pre>
-<p><img src="figure/explore_dsc_results.Rmd/unnamed-chunk-2-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p><img src="figure/explore_dsc_results.Rmd/plot-method-vs-error-1.png" width="768" style="display: block; margin: auto;" /></p>
+<p>In addition to comparing accuracy of the predictions, it is also important to compare the effort taken to arrive at the predictions:</p>
+<pre class="r"><code>ggplot(pdat,aes(x = fit,y = fit.timing,fill = fit)) +
+  geom_boxplot(color = &quot;black&quot;,outlier.size = 1,width = 0.6) +
+  facet_wrap(~simulate.s,nrow = 2,scales = &quot;free&quot;) +
+  theme_cowplot(font_size = 12) +
+  theme(axis.text.x = element_text(angle = 45,hjust = 1)) +
+  labs(x = &quot;method&quot;,y = &quot;runtime (s)&quot;)
+# Warning: Removed 240 rows containing non-finite values (stat_boxplot).</code></pre>
+<p><img src="figure/explore_dsc_results.Rmd/plot-method-vs-runtime-1.png" width="768" style="display: block; margin: auto;" /></p>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
