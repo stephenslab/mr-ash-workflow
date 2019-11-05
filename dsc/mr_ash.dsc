@@ -1,16 +1,16 @@
 # A DSC for evaluating prediction accuracy of linear regression
 # methods in different scenarios.
 DSC:
-  R_libs:    glmnet, varbvs >= 2.6-3
+  R_libs:    mr.ash.alpha, glmnet, varbvs >= 2.6-3
   lib_path:  functions
   exec_path: modules/simulate,
              modules/fit,
              modules/predict,
              modules/score
-  replicate: 4
+  replicate: 20
   define:
     simulate: sparse_normal, sparse_t
-    fit:      lasso, varbvs
+    fit:      ridge, lasso, elastic_net, varbvs, mr_ash
     predict:  predict_linear
     score:    rsse
   run: simulate * fit * predict * score
@@ -18,14 +18,12 @@ DSC:
 # simulate modules
 # ================
 # A "simulate" module generates a training and test data set used to
-# evaluate each of the linear regression models. Each training and
-# test data set should include an n x p matrix X and a vector y of
-# length n, where n is the number of samples, and p is the number of
-# candidate predictors.
+# evaluate each of the linear regression models.
 
 # Simulate the linear regression coefficients such that the s nonzero
-# coefficients are drawn from the normally distributed with zero
-# mean. The residual variance is controlled to achieve the target PVE.
+# coefficients are drawn from a normal distribution with zero mean.
+# The residual variance is controlled to achieve the target proportion
+# of variance explained (PVE).
 sparse_normal: sparse_normal.R
   n:      500
   p:      2000
@@ -39,9 +37,9 @@ sparse_normal: sparse_normal.R
   $sigma: out$sigma
 
 # Simulate the linear regression coefficients such that the s nonzero
-# coefficients are drawn from the t distrubution with 2 degrees of
+# coefficients are drawn from a t distrubution with 2 degrees of
 # freedom. The residual variance is controlled to achieve the target
-# PVE.
+# proportion of variance explained (PVE).
 sparse_t: sparse_t.R
   n:      500
   p:      2000
@@ -59,6 +57,19 @@ sparse_t: sparse_t.R
 # A "fit" module fits a linear regression model to the provided
 # training data, X and y.
 
+# Fit a ridge regression model using glmnet. The penalty strength
+# (i.e., the normal prior on the coefficients) is estimated using
+# cross-validation.
+ridge: ridge.R
+  standardize:       FALSE
+  lambda_est_method: "lambda.min", "lambda.1se"
+  X:                 $X
+  y:                 $y
+  $intercept:        out$mu
+  $beta_est:         out$beta
+  $timing:           out$timing
+  $model:            out$fit
+
 # Fit a Lasso model using glmnet. The penalty strength ("lambda") is
 # estimated via cross-validation.
 lasso: lasso.R
@@ -68,7 +79,22 @@ lasso: lasso.R
   y:                 $y
   $intercept:        out$mu
   $beta_est:         out$beta
-  $model:            out
+  $timing:           out$timing
+  $model:            out$fit
+
+# Fit an Elastic Net model to the data, and estimate the Elastic Net
+# parameters (penalty strength, "lambda", and mixing parameter,
+# "alpha") using cross-validation.
+elastic_net: elastic_net.R
+  standardize:       FALSE
+  lambda_est_method: "lambda.min", "lambda.1se"
+  X:                 $X
+  y:                 $y
+  $intercept:        out$mu
+  $beta_est:         out$beta
+  $alpha:            out$alpha
+  $timing:           out$timing
+  $model:            out$fit
   
 # Compute a fully-factorized variational approximation for Bayesian
 # variable selection in linear regression ("varbvs").
@@ -77,7 +103,20 @@ varbvs: varbvs.R
   y:          $y
   $intercept: out$mu
   $beta_est:  out$beta
+  $timing:    out$timing
   $model:     out$fit
+
+# Fit a fully-factorized variational approxition for Bayesian variable
+# selection in linear regression, with scale-mixture-of-normals
+# ("adaptive shrinkage") priors on the regression coefficients.
+mr_ash: mr_ash.R
+  standardize: FALSE
+  X:           $X
+  y:           $y
+  $intercept:  out$mu
+  $beta_est:   out$beta
+  $timing:     out$timing
+  $model:      out$fit
 
 # predict modules
 # ===============
