@@ -116,11 +116,12 @@ n            = 500
 p            = 2000
 s            = 20
 signal_list  = c("lap","t2","t5","normal","unif","const")
-method_list  = c("enet","lasso","scad","mcp","l0learn")
-method_num   = length(method_list) + 1
+method_list  = c("enet","lasso","ridge","scad","mcp","l0learn")
+method_list2 = c("mr.ash",method_list,"enet2","lasso2","ridge2")
+method_num   = length(method_list2)
 iter_num     = 20
-pred         = matrix(0, iter_num, method_num); colnames(pred) = c("mr.ash", method_list)
-time         = matrix(0, iter_num, method_num); colnames(time) = c("mr.ash", method_list)
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
 
 for (iter in 1:6) {
 for (i in 1:20) {
@@ -131,6 +132,14 @@ for (i in 1:20) {
     fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
     pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
     time[i,j+1]   = fit$t
+    
+    if (method_list[j] == "lasso") {
+      pred[i,method_num - 1] = fit$rsse2 / data$sigma / sqrt(n)
+    } else if (method_list[j] == "enet") {
+      pred[i,method_num - 2] = fit$rsse2 / data$sigma / sqrt(n)
+    } else if (method_list[j] == "ridge") {
+      pred[i,method_num - 0] = fit$rsse2 / data$sigma / sqrt(n)
+    }
   }
  
   fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
@@ -138,8 +147,8 @@ for (i in 1:20) {
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
 }
+tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
 }
-tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(c("mr.ash", method_list), each = 20))
 ```
 
 ```{r code2, eval = FALSE}
