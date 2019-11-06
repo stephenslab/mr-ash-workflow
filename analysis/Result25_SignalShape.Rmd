@@ -1,5 +1,5 @@
 ---
-title: "Result3_SignalShape"
+title: "Result25_SignalShape"
 output:
   workflowr::wflow_html:
     code_folding: hide
@@ -26,13 +26,15 @@ The following is the tail behaviors of the above signal generating probability d
 
 ```{r tail, message = FALSE}
 library(ggplot2); library(cowplot)
-x = seq(-100,100,0.01)
-dat = rbind(data.frame(x = x, y = dexp(abs(x), 1, log = TRUE) / 2, signal = "SparseLaplace"),
-            data.frame(x = x, y = dt(x, df = 2, log = TRUE), signal = "SparseT2"),
-            data.frame(x = x, y = dt(x, df = 5, log = TRUE), signal = "SparseT5"),
-            data.frame(x = x, y = dnorm(x, log = TRUE), signal = "SparseNormal"))
+x = seq(-50,50,0.01)
+dat = rbind(data.frame(x = x, y = dt(x, df = 1, log = TRUE) - dt(0, df = 1, log = TRUE), signal = "t (df = 1)"),
+            data.frame(x = x, y = dt(x, df = 2, log = TRUE) - dt(0, df = 2, log = TRUE), signal = "t (df = 2)"),
+            data.frame(x = x, y = dexp(abs(x), 1, log = TRUE) / 2, signal = "Laplace"),
+            data.frame(x = x, y = dt(x, df = 4, log = TRUE) - dt(0, df = 4, log = TRUE), signal = "t (df = 4)"),
+            data.frame(x = x, y = dt(x, df = 8, log = TRUE) - dt(0, df = 8, log = TRUE), signal = "t (df = 8)"),
+            data.frame(x = x, y = dnorm(x, log = TRUE) - dnorm(0, log = TRUE), signal = "SparseNormal"))
 ggplot(dat) + geom_line(aes(x = x, y = y, color = signal)) + 
-  coord_cartesian(ylim = c(-50,0)) + theme_cowplot(font_size = 14) +
+  coord_cartesian(ylim = c(-10,0)) + theme_cowplot(font_size = 14) +
   theme(axis.line    = element_blank()) +
   labs(x = "x", y = "logpdf(x)")
 ```
@@ -142,36 +144,6 @@ for (i in 1:20) {
 }
   tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
 }
-```
-
-```{r code2, eval = FALSE}
-# cross validation is fairly accurate
-data          = simulate_data(n, p, s = s, seed = 1, signal = signal_list[1], pve = 0.99)
-fit1          = fit.scad(data$X, data$y, data$X.test, data$y.test, seed = i)
-res1          = c(data$y.test) - predict(fit1$fit, X = data$X.test, lambda = fit1$fit$lambda)
-pred1         = sqrt(colMeans(res1^2)) / data$sigma
-
-fit2          = fit.mcp(data$X, data$y, data$X.test, data$y.test, seed = i)
-res2          = c(data$y.test) - predict(fit2$fit, X = data$X.test, lambda = fit2$fit$lambda)
-pred2         = sqrt(colMeans(res2^2)) / data$sigma
-
-fit3          = fit.enet(data$X, data$y, data$X.test, data$y.test, seed = i)
-res3          = c(data$y.test) - predict(fit3$fit, newx = data$X.test, s = fit3$fit$lambda)
-pred3         = sqrt(colMeans(res3^2))/ data$sigma
-
-# compare with mr.ash
-fit0          = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
-                           sa2 = (2^((0:19) / 20) - 1)^2)
-pred0         = fit0$rsse / data$sigma / sqrt(n)
-
-## thus mr.ash is better than the best
-print(c(mr.ash = pred0,
-        scad.best = as.numeric(pred1[which.min(pred1)]),
-        scad.cv = as.numeric(pred1[which.min(fit1$fit$cve)]),
-        mcp.best = as.numeric(pred2[which.min(pred2)]),
-        mcp.cv = as.numeric(pred2[which.min(fit2$fit$cve)]),
-        enet.best = as.numeric(pred3[which.min(pred3)]),
-        enet.cv = as.numeric(pred3[which.min(fit3$fit$cvm)])))
 ```
 
 ## System Configuration
