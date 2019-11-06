@@ -343,7 +343,7 @@ fig
 ```
 
 ```{r fig7, fig.height=11, fig.width=15}
-res_df       = readRDS("../results/highdimdiffp2.RDS")
+res_df       = readRDS("results/highdimdiffp2.RDS")
 method_list  = c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
 col          = gg_color_hue(13)[1:11]
 shape        = c(19,17,24,25,9,3,11,4,5,7,8)
@@ -379,7 +379,7 @@ fig
 ```
 
 ```{r fig71, fig.height=11, fig.width=15}
-res_df       = readRDS("../results/highdimdiffp2.RDS")
+res_df       = readRDS("results/highdimdiffp2.RDS")
 method_list  = c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
 col          = gg_color_hue(13)[1:11]
 shape        = c(19,17,24,25,9,3,11,4,5,7,8)
@@ -398,14 +398,14 @@ p1 = ggplot(sdat) + geom_line(aes(x = p, y = time, color = fit)) +
   geom_point(aes(x = p, y = time, color = fit, shape = fit), size = 2.5) +
   theme_cowplot(font_size = 14) +
   scale_x_continuous(trans = "log10", breaks = p_list) +
-  labs(y = "predictior error (rmse / sigma)", x = "number of coefficients (p)") +
+  labs(y = "computation time (seconds)", x = "number of coefficients (p)") +
   theme(axis.line = element_blank(),
         plot.title = element_text(hjust = 0.5)) +
   scale_color_manual(values = col) +
   scale_shape_manual(values = shape) +
   scale_y_continuous(trans = "log10")
 
-title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
+title     = ggdraw() + draw_label("Computation time (log-scale)", fontface = 'bold', size = 20) 
 subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + SparseNormal, n = 500, p = 50, 500, 5000, 50000, s = 20, pve = 0.5", fontface  = 'bold', size = 18) 
 p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
 fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.8,0.3))
@@ -428,7 +428,7 @@ ind = 1:12
 out = out[,ind]
 lower = lower[,ind]
 upper = upper[,ind]
-
+s_range = c(1,2,5,10,20,50,100,200,500)
 col   = gg_color_hue(13)[1:12]
 shape = c(19,17,24,25,9,3,11,4,5,7,8,1)
 df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames(out), each = 9),
@@ -459,7 +459,7 @@ fig1      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
 ```
 
 ```{r fig9, fig.height=13, fig.width=15}
-res_df       = readRDS("../results/signalshape25.RDS")
+res_df       = readRDS("results/signalshape25.RDS")
 method_list  = c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
 method_level = c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
 col          = gg_color_hue(13)[1:11]
@@ -498,10 +498,11 @@ fig2      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
 fig       = plot_grid(title, plot_grid(fig1, fig2, nrow = 1, rel_widths = c(0.5,0.55)),
                       ncol = 1, rel_heights = c(0.05,0.95))
 ggsave("figure4_paper.pdf", fig, width = 18, height = 8)
+fig
 ```
 
 ```{r fig10, fig.height=8, fig.width=15}
-res_df       = readRDS("../results/newhighdim.RDS")
+res_df       = readRDS("results/newhighdim.RDS")
 method_list  = c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","SCAD2","MCP2","L0Learn")
 df           = data.frame()
 p_range      = c(10,20,50,100,200,500,1000,2000,5000,10000)
@@ -532,14 +533,13 @@ p1    = ggplot(df) + geom_line(aes(x = p, y = pred, color = fit)) +
   scale_y_continuous(trans = "log10", breaks = c(1,1.1,1.2,1.3,1.4)) +
   coord_cartesian(ylim = c(1,1.4))
 fig_main = p1
-title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
-subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 10-2000, s = 10, pve = 0.5", fontface  = 'bold', size = 14) 
-#fig1      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
-fig1      = p1
+subtitle  = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 14) 
+title     = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 10-2000, s = 10, pve = 0.5", fontface  = 'bold', size = 20) 
+fig1      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
 ```
 
 ```{r fig11, fig.height=8, fig.width=15}
-res_df       = readRDS("../results/newhighdim.RDS")
+res_df       = readRDS("results/newhighdim.RDS")
 method_list  = c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","SCAD2","MCP2","L0Learn")
 df           = data.frame()
 p_range      = c(10,20,50,100,200,500,1000,2000,5000,10000)
@@ -568,17 +568,16 @@ p1    = ggplot(df) + geom_line(aes(x = p, y = time, color = fit)) +
   scale_shape_manual(values = shape) +
   scale_y_continuous(trans = "log10", breaks = c(0.03,0.1,0.3,1,3,10,30,100))
 fig_main = p1
-title     = ggdraw() + draw_label("Computation time (log-scale)", fontface = 'bold', size = 20) 
-subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 10-2000, s = 10, pve = 0.5", fontface  = 'bold', size = 14) 
-#fig2      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
-fig2      = p1
-fig       = plot_grid(title, subtitle, plot_grid(fig1, fig2, nrow = 1, rel_widths = c(0.5,0.59)),
-                      ncol = 1, rel_heights = c(0.05,0.05,0.95))
+subtitle  = ggdraw() + draw_label("Computation time (log-scale)", fontface = 'bold', size = 14) 
+fig2      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
+fig       = plot_grid(title, plot_grid(fig1, fig2, nrow = 1, rel_widths = c(0.5,0.59)),
+                      ncol = 1, rel_heights = c(0.05,0.95))
 ggsave("figure5_paper.pdf", fig, width = 18, height = 8)
+fig
 ```
 
 ```{r fig100, fig.height=7, fig.width=15, fig.align = "center"}
-res_df = readRDS("../results/newridge10.RDS")
+res_df = readRDS("results/newridge10.RDS")
 out = matrix(0,9,15)
 lower = matrix(0,9,15)
 upper = matrix(0,9,15)
@@ -627,6 +626,10 @@ title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bo
 subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 1000, p = 500, s = 1-500, pve = 0.5", fontface  = 'bold', size = 18) 
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.05,0.95))
 ggsave("PointNormal_Sparsity2.pdf", fig, width = 14, height = 8)
+fig
+```
+
+```{r fig103, fig.height=7, fig.width=15, fig.align = "center"}
 fig_main  = fig_main + 
     geom_ribbon(aes(x = s, ymin = lower, ymax = upper, color = fit, fill = fit),
                 linetype = 2, size = 0, alpha = 0.1, colour = NA)
@@ -636,7 +639,7 @@ fig
 ```
 
 ```{r fig101, fig.height=7, fig.width=15, fig.align = "center"}
-res_df = readRDS("../results/newridge10.RDS")
+res_df = readRDS("results/newridge10.RDS")
 out = matrix(0,9,15)
 lower = matrix(0,9,15)
 upper = matrix(0,9,15)
@@ -683,6 +686,10 @@ title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bo
 subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 1000, p = 500, s = 1-500, pve = 0.5", fontface  = 'bold', size = 18) 
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.05,0.95))
 ggsave("PointNormal_Sparsity0.pdf", fig, width = 14, height = 8)
+fig
+```
+
+```{r fig102, fig.height=7, fig.width=15, fig.align = "center"}
 fig_main  = fig_main + 
     geom_ribbon(aes(x = s, ymin = lower, ymax = upper, color = fit, fill = fit),
                 linetype = 2, size = 0, alpha = 0.1, colour = NA)
