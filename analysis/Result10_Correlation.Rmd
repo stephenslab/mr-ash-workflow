@@ -35,7 +35,7 @@ A list of packages we have loaded is collapsed. Please click "code" to see the l
 
 ```{r library, message = FALSE}
 library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
-library(glmnet); library(mr.ash); library(ncvreg); library(L0Learn); library(varbvs);
+library(glmnet); library(mr.ash.alpha); library(ncvreg); library(L0Learn); library(varbvs);
 standardize = FALSE
 source('code/method_wrapper.R')
 source('code/sim_wrapper.R')

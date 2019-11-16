@@ -128,30 +128,49 @@ tdat1        = list()
 n            = 500
 p_range      = c(50,500,5000,50000)
 s            = 20
-method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","scad2","mcp2","l0learn")
-method_num   = length(method_list) + 1
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_list2 = c("mr.ash",method_list,"enet2","lasso2","ridge2","mr.ash.opt")
+method_num   = length(method_list2)
 iter_num     = 20
-pred         = matrix(0, iter_num, method_num); colnames(pred) = c("mr.ash", method_list)
-time         = matrix(0, iter_num, method_num); colnames(time) = c("mr.ash", method_list)
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
 
 
 for (iter in 1:4) {
-for (i in 1:20) {
-  data          = simulate_data(n, p_range[iter], s = s, seed = i, signal = "normal", pve = 0.5)
- 
-  for (j in 1:length(method_list)) {
-    fit.method    = get(paste("fit.",method_list[j],sep = ""))
-    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
-    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
-    time[i,j+1]   = fit$t
+  p               = p_range[iter]
+  for (i in 1:20) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.5)
+    
+    for (j in 1:length(method_list)) {
+      fit.method    = get(paste("fit.",method_list[j],sep = ""))
+      fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+      pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+      time[i,j+1]   = fit$t
+      
+      if (method_list[j] == "lasso") {
+        pred[i,method_num - 2] = fit$rsse2 / data$sigma / sqrt(n)
+      } else if (method_list[j] == "enet") {
+        pred[i,method_num - 3] = fit$rsse2 / data$sigma / sqrt(n)
+      } else if (method_list[j] == "ridge") {
+        pred[i,method_num - 1] = fit$rsse2 / data$sigma / sqrt(n)
+      }
+    }
+    
+    fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                             sa2 = (2^((0:19) / 20) - 1)^2)
+    pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,1]   = fit$t
+    
+    fit           = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                                sa2 = c(0, 1 / s), sigma2 = data$sigma^2,
+                                update.pi = FALSE, pi = c(1 - s/p, s/p),
+                                beta.init = NULL, update.order = NULL)
+    pred[i,method_num]  = fit$rsse / data$sigma / sqrt(n)
+    time[i,method_num]  = fit$t
+    
+    print(c(pred[i,]))
   }
- 
-  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
-                           sa2 = (2^((0:19) / 20) - 1)^2)
-  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
-  time[i,1]   = fit$t
-}
-tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(c("mr.ash", method_list), each = 20))
+  tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
 }
 ```
 
