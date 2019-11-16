@@ -117,16 +117,17 @@ df$operator = factor(df$operator, levels = c("soft","hard","scad","mcp"))
 
 p1 = ggplot(df) + geom_line(aes(x = b, y = sb, color = operator)) +
   theme_cowplot(font_size = 14) + theme(axis.line = element_blank()) +
-  labs(y = "shrinakge of b (S(b))", title = "MR.ASH shrinkage operators")
+  labs(y = "shrinakge of b (S(b))", title = "MR.ASH shrinkage operators") +
+  theme(legend.position = "none")
 p2 = ggplot(df) + geom_line(aes(x = b, y = sb2, color = operator)) +
   theme_cowplot(font_size = 14) + theme(axis.line = element_blank()) +
   labs(title = "123")  +
   labs(y = "shrinakge of b (S(b))", title = "Well-known shrinkage/thresholding operators")
 
-fig = plot_grid(p1,p2, nrow = 1)
+fig = plot_grid(p1,p2, nrow = 1, rel_widths = c(0.463,0.5))
 title = ggdraw() + draw_label("MR.ASH Shrinkage operator may resemble the well-known shrinkage operators", fontface = 'bold', size = 20) 
 fig = plot_grid(title, fig, nrow = 2, rel_heights = c(0.06,0.95))
-fig
+ggsave("figures/figure1_paper.pdf", fig, width = 18, height = 9)
 ```
 
 ```{r fig2, fig.height=7, fig.width=15}
@@ -321,21 +322,26 @@ for (i in 1:10) {
                                 pve  = pve_list[i]))
 }
 sdat$fit = factor(sdat$fit, levels = method_level)
+sdat     = sdat[sdat$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn"),]
+sdat$size = 0.5
+sdat$size[1:10] = 1.2
 
-p1 = ggplot(sdat) + geom_line(aes(x = pve, y = pred, color = fit)) +
+p1 = ggplot(sdat) + geom_line(aes(x = pve, y = pred, color = fit), size = sdat$size) +
   geom_point(aes(x = pve, y = pred, color = fit, shape = fit), size = 2.5) +
   scale_x_continuous(breaks = pve_list) +
   theme_cowplot(font_size = 14) +
-  labs(y = "predictior error (rmse / sigma)", x = "number of coefficients (p)") +
+  labs(y = "predictior error (rmse / sigma)", x = "proportion of variance explained (pve)") +
   theme(axis.line = element_blank(),
-        plot.title = element_text(hjust = 0.5)) +
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none") +
   scale_color_manual(values = col) +
   scale_shape_manual(values = shape) +
   scale_y_continuous(trans = "log10", breaks = c(1,1.1,1.2,1.3,1.4)) +
-  coord_cartesian(ylim = c(1,1.5))
+  coord_cartesian(ylim = c(1,1.3))
 
 title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
-subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + SparseNormal, n = 500, p = 2000, s = 20, pve = 0 - 0.9", fontface  = 'bold', size = 18) 
+subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 2000, s = 20, pve = 0 - 0.9", fontface  = 'bold', size = 14) 
 p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
 fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.8,0.3))
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.03,0.04,0.95))
@@ -343,22 +349,29 @@ fig
 ```
 
 ```{r fig7, fig.height=11, fig.width=15}
-res_df       = readRDS("results/highdimdiffp2.RDS")
-method_list  = c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
-col          = gg_color_hue(13)[1:11]
-shape        = c(19,17,24,25,9,3,11,4,5,7,8)
+res_df       = readRDS("results/highdim_pve0.5.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso",
+                 "SCAD","MCP","L0Learn",
+                 "VarBVS","BayesB","Blasso","SuSiE")
+col          = gg_color_hue(13)[1:11][-4]
+#shape        = c(19,4,5,7,8,17,24,25,9,3,11)[-8]
+shape        = c(19,17,24,25,9,3,11,4,5,7,8)[-4]
 p_list       = c(50,500,5000,50000)
 sdat         = data.frame()
 for (i in 1:4) {
-  res_df[[i]] = res_df[[i]][1:140,]
-  sdat = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred, 20, 7)),
-                                time = colMeans(matrix(res_df[[i]]$time, 20, 7)),
+  sdat = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred, 20, 10)),
+                                time = colMeans(matrix(res_df[[i]]$time, 20, 10)),
                                 fit  = method_list,
-                                p    = p_list[i]))
+                                p = p_list[i]))
 }
-sdat$fit = factor(sdat$fit, levels = method_list)
+sdat$fit = factor(sdat$fit, levels = method_level)
+sdat     = sdat[sdat$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn"),]
+sdat$size = 0.5
+sdat$size[1:4] = 1.2
 
-p1 = ggplot(sdat) + geom_line(aes(x = p, y = pred, color = fit)) +
+p2 = ggplot(sdat) + geom_line(aes(x = p, y = pred, color = fit), size = sdat$size) +
   geom_point(aes(x = p, y = pred, color = fit, shape = fit), size = 2.5) +
   theme_cowplot(font_size = 14) +
   scale_x_continuous(trans = "log10", breaks = p_list) +
@@ -368,14 +381,21 @@ p1 = ggplot(sdat) + geom_line(aes(x = p, y = pred, color = fit)) +
   scale_color_manual(values = col) +
   scale_shape_manual(values = shape) +
   scale_y_continuous(trans = "log10", breaks = c(1,1.1,1.2,1.3,1.4)) +
-  coord_cartesian(ylim = c(1,sqrt(2)))
+  coord_cartesian(ylim = c(1,1.3))
 
 title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
-subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + SparseNormal, n = 500, p = 50, 500, 5000, 50000, s = 20, pve = 0.5", fontface  = 'bold', size = 18) 
+subtitle2 = ggdraw() + draw_label("Scenario: IndepGauss + SparseNormal, n = 500, p = 50, 500, 5000, 50000, pve = 0.5", fontface  = 'bold', size = 14) 
 p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
-fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.8,0.3))
-fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.03,0.04,0.95))
+fig_main  = plot_grid(p0,p2,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
+fig       = plot_grid(title,subtitle2,fig_main, ncol = 1, rel_heights = c(0.06,0.06,0.95))
 fig
+```
+
+```{r}
+fig       = plot_grid(plot_grid(subtitle,p1, ncol = 1, rel_heights = c(0.05,0.95)),
+                      plot_grid(subtitle2,p2, ncol = 1, rel_heights = c(0.05,0.95)), nrow = 1, rel_widths = c(0.5,0.55))
+fig       = plot_grid(title, fig, ncol = 1, rel_heights = c(0.05,0.95))
+ggsave("figures/figure6_paper.pdf", fig, width = 18, height = 9)
 ```
 
 ```{r fig71, fig.height=11, fig.width=15}
@@ -497,7 +517,7 @@ subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + Spike-and-Slab, n = 10
 fig2      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
 fig       = plot_grid(title, plot_grid(fig1, fig2, nrow = 1, rel_widths = c(0.5,0.55)),
                       ncol = 1, rel_heights = c(0.05,0.95))
-ggsave("figure4_paper.pdf", fig, width = 18, height = 8)
+ggsave("figures/figure4_paper.pdf", fig, width = 18, height = 9)
 fig
 ```
 
@@ -572,7 +592,120 @@ subtitle  = ggdraw() + draw_label("Computation time (log-scale)", fontface = 'bo
 fig2      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
 fig       = plot_grid(title, plot_grid(fig1, fig2, nrow = 1, rel_widths = c(0.5,0.59)),
                       ncol = 1, rel_heights = c(0.05,0.95))
-ggsave("figure5_paper.pdf", fig, width = 18, height = 8)
+fig
+```
+
+```{r fig12, fig.height=13, fig.width=15}
+res_df       = readRDS("results/highdimdiffnpnew.RDS")
+method_list  = c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","SCAD2","MCP2","L0Learn")
+df           = data.frame()
+p_range      = c(20,50,100,200,500,1000,2000,5000,10000,20000)
+for (i in 1:10) {
+res_df[[i]]$fit   = rep(method_list, each = 20)
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_list)
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 9))),
+                                         time2 = apply(matrix(res_df[[i]]$time, 20, 9), 2, median),
+                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 9))),
+                                         p    = p_range[i],
+                                         fit  = method_list))
+}
+df$fit = factor(df$fit, levels = method_list)
+#df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn"),]
+df$size = 0.5
+df$size[1:5] = 1.2; df$size[46:50] = 1.2;
+col   = gg_color_hue(13)[1:9]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,1,2,6)[1:9]
+p1    = ggplot(df[df$p <= 500, ]) + geom_line(aes(x = p, y = time, color = fit), size = df$size[df$p <= 500]) +
+  geom_point(aes(x = p, y = time, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(trans = "log10", breaks = p_range) +
+  labs(y = "compmutation time (seconds)", x = "number of coefficients (p)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none") +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10")
+fig_main = p1
+subtitle  = ggdraw() + draw_label("Computation time (log-scale) for p <= n", fontface = 'bold', size = 14) 
+title     = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 20-20000, s = 20, pve = 0.5", fontface  = 'bold', size = 20) 
+fig1      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
+```
+
+```{r fig13, fig.height=13, fig.width=15}
+p2    = ggplot(df[df$p > 500, ]) + geom_line(aes(x = p, y = time, color = fit), size = df$size[df$p > 500]) +
+  geom_point(aes(x = p, y = time, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(trans = "log10", breaks = p_range) +
+  labs(y = "compmutation time (seconds)", x = "number of coefficients (p)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10")
+fig_main = p2
+subtitle  = ggdraw() + draw_label("Computation time (log-scale) for p > n", fontface = 'bold', size = 14) 
+fig2      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
+fig13     = plot_grid(title, plot_grid(fig1, fig2, nrow = 1, rel_widths = c(0.5,0.55)),
+                      ncol = 1, rel_heights = c(0.05,0.95))
+ggsave("figures/figure5_paper.pdf", fig13, width = 18, height = 9)
+fig13
+```
+
+```{r fig14, fig.height=13, fig.width=15}
+res_df       = readRDS("results/highdimdiffnpnew.RDS")
+method_list  = c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","SCAD2","MCP2","L0Learn")
+df           = data.frame()
+p_range      = c(20,50,100,200,500,1000,2000,5000,10000,20000)
+for (i in 1:10) {
+res_df[[i]]$fit   = rep(method_list, each = 20)
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_list)
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 9))),
+                                         time2 = apply(matrix(res_df[[i]]$time, 20, 9), 2, median),
+                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 9))),
+                                         p    = p_range[i],
+                                         fit  = method_list))
+}
+df$fit = factor(df$fit, levels = method_list)
+#df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn"),]
+df$size = 0.5
+df$size[1:7] = 1.2
+df = df[df$p %in% c(20,50,200,500,1000,2000,10000,20000),]
+col   = gg_color_hue(13)[1:9]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,1,2,6)[1:9]
+p1    = ggplot(df) + geom_line(aes(x = p, y = pred, color = fit), size = df$size) +
+  geom_point(aes(x = p, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(trans = "log10", breaks = c(20,50,200,500,1000,2000,10000,20000)) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of coefficients (p)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10")
+fig_main = p1
+#title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 20-20000, s = 20, pve = 0.5", fontface  = 'bold', size = 20) 
+fig14     = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
+```
+
+```{r fig15, fig.height=13, fig.width=15}
+p2    = ggplot(df[df$p > 500, ]) + geom_line(aes(x = p, y = pred, color = fit), size = df$size[df$p > 500]) +
+  geom_point(aes(x = p, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(trans = "log10", breaks = p_range) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of coefficients (p)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10")
+fig_main = p2
+subtitle  = ggdraw() + draw_label("Computation time (log-scale) for p > n", fontface = 'bold', size = 14) 
+fig2      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
+fig       = plot_grid(title, plot_grid(fig1, fig2, nrow = 1, rel_widths = c(0.5,0.55)),
+                      ncol = 1, rel_heights = c(0.05,0.95))
+ggsave("figures/figure7_paper.pdf", fig, width = 18, height = 9)
 fig
 ```
 
@@ -588,7 +721,7 @@ for (i in 1:9) {
 }
 out = out[,c(1:11,15)]
 colnames(out) = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn","Mr.ASH.opt")
-ind = c(1,6,7,8,9,10,11)
+ind = c(6,7,8,9,10,11)
 out = out[,ind]
 lower = lower[,ind]
 upper = upper[,ind]
@@ -614,18 +747,18 @@ p1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = fit), size = 1) +
   coord_cartesian(ylim = c(1,1.46), xlim = c(1,600)) +
   geom_point(aes(x = 500, y = 1.1942835), size = 3, shape = 4) +
   geom_text(aes(x = 500, y = 1.1942835, label="Oracle "), vjust = 0.3, hjust = -0.2) +
-  geom_text(aes(x = 500, y = df$pred[4], label="Mr.ASH", col = "Mr.ASH"), vjust = 0.2, hjust = -0.2) +
-  geom_text(aes(x = 500, y = df$pred[8], label="E-NET ", col = "E-NET"), vjust = -0.2, hjust = -0.2) +
-  geom_text(aes(x = 500, y = df$pred[16], label="Ridge  ", col = "Ridge"), vjust = 1, hjust = -0.22) +
-  geom_text(aes(x = 500, y = df$pred[12], label="Lasso  ", col = "Lasso"), vjust = 0.2, hjust = -0.22) +
-  geom_text(aes(x = 500, y = df$pred[20], label="SCAD  ", col = "SCAD"), vjust = 0.2, hjust = -0.22) +
-  geom_text(aes(x = 500, y = df$pred[24], label="MCP   ", col = "MCP"), vjust = 0.2, hjust = -0.22) +
-  geom_text(aes(x = 500, y = df$pred[28], label="L0Learn", col = "L0Learn"), vjust = 0.2, hjust = -0.22)
+  #geom_text(aes(x = 500, y = df$pred[4], label="Mr.ASH", col = "Mr.ASH"), vjust = 0.2, hjust = -0.2) +
+  geom_text(aes(x = 500, y = df$pred[4], label="E-NET ", col = "E-NET"), vjust = -0.2, hjust = -0.2) +
+  geom_text(aes(x = 500, y = df$pred[12], label="Ridge  ", col = "Ridge"), vjust = 1, hjust = -0.22) +
+  geom_text(aes(x = 500, y = df$pred[8], label="Lasso  ", col = "Lasso"), vjust = 0.2, hjust = -0.22) +
+  geom_text(aes(x = 500, y = df$pred[16], label="SCAD  ", col = "SCAD"), vjust = 0.2, hjust = -0.22) +
+  geom_text(aes(x = 500, y = df$pred[20], label="MCP   ", col = "MCP"), vjust = 0.2, hjust = -0.22) +
+  geom_text(aes(x = 500, y = df$pred[24], label="L0Learn", col = "L0Learn"), vjust = 0.2, hjust = -0.22)
 fig_main = p1
 title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
 subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 1000, p = 500, s = 1-500, pve = 0.5", fontface  = 'bold', size = 18) 
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.05,0.95))
-ggsave("PointNormal_Sparsity2.pdf", fig, width = 14, height = 8)
+ggsave("PointNormal_Sparsity2_without_mrash.pdf", fig, width = 14, height = 8)
 fig
 ```
 
@@ -650,20 +783,20 @@ for (i in 1:9) {
 }
 out = out[,c(1:11,15)]
 colnames(out) = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn","Mr.ASH.opt")
-ind = c(1,6,7,8,9,10,11)
+ind = c(6,7,8,9,10,11)
 out = out[,ind]
 lower = lower[,ind]
 upper = upper[,ind]
 
-col   = gg_color_hue(7)[1:7]
-shape = c(19,17,24,25,9,3,11,4,5,7,8,1)[1:7]
+col   = gg_color_hue(7)[2:7]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,1)[2:7]
 df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames(out), each = 9),
                 lower = c(lower), upper = c(upper))
 df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
                                     "SCAD","MCP","L0Learn",
                                     "VarBVS","BayesB","Blasso","SuSiE","Mr.ASH.opt"))
 df = df[df$s %in% c(1,5,50,500), ]
-df = df[df$fit %in% c("Mr.ASH","Lasso","Ridge","L0Learn"),]
+df = df[df$fit %in% c("Lasso","Ridge","L0Learn"),]
 p1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = fit), size = 1) +
   geom_point(aes(x = s, y = pred, color = fit, shape = fit), size = 3) +
   theme_cowplot(font_size = 14) +
@@ -677,15 +810,15 @@ p1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = fit), size = 1) +
   coord_cartesian(ylim = c(1,1.46), xlim = c(1,600)) +
   geom_point(aes(x = 500, y = 1.1942835), size = 3, shape = 4) +
   geom_text(aes(x = 500, y = 1.1942835, label="Oracle "), vjust = 0.3, hjust = -0.2) +
-  geom_text(aes(x = 500, y = df$pred[4], label="Mr.ASH", col = "Mr.ASH"), vjust = 0.2, hjust = -0.2) +
-  geom_text(aes(x = 500, y = df$pred[12], label="Ridge  ", col = "Ridge"), vjust = 1, hjust = -0.22) +
-  geom_text(aes(x = 500, y = df$pred[8], label="Lasso  ", col = "Lasso"), vjust = 0.2, hjust = -0.22) +
-  geom_text(aes(x = 500, y = df$pred[16], label="L0Learn", col = "L0Learn"), vjust = 0.2, hjust = -0.22)
+  #geom_text(aes(x = 500, y = df$pred[4], label="Mr.ASH", col = "Mr.ASH"), vjust = 0.2, hjust = -0.2) +
+  geom_text(aes(x = 500, y = df$pred[8], label="Ridge  ", col = "Ridge"), vjust = 1, hjust = -0.22) +
+  geom_text(aes(x = 500, y = df$pred[4], label="Lasso  ", col = "Lasso"), vjust = 0.2, hjust = -0.22) +
+  geom_text(aes(x = 500, y = df$pred[12], label="L0Learn", col = "L0Learn"), vjust = 0.2, hjust = -0.22)
 fig_main = p1
 title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
 subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 1000, p = 500, s = 1-500, pve = 0.5", fontface  = 'bold', size = 18) 
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.05,0.95))
-ggsave("PointNormal_Sparsity0.pdf", fig, width = 14, height = 8)
+ggsave("PointNormal_Sparsity0_without_mrash.pdf", fig, width = 14, height = 8)
 fig
 ```
 

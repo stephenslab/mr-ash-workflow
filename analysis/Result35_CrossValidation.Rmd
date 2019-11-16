@@ -28,11 +28,11 @@ source('code/sim_wrapper.R')
 ## Results 
 
 ```{r fig1, fig.height=13, fig.width=15}
-res_df       = readRDS("results/newhighdim.RDS")
+res_df       = readRDS("../results/highdimdiffnpnew.RDS")
 method_list  = c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","SCAD2","MCP2","L0Learn")
 df           = data.frame()
-p_range      = c(10,20,50,100,200,500,1000,2000,5000,10000)
-for (i in 1:8) {
+p_range      = c(20,50,100,200,500,1000,2000,5000,10000,20000)
+for (i in 1:10) {
 res_df[[i]]$fit   = rep(method_list, each = 20)
 res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_list)
 df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 9))),
@@ -43,14 +43,13 @@ df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pr
 }
 df$fit = factor(df$fit, levels = method_list)
 df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn"),]
-df = df[df$p %in% c(10,20,50,200,1000,2000),]
 col   = gg_color_hue(13)[1:7]
 shape = c(19,17,24,25,9,3,11,4,5,7,8,1,2,6)[1:7]
 p1    = ggplot(df) + geom_line(aes(x = p, y = pred, color = fit)) +
   geom_point(aes(x = p, y = pred, color = fit, shape = fit), size = 2.5) +
   theme_cowplot(font_size = 14) +
   scale_x_continuous(trans = "log10", breaks = c(10,20,50,200,1000,2000)) +
-  labs(y = "predictior error (rmse / sigma)", x = "number of nonzero coefficients (s)") +
+  labs(y = "predictior error (rmse / sigma)", x = "number of coefficients (p)") +
   theme(axis.line = element_blank(),
         plot.title = element_text(hjust = 0.5),
         axis.text.x  = element_text(angle = 45,hjust = 1)) +
@@ -59,16 +58,16 @@ p1    = ggplot(df) + geom_line(aes(x = p, y = pred, color = fit)) +
   scale_y_continuous(trans = "log10")
 fig_main = p1
 title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
-subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 1000, p = 500, s = 200, pve = 0.5", fontface  = 'bold', size = 18) 
+subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 20-20000, s = 20, pve = 0.5", fontface  = 'bold', size = 18) 
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.05,0.95))
 ```
 
 ```{r fig2, fig.height=13, fig.width=15}
-res_df       = readRDS("results/newhighdim.RDS")
+res_df       = readRDS("../results/highdimdiffnpnew.RDS")
 method_list  = c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","SCAD2","MCP2","L0Learn")
 df           = data.frame()
-p_range      = c(10,20,50,100,200,500,1000,2000,5000,10000)
-for (i in 1:8) {
+p_range      = c(20,50,100,200,500,1000,2000,5000,10000,20000)
+for (i in 1:10) {
 res_df[[i]]$fit   = rep(method_list, each = 20)
 res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_list)
 df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 9))),
@@ -79,14 +78,13 @@ df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pr
 }
 df$fit = factor(df$fit, levels = method_list)
 df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn"),]
-df = df[df$p %in% c(10,20,50,100,200,1000,2000),]
 col   = gg_color_hue(13)[1:7]
 shape = c(19,17,24,25,9,3,11,4,5,7,8,1,2,6)[1:7]
 p1    = ggplot(df) + geom_line(aes(x = p, y = time, color = fit)) +
   geom_point(aes(x = p, y = time, color = fit, shape = fit), size = 2.5) +
   theme_cowplot(font_size = 14) +
   scale_x_continuous(trans = "log10", breaks = p_range) +
-  labs(y = "predictior error (rmse / sigma)", x = "number of nonzero coefficients (s)") +
+  labs(y = "compmutation time (seconds)", x = "number of coefficients (p)") +
   theme(axis.line = element_blank(),
         plot.title = element_text(hjust = 0.5),
         axis.text.x  = element_text(angle = 45,hjust = 1)) +
@@ -106,8 +104,8 @@ The source code will be popped up when you click `code` on the right side.
 ```{r code, eval = FALSE}
 #tdat1        = list()
 n            = 500
-p_range      = c(10,20,50,100,200,500,1000,2000,5000,10000)
-s            = 10
+p_range      = c(20,50,100,200,500,1000,2000,5000,10000,20000)
+s            = 20
 method_list  = c("enet","lasso","ridge","scad","mcp","scad2","mcp2","l0learn")
 method_list2 = c("mr.ash", method_list)
 method_num   = length(method_list2)
@@ -115,7 +113,7 @@ iter_num     = 20
 pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
 time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
 
-for (iter in 1:8) {
+for (iter in 1:10) {
   p               = p_range[iter]
 for (i in 1:20) {
   
@@ -141,7 +139,8 @@ for (i in 1:20) {
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
   
-  print(c(time[i,1],tdat1[[iter]]$time[i],pred[i,1],tdat1[[iter]]$pred[i]), digits = 4)
+  print(c(time[i,]), digits = 4)
+  print(c(pred[i,]), digits = 4)
 }
   print("-----------------------------------")
   tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))

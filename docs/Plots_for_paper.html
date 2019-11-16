@@ -448,7 +448,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-11-06
+<strong>Last updated:</strong> 2019-11-15
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
@@ -527,10 +527,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree9f2c415dd72e081f30b7d42f32ed89d22af32d63targetblank9f2c415a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/9f2c415dd72e081f30b7d42f32ed89d22af32d63" target="_blank">9f2c415</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreeed53ba9d5b821fb3d9b6769508af71ca7f9705ectargetblanked53ba9a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/ed53ba9d5b821fb3d9b6769508af71ca7f9705ec" target="_blank">ed53ba9</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree9f2c415dd72e081f30b7d42f32ed89d22af32d63targetblank9f2c415a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreeed53ba9d5b821fb3d9b6769508af71ca7f9705ectargetblanked53ba9a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -543,16 +543,35 @@ Ignored files:
 Untracked files:
     Untracked:  .DS_Store
     Untracked:  .gitignore
-    Untracked:  PointNormal_Sparsity0.pdf
-    Untracked:  PointNormal_Sparsity1.pdf
-    Untracked:  PointNormal_Sparsity2.pdf
-    Untracked:  PointNormal_Sparsity3.pdf
-    Untracked:  figure4_paper.pdf
-    Untracked:  figure5_paper.pdf
+    Untracked:  PointNormal_Sparsity0_without_mrash.pdf
+    Untracked:  PointNormal_Sparsity2_without_mrash.pdf
+    Untracked:  analysis/ETA_1_lambda.dat
+    Untracked:  analysis/ETA_1_parBayesB.dat
+    Untracked:  analysis/mu.dat
+    Untracked:  analysis/varE.dat
+    Untracked:  figures/
+    Untracked:  results/highdimdiffnpnew.RDS
+    Untracked:  results/highdimresults.RDS
+    Untracked:  results/updateordernew1.RDS
+    Untracked:  results/updateordernew2.RDS
 
 Unstaged changes:
+    Modified:   ETA_1_lambda.dat
+    Modified:   ETA_1_parBayesB.dat
+    Modified:   MR.ASH.Rmd
+    Deleted:    PointNormal_Sparsity0.pdf
+    Modified:   PointNormal_Sparsity1.pdf
+    Deleted:    PointNormal_Sparsity2.pdf
+    Modified:   PointNormal_Sparsity3.pdf
     Modified:   analysis/Plots_for_paper.Rmd
-    Modified:   analysis/figure4_paper.pdf
+    Modified:   analysis/Result11_UpdateOrder.Rmd
+    Modified:   analysis/Result35_CrossValidation.Rmd
+    Deleted:    analysis/figure4_paper.pdf
+    Deleted:    analysis/figure5_paper.pdf
+    Deleted:    figure4_paper.pdf
+    Deleted:    figure5_paper.pdf
+    Modified:   mu.dat
+    Modified:   varE.dat
 
 </code></pre>
 <p>
@@ -591,6 +610,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/5acb33bd823758bb3149f60cf3f00867535ad0f4/analysis/Plots_for_paper.Rmd" target="_blank">5acb33b</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-11-06
+</td>
+<td>
+update Plots_for_paper.Rmd
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/5acb33bd823758bb3149f60cf3f00867535ad0f4/docs/Plots_for_paper.html" target="_blank">5acb33b</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-11-06
+</td>
+<td>
+update Plots_for_paper.Rmd
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -1193,98 +1246,17 @@ df$operator = factor(df$operator, levels = c(&quot;soft&quot;,&quot;hard&quot;,&
 
 p1 = ggplot(df) + geom_line(aes(x = b, y = sb, color = operator)) +
   theme_cowplot(font_size = 14) + theme(axis.line = element_blank()) +
-  labs(y = &quot;shrinakge of b (S(b))&quot;, title = &quot;MR.ASH shrinkage operators&quot;)
+  labs(y = &quot;shrinakge of b (S(b))&quot;, title = &quot;MR.ASH shrinkage operators&quot;) +
+  theme(legend.position = &quot;none&quot;)
 p2 = ggplot(df) + geom_line(aes(x = b, y = sb2, color = operator)) +
   theme_cowplot(font_size = 14) + theme(axis.line = element_blank()) +
   labs(title = &quot;123&quot;)  +
   labs(y = &quot;shrinakge of b (S(b))&quot;, title = &quot;Well-known shrinkage/thresholding operators&quot;)
 
-fig = plot_grid(p1,p2, nrow = 1)
+fig = plot_grid(p1,p2, nrow = 1, rel_widths = c(0.463,0.5))
 title = ggdraw() + draw_label(&quot;MR.ASH Shrinkage operator may resemble the well-known shrinkage operators&quot;, fontface = &#39;bold&#39;, size = 20) 
 fig = plot_grid(title, fig, nrow = 2, rel_heights = c(0.06,0.95))
-fig</code></pre>
-<p><img src="figure/Plots_for_paper.Rmd/fig1-1.png" width="1440" style="display: block; margin: auto;" /></p>
-<p>
-<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fig1-1">
-Past versions of fig1-1.png
-</button>
-</p>
-<div id="fig-fig1-1" class="collapse">
-<div class="table-responsive">
-<table class="table table-condensed table-hover">
-<thead>
-<tr>
-<th>
-Version
-</th>
-<th>
-Author
-</th>
-<th>
-Date
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/mr-ash-workflow/blob/d901e446f6a9d32037dd951c3a340dac1de7799c/docs/figure/Plots_for_paper.Rmd/fig1-1.png" target="_blank">d901e44</a>
-</td>
-<td>
-Youngseok Kim
-</td>
-<td>
-2019-10-31
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/mr-ash-workflow/blob/66726909d9d89ed7935e64082a60c8773ad03cab/docs/figure/Plots_for_paper.Rmd/fig1-1.png" target="_blank">6672690</a>
-</td>
-<td>
-Youngseok Kim
-</td>
-<td>
-2019-10-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/mr-ash-workflow/blob/5e5d9a179f538f64e61b2395b638db684fae5e20/docs/figure/Plots_for_paper.Rmd/fig1-1.png" target="_blank">5e5d9a1</a>
-</td>
-<td>
-Youngseok Kim
-</td>
-<td>
-2019-10-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/mr-ash-workflow/blob/fabe6bc7bb0e4d2fe2e30a48e3a2cf8b9db6d909/docs/figure/Plots_for_paper.Rmd/fig1-1.png" target="_blank">fabe6bc</a>
-</td>
-<td>
-Youngseok Kim
-</td>
-<td>
-2019-10-23
-</td>
-</tr>
-<tr>
-<td>
-<a href="https://github.com/stephenslab/mr-ash-workflow/blob/1e3484c88d0e260c6920ba9440e13ded4f9fc840/docs/figure/Plots_for_paper.Rmd/fig1-1.png" target="_blank">1e3484c</a>
-</td>
-<td>
-Youngseok
-</td>
-<td>
-2019-10-14
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
+ggsave(&quot;figures/figure1_paper.pdf&quot;, fig, width = 18, height = 9)</code></pre>
 <pre class="r"><code>R.hardt = function(b, lambda = 1) {
   out = b^2/2
   out[b &gt; lambda] = lambda^2/2
@@ -1671,21 +1643,26 @@ for (i in 1:10) {
                                 pve  = pve_list[i]))
 }
 sdat$fit = factor(sdat$fit, levels = method_level)
+sdat     = sdat[sdat$fit %in% c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,
+                 &quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;),]
+sdat$size = 0.5
+sdat$size[1:10] = 1.2
 
-p1 = ggplot(sdat) + geom_line(aes(x = pve, y = pred, color = fit)) +
+p1 = ggplot(sdat) + geom_line(aes(x = pve, y = pred, color = fit), size = sdat$size) +
   geom_point(aes(x = pve, y = pred, color = fit, shape = fit), size = 2.5) +
   scale_x_continuous(breaks = pve_list) +
   theme_cowplot(font_size = 14) +
-  labs(y = &quot;predictior error (rmse / sigma)&quot;, x = &quot;number of coefficients (p)&quot;) +
+  labs(y = &quot;predictior error (rmse / sigma)&quot;, x = &quot;proportion of variance explained (pve)&quot;) +
   theme(axis.line = element_blank(),
-        plot.title = element_text(hjust = 0.5)) +
+        plot.title = element_text(hjust = 0.5),
+        legend.position = &quot;none&quot;) +
   scale_color_manual(values = col) +
   scale_shape_manual(values = shape) +
   scale_y_continuous(trans = &quot;log10&quot;, breaks = c(1,1.1,1.2,1.3,1.4)) +
-  coord_cartesian(ylim = c(1,1.5))
+  coord_cartesian(ylim = c(1,1.3))
 
 title     = ggdraw() + draw_label(&quot;Prediction Error (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
-subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + SparseNormal, n = 500, p = 2000, s = 20, pve = 0 - 0.9&quot;, fontface  = &#39;bold&#39;, size = 18) 
+subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + PointNormal, n = 500, p = 2000, s = 20, pve = 0 - 0.9&quot;, fontface  = &#39;bold&#39;, size = 14) 
 p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
 fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.8,0.3))
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.03,0.04,0.95))
@@ -1761,22 +1738,29 @@ Youngseok Kim
 </table>
 </div>
 </div>
-<pre class="r"><code>res_df       = readRDS(&quot;results/highdimdiffp2.RDS&quot;)
-method_list  = c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;)
-col          = gg_color_hue(13)[1:11]
-shape        = c(19,17,24,25,9,3,11,4,5,7,8)
+<pre class="r"><code>res_df       = readRDS(&quot;results/highdim_pve0.5.RDS&quot;)
+method_list  = c(&quot;Mr.ASH&quot;,&quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;)
+method_level = c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,
+                 &quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,
+                 &quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;)
+col          = gg_color_hue(13)[1:11][-4]
+#shape        = c(19,4,5,7,8,17,24,25,9,3,11)[-8]
+shape        = c(19,17,24,25,9,3,11,4,5,7,8)[-4]
 p_list       = c(50,500,5000,50000)
 sdat         = data.frame()
 for (i in 1:4) {
-  res_df[[i]] = res_df[[i]][1:140,]
-  sdat = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred, 20, 7)),
-                                time = colMeans(matrix(res_df[[i]]$time, 20, 7)),
+  sdat = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred, 20, 10)),
+                                time = colMeans(matrix(res_df[[i]]$time, 20, 10)),
                                 fit  = method_list,
-                                p    = p_list[i]))
+                                p = p_list[i]))
 }
-sdat$fit = factor(sdat$fit, levels = method_list)
+sdat$fit = factor(sdat$fit, levels = method_level)
+sdat     = sdat[sdat$fit %in% c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,
+                 &quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;),]
+sdat$size = 0.5
+sdat$size[1:4] = 1.2
 
-p1 = ggplot(sdat) + geom_line(aes(x = p, y = pred, color = fit)) +
+p2 = ggplot(sdat) + geom_line(aes(x = p, y = pred, color = fit), size = sdat$size) +
   geom_point(aes(x = p, y = pred, color = fit, shape = fit), size = 2.5) +
   theme_cowplot(font_size = 14) +
   scale_x_continuous(trans = &quot;log10&quot;, breaks = p_list) +
@@ -1786,13 +1770,13 @@ p1 = ggplot(sdat) + geom_line(aes(x = p, y = pred, color = fit)) +
   scale_color_manual(values = col) +
   scale_shape_manual(values = shape) +
   scale_y_continuous(trans = &quot;log10&quot;, breaks = c(1,1.1,1.2,1.3,1.4)) +
-  coord_cartesian(ylim = c(1,sqrt(2)))
+  coord_cartesian(ylim = c(1,1.3))
 
 title     = ggdraw() + draw_label(&quot;Prediction Error (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
-subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + SparseNormal, n = 500, p = 50, 500, 5000, 50000, s = 20, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 18) 
+subtitle2 = ggdraw() + draw_label(&quot;Scenario: IndepGauss + SparseNormal, n = 500, p = 50, 500, 5000, 50000, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 14) 
 p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
-fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.8,0.3))
-fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.03,0.04,0.95))
+fig_main  = plot_grid(p0,p2,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
+fig       = plot_grid(title,subtitle2,fig_main, ncol = 1, rel_heights = c(0.06,0.06,0.95))
 fig</code></pre>
 <p><img src="figure/Plots_for_paper.Rmd/fig7-1.png" width="1440" style="display: block; margin: auto;" /></p>
 <p>
@@ -1817,6 +1801,17 @@ Date
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/5acb33bd823758bb3149f60cf3f00867535ad0f4/docs/figure/Plots_for_paper.Rmd/fig7-1.png" target="_blank">5acb33b</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-11-06
+</td>
+</tr>
 <tr>
 <td>
 <a href="https://github.com/stephenslab/mr-ash-workflow/blob/1cc24af2802bfa9ffaa1ffd6aa98cc87bada7f90/docs/figure/Plots_for_paper.Rmd/fig7-1.png" target="_blank">1cc24af</a>
@@ -1854,6 +1849,10 @@ Youngseok Kim
 </table>
 </div>
 </div>
+<pre class="r"><code>fig       = plot_grid(plot_grid(subtitle,p1, ncol = 1, rel_heights = c(0.05,0.95)),
+                      plot_grid(subtitle2,p2, ncol = 1, rel_heights = c(0.05,0.95)), nrow = 1, rel_widths = c(0.5,0.55))
+fig       = plot_grid(title, fig, ncol = 1, rel_heights = c(0.05,0.95))
+ggsave(&quot;figures/figure6_paper.pdf&quot;, fig, width = 18, height = 9)</code></pre>
 <pre class="r"><code>res_df       = readRDS(&quot;results/highdimdiffp2.RDS&quot;)
 method_list  = c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;)
 col          = gg_color_hue(13)[1:11]
@@ -1887,6 +1886,43 @@ fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.8,0.3))
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.03,0.04,0.95))
 fig</code></pre>
 <p><img src="figure/Plots_for_paper.Rmd/fig71-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fig71-1">
+Past versions of fig71-1.png
+</button>
+</p>
+<div id="fig-fig71-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/ed53ba9d5b821fb3d9b6769508af71ca7f9705ec/docs/figure/Plots_for_paper.Rmd/fig71-1.png" target="_blank">ed53ba9</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-11-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>res_df = readRDS(&quot;results/Ridge_for_paper.RDS&quot;)
 out = matrix(0,9,12)
 lower = matrix(0,9,12)
@@ -1967,9 +2003,46 @@ subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + Spike-and-Slab, n
 fig2      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
 fig       = plot_grid(title, plot_grid(fig1, fig2, nrow = 1, rel_widths = c(0.5,0.55)),
                       ncol = 1, rel_heights = c(0.05,0.95))
-ggsave(&quot;figure4_paper.pdf&quot;, fig, width = 18, height = 8)
+ggsave(&quot;figures/figure4_paper.pdf&quot;, fig, width = 18, height = 9)
 fig</code></pre>
 <p><img src="figure/Plots_for_paper.Rmd/fig9-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fig9-1">
+Past versions of fig9-1.png
+</button>
+</p>
+<div id="fig-fig9-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/ed53ba9d5b821fb3d9b6769508af71ca7f9705ec/docs/figure/Plots_for_paper.Rmd/fig9-1.png" target="_blank">ed53ba9</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-11-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>res_df       = readRDS(&quot;results/newhighdim.RDS&quot;)
 method_list  = c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;SCAD2&quot;,&quot;MCP2&quot;,&quot;L0Learn&quot;)
 df           = data.frame()
@@ -2037,9 +2110,150 @@ subtitle  = ggdraw() + draw_label(&quot;Computation time (log-scale)&quot;, font
 fig2      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
 fig       = plot_grid(title, plot_grid(fig1, fig2, nrow = 1, rel_widths = c(0.5,0.59)),
                       ncol = 1, rel_heights = c(0.05,0.95))
-ggsave(&quot;figure5_paper.pdf&quot;, fig, width = 18, height = 8)
+#ggsave(&quot;figures/figure5_paper.pdf&quot;, fig, width = 18, height = 8)
 fig</code></pre>
 <p><img src="figure/Plots_for_paper.Rmd/fig11-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fig11-1">
+Past versions of fig11-1.png
+</button>
+</p>
+<div id="fig-fig11-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/ed53ba9d5b821fb3d9b6769508af71ca7f9705ec/docs/figure/Plots_for_paper.Rmd/fig11-1.png" target="_blank">ed53ba9</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-11-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<pre class="r"><code>res_df       = readRDS(&quot;results/highdimdiffnpnew.RDS&quot;)
+method_list  = c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;SCAD2&quot;,&quot;MCP2&quot;,&quot;L0Learn&quot;)
+df           = data.frame()
+p_range      = c(20,50,100,200,500,1000,2000,5000,10000,20000)
+for (i in 1:10) {
+res_df[[i]]$fit   = rep(method_list, each = 20)
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_list)
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 9))),
+                                         time2 = apply(matrix(res_df[[i]]$time, 20, 9), 2, median),
+                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 9))),
+                                         p    = p_range[i],
+                                         fit  = method_list))
+}
+df$fit = factor(df$fit, levels = method_list)
+#df = df[df$fit %in% c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;),]
+df$size = 0.5
+df$size[1:5] = 1.2; df$size[46:50] = 1.2;
+col   = gg_color_hue(13)[1:9]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,1,2,6)[1:9]
+p1    = ggplot(df[df$p &lt;= 500, ]) + geom_line(aes(x = p, y = time, color = fit), size = df$size[df$p &lt;= 500]) +
+  geom_point(aes(x = p, y = time, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(trans = &quot;log10&quot;, breaks = p_range) +
+  labs(y = &quot;compmutation time (seconds)&quot;, x = &quot;number of coefficients (p)&quot;) +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = &quot;none&quot;) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = &quot;log10&quot;)
+fig_main = p1
+subtitle  = ggdraw() + draw_label(&quot;Computation time (log-scale) for p &lt;= n&quot;, fontface = &#39;bold&#39;, size = 14) 
+title     = ggdraw() + draw_label(&quot;Scenario: IndepGauss + PointNormal, n = 500, p = 20-20000, s = 20, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 20) 
+fig1      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))</code></pre>
+<pre class="r"><code>p2    = ggplot(df[df$p &gt; 500, ]) + geom_line(aes(x = p, y = time, color = fit), size = df$size[df$p &gt; 500]) +
+  geom_point(aes(x = p, y = time, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(trans = &quot;log10&quot;, breaks = p_range) +
+  labs(y = &quot;compmutation time (seconds)&quot;, x = &quot;number of coefficients (p)&quot;) +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = &quot;log10&quot;)
+fig_main = p2
+subtitle  = ggdraw() + draw_label(&quot;Computation time (log-scale) for p &gt; n&quot;, fontface = &#39;bold&#39;, size = 14) 
+fig2      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
+fig13     = plot_grid(title, plot_grid(fig1, fig2, nrow = 1, rel_widths = c(0.5,0.55)),
+                      ncol = 1, rel_heights = c(0.05,0.95))
+ggsave(&quot;figures/figure5_paper.pdf&quot;, fig13, width = 18, height = 9)
+fig13</code></pre>
+<p><img src="figure/Plots_for_paper.Rmd/fig13-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>res_df       = readRDS(&quot;results/highdimdiffnpnew.RDS&quot;)
+method_list  = c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;SCAD2&quot;,&quot;MCP2&quot;,&quot;L0Learn&quot;)
+df           = data.frame()
+p_range      = c(20,50,100,200,500,1000,2000,5000,10000,20000)
+for (i in 1:10) {
+res_df[[i]]$fit   = rep(method_list, each = 20)
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_list)
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 9))),
+                                         time2 = apply(matrix(res_df[[i]]$time, 20, 9), 2, median),
+                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 9))),
+                                         p    = p_range[i],
+                                         fit  = method_list))
+}
+df$fit = factor(df$fit, levels = method_list)
+#df = df[df$fit %in% c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;),]
+df$size = 0.5
+df$size[1:7] = 1.2
+df = df[df$p %in% c(20,50,200,500,1000,2000,10000,20000),]
+col   = gg_color_hue(13)[1:9]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,1,2,6)[1:9]
+p1    = ggplot(df) + geom_line(aes(x = p, y = pred, color = fit), size = df$size) +
+  geom_point(aes(x = p, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(trans = &quot;log10&quot;, breaks = c(20,50,200,500,1000,2000,10000,20000)) +
+  labs(y = &quot;predictior error (rmse / sigma)&quot;, x = &quot;number of coefficients (p)&quot;) +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = &quot;log10&quot;)
+fig_main = p1
+#title     = ggdraw() + draw_label(&quot;Prediction Error (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
+subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + PointNormal, n = 500, p = 20-20000, s = 20, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 20) 
+fig14     = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))</code></pre>
+<pre class="r"><code>p2    = ggplot(df[df$p &gt; 500, ]) + geom_line(aes(x = p, y = pred, color = fit), size = df$size[df$p &gt; 500]) +
+  geom_point(aes(x = p, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(trans = &quot;log10&quot;, breaks = p_range) +
+  labs(y = &quot;predictior error (rmse / sigma)&quot;, x = &quot;number of coefficients (p)&quot;) +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = &quot;log10&quot;)
+fig_main = p2
+subtitle  = ggdraw() + draw_label(&quot;Computation time (log-scale) for p &gt; n&quot;, fontface = &#39;bold&#39;, size = 14) 
+fig2      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
+fig       = plot_grid(title, plot_grid(fig1, fig2, nrow = 1, rel_widths = c(0.5,0.55)),
+                      ncol = 1, rel_heights = c(0.05,0.95))
+ggsave(&quot;figures/figure7_paper.pdf&quot;, fig, width = 18, height = 9)
+fig</code></pre>
+<p><img src="figure/Plots_for_paper.Rmd/fig15-1.png" width="1440" style="display: block; margin: auto;" /></p>
 <pre class="r"><code>res_df = readRDS(&quot;results/newridge10.RDS&quot;)
 out = matrix(0,9,15)
 lower = matrix(0,9,15)
@@ -2051,7 +2265,7 @@ for (i in 1:9) {
 }
 out = out[,c(1:11,15)]
 colnames(out) = c(&quot;Mr.ASH&quot;,&quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,&quot;Mr.ASH.opt&quot;)
-ind = c(1,6,7,8,9,10,11)
+ind = c(6,7,8,9,10,11)
 out = out[,ind]
 lower = lower[,ind]
 upper = upper[,ind]
@@ -2077,20 +2291,57 @@ p1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = fit), size = 1) +
   coord_cartesian(ylim = c(1,1.46), xlim = c(1,600)) +
   geom_point(aes(x = 500, y = 1.1942835), size = 3, shape = 4) +
   geom_text(aes(x = 500, y = 1.1942835, label=&quot;Oracle &quot;), vjust = 0.3, hjust = -0.2) +
-  geom_text(aes(x = 500, y = df$pred[4], label=&quot;Mr.ASH&quot;, col = &quot;Mr.ASH&quot;), vjust = 0.2, hjust = -0.2) +
-  geom_text(aes(x = 500, y = df$pred[8], label=&quot;E-NET &quot;, col = &quot;E-NET&quot;), vjust = -0.2, hjust = -0.2) +
-  geom_text(aes(x = 500, y = df$pred[16], label=&quot;Ridge  &quot;, col = &quot;Ridge&quot;), vjust = 1, hjust = -0.22) +
-  geom_text(aes(x = 500, y = df$pred[12], label=&quot;Lasso  &quot;, col = &quot;Lasso&quot;), vjust = 0.2, hjust = -0.22) +
-  geom_text(aes(x = 500, y = df$pred[20], label=&quot;SCAD  &quot;, col = &quot;SCAD&quot;), vjust = 0.2, hjust = -0.22) +
-  geom_text(aes(x = 500, y = df$pred[24], label=&quot;MCP   &quot;, col = &quot;MCP&quot;), vjust = 0.2, hjust = -0.22) +
-  geom_text(aes(x = 500, y = df$pred[28], label=&quot;L0Learn&quot;, col = &quot;L0Learn&quot;), vjust = 0.2, hjust = -0.22)
+  #geom_text(aes(x = 500, y = df$pred[4], label=&quot;Mr.ASH&quot;, col = &quot;Mr.ASH&quot;), vjust = 0.2, hjust = -0.2) +
+  geom_text(aes(x = 500, y = df$pred[4], label=&quot;E-NET &quot;, col = &quot;E-NET&quot;), vjust = -0.2, hjust = -0.2) +
+  geom_text(aes(x = 500, y = df$pred[12], label=&quot;Ridge  &quot;, col = &quot;Ridge&quot;), vjust = 1, hjust = -0.22) +
+  geom_text(aes(x = 500, y = df$pred[8], label=&quot;Lasso  &quot;, col = &quot;Lasso&quot;), vjust = 0.2, hjust = -0.22) +
+  geom_text(aes(x = 500, y = df$pred[16], label=&quot;SCAD  &quot;, col = &quot;SCAD&quot;), vjust = 0.2, hjust = -0.22) +
+  geom_text(aes(x = 500, y = df$pred[20], label=&quot;MCP   &quot;, col = &quot;MCP&quot;), vjust = 0.2, hjust = -0.22) +
+  geom_text(aes(x = 500, y = df$pred[24], label=&quot;L0Learn&quot;, col = &quot;L0Learn&quot;), vjust = 0.2, hjust = -0.22)
 fig_main = p1
 title     = ggdraw() + draw_label(&quot;Prediction Error (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
 subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + PointNormal, n = 1000, p = 500, s = 1-500, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 18) 
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.05,0.95))
-ggsave(&quot;PointNormal_Sparsity2.pdf&quot;, fig, width = 14, height = 8)
+ggsave(&quot;PointNormal_Sparsity2_without_mrash.pdf&quot;, fig, width = 14, height = 8)
 fig</code></pre>
 <p><img src="figure/Plots_for_paper.Rmd/fig100-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fig100-1">
+Past versions of fig100-1.png
+</button>
+</p>
+<div id="fig-fig100-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/ed53ba9d5b821fb3d9b6769508af71ca7f9705ec/docs/figure/Plots_for_paper.Rmd/fig100-1.png" target="_blank">ed53ba9</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-11-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>fig_main  = fig_main + 
     geom_ribbon(aes(x = s, ymin = lower, ymax = upper, color = fit, fill = fit),
                 linetype = 2, size = 0, alpha = 0.1, colour = NA)
@@ -2098,6 +2349,43 @@ fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.
 ggsave(&quot;PointNormal_Sparsity3.pdf&quot;, fig, width = 14, height = 8)
 fig</code></pre>
 <p><img src="figure/Plots_for_paper.Rmd/fig103-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fig103-1">
+Past versions of fig103-1.png
+</button>
+</p>
+<div id="fig-fig103-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/ed53ba9d5b821fb3d9b6769508af71ca7f9705ec/docs/figure/Plots_for_paper.Rmd/fig103-1.png" target="_blank">ed53ba9</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-11-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>res_df = readRDS(&quot;results/newridge10.RDS&quot;)
 out = matrix(0,9,15)
 lower = matrix(0,9,15)
@@ -2109,20 +2397,20 @@ for (i in 1:9) {
 }
 out = out[,c(1:11,15)]
 colnames(out) = c(&quot;Mr.ASH&quot;,&quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,&quot;Mr.ASH.opt&quot;)
-ind = c(1,6,7,8,9,10,11)
+ind = c(6,7,8,9,10,11)
 out = out[,ind]
 lower = lower[,ind]
 upper = upper[,ind]
 
-col   = gg_color_hue(7)[1:7]
-shape = c(19,17,24,25,9,3,11,4,5,7,8,1)[1:7]
+col   = gg_color_hue(7)[2:7]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,1)[2:7]
 df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames(out), each = 9),
                 lower = c(lower), upper = c(upper))
 df$fit = factor(df$fit, levels =  c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,
                                     &quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;,
                                     &quot;VarBVS&quot;,&quot;BayesB&quot;,&quot;Blasso&quot;,&quot;SuSiE&quot;,&quot;Mr.ASH.opt&quot;))
 df = df[df$s %in% c(1,5,50,500), ]
-df = df[df$fit %in% c(&quot;Mr.ASH&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;L0Learn&quot;),]
+df = df[df$fit %in% c(&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;L0Learn&quot;),]
 p1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = fit), size = 1) +
   geom_point(aes(x = s, y = pred, color = fit, shape = fit), size = 3) +
   theme_cowplot(font_size = 14) +
@@ -2136,17 +2424,54 @@ p1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = fit), size = 1) +
   coord_cartesian(ylim = c(1,1.46), xlim = c(1,600)) +
   geom_point(aes(x = 500, y = 1.1942835), size = 3, shape = 4) +
   geom_text(aes(x = 500, y = 1.1942835, label=&quot;Oracle &quot;), vjust = 0.3, hjust = -0.2) +
-  geom_text(aes(x = 500, y = df$pred[4], label=&quot;Mr.ASH&quot;, col = &quot;Mr.ASH&quot;), vjust = 0.2, hjust = -0.2) +
-  geom_text(aes(x = 500, y = df$pred[12], label=&quot;Ridge  &quot;, col = &quot;Ridge&quot;), vjust = 1, hjust = -0.22) +
-  geom_text(aes(x = 500, y = df$pred[8], label=&quot;Lasso  &quot;, col = &quot;Lasso&quot;), vjust = 0.2, hjust = -0.22) +
-  geom_text(aes(x = 500, y = df$pred[16], label=&quot;L0Learn&quot;, col = &quot;L0Learn&quot;), vjust = 0.2, hjust = -0.22)
+  #geom_text(aes(x = 500, y = df$pred[4], label=&quot;Mr.ASH&quot;, col = &quot;Mr.ASH&quot;), vjust = 0.2, hjust = -0.2) +
+  geom_text(aes(x = 500, y = df$pred[8], label=&quot;Ridge  &quot;, col = &quot;Ridge&quot;), vjust = 1, hjust = -0.22) +
+  geom_text(aes(x = 500, y = df$pred[4], label=&quot;Lasso  &quot;, col = &quot;Lasso&quot;), vjust = 0.2, hjust = -0.22) +
+  geom_text(aes(x = 500, y = df$pred[12], label=&quot;L0Learn&quot;, col = &quot;L0Learn&quot;), vjust = 0.2, hjust = -0.22)
 fig_main = p1
 title     = ggdraw() + draw_label(&quot;Prediction Error (log-scale)&quot;, fontface = &#39;bold&#39;, size = 20) 
 subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + PointNormal, n = 1000, p = 500, s = 1-500, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 18) 
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.05,0.95))
-ggsave(&quot;PointNormal_Sparsity0.pdf&quot;, fig, width = 14, height = 8)
+ggsave(&quot;PointNormal_Sparsity0_without_mrash.pdf&quot;, fig, width = 14, height = 8)
 fig</code></pre>
 <p><img src="figure/Plots_for_paper.Rmd/fig101-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fig101-1">
+Past versions of fig101-1.png
+</button>
+</p>
+<div id="fig-fig101-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/ed53ba9d5b821fb3d9b6769508af71ca7f9705ec/docs/figure/Plots_for_paper.Rmd/fig101-1.png" target="_blank">ed53ba9</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-11-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <pre class="r"><code>fig_main  = fig_main + 
     geom_ribbon(aes(x = s, ymin = lower, ymax = upper, color = fit, fill = fit),
                 linetype = 2, size = 0, alpha = 0.1, colour = NA)
@@ -2154,6 +2479,43 @@ fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.
 ggsave(&quot;PointNormal_Sparsity1.pdf&quot;, fig, width = 14, height = 8)
 fig</code></pre>
 <p><img src="figure/Plots_for_paper.Rmd/fig102-1.png" width="1440" style="display: block; margin: auto;" /></p>
+<p>
+<button type="button" class="btn btn-default btn-xs btn-workflowr btn-workflowr-fig" data-toggle="collapse" data-target="#fig-fig102-1">
+Past versions of fig102-1.png
+</button>
+</p>
+<div id="fig-fig102-1" class="collapse">
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/ed53ba9d5b821fb3d9b6769508af71ca7f9705ec/docs/figure/Plots_for_paper.Rmd/fig102-1.png" target="_blank">ed53ba9</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-11-06
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -2178,12 +2540,12 @@ attached base packages:
 
 other attached packages:
  [1] varbvs_2.6-5       L0Learn_1.1.0      ncvreg_3.11-1     
- [4] mr.ash.alpha_0.1-2 glmnet_2.0-16      foreach_1.4.4     
+ [4] mr.ash.alpha_0.1-3 glmnet_2.0-16      foreach_1.4.4     
  [7] BGLR_1.0.8         susieR_0.7.1       cowplot_0.9.4     
 [10] ggplot2_3.2.1      Matrix_1.2-17     
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.2          RColorBrewer_1.1-2  plyr_1.8.4         
+ [1] Rcpp_1.0.3          RColorBrewer_1.1-2  plyr_1.8.4         
  [4] compiler_3.5.3      pillar_1.3.1        git2r_0.25.2       
  [7] workflowr_1.3.0     iterators_1.0.10    tools_3.5.3        
 [10] digest_0.6.18       evaluate_0.13       tibble_2.1.1       
