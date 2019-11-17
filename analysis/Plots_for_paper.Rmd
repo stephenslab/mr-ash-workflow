@@ -77,6 +77,31 @@ hardt = function(b, lambda = 1) {
 }
 ```
 
+```{r}
+l = readRDS("results/CaisaMethods.RDS")
+
+fig1 = my.line(l[[1]]$df, "x", "y", col = gg_color_hue(3), shapes = c(1,2,3)) +
+  coord_cartesian(xlim = c(0,100), ylim = c(0,200)) +
+  labs(y = "distance from the solution", x = "iteration",
+       title = "p = 20000, rho = 0") +
+  theme(axis.line    = element_blank(), plot.title = element_text(hjust = 0.5),
+        legend.position = "none")
+fig2 = my.line(l[[2]]$df, "x", "y", col = gg_color_hue(3), shapes = c(1,2,3)) +
+  coord_cartesian(xlim = c(0,100), ylim = c(0,200)) +
+  labs(y = "distance from the solution", x = "iteration",
+       title = "p = 20000, rho = 0") +
+  theme(axis.line    = element_blank(), plot.title = element_text(hjust = 0.5))
+fig3 = my.line(l[[3]]$df, "x", "y", col = gg_color_hue(3), shapes = c(1,2,3)) +
+  coord_cartesian(xlim = c(0,100), ylim = c(0,200)) +
+  labs(y = "distance from the solution", x = "iteration",
+       title = "p = 2000, rho = 0.9") +
+  theme(axis.line    = element_blank(), plot.title = element_text(hjust = 0.5),
+        legend.position = "none")
+title     = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, s = 20, pve = 0.5", fontface = 'bold', size = 20) 
+fig = plot_grid(title, plot_grid(fig3,fig1,fig2, nrow = 1, rel_widths = c(0.4,0.4,0.5)), nrow = 2, rel_heights = c(0.06,0.95))
+ggsave("figure3_paper.pdf", fig, width = 18, height = 8)
+```
+
 ## MR.ASH shrinkage operator may resemble the popular shrinkage operators
 
 ```{r fig1, fig.height=7, fig.width=15}

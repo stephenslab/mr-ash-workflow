@@ -74,6 +74,7 @@ res_df       = readRDS("results/ridge_pve0.5.RDS")
 p_list       = c(50,100,200,500,1000,2000)
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn","Ridge.opt")
 col          = gg_color_hue(13)[1:11]
+s_range      = c(1,2,5,10,20,50,100,200,500)
 sdat = data.frame()
 for (i in 1:6) {
   sdat       = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred,20,12)),
