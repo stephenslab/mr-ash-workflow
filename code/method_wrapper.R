@@ -35,7 +35,8 @@ fit.mr.ash2 = function(X, y, X.test, y.test, seed = 1,
   # run mr.ash order
   t.mr.ash           = system.time(
     fit.mr.ash        <- mr.ash(X = X, y = y, sa2 = sa2, update.order = update.order,
-                                max.iter = 2000, beta.init = beta.init, update.pi = update.pi, pi = pi,
+                                max.iter = 2000, min.iter = 200,
+                                beta.init = beta.init, update.pi = update.pi, pi = pi,
                                 standardize = standardize, sigma2 = sigma2,
                                 tol = list(epstol = 1e-12, convtol = 1e-8)))
   
@@ -257,15 +258,19 @@ fit.l0learn = function(X, y, X.test, y.test, seed = 1) {
 #'
 #'
 #' Bayesian Lasso
-fit.blasso = function(X, y, X.test, y.test, seed = 1) {
+fit.blasso = function(X, y, X.test, y.test, seed = 1, nIter = NULL, burnIn = NULL) {
   
   # set seed
   set.seed(seed)
   
+  # default setting
+  if (is.null(nIter)) nIter = 1500
+  if (is.null(burnIn)) burnIn = 500
+  
   # run blasso
   t.blasso          = system.time(
     fit.blasso       <- BGLR(y, ETA = list(list(X = X, model="BL", standardize = standardize)),
-                             verbose = FALSE))
+                             verbose = FALSE, nIter = nIter, burnIn = burnIn))
   fit.blasso$beta   = c(fit.blasso$ETA[[1]]$b)
   
   return (list(fit = fit.blasso, t = t.blasso[3],
@@ -277,15 +282,19 @@ fit.blasso = function(X, y, X.test, y.test, seed = 1) {
 #'
 #'
 #' BayesB
-fit.bayesb = function(X, y, X.test, y.test, seed = 1) {
+fit.bayesb = function(X, y, X.test, y.test, seed = 1, nIter = NULL, burnIn = NULL) {
   
   # set seed
   set.seed(seed)
   
+  # default setting
+  if (is.null(nIter)) nIter = 1500
+  if (is.null(burnIn)) burnIn = 500
+  
   # run bayesb
   t.bayesb          = system.time(
     fit.bayesb       <- BGLR(y, ETA = list(list(X = X, model="BayesB", standardize = standardize)),
-                             verbose = FALSE))
+                             verbose = FALSE, nIter = nIter, burnIn = burnIn))
   fit.bayesb$beta   = c(fit.bayesb$ETA[[1]]$b * fit.bayesb$ETA[[1]]$d)
   
   return (list(fit = fit.bayesb, t = t.bayesb[3],
@@ -311,6 +320,23 @@ fit.varbvs = function(X, y, X.test, y.test, seed = 1) {
   
 }
 
+#'
+#'
+#'
+#' varbvs2
+fit.varbvs2 = function(X, y, X.test, y.test, seed = 1) {
+  
+  # set seed
+  set.seed(seed)
+  
+  # run varbvs
+  t.varbvs          = system.time(
+    fit.varbvs       <- varbvs(X, Z = NULL, y, verbose = FALSE, logodds = seq(-log10(p),1,length.out = 40)))
+  
+  return (list(fit = fit.varbvs, t = t.varbvs[3],
+               rsse = norm(y.test - predict(fit.varbvs, X.test), '2')))
+  
+}
 
 #'
 #'
