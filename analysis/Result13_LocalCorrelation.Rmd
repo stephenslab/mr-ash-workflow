@@ -46,38 +46,92 @@ source('code/sim_wrapper.R')
 The result is summarized below. 
 
 ```{r fig1, fig.height=7, fig.width=15}
-res_df       = readRDS("results/localcorr.RDS")
+res_df       = readRDS("results/localcorr20.RDS")
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
                  "Mr.ASH.order","Mr.ASH.init")
 method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
                  "SCAD","MCP","L0Learn",
                  "VarBVS","BayesB","Blasso","SuSiE")
 col          = gg_color_hue(13)[c(1,12,13,2:11)]
-rho_list     = c(0.3,0.6,0.9,0.95)
-for (i in 1:4) {
+rho_list     = c(0.99,0.95,0.9,0.8,0.7,0.6)
+for (i in 1:6) {
 res_df[[i]]$fit   = rep(method_list, each = 20)
 res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels =  method_level)
 }
 pp = list()
-for (i in 1:4) {
+for (i in 1:6) {
   d       = res_df[[i]]
   pp[[i]] = my.box2(d, "fit", "pred", cols = col) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none") +
   geom_hline(yintercept = mean(d$pred[d$fit == "Mr.ASH.init"]), col = col[3],
-             linetype = "dotted", size = 1.5) +
+             linetype = "dotted", size = 1) +
   scale_y_continuous(trans = "log10", breaks = c(1,1.2,1.4,1.6,1.8,2.0)) +
-  coord_cartesian(ylim = c(1,1.6))
+  coord_cartesian(ylim = c(1,1.25))
   subtitle  = ggdraw() + draw_label(paste(paste("rho = ",rho_list[i], sep = ""),"", sep = ""),
                                     fontface  = 'bold', size = 18)
   pp[[i]]   = plot_grid(subtitle, pp[[i]], ncol = 1, rel_heights = c(0.06,0.95))
 }
-fig_main  = plot_grid(pp[[1]],pp[[2]],pp[[3]], nrow = 1, rel_widths = c(0.3,0.3,0.3,0.3))
+fig_main  = plot_grid(pp[[1]],pp[[2]],pp[[3]],pp[[6]], nrow = 2, rel_widths = c(0.3,0.3,0.3,0.3))
 title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
-subtitle  = ggdraw() + draw_label("Scenario: EquiCorrGauss + SparseNormal, n = 500, p = 2000, pve = 0.5", fontface = 'bold', size = 18)
-fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.06,0.95))
-fig
+subtitle  = ggdraw() + draw_label("Scenario: LocalCorrGauss + SparseNormal, n = 500, p = 2000, pve = 0.5", fontface = 'bold', size = 14)
+figure2  = plot_grid(title,plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95)), ncol = 1, rel_heights = c(0.05,0.95))
+ggsave("figures/figure3_paper.pdf", figure2, width = 18, height = 12)
+figure2
+```
+
+```{r fig2, fig.height=13, fig.width=15}
+res_df       = readRDS("results/localcorr20.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "Mr.ASH.order","Mr.ASH.init")
+method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "VarBVS","BayesB","Blasso","SuSiE")
+col          = gg_color_hue(13)[c(1,12,13,2:11)]
+rho_list     = c(0,0.3,0.6,0.9,0.95,0.99)
+a            = c(1,2,3,4,5,6)
+out = matrix(0,6,13)
+for (i in 1:6) {
+  out[i,] = colMeans(matrix(res_df[[a[i]]]$pred, 20, 13))
+}
+colnames(out) = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn",
+                  "Mr.ASH.order",
+                  "Mr.ASH.init")
+ind = c(1,6:13)
+out = out[,ind]
+
+col   = gg_color_hue(13)[c(1:7,12:13)]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1:7,12:13)]
+df = data.frame(x = rep(1:length(rho_list),length(ind)), rho = rep(rho_list, length(ind)),
+                pred = c(out), fit = rep(colnames(out), each = length(rho_list)))
+df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn","E-NET2","Lasso2","Ridge2",
+                                    "VarBVS","BayesB","Blasso","SuSiE",
+                                    "Mr.ASH.order",
+                                    "Mr.ASH.init"))
+df$size = 0.5
+df$size[1:length(rho_list)] = 1.2
+df$lt = "solid"
+df$lt[43:48] = "dashed"
+fig_dummy = ggplot(df) + geom_line(aes(x = x, y = pred, color = fit), size = df$size, linetype = df$lt) +
+  geom_point(aes(x = x, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(breaks = c(1,2,3,4,5,6),
+                     labels = c("0","0.3","0.6","0.9","0.95","0.99")) +
+  labs(y = "predictior error (rmse / sigma)", x = "correlation across columns of X (rho)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(1,1.05,1.1,1.15,1.2,1.3,1.4)) +
+  coord_cartesian(ylim = c(1,1.12))
+p1        = fig_dummy + theme(legend.position = "none")
+fig_main  = p1
+subtitle  = ggdraw() + draw_label("Scenario: EquiCorrGauss + Normal, n = 500, p = 200, s = 20, pve = 0.5", fontface  = 'bold', size = 14) 
+fig6      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
+fig6
 ```
 
 ## Source code
@@ -85,14 +139,12 @@ fig
 The source code will be popped up when you click `code` on the right side. 
 
 ```{r code, eval = FALSE}
-setwd("..")
 tdat1        = list()
 n            = 500
-p            = 2000
+p            = 200
 s            = 20
-rho_list     = c(0.3,0.6,0.9,0.95,0.99)
+rho_list     = rev(c(0.99,0.95,0.9,0.6,0.3,0))
 method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
-method_list = c("lasso")
 method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
 method_num   = length(method_list2)
 iter_num     = 20
@@ -100,7 +152,7 @@ pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
 time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
 
 
-for (iter in 4) {
+for (iter in 1:6) {
 rho        = rho_list[iter]
 Sigma.sqrt = matrix(0,p,p)
 for (j in 0:round(-2/log(rho))) {
@@ -120,7 +172,7 @@ for (i in 1:20) {
     time[i,j+1]   = fit$t
     
     if (method_list[j] == "lasso") {
-      lasso.path.order = mr.ash:::path.order(fit$fit$glmnet.fit)
+      lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
       lasso.beta       = as.vector(coef(fit$fit))[-1]
       lasso.time       = c(fit$t, fit$t2)
     }

@@ -23,7 +23,7 @@ fit.mr.ash = function(X, y, X.test, y.test, seed = 1, sa2 = (2^((0:19)/5) - 1)^2
 #'
 #' MR.ASH
 fit.mr.ash2 = function(X, y, X.test, y.test, seed = 1,
-                       sa2 = (2^((0:19)/5) - 1)^2,
+                       sa2 = (2^((0:19)/5) - 1)^2, min.iter = 500,
                        update.pi = TRUE, pi = NULL,
                        beta.init = NULL, sigma2 = NULL,
                        update.order = NULL) {
@@ -34,7 +34,7 @@ fit.mr.ash2 = function(X, y, X.test, y.test, seed = 1,
   
   # run mr.ash order
   t.mr.ash           = system.time(
-    fit.mr.ash        <- mr.ash(X = X, y = y, sa2 = sa2, update.order = update.order,
+    fit.mr.ash        <- mr.ash(X = X, y = y, sa2 = sa2, update.order = update.order, min.iter = min.iter,
                                 max.iter = 2000, beta.init = beta.init, update.pi = update.pi, pi = pi,
                                 standardize = standardize, sigma2 = sigma2,
                                 tol = list(epstol = 1e-12, convtol = 1e-8)))
