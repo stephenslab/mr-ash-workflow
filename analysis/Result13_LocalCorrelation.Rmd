@@ -179,19 +179,21 @@ for (i in 1:20) {
   }
  
   fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
-                           sa2 = (2^((0:19) / 5) - 1)^2)
+                           sa2 = c(0,2^(0:18) / 2^15))
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
+  print(max(abs(data$beta)) / data$sigma)
+  print(c(fit$fit$pi))
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             update.order = lasso.path.order,
-                            sa2 = (2^((0:19) / 5) - 1)^2)
+                            sa2 = c(0,2^(0:18) / 2^15))
   pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+2] = fit$t + lasso.time[2]
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             beta.init = lasso.beta,
-                            sa2 = (2^((0:19) / 5) - 1)^2)
+                            sa2 = c(0,2^(0:18) / 2^15))
   pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+3] = fit$t + lasso.time[1]
   
@@ -203,8 +205,8 @@ tdat2[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list
 
 ```{r code, eval = FALSE}
 tdat1        = list()
-n            = 500
-p            = 200
+n            = 1000
+p            = 500
 s            = 20
 rho_list     = c(0,0.3,0.6,0.9,0.95,0.99)
 method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
@@ -242,19 +244,21 @@ for (i in 1:20) {
   }
  
   fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
-                           sa2 = (2^((0:19) / 5) - 1)^2)
+                           sa2 = c(0,2^(0:18) / 2^15))
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
+  print(max(abs(data$beta)) / data$sigma)
+  print(c(fit$fit$pi))
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             update.order = lasso.path.order,
-                            sa2 = (2^((0:19) / 5) - 1)^2)
+                            sa2 = c(0,2^(0:18) / 2^15))
   pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+2] = fit$t + lasso.time[2]
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             beta.init = lasso.beta,
-                            sa2 = (2^((0:19) / 5) - 1)^2)
+                            sa2 = c(0,2^(0:18) / 2^15))
   pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+3] = fit$t + lasso.time[1]
   
