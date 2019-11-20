@@ -342,14 +342,14 @@ fit.varbvs2 = function(X, y, X.test, y.test, seed = 1) {
 #'
 #'
 #' susie
-fit.susie = function(X, y, X.test, y.test, seed = 1) {
+fit.susie = function(X, y, X.test, y.test, seed = 1, L = 20) {
   
   # set seed
   set.seed(seed)
   
   # run varbvs
   t.susie           = system.time(
-    fit.susie        <- susie(X = X, Y = y, standardize = standardize))
+    fit.susie        <- susie(X = X, Y = y, standardize = standardize, L = L))
   
   return (list(fit = fit.susie, t = t.susie[3],
                rsse = norm(y.test - predict(fit.susie, X.test), '2')))
