@@ -99,17 +99,17 @@ The source code will be popped up when you click `code` on the right side.
 
 ```{r code, eval = FALSE}
 tdat1        = list()
-n            = 1000
-p            = 500
-s            = 200
-method_list  = c("enet","lasso","ridge","scad2","mcp2","l0learn")
+n            = 500
+p            = 2000
+s            = 20
+method_list  = c("varbvs","bayesb","blasso","enet","lasso","ridge","scad2","mcp2","l0learn")
 method_list2 = c("mr.ash", method_list, "enet2","lasso2","ridge2")
 method_num   = length(method_list2)
 iter_num     = 20
 pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
 time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
 
-for (iter in 8) {
+for (iter in 1:8) {
   df           = c(1,2,4,8)
   signal_shape = c("lap","normal","unif","const")
 for (i in 1:20) {
@@ -136,13 +136,64 @@ for (i in 1:20) {
   }
  
   fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
-                           sa2 = (2^((0:19) / 20) - 1)^2)
+                           sa2 = c(0,2^(0:18) / 2^15))
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
+  print(max(abs(data$beta)) / data$sigma)
   print(c(fit$fit$pi))
   print(c(pred[i,]), digits = 4)
 }
   tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+}
+```
+
+```{r code2, eval = FALSE}
+tdat2        = list()
+n            = 500
+p            = 500
+s            = 20
+method_list  = c("varbvs","bayesb","blasso","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_list2 = c("mr.ash", method_list, "enet2","lasso2","ridge2")
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+for (iter in 1:8) {
+  df           = c(1,2,4,8)
+  signal_shape = c("lap","normal","unif","const")
+for (i in 1:20) {
+  
+  if (iter <= 4) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = "t", df = df[iter], pve = 0.5)
+  } else if (iter > 4) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = signal_shape[iter - 4], pve = 0.5)
+  }
+
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste("fit.",method_list[j],sep = ""))
+    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
+    
+    if (method_list[j] == "lasso") {
+      pred[i,method_num - 1] = fit$rsse2 / data$sigma / sqrt(n)
+    } else if (method_list[j] == "enet") {
+      pred[i,method_num - 2] = fit$rsse2 / data$sigma / sqrt(n)
+    } else if (method_list[j] == "ridge") {
+      pred[i,method_num - 0] = fit$rsse2 / data$sigma / sqrt(n)
+    }
+  }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = c(0,2^(0:18) / 2^15))
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  print(max(abs(data$beta)) / data$sigma)
+  print(c(fit$fit$pi))
+  print(c(pred[i,]), digits = 4)
+}
+  tdat2[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
 }
 ```
 

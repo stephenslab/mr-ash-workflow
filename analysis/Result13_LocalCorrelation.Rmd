@@ -35,7 +35,7 @@ A list of packages we have loaded is collapsed. Please click "code" to see the l
 
 ```{r library, message = FALSE}
 library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
-library(glmnet); library(mr.ash); library(ncvreg); library(L0Learn); library(varbvs); library(mvtnorm)
+library(glmnet); library(mr.ash.alpha); library(ncvreg); library(L0Learn); library(varbvs); library(mvtnorm)
 standardize = FALSE
 source('code/method_wrapper.R')
 source('code/sim_wrapper.R')
@@ -82,7 +82,7 @@ figure2
 ```
 
 ```{r fig2, fig.height=13, fig.width=15}
-res_df       = readRDS("results/localcorr20.RDS")
+res_df       = readRDS("../results/localcorr50.RDS")
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
                  "Mr.ASH.order","Mr.ASH.init")
 method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
@@ -126,7 +126,7 @@ fig_dummy = ggplot(df) + geom_line(aes(x = x, y = pred, color = fit), size = df$
   scale_color_manual(values = col) +
   scale_shape_manual(values = shape) +
   scale_y_continuous(trans = "log10", breaks = c(1,1.05,1.1,1.15,1.2,1.3,1.4)) +
-  coord_cartesian(ylim = c(1,1.12))
+  coord_cartesian(ylim = c(1,1.3))
 p1        = fig_dummy + theme(legend.position = "none")
 fig_main  = p1
 subtitle  = ggdraw() + draw_label("Scenario: EquiCorrGauss + Normal, n = 500, p = 200, s = 20, pve = 0.5", fontface  = 'bold', size = 14) 
@@ -138,12 +138,75 @@ fig6
 
 The source code will be popped up when you click `code` on the right side. 
 
+```{r code2}
+tdat2        = list()
+n            = 500
+p            = 2000
+s            = 20
+rho_list     = c(0,0.3,0.6,0.9,0.95,0.99)
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+
+for (iter in 1:6) {
+rho        = rho_list[iter]
+Sigma.sqrt = matrix(0,p,p)
+for (j in 0:round(-2/log(rho))) {
+  for (jj in 1:(p-j)) {
+    Sigma.sqrt[jj,jj+j] = rho^j
+    Sigma.sqrt[jj+j,jj] = rho^j
+  }
+}
+for (i in 1:20) {
+  data          = simulate_data(n, p, s = s, seed = i, signal = "normal", rho = rho,
+                                design = "localcorrgauss", Sigma.sqrt = Sigma.sqrt, pve = 0.5)
+ 
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste("fit.",method_list[j],sep = ""))
+    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
+    
+    if (method_list[j] == "lasso") {
+      lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
+      lasso.beta       = as.vector(coef(fit$fit))[-1]
+      lasso.time       = c(fit$t, fit$t2)
+    }
+  }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            update.order = lasso.path.order,
+                            sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+2] = fit$t + lasso.time[2]
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta,
+                            sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+3] = fit$t + lasso.time[1]
+  
+  print(c(pred[i,]))
+}
+tdat2[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+}
+```
+
 ```{r code, eval = FALSE}
 tdat1        = list()
 n            = 500
 p            = 200
 s            = 20
-rho_list     = rev(c(0.99,0.95,0.9,0.6,0.3,0))
+rho_list     = c(0,0.3,0.6,0.9,0.95,0.99)
 method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
 method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
 method_num   = length(method_list2)
