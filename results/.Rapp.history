@@ -1,0 +1,34 @@
+load("/Users/yosikim/git/mr-ash-workflow/results/BayesShape1.RDS")
+a = readRDS("/Users/yosikim/git/mr-ash-workflow/results/BayesShape1.RDS")
+matrix(a[[1]]$pred, 20, 15)
+colMeans(matrix(a[[1]]$pred, 20, 12))
+colMeans(matrix(a[[2]]$pred, 20, 12))
+colMeans(matrix(a[[3]]$pred, 20, 12))
+colMeans(matrix(a[[4]]$pred, 20, 12))
+str(a)
+a[[1]]
+colMeans(matrix(a[[6]]$pred, 20, 12))
+colMeans(matrix(a[[6]]$pred, 20, 6))
+colMeans(matrix(a[[7]]$pred, 20, 6))
+colMeans(matrix(a[[8]]$pred, 20, 6))
+colMeans(matrix(a[[9]]$pred, 20, 6))
+for(i in 1:8){print(colMeans(matrix(a[[1]]$pred, 20, 6)))}
+for(i in 1:8){print(colMeans(matrix(a[[i]]$pred, 20, 6)))}
+load("/Users/yosikim/git/mr-ash-workflow/results/signalshape30.RDS")
+readRDS("/Users/yosikim/git/mr-ash-workflow/results/signalshape30.RDS")
+b = readRDS("/Users/yosikim/git/mr-ash-workflow/results/signalshape30.RDS")
+str(b)
+b = readRDS("/Users/yosikim/git/mr-ash-workflow/results/signalshapetotal.RDS")
+b
+str(b)
+for(i in 1:8){print(colMeans(matrix(a[[1]]$pred, 20, 14)))}
+for(i in 1:8){print(colMeans(matrix(b[[1]]$pred, 20, 14)))}
+for(i in 1:8){print(colMeans(matrix(b[[i]]$pred, 20, 14)))}
+for(i in 1:8){print(c[i,] = colMeans(matrix(b[[i]]$pred, 20, 14)))}
+c = matrix(0,8,14)
+for(i in 1:8){print(c[i,] = colMeans(matrix(b[[i]]$pred, 20, 14)))}
+for(i in 1:8){print(c[i,] <- colMeans(matrix(b[[i]]$pred, 20, 14)))}
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")#
+method_list2 = c("mr.ash",method_list,"enet2","lasso2","ridge2")
+colnames(c) = method_list2
+c
