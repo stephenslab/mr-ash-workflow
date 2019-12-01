@@ -295,7 +295,7 @@ fit.bayesb = function(X, y, X.test, y.test, seed = 1, nIter = NULL, burnIn = NUL
   t.bayesb          = system.time(
     fit.bayesb       <- BGLR(y, ETA = list(list(X = X, model="BayesB", standardize = standardize)),
                              verbose = FALSE, nIter = nIter, burnIn = burnIn))
-  fit.bayesb$beta   = c(fit.bayesb$ETA[[1]]$b)
+  fit.bayesb$beta   = c(fit.bayesb$ETA[[1]]$b * fit.bayesb$ETA[[1]]$d)
   
   return (list(fit = fit.bayesb, t = t.bayesb[3],
                rsse = norm(y.test - X.test %*% fit.bayesb$beta - fit.bayesb$mu, '2')))
