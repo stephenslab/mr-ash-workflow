@@ -71,7 +71,7 @@ source('code/sim_wrapper.R')
 The result is summarized below. 
 
 ```{r fig1, fig.height=10, fig.width=15}
-res_df       = readRDS("results/diffpve.RDS")
+res_df       = tdat1
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
 method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
                  "SCAD","MCP","L0Learn",
@@ -80,7 +80,7 @@ col          = gg_color_hue(13)[1:11]
 shape        = c(19,17,24,25,9,3,11,4,5,7,8)
 pve_list     = seq(0,0.9,0.1)
 sdat         = data.frame()
-for (i in 1:10) {
+for (i in 1:6) {
   sdat = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred, 20, 11)),
                                 time = colMeans(matrix(res_df[[i]]$time, 20, 11)),
                                 fit  = method_list,
@@ -103,8 +103,8 @@ p1 = ggplot(sdat) + geom_line(aes(x = pve, y = pred, color = fit)) +
 title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
 subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + SparseNormal, n = 500, p = 2000, pve = 0 - 0.9", fontface  = 'bold', size = 18) 
 p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
-fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
-fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.06,0.06,0.95))
+fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.03,0.6,0.03))
+fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.03,0.03,0.95))
 fig
 ```
 
@@ -134,8 +134,8 @@ The source code will be popped up when you click `code` on the right side.
 
 ```{r code, eval = FALSE}
 tdat1        = list()
-n            = 500
-p            = 2000
+n            = 1000
+p            = 500
 pve_range    = seq(0,1,0.1)
 s            = 20
 method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
@@ -144,8 +144,7 @@ iter_num     = 20
 pred         = matrix(0, iter_num, method_num); colnames(pred) = c("mr.ash", method_list)
 time         = matrix(0, iter_num, method_num); colnames(time) = c("mr.ash", method_list)
 
-
-for (iter in 1:9) {
+for (iter in 1:10) {
 for (i in 1:20) {
   data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = pve_range[iter])
  
@@ -157,9 +156,10 @@ for (i in 1:20) {
   }
  
   fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
-                           sa2 = (2^((0:19) / 20) - 1)^2)
+                           sa2 = c(0,2^(0:18) / 2^15))
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
+  print(pred[i,])
 }
 tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(c("mr.ash", method_list), each = 20))
 }
