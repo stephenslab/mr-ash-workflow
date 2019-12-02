@@ -104,7 +104,7 @@ fig2      = plot_grid(suptitle,subtitle,fig_main, ncol = 1, rel_heights = c(0.04
 ```
 
 ```{r fig3, fig.height=11, fig.width=15}
-res_df       = readRDS("results/diffpve.RDS")
+res_df       = readRDS("results/pve500200020.RDS")
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
 method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
                  "SCAD","MCP","L0Learn",
@@ -144,16 +144,16 @@ fig3      = plot_grid(suptitle, subtitle,p1, ncol = 1, rel_heights = c(0.04,0.04
 ```
 
 ```{r fig4, fig.height=11, fig.width=15}
-res_df       = readRDS("results/highdimdiffnpnew.RDS")
-method_list  = c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","SCAD2","MCP2","L0Learn")
+res_df       = readRDS("results/highdim50020.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","SCAD2","MCP2","L0Learn")
 df           = data.frame()
 p_range      = c(20,50,100,200,500,1000,2000,5000,10000,20000)
 for (i in 1:10) {
 res_df[[i]]$fit   = rep(method_list, each = 20)
 res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_list)
-df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 9))),
-                                         time2 = apply(matrix(res_df[[i]]$time, 20, 9), 2, median),
-                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 9))),
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 13))),
+                                         time2 = apply(matrix(res_df[[i]]$time, 20, 13), 2, median),
+                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 13))),
                                          p    = p_range[i],
                                          fit  = method_list))
 }
@@ -183,21 +183,21 @@ fig4     = plot_grid(suptitle,subtitle,fig_main, ncol = 1, rel_heights = c(0.04,
 ```
 
 ```{r fig4.1, fig.height=11, fig.width=15}
-res_df       = readRDS("results/highdimdiffnpnew.RDS")
-method_list  = c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","SCAD2","MCP2","L0Learn")
+res_df       = readRDS("results/highdim50020.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","SCAD2","MCP2","L0Learn")
 df           = data.frame()
 p_range      = c(20,50,100,200,500,1000,2000,5000,10000,20000)
 for (i in 1:10) {
 res_df[[i]]$fit   = rep(method_list, each = 20)
 res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_list)
-df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 9))),
-                                         time2 = apply(matrix(res_df[[i]]$time, 20, 9), 2, median),
-                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 9))),
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 13))),
+                                         time2 = apply(matrix(res_df[[i]]$time, 20, 13), 2, median),
+                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 13))),
                                          p    = p_range[i],
                                          fit  = method_list))
 }
 df$fit = factor(df$fit, levels = method_list)
-#df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn"),]
+df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","SCAD2","MCP2","L0Learn"),]
 df = df[df$p %in% c(20,50,200,500,1000,2000,10000,20000),]
 df$size = 0.5
 df$size[1:8] = 1.2
@@ -370,21 +370,21 @@ fig7      = plot_grid(suptitle,subtitle,fig_main, ncol = 1, rel_heights = c(0.04
 ```
 
 ```{r fig8, fig.height=11, fig.width=15}
-res_df       = readRDS("results/highdimdiffnpnew.RDS")
-method_list  = c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","SCAD2","MCP2","L0Learn")
+res_df       = readRDS("results/highdim50020.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","SCAD2","MCP2","L0Learn")
 df           = data.frame()
 p_range      = c(20,50,100,200,500,1000,2000,5000,10000,20000)
 for (i in 1:10) {
 res_df[[i]]$fit   = rep(method_list, each = 20)
 res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_list)
-df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 9))),
-                                         time2 = apply(matrix(res_df[[i]]$time, 20, 9), 2, median),
-                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 9))),
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 13))),
+                                         time2 = apply(matrix(res_df[[i]]$time, 20, 13), 2, median),
+                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 13))),
                                          p    = p_range[i],
                                          fit  = method_list))
 }
 df$fit = factor(df$fit, levels = method_list)
-#df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn"),]
+df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","SCAD2","MCP2","L0Learn"),]
 df$size = 0.5
 df$size[1:5] = 1.2; df$size[46:50] = 1.2;
 col   = gg_color_hue(13)[c(1:6,5,6,7)]
@@ -532,7 +532,7 @@ fig11     = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.0
 ```
 
 ```{r fig12, fig.height=11, fig.width=15}
-res_df       = readRDS("results/diffpve.RDS")
+res_df       = readRDS("results/pve500200020.RDS")
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
 method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
                  "SCAD","MCP","L0Learn",
@@ -570,25 +570,24 @@ fig12     = plot_grid(suptitle,subtitle,p1, ncol = 1, rel_heights = c(0.04,0.04,
 ```
 
 ```{r fig13, fig.height=11, fig.width=15}
-res_df       = readRDS("results/BayesLinReg2.RDS")
-method_list  = c("Mr.ASH","VarBVS","VarBVS2","BayesB","Blasso","SuSiE","Mr.ASH.opt")
-method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
-                 "SCAD","MCP","L0Learn",
-                 "VarBVS","BayesB","Blasso","SuSiE","VarBVS2","Mr.ASH.opt")
+res_df       = readRDS("results/highdim50020.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","SCAD2","MCP2","L0Learn")
+method_level = method_list
 col          = gg_color_hue(13)[c(1,8:13)]
 shape        = c(19,17,24,25,9,3,11,4,5,7,8,2,1)[c(1,8:13)]
-p_range      = c(20,50,200,500,2000,10000,20000)
+p_range      = c(20,50,100,200,500,1000,2000,5000,10000,20000)
 sdat         = data.frame()
-for (i in 1:7) {
-  sdat = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred, 20, 7)),
-                                time = colMeans(matrix(res_df[[i]]$time, 20, 7)),
+for (i in 1:10) {
+  sdat = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred, 20, 13)),
+                                time = colMeans(matrix(res_df[[i]]$time, 20, 13)),
                                 fit  = method_list,
                                 p    = p_range[i]))
 }
 sdat$fit = factor(sdat$fit, levels = method_level)
 sdat     = sdat[sdat$fit %in% c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE"),]
 sdat$size = 0.5
-sdat$size[1:6] = 1.2
+sdat$size[1:7] = 1.2
+sdat = sdat[sdat$p %in% c(20,50,200,500,1000,2000,10000,20000),]
 
 p1 = ggplot(sdat) + geom_line(aes(x = p, y = pred, color = fit), size = sdat$size) +
   geom_point(aes(x = p, y = pred, color = fit, shape = fit), size = 2.5) +
@@ -626,7 +625,7 @@ for (i in 1:7) {
 sdat$fit = factor(sdat$fit, levels = method_level)
 sdat     = sdat[sdat$fit %in% c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE"),]
 sdat$size = 0.5
-sdat$size[1:6] = 1.2
+sdat$size[1:7] = 1.2
 
 p1 = ggplot(sdat) + geom_line(aes(x = s, y = pred, color = fit), size = sdat$size) +
   geom_point(aes(x = s, y = pred, color = fit, shape = fit), size = 2.5) +
@@ -869,28 +868,23 @@ fig18.1   = plot_grid(suptitle,subtitle,fig_main, ncol = 1, rel_heights = c(0.04
 ```
 
 ```{r fig19, fig.height=11, fig.width=15}
-res_df       = readRDS("results/BayesLinReg2.RDS")
-method_list  = c("Mr.ASH","VarBVS","VarBVS2","BayesB","Blasso","SuSiE","Mr.ASH.opt")
-method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
-                 "SCAD","MCP","L0Learn",
-                 "VarBVS","BayesB","Blasso","SuSiE","VarBVS2","Mr.ASH.opt")
+res_df       = readRDS("results/highdim50020.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","SCAD2","MCP2","L0Learn")
+method_level = method_list
 col          = gg_color_hue(13)[c(1,8:13)]
 shape        = c(19,17,24,25,9,3,11,4,5,7,8,2,1)[c(1,8:13)]
-p_range      = c(20,50,200,500,2000,10000,20000,100000)
+p_range      = c(20,50,100,200,500,1000,2000,5000,10000,20000)
 sdat         = data.frame()
-for (i in 1:7) {
-  sdat = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred, 20, 7)),
-                                time = colMeans(matrix(res_df[[i]]$time, 20, 7)),
+for (i in 1:10) {
+  sdat = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred, 20, 13)),
+                                time = colMeans(matrix(res_df[[i]]$time, 20, 13)),
                                 fit  = method_list,
                                 p    = p_range[i]))
 }
-sdat     = rbind(sdat, data.frame(pred = 0,
-                                  time = c(92.45325, 206.78125, 0, 184.80950, 185.48075,  83.94225, 0),
-                                  fit   = method_list, p = 100000))
 sdat$fit = factor(sdat$fit, levels = method_level)
 sdat     = sdat[sdat$fit %in% c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE"),]
 sdat$size = 0.5
-sdat$size[1:8] = 1.2
+sdat$size[1:10] = 1.2
 
 p1 = ggplot(sdat) + geom_line(aes(x = p, y = time, color = fit), size = sdat$size) +
   geom_point(aes(x = p, y = time, color = fit, shape = fit), size = 2.5) +

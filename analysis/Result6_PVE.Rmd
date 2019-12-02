@@ -71,7 +71,7 @@ source('code/sim_wrapper.R')
 The result is summarized below. 
 
 ```{r fig1, fig.height=10, fig.width=15}
-res_df       = tdat1
+res_df       = readRDS("../results/pve50020020.RDS")
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
 method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
                  "SCAD","MCP","L0Learn",
@@ -134,9 +134,43 @@ The source code will be popped up when you click `code` on the right side.
 
 ```{r code, eval = FALSE}
 tdat1        = list()
-n            = 1000
-p            = 500
-pve_range    = seq(0,1,0.1)
+n            = 500
+p            = 200
+pve_range    = seq(0,0.9,0.1)
+s            = 20
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_list2 = c("mr.ash", method_list)
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+for (iter in 1:10) {
+for (i in 1:20) {
+  data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = pve_range[iter])
+ 
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste("fit.",method_list[j],sep = ""))
+    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
+  }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  print(pred[i,])
+}
+tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(c("mr.ash", method_list), each = 20))
+}
+```
+
+```{r code2, eval = FALSE}
+tdat2        = list()
+n            = 500
+p            = 2000
+pve_range    = seq(0,0.9,0.1)
 s            = 20
 method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
 method_num   = length(method_list) + 1
@@ -161,7 +195,40 @@ for (i in 1:20) {
   time[i,1]   = fit$t
   print(pred[i,])
 }
-tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(c("mr.ash", method_list), each = 20))
+tdat2[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(c("mr.ash", method_list), each = 20))
+}
+```
+
+```{r code3, eval = FALSE}
+tdat3        = list()
+n            = 500
+p            = 10000
+pve_range    = seq(0,0.9,0.1)
+s            = 20
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_num   = length(method_list) + 1
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = c("mr.ash", method_list)
+time         = matrix(0, iter_num, method_num); colnames(time) = c("mr.ash", method_list)
+
+for (iter in 1:10) {
+for (i in 1:20) {
+  data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = pve_range[iter])
+ 
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste("fit.",method_list[j],sep = ""))
+    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
+  }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = c(0,2^(0:18) / 2^15))
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  print(pred[i,])
+}
+tdat3[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(c("mr.ash", method_list), each = 20))
 }
 ```
 
