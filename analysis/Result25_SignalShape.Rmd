@@ -56,7 +56,7 @@ source('code/sim_wrapper.R')
 ## Results 
 
 ```{r fig1.1, fig.height=13, fig.width=15}
-res_df       = readRDS("results/signalshape500200020.RDS")
+res_df       = readRDS("../results/signalshape500200020.RDS")
 method_list  = c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
 method_level = c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
 col          = gg_color_hue(13)[1:11]
@@ -96,7 +96,7 @@ fig1.1    = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.03,0.
 ```
 
 ```{r fig1.2, fig.height=13, fig.width=15}
-res_df       = readRDS("results/signalshape500200020.RDS")
+res_df       = readRDS("../results/signalshape500200020.RDS")
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE")
 method_level = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE")
 col          = gg_color_hue(13)[1:11]
@@ -136,7 +136,7 @@ fig1.2    = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.03,0.
 ```
 
 ```{r fig2.1, fig.height=13, fig.width=15}
-res_df       = readRDS("results/signalshape50020020.RDS")
+res_df       = readRDS("../results/signalshape50020020.RDS")
 method_list  = c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
 method_level = c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
 col          = gg_color_hue(13)[1:11]
@@ -176,7 +176,7 @@ fig2.1    = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.03,0.
 ```
 
 ```{r fig2.2, fig.height=13, fig.width=15}
-res_df       = readRDS("results/signalshape50020020.RDS")
+res_df       = readRDS("../results/signalshape50020020.RDS")
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE")
 method_level = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE")
 col          = gg_color_hue(13)[1:11]
@@ -258,11 +258,9 @@ for (i in 1:20) {
   }
  
   fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
-                           sa2 = c(0,2^(0:18) / 2^15))
+                           sa2 = (2^((0:19) / 20) - 1)^2)
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
-  print(max(abs(data$beta)) / data$sigma)
-  print(c(fit$fit$pi))
   print(c(pred[i,]), digits = 4)
 }
   tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
@@ -308,11 +306,9 @@ for (i in 1:20) {
   }
  
   fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
-                           sa2 = c(0,2^(0:18) / 2^15))
+                           sa2 = (2^((0:19) / 20) - 1)^2)
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
-  print(max(abs(data$beta)) / data$sigma)
-  print(c(fit$fit$pi))
   print(c(pred[i,]), digits = 4)
 }
   tdat2[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
