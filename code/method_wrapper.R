@@ -2,7 +2,7 @@
 #'
 #'
 #' MR.ASH
-fit.mr.ash = function(X, y, X.test, y.test, seed = 1, sa2 = (2^((0:19)/5) - 1)^2) {
+fit.mr.ash = function(X, y, X.test, y.test, seed = 1, sa2 = NULL) {
   
   # set seed
   set.seed(seed)
@@ -23,7 +23,7 @@ fit.mr.ash = function(X, y, X.test, y.test, seed = 1, sa2 = (2^((0:19)/5) - 1)^2
 #'
 #' MR.ASH
 fit.mr.ash2 = function(X, y, X.test, y.test, seed = 1,
-                       sa2 = (2^((0:19)/5) - 1)^2,
+                       sa2 = NULL,
                        update.pi = TRUE, pi = NULL,
                        beta.init = NULL, sigma2 = NULL,
                        update.order = NULL) {

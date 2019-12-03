@@ -46,13 +46,12 @@ source('code/sim_wrapper.R')
 The result is summarized below. 
 
 ```{r fig1.1, fig.height=13, fig.width=15}
-res_df       = readRDS("results/equicorr50020020.RDS")
+res_df       = readRDS("../results/equicorr50020020.RDS")
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
                  "Mr.ASH.order","Mr.ASH.init")
 method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
                  "SCAD","MCP","L0Learn",
                  "VarBVS","BayesB","Blasso","SuSiE")
-col          = gg_color_hue(13)[c(1,12,13,2:11)]
 rho_list     = c(0,0.3,0.6,0.9,0.95,0.99)
 a            = c(1,2,3,4,5,6)
 out = matrix(0,6,13)
@@ -98,7 +97,12 @@ fig1.1      = plot_grid(subtitle,fig_dummy, ncol = 1, rel_heights = c(0.05,0.95)
 ```
 
 ```{r fig1.2, fig.height=13, fig.width=15}
-res_df       = readRDS("results/equicorr50020020.RDS")
+res_df       = readRDS("../results/equicorr50020020.RDS")
+for (i in 1:6){
+  res_df[[i]][1:20,] = tdat2[[i]][1:20,]
+  res_df[[i]][221:240,] = tdat2[[i]][41:60,]
+  res_df[[i]][241:260,] = tdat2[[i]][61:80,]
+}
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
                  "Mr.ASH.order","Mr.ASH.init")
 method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
@@ -150,7 +154,7 @@ fig1.2      = plot_grid(subtitle,fig_dummy, ncol = 1, rel_heights = c(0.05,0.95)
 ```
 
 ```{r fig2.1, fig.height=13, fig.width=15}
-res_df       = readRDS("../results/equicorr500200020.RDS")
+res_df       = readRDS("../results/ecorr500200020.RDS")
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
                  "Mr.ASH.order","Mr.ASH.init")
 method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
@@ -202,7 +206,7 @@ fig2.1      = plot_grid(subtitle,fig_dummy, ncol = 1, rel_heights = c(0.05,0.95)
 ```
 
 ```{r fig2.2, fig.height=13, fig.width=15}
-res_df       = readRDS("../results/equicorr500200020.RDS")
+res_df       = readRDS("../results/ecorr5001000020.RDS")
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
                  "Mr.ASH.order","Mr.ASH.init")
 method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
@@ -291,21 +295,19 @@ for (i in 1:20) {
   }
  
   fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
-                           sa2 = c(0,2^(0:18) / 2^15))
+                           sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
-  print(max(abs(data$beta)) / data$sigma)
-  print(c(fit$fit$pi))
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             update.order = lasso.path.order,
-                            sa2 = c(0,2^(0:18) / 2^15))
+                           sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+2] = fit$t + lasso.time[2]
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             beta.init = lasso.beta,
-                            sa2 = c(0,2^(0:18) / 2^15))
+                           sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+3] = fit$t + lasso.time[1]
   
@@ -317,8 +319,8 @@ tdat2[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list
 
 ```{r code2, eval = FALSE}
 tdat1        = list()
-n            = 1000
-p            = 500
+n            = 500
+p            = 2000
 s            = 20
 rho_list     = c(0,0.3,0.6,0.9,0.95,0.99)
 method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
@@ -349,27 +351,81 @@ for (i in 1:20) {
   }
  
   fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
-                           sa2 = c(0,2^(0:18) / 2^15))
+                           sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
-  print(max(abs(data$beta)) / data$sigma)
-  print(c(fit$fit$pi))
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             update.order = lasso.path.order,
-                            sa2 = c(0,2^(0:18) / 2^15))
+                            sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+2] = fit$t + lasso.time[2]
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             beta.init = lasso.beta,
-                            sa2 = c(0,2^(0:18) / 2^15))
+                            sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+3] = fit$t + lasso.time[1]
   
   print(c(pred[i,]))
 }
 tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+}
+```
+
+```{r code3, eval = FALSE}
+tdat3        = list()
+n            = 500
+p            = 10000
+s            = 20
+rho_list     = c(0,0.3,0.6,0.9,0.95,0.99)
+method_list  = c("lasso")
+method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+
+for (iter in 1:6) {
+rho        = rho_list[iter]
+for (i in 1:20) {
+  data          = simulate_data(n, p, s = s, seed = i, signal = "normal", rho = rho,
+                                design = "equicorrgauss", pve = 0.5)
+ 
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste("fit.",method_list[j],sep = ""))
+    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
+    
+    if (method_list[j] == "lasso") {
+      lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
+      lasso.beta       = as.vector(coef(fit$fit))[-1]
+      lasso.time       = c(fit$t, fit$t2)
+    }
+  }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            update.order = lasso.path.order,
+                            sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+2] = fit$t + lasso.time[2]
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta,
+                            sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+3] = fit$t + lasso.time[1]
+  
+  print(c(pred[i,]))
+}
+tdat3[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
 }
 ```
 
