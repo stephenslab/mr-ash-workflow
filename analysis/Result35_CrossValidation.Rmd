@@ -184,17 +184,17 @@ for (i in 1:20) {
 
 ```{r code2, eval = FALSE}
 tdat2        = list()
-n_range      = c(50,200,1000,5000,20000)
-p            = 2000
+n_range      = c(200,500,1000,2000,5000,10000,20000,50000)
+p            = 200
 s            = 20
-method_list  = c("varbvs","bayesb","blasso","susie")
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
 method_list2 = c("mr.ash", method_list)
 method_num   = length(method_list2)
 iter_num     = 20
 pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
 time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
 
-for (iter in 1:5) {
+for (iter in 1:8) {
   n               = n_range[iter]
 for (i in 1:20) {
   
@@ -226,6 +226,41 @@ for (i in 1:20) {
   print("-----------------------------------")
   tdat2[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
 }
+```
+
+```{r fig3.1, fig.height=13, fig.width=15}
+res_df       = readRDS("../results/largen200020.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+df           = data.frame()
+n_range      = c(50,100,200,500,1000,2000,5000)
+for (i in 1:7) {
+res_df[[i]]$fit   = rep(method_list, each = 20)
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_list)
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 11))),
+                                         time2 = apply(matrix(res_df[[i]]$time, 20, 11), 2, median),
+                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 11))),
+                                         n    = n_range[i],
+                                         fit  = method_list))
+}
+df$fit = factor(df$fit, levels = method_list)
+df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn"),]
+col   = gg_color_hue(13)[1:7]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,1,2,6)[1:7]
+p1    = ggplot(df) + geom_line(aes(x = n, y = time, color = fit)) +
+  geom_point(aes(x = n, y = time, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(trans = "log10", breaks = n_range) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of coefficients (p)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 45,hjust = 1)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10")
+fig_main = p1
+title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 20-20000, s = 20, pve = 0.5", fontface  = 'bold', size = 18) 
+fig3.1    = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.05,0.95))
 ```
 
 ## System Configuration
