@@ -301,6 +301,51 @@ fit.bayesb = function(X, y, X.test, y.test, seed = 1, nIter = NULL, burnIn = NUL
                rsse = norm(y.test - X.test %*% fit.bayesb$beta - fit.bayesb$mu, '2')))
 }
 
+#'
+#'
+#'
+#' BayesC
+fit.bayesc = function(X, y, X.test, y.test, seed = 1, nIter = NULL, burnIn = NULL) {
+  
+  # set seed
+  set.seed(seed)
+  
+  # default setting
+  if (is.null(nIter)) nIter = 1500
+  if (is.null(burnIn)) burnIn = 500
+  
+  # run bayesb
+  t.bayesc          = system.time(
+    fit.bayesc       <- BGLR(y, ETA = list(list(X = X, model="BayesC", standardize = standardize)),
+                             verbose = FALSE, nIter = nIter, burnIn = burnIn))
+  fit.bayesc$beta   = c(fit.bayesc$ETA[[1]]$b * fit.bayesc$ETA[[1]]$d)
+  
+  return (list(fit = fit.bayesc, t = t.bayesc[3],
+               rsse = norm(y.test - X.test %*% fit.bayesc$beta - fit.bayesc$mu, '2')))
+}
+
+#'
+#'
+#'
+#' gibbs sampling
+fit.mcmc = function(X, y, X.test, y.test, seed = 1, nIter = NULL, burnIn = NULL) {
+  
+  # set seed
+  set.seed(seed)
+  
+  # default setting
+  if (is.null(nIter)) nIter = 1500
+  if (is.null(burnIn)) burnIn = 500
+  
+  # run bayesb
+  t.mcmc           = system.time(
+    fit.mcmc <- gibbs.sampling(data$X, data$y, sa2 = c(0, 1 / s), burn.in = burnIn, max.iter = nIter,
+                               pi = c(1 - s/p, s/p), beta.init = data$beta, sigma2 = data$sigma^2))
+  
+  return (list(fit = fit.mcmc, t = t.mcmc[3],
+               rsse = norm(y.test - X.test %*% fit.mcmc$beta - fit.mcmc$mu, '2')))
+}
+
 
 #'
 #'
