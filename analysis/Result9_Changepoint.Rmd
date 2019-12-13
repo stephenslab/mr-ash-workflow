@@ -17,10 +17,50 @@ source('code/method_wrapper.R')
 source('code/sim_wrapper.R')
 ```
 
-```{r fig1, fig.height=7, fig.width=15, warning = FALSE, message = FALSE}
-res_df       = readRDS("results/changepoint1.RDS")
+```{r fig1.1, fig.height=13, fig.width=15}
+res_df       = readRDS("../results/onebigchange1.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "Mr.ASH.order", "Mr.ASH.init")
+method_level = c("Mr.ASH","Mr.ASH.order", "Mr.ASH.init",
+                                            "E-NET","Lasso","Ridge",
+                                            "SCAD","MCP","L0Learn",
+                                            "VarBVS","BayesB","Blasso","SuSiE")
+df           = data.frame()
+snr_range    = seq(2,10,by = 2)
+for (i in 1:5) {
+res_df[[i]]$fit   = rep(method_list, each = 20)
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 13))),
+                                         time2 = apply(matrix(res_df[[i]]$time, 20, 13), 2, median),
+                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 13))),
+                                         n    = 200 * i,
+                                         fit  = method_list))
+}
+df$fit = factor(df$fit, levels = method_level)
+col   = gg_color_hue(13)[c(1,12,13,2:7)]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1,12,13,2:7)]
+df    = df[df$fit %in% c("Mr.ASH","Mr.ASH.order", "Mr.ASH.init", "E-NET","Lasso","Ridge",
+           "SCAD","MCP","L0Learn"),]
+p1    = ggplot(df) + geom_line(aes(x = n, y = pred, color = fit)) +
+  geom_point(aes(x = n, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(trans = "log10", breaks = c(10,20,50,200,1000,2000)) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of coefficients (p)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 45,hjust = 1)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10")
+fig_main = p1
+title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 20-10000, s = 20, pve = 0.5", fontface  = 'bold', size = 18) 
+fig1      = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.05,0.95))
+```
+
+```{r fig3, fig.height=7, fig.width=15, warning = FALSE, message = FALSE}
+res_df       = readRDS("../results/changepoint1.RDS")
 sdat         = data.frame()
-for (i in 1:10) {
+for (i in 3) {
   sdat = rbind(sdat, res_df[[i]])
 }
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
@@ -39,20 +79,18 @@ p1 = my.box(sdat, "fit", "pred") +
         legend.position = "none") +
   geom_hline(yintercept = median(sdat$pred[sdat$fit == "Mr.ASH"]), col = gg_color_hue(11)[1],
              linetype = "dotted", size = 1.5) +
-  scale_y_continuous(trans = "log10") +
-  coord_cartesian(ylim = c(0.1, 1))
+  scale_y_continuous(trans = "log10")# + coord_cartesian(ylim = c(0.1, 1))
 p0        = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
 fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
 title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
 subtitle  = ggdraw() + draw_label("Scenario: RealGenotype + SparseNormal, n = 287, p = 4012-8760, pve = 0.5", fontface  = 'bold', size = 18) 
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
-fig
 ```
 
 ```{r fig2, fig.height=7, fig.width=15, warning = FALSE, message = FALSE}
-res_df       = readRDS("results/changepoint2.RDS")
+res_df       = readRDS("../results/changepoint2.RDS")
 sdat         = data.frame()
-for (i in 1:1) {
+for (i in 1) {
   sdat = rbind(sdat, res_df[[i]])
 }
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
@@ -83,10 +121,8 @@ fig
 ```{r code2, message = FALSE, warning = FALSE, eval= FALSE}
 setwd("..")
 library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
-library(glmnet); library(mr.ash); library(ncvreg); library(L0Learn); library(varbvs);
+library(glmnet); library(mr.ash.alpha); library(ncvreg); library(L0Learn); library(varbvs);
 standardize = FALSE
-filepath = "data"
-filelist = paste("data/", list.files(filepath, pattern = "*.RDS"), sep = "")
 source('code/method_wrapper.R')
 source('code/sim_wrapper.R')
 tdat1        = list()
@@ -100,13 +136,13 @@ colnames(time) = c("mr.ash", method_list,"mr.ash.order","mr.ash.init")
 n            = 100 # must be even
 p            = n-1
 
-for (iter in 1:1) {
+for (iter in 1:5) {
 for (i in 1:20) {
   beta          = double(p)
-  beta[n/2 - iter] = 1
-  beta[n/2 + iter] = -1
+  beta[n/2 - 2] = 1
+  beta[n/2 + 2] = -1
   data          = simulate_data(n = n, seed = i, beta = beta,
-                                design = "changepoint", snr = 10)
+                                design = "changepoint", snr = 2 * iter)
   
   for (j in 1:length(method_list)) {
     fit.method    = get(paste("fit.",method_list[j],sep = ""))
@@ -115,7 +151,7 @@ for (i in 1:20) {
     time[i,j+1]   = fit$t
     
     if (method_list[j] == "lasso") {
-      lasso.path.order = mr.ash:::path.order(fit$fit$glmnet.fit)
+      lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
       lasso.beta       = as.vector(coef(fit$fit))[-1]
       lasso.time       = c(fit$t, fit$t2)
     }
@@ -154,15 +190,17 @@ pred         = matrix(0, iter_num, method_num);
 colnames(pred) = c("mr.ash", method_list,"mr.ash.order","mr.ash.init")
 time         = matrix(0, iter_num, method_num);
 colnames(time) = c("mr.ash", method_list,"mr.ash.order","mr.ash.init")
-n            = 1000 # must be even
+n            = 200 # must be even
 p            = n-1
 
-for (iter in 1:1) {
+for (iter in 5) {
+  n             = 200 * iter
+  p             = n-1
 for (i in 1:20) {
   beta          = double(p)
   beta[n/2]     = 1
   data          = simulate_data(n = n, seed = i, beta = beta,
-                                design = "changepoint", snr = 2)
+                                design = "changepoint", snr = 1)
   
   for (j in 1:length(method_list)) {
     fit.method    = get(paste("fit.",method_list[j],sep = ""))
@@ -171,7 +209,7 @@ for (i in 1:20) {
     time[i,j+1]   = fit$t
     
     if (method_list[j] == "lasso") {
-      lasso.path.order = mr.ash:::path.order(fit$fit$glmnet.fit)
+      lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
       lasso.beta       = as.vector(coef(fit$fit))[-1]
       lasso.time       = c(fit$t, fit$t2)
     }
