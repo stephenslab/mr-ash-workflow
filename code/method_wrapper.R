@@ -13,8 +13,10 @@ fit.mr.ash = function(X, y, X.test, y.test, seed = 1, sa2 = NULL) {
                                 max.iter = 2000,
                                 standardize = standardize,
                                 tol = list(epstol = 1e-12, convtol = 1e-8)))
+  beta               = fit.mr.ash$beta
+  pip                = 1 - mr.ash.alpha:::get_phi(fit.mr.ash)$phi[,1]
   
-  return (list(fit = fit.mr.ash, t = t.mr.ash[3],
+  return (list(fit = fit.mr.ash, t = t.mr.ash[3], beta = beta, pip = pip,
                rsse = norm(y.test - predict(fit.mr.ash, X.test), '2')))
 }
 
@@ -39,8 +41,10 @@ fit.mr.ash2 = function(X, y, X.test, y.test, seed = 1,
                                 beta.init = beta.init, update.pi = update.pi, pi = pi,
                                 standardize = standardize, sigma2 = sigma2,
                                 tol = list(epstol = 1e-12, convtol = 1e-8)))
+  beta               = fit.mr.ash$beta
+  pip                = 1 - mr.ash.alpha:::get_phi(fit.mr.ash)$phi[,1]
   
-  return (list(fit = fit.mr.ash, t = t.mr.ash[3],
+  return (list(fit = fit.mr.ash, t = t.mr.ash[3], beta = beta, pip = pip,
                rsse = norm(y.test - predict(fit.mr.ash, X.test), '2')))
 }
 
@@ -58,8 +62,10 @@ fit.lasso = function(X, y, X.test, y.test, seed = 1) {
     fit.lasso        <- cv.glmnet(x = X, y = y, standardize = standardize))
   
   t.lasso2          = system.time(glmnet(x = X, y = y, standardize = standardize))
+  beta              = as.vector(coef(fit.lasso, s = fit.lasso$lambda.1se))[-1]
+  beta2             = as.vector(coef(fit.lasso, s = fit.lasso$lambda.min))[-1]
   
-  return (list(fit = fit.lasso, t = t.lasso[3], t2 = t.lasso2[3],
+  return (list(fit = fit.lasso, t = t.lasso[3], t2 = t.lasso2[3], beta = beta, beta2 = beta2,
                rsse = norm(y.test - predict(fit.lasso, newx = X.test, s = fit.lasso$lambda.1se), '2'),
                rsse2 = norm(y.test - predict(fit.lasso, newx = X.test, s = fit.lasso$lambda.min), '2')))
 }
@@ -77,8 +83,10 @@ fit.ridge = function(X, y, X.test, y.test, seed = 1) {
   # run lasso
   t.ridge           = system.time(
     fit.ridge        <- cv.glmnet(x = X, y = y, alpha = 0, standardize = standardize))
+  beta              = as.vector(coef(fit.ridge, s = fit.ridge$lambda.1se))[-1]
+  beta2             = as.vector(coef(fit.ridge, s = fit.ridge$lambda.min))[-1]
   
-  return (list(fit = fit.ridge, t = t.ridge[3],
+  return (list(fit = fit.ridge, t = t.ridge[3], beta = beta, beta2 = beta2,
                rsse = norm(y.test - predict(fit.ridge, newx = X.test, s = fit.ridge$lambda.1se), '2'),
                rsse2 = norm(y.test - predict(fit.ridge, newx = X.test, s = fit.ridge$lambda.min), '2')))
 }
@@ -134,10 +142,11 @@ fit.enet = function(X, y, X.test, y.test, seed = 1, all = FALSE) {
     return (list(fit = fit.enet, t = time, rsse = rsse))
   }
   
-  return (list(fit = fit.enet[[alpha.ind]], t = sum(time),
-               rsse = rsse[alpha.ind],
-               rsse2 = rsse2[alpha.ind],
-               alpha = (alpha.ind - 1) * 0.1))
+  beta              = as.vector(coef(fit.enet[[alpha.ind]], s = fit.enet[[alpha.ind]]$lambda.1se))[-1]
+  beta2             = as.vector(coef(fit.enet[[alpha.ind]], s = fit.enet[[alpha.ind]]$lambda.min))[-1]
+  
+  return (list(fit = fit.enet[[alpha.ind]], t = sum(time), beta = beta, beta2 = beta2,
+               rsse = rsse[alpha.ind], rsse2 = rsse2[alpha.ind], alpha = (alpha.ind - 1) * 0.1))
 }
 
 #'
@@ -164,8 +173,9 @@ fit.scad = function(X, y, X.test, y.test, seed = 1) {
       }
     }
   }
+  beta              = as.vector(coef(fit.scad))[-1]
   
-  return (list(fit = fit.scad, t = t.scad[3], rsse = norm(y.test - predict(fit.scad, X.test), '2')))
+  return (list(fit = fit.scad, t = t.scad[3], beta = beta, rsse = norm(y.test - predict(fit.scad, X.test), '2')))
 }
 
 #'
@@ -192,8 +202,9 @@ fit.mcp = function(X, y, X.test, y.test, seed = 1) {
       }
     }
   }
+  beta              = as.vector(coef(fit.mcp))[-1]
   
-  return (list(fit = fit.mcp, t = t.mcp[3], rsse = norm(y.test - predict(fit.mcp, X.test), '2')))
+  return (list(fit = fit.mcp, t = t.mcp[3], beta = beta, rsse = norm(y.test - predict(fit.mcp, X.test), '2')))
 }
 
 #'
@@ -210,8 +221,9 @@ fit.scad2 = function(X, y, X.test, y.test, seed = 1) {
     fit.scad       <- cv.ncvreg(X, y, penalty = "SCAD", nfolds = 10))
   
   t.scad2           = system.time(ncvreg(X, y, penalty = "SCAD"))
+  beta              = as.vector(coef(fit.scad))[-1]
   
-  return (list(fit = fit.scad, t = t.scad[3], rsse = norm(y.test - predict(fit.scad, X.test), '2'),
+  return (list(fit = fit.scad, t = t.scad[3], beta = beta, rsse = norm(y.test - predict(fit.scad, X.test), '2'),
                t2 = t.scad2[3]))
 }
 
@@ -225,11 +237,12 @@ fit.mcp2 = function(X, y, X.test, y.test, seed = 1) {
   set.seed(seed)
   
   # run MCP
-  t.mcp           = system.time(
-    fit.mcp      <- cv.ncvreg(X, y, penalty = "MCP", nfolds = 10))
-  t.mcp2          = system.time(ncvreg(X, y, penalty = "MCP"))
+  t.mcp             = system.time(
+    fit.mcp        <- cv.ncvreg(X, y, penalty = "MCP", nfolds = 10))
+  t.mcp2            = system.time(ncvreg(X, y, penalty = "MCP"))
+  beta              = as.vector(coef(fit.mcp))[-1]
   
-  return (list(fit = fit.mcp, t = t.mcp[3], rsse = norm(y.test - predict(fit.mcp, X.test), '2'),
+  return (list(fit = fit.mcp, t = t.mcp[3], beta = beta, rsse = norm(y.test - predict(fit.mcp, X.test), '2'),
                t2 = t.mcp2[3]))
 }
 
@@ -247,8 +260,9 @@ fit.l0learn = function(X, y, X.test, y.test, seed = 1) {
   t.l0learn         = system.time(
     fit.l0learn      <- L0Learn.cvfit(X, y, nFolds = 10))
   lambda.min        = fit.l0learn$fit$lambda[[1]][which.min(fit.l0learn$cvMeans[[1]])]
+  beta              = as.vector(coef(fit.l0learn, lambda = lambda.min))[-1]
   
-  return (list(fit = fit.l0learn, t = t.l0learn[3],
+  return (list(fit = fit.l0learn, t = t.l0learn[3], lambda = lambda.min, beta = beta,
                rsse = norm(y.test - predict(fit.l0learn, X.test, lambda = lambda.min)@x, '2')))
 }
 
@@ -273,7 +287,7 @@ fit.blasso = function(X, y, X.test, y.test, seed = 1, nIter = NULL, burnIn = NUL
                              verbose = FALSE, nIter = nIter, burnIn = burnIn))
   fit.blasso$beta   = c(fit.blasso$ETA[[1]]$b)
   
-  return (list(fit = fit.blasso, t = t.blasso[3],
+  return (list(fit = fit.blasso, t = t.blasso[3], beta = fit.blasso$beta,
                rsse = norm(y.test - X.test %*% fit.blasso$beta - fit.blasso$mu, '2')))
 }
 
@@ -296,8 +310,9 @@ fit.bayesb = function(X, y, X.test, y.test, seed = 1, nIter = NULL, burnIn = NUL
     fit.bayesb       <- BGLR(y, ETA = list(list(X = X, model="BayesB", standardize = standardize)),
                              verbose = FALSE, nIter = nIter, burnIn = burnIn))
   fit.bayesb$beta   = c(fit.bayesb$ETA[[1]]$b * fit.bayesb$ETA[[1]]$d)
+  pip               = (fit.bayesb$ETA[[1]]$d > 0.5)
   
-  return (list(fit = fit.bayesb, t = t.bayesb[3],
+  return (list(fit = fit.bayesb, t = t.bayesb[3], beta = fit.bayesb$beta, pip = pip,
                rsse = norm(y.test - X.test %*% fit.bayesb$beta - fit.bayesb$mu, '2')))
 }
 
@@ -320,7 +335,7 @@ fit.bayesc = function(X, y, X.test, y.test, seed = 1, nIter = NULL, burnIn = NUL
                              verbose = FALSE, nIter = nIter, burnIn = burnIn))
   fit.bayesc$beta   = c(fit.bayesc$ETA[[1]]$b * fit.bayesc$ETA[[1]]$d)
   
-  return (list(fit = fit.bayesc, t = t.bayesc[3],
+  return (list(fit = fit.bayesc, t = t.bayesc[3], beta = fit.bayesc$beta,
                rsse = norm(y.test - X.test %*% fit.bayesc$beta - fit.bayesc$mu, '2')))
 }
 
@@ -340,9 +355,12 @@ fit.mcmc = function(X, y, X.test, y.test, seed = 1, nIter = NULL, burnIn = NULL)
   # run bayesb
   t.mcmc           = system.time(
     fit.mcmc <- gibbs.sampling(data$X, data$y, sa2 = c(0, 1 / s), burn.in = burnIn, max.iter = nIter,
-                               pi = c(1 - s/p, s/p), beta.init = data$beta, sigma2 = data$sigma^2))
+                               pi = c(1 - s/p, s/p), beta.init = data$beta + 0, sigma2 = data$sigma^2))
+  fit.mcmc$data$sa2 = c(0, 1 / s)
+  fit.mcmc$pi       = pi = c(1 - s/p, s/p)
+  pip              = 1 - mr.ash.alpha:::get_phi(fit.mcmc)$phi[,1]
   
-  return (list(fit = fit.mcmc, t = t.mcmc[3],
+  return (list(fit = fit.mcmc, t = t.mcmc[3], beta = fit.mcmc$beta, pip = pip, 
                rsse = norm(y.test - X.test %*% fit.mcmc$beta - fit.mcmc$mu, '2')))
 }
 
@@ -359,8 +377,10 @@ fit.varbvs = function(X, y, X.test, y.test, seed = 1) {
   # run varbvs
   t.varbvs          = system.time(
     fit.varbvs       <- varbvs(X, Z = NULL, y, verbose = FALSE))
+  beta              = c(rowSums(fit.varbvs$alpha * fit.varbvs$mu))
+  pip               = fit.varbvs$pip
   
-  return (list(fit = fit.varbvs, t = t.varbvs[3],
+  return (list(fit = fit.varbvs, t = t.varbvs[3], beta = beta, pip = pip,
                rsse = norm(y.test - predict(fit.varbvs, X.test), '2')))
   
 }
@@ -377,8 +397,10 @@ fit.varbvs2 = function(X, y, X.test, y.test, seed = 1) {
   # run varbvs
   t.varbvs          = system.time(
     fit.varbvs       <- varbvs(X, Z = NULL, y, verbose = FALSE, logodds = seq(-log10(p),1,length.out = 40)))
+  beta              = c(rowSums(fit.varbvs$alpha * fit.varbvs$mu))
+  pip               = fit.varbvs$pip
   
-  return (list(fit = fit.varbvs, t = t.varbvs[3],
+  return (list(fit = fit.varbvs, t = t.varbvs[3], beta = beta, pip = pip,
                rsse = norm(y.test - predict(fit.varbvs, X.test), '2')))
   
 }
@@ -395,8 +417,10 @@ fit.susie = function(X, y, X.test, y.test, seed = 1, L = 20) {
   # run varbvs
   t.susie           = system.time(
     fit.susie        <- susie(X = X, Y = y, standardize = standardize, L = L))
+  beta              = coef(fit.susie)
+  pip               = fit.susie$pip
   
-  return (list(fit = fit.susie, t = t.susie[3],
+  return (list(fit = fit.susie, t = t.susie[3], beta = beta, pip = pip,
                rsse = norm(y.test - predict(fit.susie, X.test), '2')))
   
 }

@@ -46,7 +46,7 @@ source('code/sim_wrapper.R')
 The result is summarized below. 
 
 ```{r fig1.1, fig.height=13, fig.width=15}
-res_df       = readRDS("../results/equicorr50020020.RDS")
+res_df       = readRDS("../results/equicorr500200020.RDS")
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
                  "Mr.ASH.order","Mr.ASH.init")
 method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
@@ -273,6 +273,8 @@ method_num   = length(method_list2)
 iter_num     = 20
 pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
 time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+fdp          = matrix(0, iter_num, method_num); colnames(fdp) = method_list2
+pow          = matrix(0, iter_num, method_num); colnames(pow) = method_list2
 
 
 for (iter in 1:6) {
@@ -280,12 +282,20 @@ rho        = rho_list[iter]
 for (i in 1:20) {
   data          = simulate_data(n, p, s = s, seed = i, signal = "normal", rho = rho,
                                 design = "equicorrgauss", pve = 0.5)
+  true_support  = (data$beta != 0)
  
   for (j in 1:length(method_list)) {
     fit.method    = get(paste("fit.",method_list[j],sep = ""))
     fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
     pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
     time[i,j+1]   = fit$t
+    if (method_list[j] %in% c("varbvs","bayesb","susie")) {
+      discoveries       = (fit$pip > 0.5)
+    } else {
+      discoveries       = (fit$beta != 0)
+    }
+    fdp[i,j+1]    = compute_fdp(discoveries, true_support)
+    pow[i,j+1]    = compute_pow(discoveries, true_support)
     
     if (method_list[j] == "lasso") {
       lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
@@ -298,22 +308,33 @@ for (i in 1:20) {
                            sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
+  discoveries = (fit$pip > 0.5)
+  fdp[i,1]    = compute_fdp(discoveries, true_support)
+  pow[i,1]    = compute_pow(discoveries, true_support)
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             update.order = lasso.path.order,
                            sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+2] = fit$t + lasso.time[2]
+  discoveries = (fit$pip > 0.5)
+  fdp[i,j+2]  = compute_fdp(discoveries, true_support)
+  pow[i,j+2]  = compute_pow(discoveries, true_support)
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             beta.init = lasso.beta,
                            sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+3] = fit$t + lasso.time[1]
+  discoveries = (fit$pip > 0.5)
+  fdp[i,j+3]  = compute_fdp(discoveries, true_support)
+  pow[i,j+3]  = compute_pow(discoveries, true_support)
   
-  print(c(pred[i,]))
+  print(c(fdp[i,]))
+  print(c(pow[i,]))
 }
-tdat2[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+tdat2[[iter]] = data.frame(pred = c(pred), time = c(time), fdp = c(fdp),
+                           pow = c(pow), fit = rep(method_list2, each = 20))
 }
 ```
 
@@ -329,6 +350,8 @@ method_num   = length(method_list2)
 iter_num     = 20
 pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
 time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+fdp          = matrix(0, iter_num, method_num); colnames(fdp) = method_list2
+pow          = matrix(0, iter_num, method_num); colnames(pow) = method_list2
 
 
 for (iter in 1:6) {
@@ -336,12 +359,20 @@ rho        = rho_list[iter]
 for (i in 1:20) {
   data          = simulate_data(n, p, s = s, seed = i, signal = "normal", rho = rho,
                                 design = "equicorrgauss", pve = 0.5)
+  true_support  = (data$beta != 0)
  
   for (j in 1:length(method_list)) {
     fit.method    = get(paste("fit.",method_list[j],sep = ""))
     fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
     pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
     time[i,j+1]   = fit$t
+    if (method_list[j] %in% c("varbvs","bayesb","susie")) {
+      discoveries       = (fit$pip > 0.5)
+    } else {
+      discoveries       = (fit$beta != 0)
+    }
+    fdp[i,j+1]    = compute_fdp(discoveries, true_support)
+    pow[i,j+1]    = compute_pow(discoveries, true_support)
     
     if (method_list[j] == "lasso") {
       lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
@@ -354,22 +385,33 @@ for (i in 1:20) {
                            sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
+  discoveries = (fit$pip > 0.5)
+  fdp[i,1]    = compute_fdp(discoveries, true_support)
+  pow[i,1]    = compute_pow(discoveries, true_support)
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             update.order = lasso.path.order,
-                            sa2 = (2^((0:19) / 5) - 1)^2)
+                           sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+2] = fit$t + lasso.time[2]
+  discoveries = (fit$pip > 0.5)
+  fdp[i,j+2]  = compute_fdp(discoveries, true_support)
+  pow[i,j+2]  = compute_pow(discoveries, true_support)
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             beta.init = lasso.beta,
-                            sa2 = (2^((0:19) / 5) - 1)^2)
+                           sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+3] = fit$t + lasso.time[1]
+  discoveries = (fit$pip > 0.5)
+  fdp[i,j+3]  = compute_fdp(discoveries, true_support)
+  pow[i,j+3]  = compute_pow(discoveries, true_support)
   
-  print(c(pred[i,]))
+  print(c(fdp[i,]))
+  print(c(pow[i,]))
 }
-tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fdp = c(fdp),
+                           pow = c(pow), fit = rep(method_list2, each = 20))
 }
 ```
 

@@ -52,7 +52,7 @@ source('code/sim_wrapper.R')
 The result is summarized below. 
 
 ```{r fig1, fig.height=7, fig.width=15, warning = FALSE, message = FALSE}
-res_df       = readRDS("results/realgenotype.RDS")
+res_df       = readRDS("../results/realgenotype22.RDS")
 sdat         = res_df
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
                  "Mr.ASH.order", "Mr.ASH.init")
@@ -77,7 +77,6 @@ fig_main  = plot_grid(p0,p1,p0, nrow = 1, rel_widths = c(0.3,0.6,0.3))
 title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
 subtitle  = ggdraw() + draw_label("Scenario: RealGenotype + SparseNormal, n = 287, p = 4012-8760, pve = 0.5", fontface  = 'bold', size = 18) 
 fig       = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.1,0.06,0.95))
-fig
 ```
 
 ```{r fig2, fig.height=7, fig.width=15}
@@ -115,11 +114,11 @@ colnames(pred) = c("mr.ash", method_list,"mr.ash.order","mr.ash.init")
 time         = matrix(0, iter_num, method_num);
 colnames(time) = c("mr.ash", method_list,"mr.ash.order","mr.ash.init")
 n            = 287
-sa2          = (2^((0:19) / 20) - 1)^2
+sa2          = (2^((0:19) / 5) - 1)^2
 
 for (i in 1:20) {
   data          = simulate_data(s = 20, seed = i, signal = "normal",
-                                design = "realgenotype", filepath = filelist[i], pve = 0.2)
+                                design = "realgenotype", filepath = filelist[i], pve = 0.5)
   
   for (j in 1:length(method_list)) {
     fit.method    = get(paste("fit.",method_list[j],sep = ""))
@@ -128,7 +127,7 @@ for (i in 1:20) {
     time[i,j+1]   = fit$t
     
     if (method_list[j] == "lasso") {
-      lasso.path.order = mr.ash:::path.order(fit$fit$glmnet.fit)
+      lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
       lasso.beta       = as.vector(coef(fit$fit))[-1]
       lasso.time       = c(fit$t, fit$t2)
     }

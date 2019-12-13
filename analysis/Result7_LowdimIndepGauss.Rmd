@@ -46,14 +46,15 @@ source('code/sim_wrapper.R')
 The result is summarized below.
 
 ```{r fig1, fig.height=7, fig.width=15}
-res_df       = readRDS("results/subogdancandes.RDS")
+res_df       = readRDS("../results/subogdancandes1010100020.RDS")
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
                  "Mr.ASH.order","Mr.ASH.init")
 method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
                  "SCAD","MCP","L0Learn",
                  "VarBVS","BayesB","Blasso","SuSiE")
 col          = gg_color_hue(13)[c(1,12,13,2:11)]
-for (i in 1:2) {
+for (i in 1:1) {
+res_df[[i]]       = res_df[[i]][1:260,]
 res_df[[i]]$fit   = rep(method_list, each = 20)
 res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels =  method_level)
 }
@@ -64,7 +65,8 @@ p1 = my.box2(res_df[[1]], "fit", "pred", cols = col) +
         legend.position = "none") +
   geom_hline(yintercept = mean(res_df[[1]]$pred[res_df[[1]]$fit == "Mr.ASH"]), col = gg_color_hue(11)[1],
              linetype = "dotted", size = 1.5) +
-  scale_y_continuous(trans = "log10")
+  scale_y_continuous(trans = "log10") +
+  coord_cartesian(ylim = c(1,1.5))
 p2 = my.box2(res_df[[2]], "fit", "pred", cols = col) +
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
@@ -107,8 +109,8 @@ fig
 
 ```{r eval = FALSE}
 tdat1        = list()
-n            = 1010
-p            = 1000
+n            = 1000
+p            = 100
 s            = 20
 method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
 method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init","enet2","lasso2","ridge2")
@@ -124,9 +126,8 @@ for (i in 1:20) {
   set.seed(2010 + i)
   beta            = double(p)
   ind             = sample(p,s)
-  M               = 5
-  beta[ind]       = 1/M
-  beta[ind[1:10]] = M
+  beta[ind]       = 0.1
+  beta[ind[1:5]]  = 10
   data            = simulate_data(n, p, s = s, seed = i, beta = beta, sigma = 1)
  
   for (j in 1:length(method_list)) {
@@ -150,21 +151,24 @@ for (i in 1:20) {
   }
  
   fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
-                           sa2 = (2^((0:19) / 2) - 1)^2)
+                           sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             update.order = lasso.path.order,
-                            sa2 = (2^((0:19) / 2) - 1)^2)
+                            sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+2] = fit$t + lasso.time[2]
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             beta.init = lasso.beta,
-                            sa2 = (2^((0:19) / 2) - 1)^2)
+                            sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+3] = fit$t + lasso.time[1]
+  
+  print(c(pred[i,]))
+  print(c(time[i,]))
 }
 tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
 }

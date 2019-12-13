@@ -117,8 +117,8 @@ fig1.1    = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.
 ```
 
 ```{r fig1.2, fig.height=13, fig.width=15}
-res_df       = readRDS("../results/mcmcecorr50020020.RDS")
-res_df1      = readRDS("../results/equicorr50020020.RDS")
+res_df       = readRDS("../results/mcmcecorr500200020.RDS")
+res_df1      = readRDS("../results/equicorr500200020.RDS")
 for (i in 1:6) {
   res_df[[i]][1:20,] = res_df1[[i]][1:20, ]
   res_df[[i]]        = rbind(res_df[[i]], res_df1[[i]][241:260,])

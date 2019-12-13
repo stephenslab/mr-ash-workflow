@@ -130,6 +130,23 @@ simulate_data = function(n = NULL, p = NULL, s = NULL, seed = 1,
 #'
 #'
 #'
+#' compute fdp and power
+compute_fdp <- function(discoveries, true_support) {
+  false_discoveries = (!true_support) & discoveries
+  fdp               = sum(false_discoveries) / max(sum(discoveries), 1)
+  return (fdp)
+}
+
+compute_pow <- function(discoveries, true_support) {
+  true_discoveries  = true_support & discoveries
+  pow               = sum(true_discoveries) / max(sum(true_support), 1)
+  return (pow)
+}
+
+
+#'
+#'
+#'
 #' Plotting routines
 
 ## function for boxplot

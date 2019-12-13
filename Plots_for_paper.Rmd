@@ -1757,7 +1757,6 @@ fig38     = plot_grid(subtitle,p1, ncol = 1, rel_heights = c(0.05,0.95))
 ```
 
 ```{r figure3, fig.height=14, fig.width=16}
-p0       = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
 figure3  = plot_grid(fig31,fig32, nrow = 1)
 title    = ggdraw() + draw_label("Accuracy of Variational Approximation", fontface = 'bold', size = 20) 
 legend  <- get_legend(fig_dummy5 + theme(legend.box.margin = margin(0, 0, 0, 12)))
@@ -1767,7 +1766,6 @@ ggsave("figures/figure3_paper.pdf", figure3, width = 18, height = 8)
 ```
 
 ```{r figure7, fig.height=14, fig.width=16}
-p0       = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
 figure7  = plot_grid(fig33,fig34, nrow = 1)
 title    = ggdraw() + draw_label("Initialization of MR.ASH", fontface = 'bold', size = 20) 
 legend  <- get_legend(fig_dummy6 + theme(legend.box.margin = margin(0, 0, 0, 12)))
@@ -1777,13 +1775,52 @@ ggsave("figures/figure7_paper.pdf", figure7, width = 18, height = 8)
 ```
 
 ```{r figure8, fig.height=14, fig.width=16}
-p0       = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
 figure8  = plot_grid(fig35,fig36,fig37,fig38, nrow = 2)
 title    = ggdraw() + draw_label("Update Order of MR.ASH", fontface = 'bold', size = 20) 
 legend  <- get_legend(fig_dummy7 + theme(legend.box.margin = margin(0, 0, 0, 12)))
 figure8  = plot_grid(plot_grid(title, figure8, ncol = 1, rel_heights = c(0.04,0.95)),
                      legend, nrow = 1, rel_widths = c(0.9,0.1))
 ggsave("figures/figure8_paper.pdf", figure8, width = 18, height = 15)
+```
+
+```{r fig41, fig.height=11, fig.width=15}
+df         = readRDS("results/design4.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "Mr.ASH.order", "Mr.ASH.init")
+method_level = c("Mr.ASH","Mr.ASH.order", "Mr.ASH.init",
+                 "E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "VarBVS","BayesB","Blasso","SuSiE")
+design       = c("Real Genotype","Locally Decaying Correlation, rho = 0.9", "Changepoint + OneBigBump","Changepoint + OneSmallChange")
+limits       = list(c(1,1.35),c(1,1.3),c(0,0.6),c(0,2.0))
+fig41        = list()
+col          = gg_color_hue(13)[c(1,12,13,2:11)]
+for (i in 1:4) {
+  df[[i]]$fit = rep(method_list, each = 20)
+  df[[i]]$fit = factor(df[[i]]$fit, levels = method_level)
+  fig41[[i]]    = ggplot(df[[i]]) +
+  stat_summary(aes(x = fit, y = pred), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
+  stat_summary(aes(x = fit, y = pred, ymin = ..y.., ymax = ..y..), colour = col, fun.y = mean, geom = "errorbar",
+               width = 0.75, size = 0, linetype = "dotted") + 
+  geom_boxplot(alpha = 0.1, aes(x = fit, y = pred, color = fit, fill = fit, lower = quantile(pred, .25), 
+                                middle = mean(pred), upper = quantile(pred, .75)), outlier.alpha = 0, fatten = 0.9) +
+  scale_alpha_manual(values = 0.1) +
+  scale_fill_manual(values = col, guide = "none") +
+  scale_color_manual(values = col, guide = "none") +
+  labs(x           = "") + coord_cartesian(ylim = limits[[i]]) + 
+  theme_cowplot(font_size = 14) + 
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = "none")
+  subtitle[[i]] = ggdraw() + draw_label(design[i], fontface = 'bold', size = 14)
+  fig41[[i]]    = plot_grid(subtitle[[i]], fig41[[i]], ncol = 1, rel_heights = c(0.05,0.95))
+}
+```
+
+```{r figure9, fig.height=14, fig.width=16}
+figure9  = plot_grid(fig41[[1]], fig41[[2]], fig41[[3]], fig41[[4]], nrow = 2)
+title    = ggdraw() + draw_label("Different Design", fontface = 'bold', size = 20) 
+figure9  = plot_grid(title, figure9, ncol = 1, rel_heights = c(0.04,0.95))
+ggsave("figures/figure9_paper.pdf", figure9, width = 18, height = 15)
 ```
 
 ```{r}
