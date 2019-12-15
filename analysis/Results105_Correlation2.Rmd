@@ -1,5 +1,5 @@
 ---
-title: "Result10_Correlation"
+title: "Result105_Correlation2"
 output:
   workflowr::wflow_html:
     code_folding: hide
@@ -35,7 +35,7 @@ A list of packages we have loaded is collapsed. Please click "code" to see the l
 
 ```{r library, message = FALSE}
 library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
-library(glmnet); library(mr.ash.alpha); library(ncvreg); library(L0Learn); library(varbvs); library(mvtnorm)
+library(glmnet); library(mr.ash.alpha); library(ncvreg); library(L0Learn); library(varbvs);
 standardize = FALSE
 source('code/method_wrapper.R')
 source('code/sim_wrapper.R')
@@ -46,24 +46,23 @@ source('code/sim_wrapper.R')
 The result is summarized below. 
 
 ```{r fig1.1, fig.height=13, fig.width=15}
-res_df       = readRDS("../results/localcorrfdr50020020.RDS")
+res_df       = readRDS("../results/equicorrnew50020020.RDS")
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
                  "Mr.ASH.order","Mr.ASH.init")
 method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
                  "SCAD","MCP","L0Learn",
                  "VarBVS","BayesB","Blasso","SuSiE")
-col          = gg_color_hue(13)[c(1,12,13,2:11)]
-rho_list     = c(0,0.3,0.6,0.9,0.95,0.99)
-a            = c(1,2,3,4,5,6)
-out = matrix(0,6,13)
-for (i in 1:6) {
+rho_list     = seq(0,0.9,0.1)
+a            = 1:10
+out = matrix(0,10,13)
+for (i in 1:10) {
   out[i,] = colMeans(matrix(res_df[[a[i]]]$pred, 20, 13))
 }
 colnames(out) = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge",
                   "SCAD","MCP","L0Learn",
                   "Mr.ASH.order",
                   "Mr.ASH.init")
-ind = c(1,6:13)
+ind = c(1,2,6,7,9:13)
 out = out[,ind]
 
 col   = gg_color_hue(13)[c(1:7,12,13)]
@@ -78,7 +77,7 @@ df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
 df$size = 0.5
 df$size[1:length(rho_list)] = 1.2
 df$lt = "solid"
-df$lt[43:48] = "dashed"
+df$lt[71:80] = "dashed"
 fig_dummy = ggplot(df) + geom_line(aes(x = x, y = pred, color = fit), size = df$size, linetype = df$lt) +
   geom_point(aes(x = x, y = pred, color = fit, shape = fit), size = 2.5) +
   theme_cowplot(font_size = 14) +
@@ -98,7 +97,12 @@ fig1.1      = plot_grid(subtitle,fig_dummy, ncol = 1, rel_heights = c(0.05,0.95)
 ```
 
 ```{r fig1.2, fig.height=13, fig.width=15}
-res_df       = readRDS("../results/localcorr50020020.RDS")
+res_df       = readRDS("../results/equicorr50020020.RDS")
+for (i in 1:6){
+  res_df[[i]][1:20,] = tdat2[[i]][1:20,]
+  res_df[[i]][221:240,] = tdat2[[i]][41:60,]
+  res_df[[i]][241:260,] = tdat2[[i]][61:80,]
+}
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
                  "Mr.ASH.order","Mr.ASH.init")
 method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
@@ -149,59 +153,8 @@ subtitle  = ggdraw() + draw_label("Scenario: EquiCorrGauss + Normal, n = 500, p 
 fig1.2      = plot_grid(subtitle,fig_dummy, ncol = 1, rel_heights = c(0.05,0.95))
 ```
 
-```{r fig1.3}
-res_df       = readRDS("../results/localcorrfdr50020020.RDS")
-method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
-                 "Mr.ASH.order","Mr.ASH.init")
-method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
-                 "SCAD","MCP","L0Learn",
-                 "VarBVS","BayesB","Blasso","SuSiE")
-col          = gg_color_hue(13)[c(1,12,13,2:11)]
-rho_list     = c(0,0.3,0.6,0.9,0.95,0.99)
-a            = c(1,2,3,4,5,6)
-out = matrix(0,6,13)
-for (i in 1:6) {
-  out[i,] = colMeans(matrix(res_df[[a[i]]]$fdp, 20, 13))
-}
-colnames(out) = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge",
-                  "SCAD","MCP","L0Learn",
-                  "Mr.ASH.order",
-                  "Mr.ASH.init")
-ind = c(1,6:13)
-out = out[,ind]
-
-col   = gg_color_hue(13)[c(1:7,12,13)]
-shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1:7,12,13)]
-df = data.frame(x = rep(1:length(rho_list),length(ind)), rho = rep(rho_list, length(ind)),
-                pred = c(out), fit = rep(colnames(out), each = length(rho_list)))
-df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
-                                    "SCAD","MCP","L0Learn","E-NET2","Lasso2","Ridge2",
-                                    "VarBVS","BayesB","Blasso","SuSiE",
-                                    "Mr.ASH.order",
-                                    "Mr.ASH.init"))
-df$size = 0.5
-df$size[1:length(rho_list)] = 1.2
-df$lt = "solid"
-df$lt[43:48] = "dashed"
-fig_dummy = ggplot(df) + geom_line(aes(x = x, y = pred, color = fit), size = df$size, linetype = df$lt) +
-  geom_point(aes(x = x, y = pred, color = fit, shape = fit), size = 2.5) +
-  theme_cowplot(font_size = 14) +
-  scale_x_continuous(breaks = c(1,2,3,4,5,6),
-                     labels = c("0","0.3","0.6","0.9","0.95","0.99")) +
-  labs(y = "predictior error (rmse / sigma)", x = "correlation across columns of X (rho)") +
-  theme(axis.line = element_blank(),
-        plot.title = element_text(hjust = 0.5)) +
-  scale_color_manual(values = col) +
-  scale_shape_manual(values = shape) +
-  coord_cartesian(ylim = c(0,1))
-p1        = fig_dummy + theme(legend.position = "none")
-fig_main  = p1
-subtitle  = ggdraw() + draw_label("Scenario: EquiCorrGauss + Normal, n = 500, p = 200, s = 20, pve = 0.5", fontface  = 'bold', size = 14) 
-fig1.3      = plot_grid(subtitle,fig_dummy, ncol = 1, rel_heights = c(0.05,0.95))
-```
-
 ```{r fig2.1, fig.height=13, fig.width=15}
-res_df       = readRDS("../results/localcorr500200020.RDS")
+res_df       = readRDS("../results/ecorr500200020.RDS")
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
                  "Mr.ASH.order","Mr.ASH.init")
 method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
@@ -253,7 +206,7 @@ fig2.1      = plot_grid(subtitle,fig_dummy, ncol = 1, rel_heights = c(0.05,0.95)
 ```
 
 ```{r fig2.2, fig.height=13, fig.width=15}
-res_df       = readRDS("../results/localcorr500200020.RDS")
+res_df       = readRDS("../results/ecorr5001000020.RDS")
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
                  "Mr.ASH.order","Mr.ASH.init")
 method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
@@ -308,49 +261,90 @@ fig2.2      = plot_grid(subtitle,fig_dummy, ncol = 1, rel_heights = c(0.05,0.95)
 
 The source code will be popped up when you click `code` on the right side. 
 
-```{r code2}
+```{r code1, eval = FALSE}
 tdat2        = list()
 n            = 500
-p            = 2000
+p            = 200
 s            = 20
-rho_list     = c(0,0.3,0.6,0.9,0.95,0.99)
-method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
-method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
+rho_list     = seq(0,0.9,0.1)
+method_list  = c("lasso","scad2")
+method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init", "mr.ash.order2", "mr.ash.init2")
 method_num   = length(method_list2)
 iter_num     = 20
 pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
 time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
-fdp          = matrix(0, iter_num, method_num); colnames(fdp) = method_list2
-pow          = matrix(0, iter_num, method_num); colnames(pow) = method_list2
 
 
-for (iter in 6:1) {
+for (iter in 1:10) {
 rho        = rho_list[iter]
-Sigma.sqrt = matrix(0,p,p)
-for (j in 0:round(-2/log(rho))) {
-  for (jj in 1:(p-j)) {
-    Sigma.sqrt[jj,jj+j] = rho^j
-    Sigma.sqrt[jj+j,jj] = rho^j
-  }
-}
 for (i in 1:20) {
   data          = simulate_data(n, p, s = s, seed = i, signal = "normal", rho = rho,
-                                design = "localcorrgauss", Sigma.sqrt = Sigma.sqrt, pve = 0.5)
- 
-  true_support  = (data$beta != 0)
+                                design = "equicorrgauss", snr = 1 / (1 - rho))
+  
  
   for (j in 1:length(method_list)) {
     fit.method    = get(paste("fit.",method_list[j],sep = ""))
     fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
     pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
     time[i,j+1]   = fit$t
-    if (method_list[j] %in% c("varbvs","bayesb","susie")) {
-      discoveries       = (fit$pip > 0.5)
-    } else {
-      discoveries       = (fit$beta != 0)
+    
+    if (method_list[j] == "lasso") {
+      lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
+      lasso.abs.order  = mr.ash.alpha:::abs.order(coef(fit$fit)[-1])
+      lasso.beta       = as.vector(coef(fit$fit))[-1]
+      lasso.time       = c(fit$t, fit$t2)
     }
-    fdp[i,j+1]    = compute_fdp(discoveries, true_support)
-    pow[i,j+1]    = compute_pow(discoveries, true_support)
+    
+    if (method_list[j] == "scad2") {
+      scad.path.order = mr.ash.alpha:::path.order(fit$fit$fit)
+      scad.abs.order  = mr.ash.alpha:::abs.order(c(coef(fit$fit)[-1]))
+      scad.beta       = as.vector(coef(fit$fit))[-1]
+      scad.time       = c(fit$t, fit$t2)
+    }
+  }
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            update.order = lasso.abs.order,
+                           sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+2] = fit$t + lasso.time[2]
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            update.order = scad.abs.order,
+                           sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,j+4] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+4] = fit$t + scad.time[2]
+  print(c(pred[i,]))
+}
+tdat2[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+}
+```
+
+```{r code2, eval = FALSE}
+tdat1        = list()
+n            = 500
+p            = 2000
+s            = 20
+rho_list     = seq(0,0.9,0.1)
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+
+for (iter in 1:10) {
+rho        = rho_list[iter]
+for (i in 1:20) {
+  data          = simulate_data(n, p, s = s, seed = i, signal = "normal", rho = rho,
+                                design = "equicorrgauss", snr = 1 / (1 - rho))
+  
+ 
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste("fit.",method_list[j],sep = ""))
+    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
     
     if (method_list[j] == "lasso") {
       lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
@@ -363,78 +357,50 @@ for (i in 1:20) {
                            sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
-  discoveries = (fit$pip > 0.5)
-  fdp[i,1]    = compute_fdp(discoveries, true_support)
-  pow[i,1]    = compute_pow(discoveries, true_support)
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             update.order = lasso.path.order,
                            sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+2] = fit$t + lasso.time[2]
-  discoveries = (fit$pip > 0.5)
-  fdp[i,j+2]  = compute_fdp(discoveries, true_support)
-  pow[i,j+2]  = compute_pow(discoveries, true_support)
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             beta.init = lasso.beta,
                            sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+3] = fit$t + lasso.time[1]
-  discoveries = (fit$pip > 0.5)
-  fdp[i,j+3]  = compute_fdp(discoveries, true_support)
-  pow[i,j+3]  = compute_pow(discoveries, true_support)
   
-  print(c(fdp[i,]))
-  print(c(pow[i,]))
+  print(c(pred[i,]))
 }
-tdat2[[iter]] = data.frame(pred = c(pred), time = c(time), fdp = c(fdp),
-                           pow = c(pow), fit = rep(method_list2, each = 20))
+tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
 }
 ```
 
-```{r code, eval = FALSE}
-tdat1        = list()
+```{r code3, eval = FALSE}
+tdat3        = list()
 n            = 500
-p            = 200
+p            = 10000
 s            = 20
 rho_list     = c(0,0.3,0.6,0.9,0.95,0.99)
-method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_list  = c("lasso")
 method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
 method_num   = length(method_list2)
 iter_num     = 20
 pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
 time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
-fdp          = matrix(0, iter_num, method_num); colnames(fdp) = method_list2
-pow          = matrix(0, iter_num, method_num); colnames(pow) = method_list2
 
 
 for (iter in 1:6) {
 rho        = rho_list[iter]
-Sigma.sqrt = matrix(0,p,p)
-for (j in 0:round(-2/log(rho))) {
-  for (jj in 1:(p-j)) {
-    Sigma.sqrt[jj,jj+j] = rho^j
-    Sigma.sqrt[jj+j,jj] = rho^j
-  }
-}
 for (i in 1:20) {
   data          = simulate_data(n, p, s = s, seed = i, signal = "normal", rho = rho,
-                                design = "localcorrgauss", Sigma.sqrt = Sigma.sqrt, pve = 0.5)
-  true_support  = (data$beta != 0)
+                                design = "equicorrgauss", pve = 0.5)
  
   for (j in 1:length(method_list)) {
     fit.method    = get(paste("fit.",method_list[j],sep = ""))
     fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
     pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
     time[i,j+1]   = fit$t
-    if (method_list[j] %in% c("varbvs","bayesb","susie")) {
-      discoveries       = (fit$pip > 0.5)
-    } else {
-      discoveries       = (fit$beta != 0)
-    }
-    fdp[i,j+1]    = compute_fdp(discoveries, true_support)
-    pow[i,j+1]    = compute_pow(discoveries, true_support)
     
     if (method_list[j] == "lasso") {
       lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
@@ -447,33 +413,22 @@ for (i in 1:20) {
                            sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
   time[i,1]   = fit$t
-  discoveries = (fit$pip > 0.5)
-  fdp[i,1]    = compute_fdp(discoveries, true_support)
-  pow[i,1]    = compute_pow(discoveries, true_support)
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             update.order = lasso.path.order,
-                           sa2 = (2^((0:19) / 5) - 1)^2)
+                            sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+2] = fit$t + lasso.time[2]
-  discoveries = (fit$pip > 0.5)
-  fdp[i,j+2]  = compute_fdp(discoveries, true_support)
-  pow[i,j+2]  = compute_pow(discoveries, true_support)
   
   fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                             beta.init = lasso.beta,
-                           sa2 = (2^((0:19) / 5) - 1)^2)
+                            sa2 = (2^((0:19) / 5) - 1)^2)
   pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
   time[i,j+3] = fit$t + lasso.time[1]
-  discoveries = (fit$pip > 0.5)
-  fdp[i,j+3]  = compute_fdp(discoveries, true_support)
-  pow[i,j+3]  = compute_pow(discoveries, true_support)
   
-  print(c(fdp[i,]))
-  print(c(pow[i,]))
+  print(c(pred[i,]))
 }
-tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fdp = c(fdp),
-                           pow = c(pow), fit = rep(method_list2, each = 20))
+tdat3[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
 }
 ```
 
