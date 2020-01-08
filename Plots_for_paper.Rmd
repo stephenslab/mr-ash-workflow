@@ -845,17 +845,6 @@ figure2  = plot_grid(plot_grid(title, figure2, ncol = 1, rel_heights = c(0.05,0.
 ggsave("figures/figure2_paper.pdf", figure2, width = 18, height = 22)
 ```
 
-#```{r figure3, fig.height=14, fig.width=16}
-#p0       = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
-#figure3  = plot_grid(fig8,fig9, nrow = 1)
-#title    = ggdraw() + draw_label("Varying p", fontface  = 'bold', size = 18) 
-#title2   = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 20-20000, s = 20, pve = 0.5", fontface  = 'bold', #size = 16) 
-#legend  <- get_legend(fig_dummy2 + theme(legend.box.margin = margin(0, 0, 0, 12)))
-#figure3  = plot_grid(plot_grid(title, title2, figure3, ncol = 1, rel_heights = c(0.04,0.04,0.95)),
-#                     legend, nrow = 1, rel_widths = c(0.9,0.1))
-#ggsave("figures/figure3_paper.pdf", figure3, width = 18, height = 8)
-#```
-
 ```{r fig11, fig.height=11, fig.width=15, fig.align = "center"}
 res_df       = readRDS("results/sparsity500200.RDS")
 out = matrix(0,8,15)
@@ -1194,7 +1183,7 @@ df$size = 0.5
 df$size[1:length(rho_list)] = 1.2
 df$lt = "solid"
 df$lt[31:36] = "dashed"
-fig_dummy = ggplot(df) + geom_line(aes(x = x, y = pred, color = fit), size = df$size, linetype = df$lt) +
+fig_dummy0 = ggplot(df) + geom_line(aes(x = x, y = pred, color = fit), size = df$size, linetype = df$lt) +
   geom_point(aes(x = x, y = pred, color = fit, shape = fit), size = 2.5) +
   theme_cowplot(font_size = 14) +
   scale_x_continuous(breaks = c(1,2,3,4,5,6),
@@ -1206,7 +1195,7 @@ fig_dummy = ggplot(df) + geom_line(aes(x = x, y = pred, color = fit), size = df$
   scale_shape_manual(values = shape) +
   scale_y_continuous(trans = "log10", breaks = c(1,1.05,1.1,1.15,1.2,1.3,1.4)) +
   coord_cartesian(ylim = c(1,1.3))
-p1        = fig_dummy + theme(legend.position = "none")
+p1        = fig_dummy0 + theme(legend.position = "none")
 fig_main  = p1
 suptitle  = ggdraw() + draw_label("Varying Correlation", fontface  = 'bold', size = 14) 
 subtitle  = ggdraw() + draw_label("Scenario: EquiCorrGauss + PointNormal, n = 500, p = 200, s = 20, pve = 0.5", fontface  = 'bold', size = 14) 
@@ -1445,7 +1434,7 @@ ggsave("figures/figure4_paper.pdf", figure4, width = 18, height = 15)
 ```{r figure5, fig.height=20, fig.width=16}
 figure5  = plot_grid(fig12,fig12.1,fig18,fig18.1,fig16,fig16.1, ncol = 2, rel_widths = c(0.5,0.5))
 title    = ggdraw() + draw_label("Prediction Error (RMSE / sigma)", fontface = 'bold', size = 20)
-legend <- get_legend(fig_dummy + theme(legend.box.margin = margin(0, 0, 0, 12)))
+legend <- get_legend(fig_dummy0 + theme(legend.box.margin = margin(0, 0, 0, 12)))
 figure5  = plot_grid(plot_grid(title, figure5, ncol = 1, rel_heights = c(0.05,0.95)), legend, nrow = 1, rel_widths = c(0.9,0.1))
 ggsave("figures/figure5_paper.pdf", figure5, width = 18, height = 22)
 ```
@@ -1821,6 +1810,428 @@ figure9  = plot_grid(fig41[[1]], fig41[[2]], fig41[[3]], fig41[[4]], nrow = 2)
 title    = ggdraw() + draw_label("Different Design", fontface = 'bold', size = 20) 
 figure9  = plot_grid(title, figure9, ncol = 1, rel_heights = c(0.04,0.95))
 ggsave("figures/figure9_paper.pdf", figure9, width = 18, height = 15)
+```
+
+```{r fig42, fig.height=11, fig.width=15}
+res_df       = readRDS("results/localcorrfdr500200020.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "Mr.ASH.order","Mr.ASH.init")
+method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "VarBVS","BayesB","Blasso","SuSiE")
+col          = gg_color_hue(13)[c(1,12,13,2:11)]
+rho_list     = c(0,0.3,0.6,0.9,0.95,0.99)
+a            = c(1,2,3,4,5,6)
+out = matrix(0,6,13)
+for (i in 1:6) {
+  out[i,] = colMeans(matrix(res_df[[a[i]]]$fdp, 20, 13))
+}
+colnames(out) = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn",
+                  "Mr.ASH.order",
+                  "Mr.ASH.init")
+ind = c(1,6,7,9:13)
+out = out[,ind]
+
+col   = gg_color_hue(13)[c(1:3,5:7,12,13)]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1:3,5:7,12,13)]
+df = data.frame(x = rep(1:length(rho_list),length(ind)), rho = rep(rho_list, length(ind)),
+                pred = c(out), fit = rep(colnames(out), each = length(rho_list)))
+df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn","E-NET2","Lasso2","Ridge2",
+                                    "VarBVS","BayesB","Blasso","SuSiE",
+                                    "Mr.ASH.order",
+                                    "Mr.ASH.init"))
+df$size = 0.5
+df$size[1:length(rho_list)] = 1.2
+df$lt = "solid"
+df$lt[37:42] = "dashed"
+fig_dummy = ggplot(df) + geom_line(aes(x = x, y = pred, color = fit), size = df$size, linetype = df$lt) +
+  geom_point(aes(x = x, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(breaks = c(1,2,3,4,5,6),
+                     labels = c("0","0.3","0.6","0.9","0.95","0.99")) +
+  labs(y = "false discovery proportion", x = "correlation across columns of X (rho)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  coord_cartesian(ylim = c(0,1))
+p1        = fig_dummy + theme(legend.position = "none")
+fig_main  = p1
+subtitle  = ggdraw() + draw_label("False Discovery Proportion (# of false discoveries / # of discoveries)", fontface  = 'bold', size = 14) 
+fig42      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
+```
+
+```{r fig43, fig.height=11, fig.width=15}
+res_df       = readRDS("results/localcorrfdr500200020.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "Mr.ASH.order","Mr.ASH.init")
+method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "VarBVS","BayesB","Blasso","SuSiE")
+col          = gg_color_hue(13)[c(1,12,13,2:11)]
+rho_list     = c(0,0.3,0.6,0.9,0.95,0.99)
+a            = c(1,2,3,4,5,6)
+out = matrix(0,6,13)
+for (i in 1:6) {
+  out[i,] = colMeans(matrix(res_df[[a[i]]]$pow, 20, 13))
+}
+colnames(out) = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn",
+                  "Mr.ASH.order",
+                  "Mr.ASH.init")
+ind = c(1,6,7,9:13)
+out = out[,ind]
+
+col   = gg_color_hue(13)[c(1:3,5:7,12,13)]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1:3,5:7,12,13)]
+df = data.frame(x = rep(1:length(rho_list),length(ind)), rho = rep(rho_list, length(ind)),
+                pred = c(out), fit = rep(colnames(out), each = length(rho_list)))
+df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn","E-NET2","Lasso2","Ridge2",
+                                    "VarBVS","BayesB","Blasso","SuSiE",
+                                    "Mr.ASH.order",
+                                    "Mr.ASH.init"))
+df$size = 0.5
+df$size[1:length(rho_list)] = 1.2
+df$lt = "solid"
+df$lt[37:42] = "dashed"
+fig_dummy = ggplot(df) + geom_line(aes(x = x, y = pred, color = fit), size = df$size, linetype = df$lt) +
+  geom_point(aes(x = x, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(breaks = c(1,2,3,4,5,6),
+                     labels = c("0","0.3","0.6","0.9","0.95","0.99")) +
+  labs(y = "power", x = "correlation across columns of X (rho)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  coord_cartesian(ylim = c(0,1))
+p1        = fig_dummy + theme(legend.position = "none")
+fig_main  = p1
+subtitle  = ggdraw() + draw_label("Power (# of true discoveries / # of nonzero coefficients)", fontface  = 'bold', size = 14) 
+fig43      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
+```
+
+```{r fig44, fig.height=11, fig.width=15}
+res_df       = readRDS("results/localcorrfdr500200020.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "Mr.ASH.order","Mr.ASH.init")
+method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "VarBVS","BayesB","Blasso","SuSiE")
+col          = gg_color_hue(13)[c(1,12,13,2:11)]
+rho_list     = c(0,0.3,0.6,0.9,0.95,0.99)
+a            = c(1,2,3,4,5,6)
+out = matrix(0,6,13)
+for (i in 1:6) {
+  out[i,] = colMeans(matrix(res_df[[a[i]]]$fdp, 20, 13))
+}
+colnames(out) = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn",
+                  "Mr.ASH.order",
+                  "Mr.ASH.init")
+ind = c(1:3,5,12,13)
+out = out[,ind]
+
+col   = gg_color_hue(13)[c(1,8,9,11,12,13)]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1,8,9,11,12,13)]
+df = data.frame(x = rep(1:length(rho_list),length(ind)), rho = rep(rho_list, length(ind)),
+                pred = c(out), fit = rep(colnames(out), each = length(rho_list)))
+df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn","E-NET2","Lasso2","Ridge2",
+                                    "VarBVS","BayesB","Blasso","SuSiE",
+                                    "Mr.ASH.order",
+                                    "Mr.ASH.init"))
+df$size = 0.5
+df$size[1:length(rho_list)] = 1.2
+df$lt = "solid"
+df$lt[25:30] = "dashed"
+fig_dummy = ggplot(df) + geom_line(aes(x = x, y = pred, color = fit), size = df$size, linetype = df$lt) +
+  geom_point(aes(x = x, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(breaks = c(1,2,3,4,5,6),
+                     labels = c("0","0.3","0.6","0.9","0.95","0.99")) +
+  labs(y = "false discovery proportion (fdp)", x = "correlation across columns of X (rho)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  coord_cartesian(ylim = c(0,1))
+p1        = fig_dummy + theme(legend.position = "none")
+fig_main  = p1
+subtitle  = ggdraw() + draw_label("False Discovery Proportion (# of false discoveries / # of discoveries)", fontface  = 'bold', size = 14) 
+fig44      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
+```
+
+```{r fig45, fig.height=11, fig.width=15}
+res_df       = readRDS("results/localcorrfdr500200020.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "Mr.ASH.order","Mr.ASH.init")
+method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "VarBVS","BayesB","Blasso","SuSiE")
+col          = gg_color_hue(13)[c(1,12,13,2:11)]
+rho_list     = c(0,0.3,0.6,0.9,0.95,0.99)
+a            = c(1,2,3,4,5,6)
+out = matrix(0,6,13)
+for (i in 1:6) {
+  out[i,] = colMeans(matrix(res_df[[a[i]]]$pow, 20, 13))
+}
+colnames(out) = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn",
+                  "Mr.ASH.order",
+                  "Mr.ASH.init")
+ind = c(1:3,5,12,13)
+out = out[,ind]
+
+col   = gg_color_hue(13)[c(1,8,9,11,12,13)]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1,8,9,11,12,13)]
+df = data.frame(x = rep(1:length(rho_list),length(ind)), rho = rep(rho_list, length(ind)),
+                pred = c(out), fit = rep(colnames(out), each = length(rho_list)))
+df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn","E-NET2","Lasso2","Ridge2",
+                                    "VarBVS","BayesB","Blasso","SuSiE",
+                                    "Mr.ASH.order",
+                                    "Mr.ASH.init"))
+df$size = 0.5
+df$size[1:length(rho_list)] = 1.2
+df$lt = "solid"
+df$lt[25:30] = "dashed"
+fig_dummy = ggplot(df) + geom_line(aes(x = x, y = pred, color = fit), size = df$size, linetype = df$lt) +
+  geom_point(aes(x = x, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(breaks = c(1,2,3,4,5,6),
+                     labels = c("0","0.3","0.6","0.9","0.95","0.99")) +
+  labs(y = "power", x = "correlation across columns of X (rho)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  coord_cartesian(ylim = c(0,1))
+p1        = fig_dummy + theme(legend.position = "none")
+fig_main  = p1
+subtitle  = ggdraw() + draw_label("Power (# of true discoveries / # of nonzero coefficients)", fontface  = 'bold', size = 14) 
+fig45     = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
+```
+
+```{r fig42.1, fig.height=11, fig.width=15}
+res_df       = readRDS("results/equicorrfdr500200020.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "Mr.ASH.order","Mr.ASH.init")
+method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "VarBVS","BayesB","Blasso","SuSiE")
+col          = gg_color_hue(13)[c(1,12,13,2:11)]
+rho_list     = c(0,0.3,0.6,0.9,0.95,0.99)
+a            = c(1,2,3,4,5,6)
+out = matrix(0,6,13)
+for (i in 1:6) {
+  out[i,] = colMeans(matrix(res_df[[a[i]]]$fdp, 20, 13))
+}
+colnames(out) = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn",
+                  "Mr.ASH.order",
+                  "Mr.ASH.init")
+ind = c(1,6,7,9:13)
+out = out[,ind]
+
+col   = gg_color_hue(13)[c(1:3,5:7,12,13)]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1:3,5:7,12,13)]
+df = data.frame(x = rep(1:length(rho_list),length(ind)), rho = rep(rho_list, length(ind)),
+                pred = c(out), fit = rep(colnames(out), each = length(rho_list)))
+df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn","E-NET2","Lasso2","Ridge2",
+                                    "VarBVS","BayesB","Blasso","SuSiE",
+                                    "Mr.ASH.order",
+                                    "Mr.ASH.init"))
+df$size = 0.5
+df$size[1:length(rho_list)] = 1.2
+df$lt = "solid"
+df$lt[37:42] = "dashed"
+fig_dummy = ggplot(df) + geom_line(aes(x = x, y = pred, color = fit), size = df$size, linetype = df$lt) +
+  geom_point(aes(x = x, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(breaks = c(1,2,3,4,5,6),
+                     labels = c("0","0.3","0.6","0.9","0.95","0.99")) +
+  labs(y = "false discovery proportion", x = "correlation across columns of X (rho)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  coord_cartesian(ylim = c(0,1))
+p1        = fig_dummy + theme(legend.position = "none")
+fig_main  = p1
+subtitle  = ggdraw() + draw_label("False Discovery Proportion (# of false discoveries / # of discoveries)", fontface  = 'bold', size = 14) 
+fig42.1      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
+```
+
+```{r fig43.1, fig.height=11, fig.width=15}
+res_df       = readRDS("results/equicorrfdr500200020.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "Mr.ASH.order","Mr.ASH.init")
+method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "VarBVS","BayesB","Blasso","SuSiE")
+col          = gg_color_hue(13)[c(1,12,13,2:11)]
+rho_list     = c(0,0.3,0.6,0.9,0.95,0.99)
+a            = c(1,2,3,4,5,6)
+out = matrix(0,6,13)
+for (i in 1:6) {
+  out[i,] = colMeans(matrix(res_df[[a[i]]]$pow, 20, 13))
+}
+colnames(out) = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn",
+                  "Mr.ASH.order",
+                  "Mr.ASH.init")
+ind = c(1,6,7,9:13)
+out = out[,ind]
+
+col   = gg_color_hue(13)[c(1:3,5:7,12,13)]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1:3,5:7,12,13)]
+df = data.frame(x = rep(1:length(rho_list),length(ind)), rho = rep(rho_list, length(ind)),
+                pred = c(out), fit = rep(colnames(out), each = length(rho_list)))
+df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn","E-NET2","Lasso2","Ridge2",
+                                    "VarBVS","BayesB","Blasso","SuSiE",
+                                    "Mr.ASH.order",
+                                    "Mr.ASH.init"))
+df$size = 0.5
+df$size[1:length(rho_list)] = 1.2
+df$lt = "solid"
+df$lt[37:42] = "dashed"
+fig_dummy = ggplot(df) + geom_line(aes(x = x, y = pred, color = fit), size = df$size, linetype = df$lt) +
+  geom_point(aes(x = x, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(breaks = c(1,2,3,4,5,6),
+                     labels = c("0","0.3","0.6","0.9","0.95","0.99")) +
+  labs(y = "power", x = "correlation across columns of X (rho)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  coord_cartesian(ylim = c(0,1))
+p1        = fig_dummy + theme(legend.position = "none")
+fig_main  = p1
+subtitle  = ggdraw() + draw_label("Power (# of true discoveries / # of nonzero coefficients)", fontface  = 'bold', size = 14) 
+fig43.1      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
+```
+
+```{r fig44.1, fig.height=11, fig.width=15}
+res_df       = readRDS("results/equicorrfdr500200020.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "Mr.ASH.order","Mr.ASH.init")
+method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "VarBVS","BayesB","Blasso","SuSiE")
+col          = gg_color_hue(13)[c(1,12,13,2:11)]
+rho_list     = c(0,0.3,0.6,0.9,0.95,0.99)
+a            = c(1,2,3,4,5,6)
+out = matrix(0,6,13)
+for (i in 1:6) {
+  out[i,] = colMeans(matrix(res_df[[a[i]]]$fdp, 20, 13))
+}
+colnames(out) = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn",
+                  "Mr.ASH.order",
+                  "Mr.ASH.init")
+ind = c(1:3,5,12,13)
+out = out[,ind]
+
+col   = gg_color_hue(13)[c(1,8,9,11,12,13)]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1,8,9,11,12,13)]
+df = data.frame(x = rep(1:length(rho_list),length(ind)), rho = rep(rho_list, length(ind)),
+                pred = c(out), fit = rep(colnames(out), each = length(rho_list)))
+df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn","E-NET2","Lasso2","Ridge2",
+                                    "VarBVS","BayesB","Blasso","SuSiE",
+                                    "Mr.ASH.order",
+                                    "Mr.ASH.init"))
+df$size = 0.5
+df$size[1:length(rho_list)] = 1.2
+df$lt = "solid"
+df$lt[25:30] = "dashed"
+fig_dummy = ggplot(df) + geom_line(aes(x = x, y = pred, color = fit), size = df$size, linetype = df$lt) +
+  geom_point(aes(x = x, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(breaks = c(1,2,3,4,5,6),
+                     labels = c("0","0.3","0.6","0.9","0.95","0.99")) +
+  labs(y = "false discovery proportion (fdp)", x = "correlation across columns of X (rho)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  coord_cartesian(ylim = c(0,1))
+p1        = fig_dummy + theme(legend.position = "none")
+fig_main  = p1
+subtitle  = ggdraw() + draw_label("False Discovery Proportion (# of false discoveries / # of discoveries)", fontface  = 'bold', size = 14) 
+fig44.1      = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
+```
+
+```{r fig45.1, fig.height=11, fig.width=15}
+res_df       = readRDS("results/equicorrfdr500200020.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "Mr.ASH.order","Mr.ASH.init")
+method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "VarBVS","BayesB","Blasso","SuSiE")
+col          = gg_color_hue(13)[c(1,12,13,2:11)]
+rho_list     = c(0,0.3,0.6,0.9,0.95,0.99)
+a            = c(1,2,3,4,5,6)
+out = matrix(0,6,13)
+for (i in 1:6) {
+  out[i,] = colMeans(matrix(res_df[[a[i]]]$pow, 20, 13))
+}
+colnames(out) = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn",
+                  "Mr.ASH.order",
+                  "Mr.ASH.init")
+ind = c(1:3,5,12,13)
+out = out[,ind]
+
+col   = gg_color_hue(13)[c(1,8,9,11,12,13)]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1,8,9,11,12,13)]
+df = data.frame(x = rep(1:length(rho_list),length(ind)), rho = rep(rho_list, length(ind)),
+                pred = c(out), fit = rep(colnames(out), each = length(rho_list)))
+df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn","E-NET2","Lasso2","Ridge2",
+                                    "VarBVS","BayesB","Blasso","SuSiE",
+                                    "Mr.ASH.order",
+                                    "Mr.ASH.init"))
+df$size = 0.5
+df$size[1:length(rho_list)] = 1.2
+df$lt = "solid"
+df$lt[25:30] = "dashed"
+fig_dummy = ggplot(df) + geom_line(aes(x = x, y = pred, color = fit), size = df$size, linetype = df$lt) +
+  geom_point(aes(x = x, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(breaks = c(1,2,3,4,5,6),
+                     labels = c("0","0.3","0.6","0.9","0.95","0.99")) +
+  labs(y = "power", x = "correlation across columns of X (rho)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  coord_cartesian(ylim = c(0,1))
+p1        = fig_dummy + theme(legend.position = "none")
+fig_main  = p1
+subtitle  = ggdraw() + draw_label("Power (# of true discoveries / # of nonzero coefficients)", fontface  = 'bold', size = 14) 
+fig45.1     = plot_grid(subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.95))
+```
+
+```{r figure10, fig.height=14, fig.width=16}
+figure10.1 = plot_grid(fig42, fig43, nrow = 1)
+legend    <- get_legend(fig_dummy1 + theme(legend.box.margin = margin(0, 0, 0, 12)))
+figure10.1  = plot_grid(figure10.1, legend, nrow = 1, rel_widths = c(0.9,0.1))
+figure10.2 = plot_grid(fig44, fig45, nrow = 1)
+legend    <- get_legend(fig_dummy0 + theme(legend.box.margin = margin(0, 0, 0, 12)))
+figure10.2 = plot_grid(figure10.2, legend, nrow = 1, rel_widths = c(0.9,0.1))
+figure10   = plot_grid(figure10.1, figure10.2, ncol = 1)
+title      = ggdraw() + draw_label("Variable Selection Performance", fontface = 'bold', size = 20) 
+subtitle   = ggdraw() + draw_label("Scenario: EquiCorrGauss + PointNormal, n = 500, p = 2000, s = 20, pve = 0.5", fontface  = 'bold', size = 14) 
+figure10  = plot_grid(title, subtitle, figure10, ncol = 1, rel_heights = c(0.04,0.04,0.95))
+ggsave("figures/figure10_paper.pdf", figure10, width = 18, height = 15)
 ```
 
 ```{r}
