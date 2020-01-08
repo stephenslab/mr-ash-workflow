@@ -46,7 +46,7 @@ source('code/sim_wrapper.R')
 The result is summarized below. 
 
 ```{r fig1.1, fig.height=13, fig.width=15}
-res_df       = readRDS("../results/equicorr500200020.RDS")
+res_df       = readRDS("../results/equicorrfdr500200020.RDS")
 method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
                  "Mr.ASH.order","Mr.ASH.init")
 method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
@@ -97,7 +97,7 @@ fig1.1      = plot_grid(subtitle,fig_dummy, ncol = 1, rel_heights = c(0.05,0.95)
 ```
 
 ```{r fig1.2, fig.height=13, fig.width=15}
-res_df       = readRDS("../results/equicorr50020020.RDS")
+res_df       = readRDS("../results/equicorrfdr50020020.RDS")
 for (i in 1:6){
   res_df[[i]][1:20,] = tdat2[[i]][1:20,]
   res_df[[i]][221:240,] = tdat2[[i]][41:60,]
@@ -151,6 +151,106 @@ p1        = fig_dummy + theme(legend.position = "none")
 fig_main  = p1
 subtitle  = ggdraw() + draw_label("Scenario: EquiCorrGauss + Normal, n = 500, p = 200, s = 20, pve = 0.5", fontface  = 'bold', size = 14) 
 fig1.2      = plot_grid(subtitle,fig_dummy, ncol = 1, rel_heights = c(0.05,0.95))
+```
+
+```{r fig1.3, fig.height=13, fig.width=15}
+res_df       = readRDS("../results/equicorrfdr500200020.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "Mr.ASH.order","Mr.ASH.init")
+method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "VarBVS","BayesB","Blasso","SuSiE")
+rho_list     = c(0,0.3,0.6,0.9,0.95,0.99)
+a            = c(1,2,3,4,5,6)
+out = matrix(0,6,13)
+for (i in 1:6) {
+  out[i,] = colMeans(matrix(res_df[[a[i]]]$fdp, 20, 13))
+}
+colnames(out) = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn",
+                  "Mr.ASH.order",
+                  "Mr.ASH.init")
+ind = c(1,6:13)
+out = out[,ind]
+
+col   = gg_color_hue(13)[c(1:7,12,13)]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1:7,12,13)]
+df = data.frame(x = rep(1:length(rho_list),length(ind)), rho = rep(rho_list, length(ind)),
+                pred = c(out), fit = rep(colnames(out), each = length(rho_list)))
+df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn","E-NET2","Lasso2","Ridge2",
+                                    "VarBVS","BayesB","Blasso","SuSiE",
+                                    "Mr.ASH.order",
+                                    "Mr.ASH.init"))
+df$size = 0.5
+df$size[1:length(rho_list)] = 1.2
+df$lt = "solid"
+df$lt[43:48] = "dashed"
+fig_dummy = ggplot(df) + geom_line(aes(x = x, y = pred, color = fit), size = df$size, linetype = df$lt) +
+  geom_point(aes(x = x, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(breaks = c(1,2,3,4,5,6),
+                     labels = c("0","0.3","0.6","0.9","0.95","0.99")) +
+  labs(y = "predictior error (rmse / sigma)", x = "correlation across columns of X (rho)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  coord_cartesian(ylim = c(0,1))
+p1        = fig_dummy + theme(legend.position = "none")
+fig_main  = p1
+subtitle  = ggdraw() + draw_label("Scenario: EquiCorrGauss + Normal, n = 500, p = 200, s = 20, pve = 0.5", fontface  = 'bold', size = 14) 
+fig1.3      = plot_grid(subtitle,fig_dummy, ncol = 1, rel_heights = c(0.05,0.95))
+```
+
+```{r fig1.4, fig.height=13, fig.width=15}
+res_df       = readRDS("../results/equicorrfdr500200020.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "Mr.ASH.order","Mr.ASH.init")
+method_level = c("Mr.ASH","Mr.ASH.order","Mr.ASH.init","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "VarBVS","BayesB","Blasso","SuSiE")
+rho_list     = c(0,0.3,0.6,0.9,0.95,0.99)
+a            = c(1,2,3,4,5,6)
+out = matrix(0,6,13)
+for (i in 1:6) {
+  out[i,] = colMeans(matrix(res_df[[a[i]]]$pow, 20, 13))
+}
+colnames(out) = c("Mr.ASH","VarBVS","BayesB","Blasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn",
+                  "Mr.ASH.order",
+                  "Mr.ASH.init")
+ind = c(1,6:13)
+out = out[,ind]
+
+col   = gg_color_hue(13)[c(1:7,12,13)]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1:7,12,13)]
+df = data.frame(x = rep(1:length(rho_list),length(ind)), rho = rep(rho_list, length(ind)),
+                pred = c(out), fit = rep(colnames(out), each = length(rho_list)))
+df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn","E-NET2","Lasso2","Ridge2",
+                                    "VarBVS","BayesB","Blasso","SuSiE",
+                                    "Mr.ASH.order",
+                                    "Mr.ASH.init"))
+df$size = 0.5
+df$size[1:length(rho_list)] = 1.2
+df$lt = "solid"
+df$lt[43:48] = "dashed"
+fig_dummy = ggplot(df) + geom_line(aes(x = x, y = pred, color = fit), size = df$size, linetype = df$lt) +
+  geom_point(aes(x = x, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(breaks = c(1,2,3,4,5,6),
+                     labels = c("0","0.3","0.6","0.9","0.95","0.99")) +
+  labs(y = "predictior error (rmse / sigma)", x = "correlation across columns of X (rho)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  coord_cartesian(ylim = c(0,1))
+p1        = fig_dummy + theme(legend.position = "none")
+fig_main  = p1
+subtitle  = ggdraw() + draw_label("Scenario: EquiCorrGauss + Normal, n = 500, p = 200, s = 20, pve = 0.5", fontface  = 'bold', size = 14) 
+fig1.4      = plot_grid(subtitle,fig_dummy, ncol = 1, rel_heights = c(0.05,0.95))
 ```
 
 ```{r fig2.1, fig.height=13, fig.width=15}
