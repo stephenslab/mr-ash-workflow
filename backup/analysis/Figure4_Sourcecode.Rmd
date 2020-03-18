@@ -1,0 +1,227 @@
+---
+  title: "Figure3_Adaptation_to_(n, PVE, SignalShape)"
+  output:
+    workflowr::wflow_html:
+    code_folding: hide
+---
+  
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Source Code
+
+```{r library, message = FALSE}
+library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(mr.ash.alpha); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
+source('code/method_wrapper.R')
+source('code/sim_wrapper.R')
+```
+
+## Scenarios
+
+### Scenario 7
+
+Scenario 7 (Varying $n$): $n \in [\textrm{200}, \textrm{5,000}]$, $p = \textrm{2,000}$, $s = \textrm{20}$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and $\textrm{SignalShape} = \textrm{PointNormal}$.
+
+```{r code8, eval = FALSE}
+tdat8        = list()
+n_range      = c(200,500,1000,2000,5000,10000,20000,50000)
+p            = 2000
+s            = 20
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_list2 = c("mr.ash", method_list)
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+for (iter in 1:5) {
+  n               = n_range[iter]
+for (i in 1:20) {
+  
+  data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.5)
+  
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste("fit.",method_list[j],sep = ""))
+    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
+    
+    if (method_list[j] == "lasso") {
+      pred[i,method_num - 1] = fit$rsse2 / data$sigma / sqrt(n)
+    } else if (method_list[j] == "enet") {
+      pred[i,method_num - 2] = fit$rsse2 / data$sigma / sqrt(n)
+    } else if (method_list[j] == "ridge") {
+      pred[i,method_num - 0] = fit$rsse2 / data$sigma / sqrt(n)
+    }
+  }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  
+  print(c(time[i,]), digits = 4)
+  print(c(pred[i,]), digits = 4)
+}
+  print("-----------------------------------")
+  tdat8[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+}
+```
+
+### Scenario 8
+
+Scenario 8 (Varying PVE): $n = \textrm{500}$, $p = \textrm{2,000}$, $s = \textrm{20}$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = \in [0,0.9]$ and $\textrm{SignalShape} = \textrm{PointNormal}$.
+
+```{r code9, eval = FALSE}
+tdat9        = list()
+n            = 500
+p            = 2000
+pve_range    = seq(0,0.9,0.1)
+s            = 20
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_num   = length(method_list) + 1
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = c("mr.ash", method_list)
+time         = matrix(0, iter_num, method_num); colnames(time) = c("mr.ash", method_list)
+
+for (iter in 1:10) {
+for (i in 1:20) {
+  data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = pve_range[iter])
+ 
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste("fit.",method_list[j],sep = ""))
+    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
+  }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  print(pred[i,])
+}
+tdat9[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(c("mr.ash", method_list), each = 20))
+}
+```
+
+### Scenario 9
+
+Scenario 9 (Varying SignalShape with a dense signal): $n = \textrm{500}$, $p = \textrm{200}$, $s = \textrm{200}$, $\textrm{Design} = \textrm{IndepGauss}$ and $\textrm{PVE} = 0.5$. We sample $\beta$ from the point-$h$ density, i.e.
+\ba
+\beta_j = \left\{ \begin{array}{ll} \iid\, h, & j \in S \\
+= 0, & j \notin S \end{array} \right,
+\ea
+for $h \in \{t_1,t_2, t_4, t_8, \mathcal{L}(1), \mathcal{N}(0,1), \mathcal{U}(-1,1),\mathcal{C}(1) \}$, where $t_{\rm df}$ is the $t$-density with degree of freedom df, and $\mathcal{L}$, $\mathcal{N}$, $\mathcal{U}$ and $\mathcal{C}$ denote Laplace, Normal, Uniform and Constant densities, respectively. Again, $\beta$ is rescaled after sampling to satisfy $\textrm{PVE} = 0.5$.
+
+```{r code10, eval = FALSE}
+tdat10       = list()
+n            = 500
+p            = 200
+s            = 200
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_list2 = c("mr.ash", method_list, "enet2","lasso2","ridge2")
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+for (iter in 1:8) {
+  df           = c(1,2,4,8)
+  signal_shape = c("lap","normal","unif","const")
+for (i in 1:20) {
+  
+  if (iter <= 4) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = "t", df = df[iter], pve = 0.5)
+  } else if (iter > 4) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = signal_shape[iter - 4], pve = 0.5)
+  }
+
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste("fit.",method_list[j],sep = ""))
+    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
+    
+    if (method_list[j] == "lasso") {
+      pred[i,method_num - 1] = fit$rsse2 / data$sigma / sqrt(n)
+    } else if (method_list[j] == "enet") {
+      pred[i,method_num - 2] = fit$rsse2 / data$sigma / sqrt(n)
+    } else if (method_list[j] == "ridge") {
+      pred[i,method_num - 0] = fit$rsse2 / data$sigma / sqrt(n)
+    }
+  }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  print(c(pred[i,]), digits = 4)
+}
+  tdat10[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+}
+```
+
+### Scenario 10
+
+Scenario 10 (Varying SignalShape with a sparse signal): $n = \textrm{500}$, $p = \textrm{2,000}$, $s = \textrm{20}$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and varying signal shapes described in Scenario 9.
+
+```{r code11, eval = FALSE}
+tdat11        = list()
+n            = 500
+p            = 2000
+s            = 20
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_list2 = c("mr.ash", method_list, "enet2","lasso2","ridge2")
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+for (iter in 1:8) {
+  df           = c(1,2,4,8)
+  signal_shape = c("lap","normal","unif","const")
+for (i in 1:20) {
+  
+  if (iter <= 4) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = "t", df = df[iter], pve = 0.5)
+  } else if (iter > 4) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = signal_shape[iter - 4], pve = 0.5)
+  }
+
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste("fit.",method_list[j],sep = ""))
+    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
+    
+    if (method_list[j] == "lasso") {
+      pred[i,method_num - 1] = fit$rsse2 / data$sigma / sqrt(n)
+    } else if (method_list[j] == "enet") {
+      pred[i,method_num - 2] = fit$rsse2 / data$sigma / sqrt(n)
+    } else if (method_list[j] == "ridge") {
+      pred[i,method_num - 0] = fit$rsse2 / data$sigma / sqrt(n)
+    }
+  }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  print(c(pred[i,]), digits = 4)
+}
+  tdat11[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+}
+```
+
+## Save the results
+
+```{r saveresults}
+saveRDS(tdat8, "results/scenario7.RDS")
+saveRDS(tdat9, "results/scenario8.RDS")
+saveRDS(tdat10, "results/scenario9.RDS")
+saveRDS(tdat11, "results/scenario10.RDS")
+```

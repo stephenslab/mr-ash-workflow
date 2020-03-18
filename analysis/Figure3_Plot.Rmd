@@ -1,0 +1,241 @@
+---
+title: "Figure3_for_the_paper"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message = FALSE}
+library(ggplot2); library(cowplot);
+## function for color
+gg_color_hue <- function(n) {
+  hues = seq(15, 375, length = n + 1)
+  hcl(h = hues, l = 65, c = 100)[1:n]
+}
+```
+
+## Figure
+
+### Scenario 7
+
+Scenario 1 (Low-dimensional setting): $n = \textrm{500}$, $p = \textrm{200}$, $s \in [1,p]$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and $\textrm{SignalShape} = \textrm{PointNormal}$.
+
+```{r fig1_7, fig.height=11, fig.width=15, fig.align = "center"}
+res_df = readRDS("./results/scenario7.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+df           = data.frame()
+n_range      = c(50,100,200,500,1000,2000,5000)
+for (i in 3:7) {
+res_df[[i]]$fit   = rep(method_list, each = 20)
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_list)
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 11))),
+                                         time2 = apply(matrix(res_df[[i]]$time, 20, 11), 2, median),
+                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 11))),
+                                         n    = n_range[i],
+                                         fit  = method_list))
+}
+df$fit = factor(df$fit, levels = method_list)
+df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn"),]
+df$size = 0.5
+df$size[1:5] = 1.2
+col   = gg_color_hue(13)[1:7]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,1,2,6)[1:7]
+df$Method = df$fit
+p1    = ggplot(df) + geom_line(aes(x = n, y = pred, color = Method), size = df$size) +
+  geom_point(aes(x = n, y = pred, color = Method, shape = Method), size = 2.5) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = n_range) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of coefficients (p)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        axis.title.y = element_blank()) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(1,1.1,1.2,1.3,1.4)) +
+  coord_cartesian(ylim = c(1,1.4))
+fig_dummy2 = p1
+fig_main  = p1 + theme(legend.position = "none")
+#suptitle  = ggdraw() + draw_label("Varying n", fontface  = 'bold', size = 22) 
+#subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 200-5000, p = 2000, s = 20, pve = 0.5", fontface  = 'bold', size = 22) 
+#fig1_7     = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
+subtitle   = ggdraw() + draw_label("Varying n (Scenario 7)", fontface  = 'bold', size = 22)  
+fig1_7    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+
+### Scenario 8
+
+Scenario 8 (Varying PVE): $n = \textrm{500}$, $p = \textrm{2,000}$, $s = \textrm{20}$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = \in [0,0.9]$ and $\textrm{SignalShape} = \textrm{PointNormal}$.
+
+```{r fig1_8, fig.height=11, fig.width=15, fig.align = "center"}
+res_df = readRDS("./results/scenario8.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "VarBVS","BayesB","B-Lasso","SuSiE")
+col          = gg_color_hue(13)[1:11]
+shape        = c(19,17,24,25,9,3,11,4,5,7,8)
+pve_list     = seq(0,0.9,0.1)
+sdat         = data.frame()
+for (i in 1:10) {
+  sdat = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred, 20, 11)),
+                                time = colMeans(matrix(res_df[[i]]$time, 20, 11)),
+                                fit  = method_list,
+                                pve  = pve_list[i]))
+}
+sdat$fit = factor(sdat$fit, levels = method_level)
+sdat     = sdat[sdat$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn"),]
+sdat$size = 0.5
+sdat$size[1:10] = 1.2
+
+p1 = ggplot(sdat) + geom_line(aes(x = pve, y = pred, color = fit), size = sdat$size) +
+  geom_point(aes(x = pve, y = pred, color = fit, shape = fit), size = 2.5) +
+  scale_x_continuous(breaks = pve_list) +
+  theme_cowplot(font_size = 22) +
+  labs(y = "predictior error (rmse / sigma)", x = "proportion of variance explained (pve)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        axis.title.y = element_blank(),
+        legend.position = "none") +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(1,1.1,1.2,1.3,1.4)) +
+  coord_cartesian(ylim = c(1,1.35))
+fig_main = p1
+#suptitle  = ggdraw() + draw_label("Varying PVE (or SNR, Noise Variance)", fontface  = 'bold', size = 22) 
+#subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 2000, s = 20, pve = 0-0.9", fontface  = 'bold', size = 22) 
+#fig1_8    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
+subtitle   = ggdraw() + draw_label("Varying PVE / Signal-to-Noise Ratio (Scenario 8)", fontface  = 'bold', size = 22)  
+fig1_8    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+
+### Scenario 9
+
+Scenario 9 (Varying SignalShape with a dense signal): $n = \textrm{500}$, $p = \textrm{200}$, $s = \textrm{200}$, $\textrm{Design} = \textrm{IndepGauss}$ and $\textrm{PVE} = 0.5$. We sample $\beta$ from the Point + $h$ density, i.e.
+
+$$
+\beta_j = \left\{ \begin{array}{ll} \sim\, h, & j \in S \\
+= 0, & j \notin S \end{array} \right.
+$$
+
+
+for $h \in \{t_1,t_2, t_4, t_8, \mathcal{L}(1), \mathcal{N}(0,1), \mathcal{U}(-1,1),\mathcal{C}(1) \}$, where $t_{\rm df}$ is the $t$-density with degree of freedom df, and $\mathcal{L}$, $\mathcal{N}$, $\mathcal{U}$ and $\mathcal{C}$ denote Laplace, Normal, Uniform and Constant densities, respectively. Again, $\beta$ is rescaled after sampling to satisfy $\textrm{PVE} = 0.5$.
+
+```{r fig1_9, fig.height=11, fig.width=15, fig.align = "center"}
+res_df = readRDS("./results/scenario9.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "VarBVS","BayesB","B-Lasso","SuSiE")
+x_range      = 2^(c(1,2,3,4,5,6,7,8) - 1)
+df           = data.frame()
+for (i in 1:8) {
+res_df[[i]]       = res_df[[i]][1:220,]
+res_df[[i]]$fit   = rep(method_list, each = 20)
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_level)
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 11))),
+                                         df   = x_range[i],
+                                         fit  = method_list))
+}
+df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn"),]
+df$fit = factor(df$fit, levels = method_level)
+df$size = 0.5
+df$size[1:8] = 1.2
+col   = gg_color_hue(13)[1:7]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,1)[1:7]
+p1    = ggplot(df) + geom_line(aes(x = df, y = pred, color = fit), size = df$size) +
+  geom_point(aes(x = df, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = c(1,2,4,8,16,32,64,128),
+                     labels = c("t (df=1)","t (df=2)","t (df=4)","t (df=8)","Laplace",
+                                "Normal","Uniform","Constant")) +
+  labs(y = "predictior error (rmse / sigma)", x = "signal shape (distribution of nonzero coefficients)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        axis.title.y = element_blank(),
+        legend.position = "none") +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(1,1.1,1.2,1.3,1.4)) +
+  coord_cartesian(ylim = c(1,sqrt(2)))
+fig_main = p1
+#suptitle  = ggdraw() + draw_label("Varying Signal Shape (p = 200, s = 200)", fontface  = 'bold', size = 22) 
+#subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + Spike-and-Slab, n = 500, p = 200, s = 200, pve = 0.5", fontface  = 'bold', size = 22) 
+#fig1_9    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
+subtitle   = ggdraw() + draw_label("Varying Signal Shape, Dense Signal (Scenario 9)", fontface  = 'bold', size = 22)  
+fig1_9    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+
+### Scenario 10
+
+Scenario 10 (Varying SignalShape with a sparse signal): $n = \textrm{500}$, $p = \textrm{2,000}$, $s = \textrm{20}$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and varying signal shapes described in Scenario 9.
+
+```{r fig1_10, fig.height=11, fig.width=15, fig.align = "center"}
+res_df = readRDS("./results/scenario10.RDS")
+method_list  = c("Mr.ASH","VarBVS","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "VarBVS","BayesB","B-Lasso","SuSiE")
+x_range      = 2^(c(1,2,3,4,5,6,7,8) - 1)
+df           = data.frame()
+for (i in 1:8) {
+res_df[[i]]       = res_df[[i]][1:220,]
+res_df[[i]]$fit   = rep(method_list, each = 20)
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_level)
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 11))),
+                                         df   = x_range[i],
+                                         fit  = method_list))
+}
+df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn"),]
+df$fit = factor(df$fit, levels = method_level)
+df$size = 0.5
+df$size[1:8] = 1.2
+col   = gg_color_hue(13)[1:7]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,1)[1:7]
+p1    = ggplot(df) + geom_line(aes(x = df, y = pred, color = fit), size = df$size) +
+  geom_point(aes(x = df, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = c(1,2,4,8,16,32,64,128),
+                     labels = c("t (df=1)","t (df=2)","t (df=4)","t (df=8)","Laplace",
+                                "Normal","Uniform","Constant")) +
+  labs(y = "predictior error (rmse / sigma)", x = "signal shape (distribution of nonzero coefficients)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        axis.title.y = element_blank(),
+        legend.position = "none") +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(1,1.1,1.2,1.3,1.4)) +
+  coord_cartesian(ylim = c(1,1.4))
+fig_main = p1
+#suptitle  = ggdraw() + draw_label("Varying Signal Shape (p = 2000, s = 20)", fontface  = 'bold', size = 22) 
+#subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + Spike-and-Slab, n = 500, p = 2000, s = 20, pve = 0.5", fontface  = 'bold', size = 22) 
+#fig1_10    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
+subtitle   = ggdraw() + draw_label("Varying Signal Shape, Sparse Signal (Scenario 10)", fontface  = 'bold', size = 22)  
+fig1_10    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+
+## Draw Figure
+
+```{r figure3}
+figure3  = plot_grid(fig1_7, fig1_8, fig1_9, fig1_10, ncol = 2, rel_heights = c(0.5,0.55))
+title    = ggdraw() + draw_label("Adaptation to Dimension, Signal Shape and PVE (Penalized Linear Regression)", fontface = 'bold', size = 22)
+legend   <- get_legend(fig_dummy2 +
+                         theme_cowplot(font_size = 22) +
+                         theme(legend.box.margin = margin(0, 0, 0, 12),
+                               legend.key.size = unit(0.8, "cm")))
+yaxis    = ggdraw() + draw_label("predictior error (rmse / sigma)", size = 25, angle = 90)
+figure3  = plot_grid(plot_grid(plot_grid(yaxis,
+                                                figure3, rel_widths = c(0.03,0.97), nrow = 1),
+                               ncol = 1, rel_heights = c(0.05,0.95)),
+                     legend, nrow = 1, rel_widths = c(0.9,0.1))
+ggsave("figure3_for_paper.pdf", figure3, width = 18, height = 16)
+```
