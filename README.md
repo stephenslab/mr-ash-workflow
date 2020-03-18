@@ -76,6 +76,7 @@ We provide `analysis/plots_for_the_paper.RDS` for reproducing all the figures in
 | `Figure 4` | Adaptation to Sparsity (Bayesian Linear Regression)                      | `analysis/Figure2_Sourcecode`          | `analysis/Figure4_Plot`  |   |
 | `Figure 5` | Sample size, signal strength, signal shape (Bayesian Linear Regression)  | `analysis/Figure3_Sourcecode`          | `analysis/Figure5_Plot`  |   |
 | `Figure 6` | Computation time (scalability)                                           | `analysis/Figure6_Sourcecode`          | `analysis/Figure6_Plot`  |   |
+| `Figure 7` | Relative Performance                                                     | -          | `analysis/Figure7_Plot`  |   |
 
 
 ---------------------------------------------------------------
