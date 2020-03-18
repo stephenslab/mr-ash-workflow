@@ -1,0 +1,16 @@
+name: "mr-ash-workflow"
+output_dir: ../docs
+navbar:
+  title: "mr-ash-workflow"
+  left:
+  - text: Home
+    href: index.html
+  right:
+    - text: source
+      href: https://github.com/stephenslab/mr-ash-workflow
+output:
+  workflowr::wflow_html:
+    toc: yes
+    toc_float: yes
+    theme: cosmo
+    highlight: textmate

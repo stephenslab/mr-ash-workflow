@@ -1,0 +1,474 @@
+---
+title: "Figure2_Adaptation_to_Sparsity"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Source Code
+
+```{r library, message = FALSE}
+library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(mr.ash.alpha); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
+source('code/method_wrapper.R')
+source('code/sim_wrapper.R')
+```
+
+## Scenarios
+
+### Scenario 1
+
+Scenario 1 (Low-dimensional setting): $n = \textrm{500}$, $p = \textrm{200}$, $s \in [1,p]$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and $\textrm{SignalShape} = \textrm{PointNormal}$.
+
+```{r code1, eval = FALSE}
+tdat1        = list()
+n            = 500
+p            = 200
+s_range      = c(1,2,5,10,20,50,100,200)
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+
+for (iter in 1:8) {
+  s               = s_range[iter]
+  for (i in 1:20) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.5)
+    
+    for (j in 1:length(method_list)) {
+      fit.method    = get(paste("fit.",method_list[j],sep = ""))
+      fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+      pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+      time[i,j+1]   = fit$t
+      
+      if (method_list[j] == "lasso") {
+        pred[i,method_num - 2] = fit$rsse2 / data$sigma / sqrt(n)
+      } else if (method_list[j] == "enet") {
+        pred[i,method_num - 3] = fit$rsse2 / data$sigma / sqrt(n)
+      } else if (method_list[j] == "ridge") {
+        pred[i,method_num - 1] = fit$rsse2 / data$sigma / sqrt(n)
+      }
+    }
+    
+    fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            sa2 = (2^((0:19)/20) - 1)^2))
+    pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,1]   = fit$t
+    
+    fit           = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                                sa2 = c(0, 1 / s), sigma2 = data$sigma^2,
+                                update.pi = FALSE, pi = c(1 - s/p, s/p),
+                                beta.init = NULL, update.order = NULL)
+    pred[i,method_num]  = fit$rsse / data$sigma / sqrt(n)
+    time[i,method_num]  = fit$t
+    cat(pred[i,method_num], " ", mean((data$beta[data$beta != 0]/data$sigma)^2), " ", 1/s, "\n")
+    
+    print(c(pred[i,]))
+  }
+  tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+}
+```
+
+### Scenario 2
+
+(High-dimensional setting): $n = \textrm{500}$, $p = \textrm{10,000}$, $s \in [1,p]$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and $\textrm{SignalShape} = \textrm{PointNormal}$.
+
+```{r code2, eval = FALSE}
+tdat2        = list()
+n            = 500
+p            = 10000
+s_range      = c(1,5,20,100,500,2000,10000)
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+for (iter in 1:7) {
+  s               = s_range[iter]
+  for (i in 1:20) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.5)
+    
+    for (j in 1:length(method_list)) {
+      fit.method    = get(paste("fit.",method_list[j],sep = ""))
+      fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+      pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+      time[i,j+1]   = fit$t
+      
+      if (method_list[j] == "lasso") {
+        pred[i,method_num - 2] = fit$rsse2 / data$sigma / sqrt(n)
+      } else if (method_list[j] == "enet") {
+        pred[i,method_num - 3] = fit$rsse2 / data$sigma / sqrt(n)
+      } else if (method_list[j] == "ridge") {
+        pred[i,method_num - 1] = fit$rsse2 / data$sigma / sqrt(n)
+      }
+    }
+    
+    fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            sa2 = (2^((0:19)/20) - 1)^2)
+    pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,1]   = fit$t
+    
+    fit           = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                                sa2 = c(0, 1 / s), sigma2 = data$sigma^2,
+                                update.pi = FALSE, pi = c(1 - s/p, s/p),
+                                beta.init = NULL, update.order = NULL)
+    pred[i,method_num]  = fit$rsse / data$sigma / sqrt(n)
+    time[i,method_num]  = fit$t
+    
+    print(c(pred[i,]))
+  }
+  tdat2[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+}
+```
+
+### Scenario 3
+
+Scenario 3 (Constant SignalShape setting): $n = \textrm{500}$, $p = \textrm{200}$, $s \in [1,p]$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and $\textrm{SignalShape} = \textrm{PointConst}$. Here PointConst denotes the following distribution on $\beta$: $\beta_j = c$ if $j \in S$ and $\beta_j = 0$ otherwise. Again, $c$ is chosen according to $\textrm{PVE} = 0.5$.
+
+```{r code3, eval = FALSE}
+tdat3        = list()
+n            = 500
+p            = 200
+s_range      = c(1,2,5,10,20,50,100,200)
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+fdp          = matrix(0, iter_num, method_num); colnames(fdp) = method_list2
+pow          = matrix(0, iter_num, method_num); colnames(pow) = method_list2
+
+
+for (iter in 1:8) {
+s            = s_range[iter]
+for (i in 1:20) {
+  data          = simulate_data(n, p, s = s, seed = i, signal = "const", pve = 0.5)
+  true_support  = (data$beta != 0)
+ 
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste("fit.",method_list[j],sep = ""))
+    suppressWarnings(
+    fit          <- fit.method(data$X, data$y, data$X.test, data$y.test, seed = i))
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
+    if (method_list[j] %in% c("varbvs","bayesb","susie")) {
+      discoveries       = (fit$pip > 0.5)
+    } else {
+      discoveries       = (fit$beta != 0)
+    }
+    fdp[i,j+1]    = compute_fdp(discoveries, true_support)
+    pow[i,j+1]    = compute_pow(discoveries, true_support)
+    
+    if (method_list[j] == "lasso") {
+      lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
+      lasso.beta       = as.vector(coef(fit$fit))[-1]
+      lasso.time       = c(fit$t, fit$t2)
+    }
+  }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  discoveries = (fit$pip > 0.5)
+  fdp[i,1]    = compute_fdp(discoveries, true_support)
+  pow[i,1]    = compute_pow(discoveries, true_support)
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            update.order = lasso.path.order,
+                           sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+2] = fit$t + lasso.time[2]
+  discoveries = (fit$pip > 0.5)
+  fdp[i,j+2]  = compute_fdp(discoveries, true_support)
+  pow[i,j+2]  = compute_pow(discoveries, true_support)
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta,
+                           sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+3] = fit$t + lasso.time[1]
+  discoveries = (fit$pip > 0.5)
+  fdp[i,j+3]  = compute_fdp(discoveries, true_support)
+  pow[i,j+3]  = compute_pow(discoveries, true_support)
+  
+  print(c(pred[i,]), digits = 3)
+}
+cat("-------------------------------\n")
+print(c(colMeans(pred)), digits = 3)
+tdat3[[iter]] = data.frame(pred = c(pred), time = c(time), fdp = c(fdp),
+                           pow = c(pow), fit = rep(method_list2, each = 20))
+}
+```
+
+### Scenario 4
+
+Scenario 4 (High PVE setting): $n = \textrm{500}$, $p = \textrm{200}$, $s \in [1,p]$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.9$ and $\textrm{SignalShape} = \textrm{PointNormal}$.
+
+```{r code4, eval = FALSE}
+tdat4        = list()
+n            = 500
+p            = 200
+s_range      = c(1,2,5,10,20,50,100,200)
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+fdp          = matrix(0, iter_num, method_num); colnames(fdp) = method_list2
+pow          = matrix(0, iter_num, method_num); colnames(pow) = method_list2
+
+
+for (iter in 1:8) {
+s            = s_range[iter]
+for (i in 1:20) {
+  data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.9)
+  true_support  = (data$beta != 0)
+ 
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste("fit.",method_list[j],sep = ""))
+    suppressWarnings(
+    fit          <- fit.method(data$X, data$y, data$X.test, data$y.test, seed = i))
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
+    if (method_list[j] %in% c("varbvs","bayesb","susie")) {
+      discoveries       = (fit$pip > 0.5)
+    } else {
+      discoveries       = (fit$beta != 0)
+    }
+    fdp[i,j+1]    = compute_fdp(discoveries, true_support)
+    pow[i,j+1]    = compute_pow(discoveries, true_support)
+    
+    if (method_list[j] == "lasso") {
+      lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
+      lasso.beta       = as.vector(coef(fit$fit))[-1]
+      lasso.time       = c(fit$t, fit$t2)
+    }
+  }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  discoveries = (fit$pip > 0.5)
+  fdp[i,1]    = compute_fdp(discoveries, true_support)
+  pow[i,1]    = compute_pow(discoveries, true_support)
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            update.order = lasso.path.order,
+                           sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+2] = fit$t + lasso.time[2]
+  discoveries = (fit$pip > 0.5)
+  fdp[i,j+2]  = compute_fdp(discoveries, true_support)
+  pow[i,j+2]  = compute_pow(discoveries, true_support)
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta,
+                           sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+3] = fit$t + lasso.time[1]
+  discoveries = (fit$pip > 0.5)
+  fdp[i,j+3]  = compute_fdp(discoveries, true_support)
+  pow[i,j+3]  = compute_pow(discoveries, true_support)
+  
+  print(c(pred[i,]), digits = 3)
+}
+cat("-------------------------------\n")
+print(c(colMeans(pred)), digits = 3)
+tdat4[[iter]] = data.frame(pred = c(pred), time = c(time), fdp = c(fdp),
+                           pow = c(pow), fit = rep(method_list2, each = 20))
+}
+```
+
+### Scenario 5
+
+Scenario 5 (Equicorrelated design setting with low dimension): $n = \textrm{500}$, $p = \textrm{200}$, $s \in [1,p]$, $\textrm{Design} = \textrm{EquicorrGauss}(0.95)$, $\textrm{PVE} = 0.5$ and $\textrm{SignalShape} = \textrm{PointNormal}$. Here $\textrm{EquicorrGauss}(\rho)$ denotes the design matrix $X \sim \mathcal{MN}(0,I_n, \Sigma_\rho)$, where $\mathcal{MN}$ is the matrix normal distribution and $\Sigma_\rho$ is the equicorrelated covariance matrix having unit diagonal entries and constant off-diagonal entries $\rho$.
+
+```{r code5, eval = FALSE}
+tdat5        = list()
+n            = 500
+p            = 2000
+s_range      = c(1,2,5,10,20,50,100,200)
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+fdp          = matrix(0, iter_num, method_num); colnames(fdp) = method_list2
+pow          = matrix(0, iter_num, method_num); colnames(pow) = method_list2
+
+
+for (iter in 1:8) {
+s            = s_range[iter]
+for (i in 1:20) {
+  data          = simulate_data(n, p, s = s, seed = i, signal = "normal", rho = 0.95,
+                                design = "equicorrgauss", pve = 0.5)
+  true_support  = (data$beta != 0)
+ 
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste("fit.",method_list[j],sep = ""))
+    suppressWarnings(
+    fit          <- fit.method(data$X, data$y, data$X.test, data$y.test, seed = i))
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
+    if (method_list[j] %in% c("varbvs","bayesb","susie")) {
+      discoveries       = (fit$pip > 0.5)
+    } else {
+      discoveries       = (fit$beta != 0)
+    }
+    fdp[i,j+1]    = compute_fdp(discoveries, true_support)
+    pow[i,j+1]    = compute_pow(discoveries, true_support)
+    
+    if (method_list[j] == "lasso") {
+      lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
+      lasso.beta       = as.vector(coef(fit$fit))[-1]
+      lasso.time       = c(fit$t, fit$t2)
+    }
+  }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  discoveries = (fit$pip > 0.5)
+  fdp[i,1]    = compute_fdp(discoveries, true_support)
+  pow[i,1]    = compute_pow(discoveries, true_support)
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            update.order = lasso.path.order,
+                           sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+2] = fit$t + lasso.time[2]
+  discoveries = (fit$pip > 0.5)
+  fdp[i,j+2]  = compute_fdp(discoveries, true_support)
+  pow[i,j+2]  = compute_pow(discoveries, true_support)
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta,
+                           sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+3] = fit$t + lasso.time[1]
+  discoveries = (fit$pip > 0.5)
+  fdp[i,j+3]  = compute_fdp(discoveries, true_support)
+  pow[i,j+3]  = compute_pow(discoveries, true_support)
+  
+  print(c(pred[i,]), digits = 3)
+  #print(c(fdp[i,]), digits = 3)
+  #print(c(pow[i,]), digits = 3)
+}
+cat("-------------------------------\n")
+print(c(colMeans(pred)), digits = 3)
+tdat5[[iter]] = data.frame(pred = c(pred), time = c(time), fdp = c(fdp),
+                           pow = c(pow), fit = rep(method_list2, each = 20))
+}
+```
+
+### Scenario 6
+
+Scenario 6 (Real Genotype design): $n = \textrm{287}$, $p = [\textrm{4,012}, \textrm{8,760}]$, $s \in [1,500]$, $\textrm{Design} = \textrm{RealGenotype}$, $\textrm{PVE} = 0.5$ and $\textrm{SignalShape} = \textrm{PointNormal}$.
+
+```{r code6, eval = FALSE}
+tdat6        = list()
+n            = 287
+p            = 2000
+s_range      = c(1,5,20,100,500)
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+fdp          = matrix(0, iter_num, method_num); colnames(fdp) = method_list2
+pow          = matrix(0, iter_num, method_num); colnames(pow) = method_list2
+
+
+for (iter in 1:5) {
+s            = s_range[iter]
+for (i in 1:20) {
+  data          = simulate_data(s = s, seed = i, signal = "normal",
+                                design = "realgenotype", filepath = filelist[i], pve = 0.5)
+  p             = dim(data$X)[2]
+  true_support  = (data$beta != 0)
+ 
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste("fit.",method_list[j],sep = ""))
+    suppressWarnings(
+    fit          <- fit.method(data$X, data$y, data$X.test, data$y.test, seed = i))
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
+    if (method_list[j] %in% c("varbvs","bayesb","susie")) {
+      discoveries       = (fit$pip > 0.5)
+    } else {
+      discoveries       = (fit$beta != 0)
+    }
+    fdp[i,j+1]    = compute_fdp(discoveries, true_support)
+    pow[i,j+1]    = compute_pow(discoveries, true_support)
+    
+    if (method_list[j] == "lasso") {
+      lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
+      lasso.beta       = as.vector(coef(fit$fit))[-1]
+      lasso.time       = c(fit$t, fit$t2)
+    }
+  }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  discoveries = (fit$pip > 0.5)
+  fdp[i,1]    = compute_fdp(discoveries, true_support)
+  pow[i,1]    = compute_pow(discoveries, true_support)
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            update.order = lasso.path.order,
+                           sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+2] = fit$t + lasso.time[2]
+  discoveries = (fit$pip > 0.5)
+  fdp[i,j+2]  = compute_fdp(discoveries, true_support)
+  pow[i,j+2]  = compute_pow(discoveries, true_support)
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta,
+                           sa2 = (2^((0:19) / 5) - 1)^2)
+  pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+3] = fit$t + lasso.time[1]
+  discoveries = (fit$pip > 0.5)
+  fdp[i,j+3]  = compute_fdp(discoveries, true_support)
+  pow[i,j+3]  = compute_pow(discoveries, true_support)
+  
+  print(c(pred[i,]), digits = 3)
+  print(c(fdp[i,]), digits = 3)
+  print(c(pow[i,]), digits = 3)
+}
+cat("-------------------------------\n")
+print(c(colMeans(pred)), digits = 3)
+tdat6[[iter]] = data.frame(pred = c(pred), time = c(time), fdp = c(fdp),
+                           pow = c(pow), fit = rep(method_list2, each = 20))
+}
+```
+
+## Save the results
+
+```{r saveresults}
+saveRDS(tdat1, "results/scenario1.RDS")
+saveRDS(tdat2, "results/scenario2.RDS")
+saveRDS(tdat3, "results/scenario3.RDS")
+saveRDS(tdat4, "results/scenario4.RDS")
+saveRDS(tdat5, "results/scenario5.RDS")
+saveRDS(tdat6, "results/scenario6.RDS")
+```

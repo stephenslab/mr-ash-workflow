@@ -1,0 +1,222 @@
+---
+title: "Figure1_Sourcecode"
+author: "Youngseok Kim"
+date: "5/19/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+scad = function(b, lambda = 1, eta = 3) {
+  b1 = pmax(abs(b) - lambda, 0) * sign(b) * (abs(b) <= 2 * lambda)
+  b2 = ((eta-1) * b - sign(b) * eta * lambda) / (eta-2) * (abs(b) <= eta * lambda) * (abs(b) > 2 * lambda)
+  b3 = b * (abs(b) > eta * lambda)
+  return (b1+b2+b3)
+}
+
+mcp = function(b, lambda = 1, eta = 2) {
+  b1 = pmax(abs(b) - lambda, 0) * sign(b) * (b <= eta * lambda) * eta / (eta-1)
+  b2 = b * (abs(b) > eta * lambda)
+  return (b1+b2)
+}
+
+softt = function(b, lambda = 1) {
+  return (pmax(abs(b) - lambda, 0) * sign(b))
+}
+
+hardt = function(b, lambda = 1) {
+  return (b * (abs(b) >= lambda))
+}
+
+enett = function(b, lambda = 1, eta = 0.5) {
+  r = 1 + (1 - eta) * lambda
+  return (softt(b / r, lambda * eta / r))
+}
+```
+
+
+```{r}
+R.hardt = function(b, lambda = 1) {
+  b     = abs(b)
+  out   = b^2/2
+  out[b > lambda] = lambda^2/2
+  exp(-out)
+}
+
+R.softt = function(b, lambda = 1) {
+  b     = abs(b)
+  out   = lambda^2/2 + (b - lambda) * lambda
+  out[b <= lambda] = b[b <= lambda]^2/2
+  exp(-out)
+}
+
+R.scad = function(b, lambda = 1, eta = 3) {
+  b     = abs(b)
+  out   = lambda^2/2 + (b - lambda) * lambda
+  out[b <= lambda] = b[b <= lambda]^2/2
+  out[b > 2 * lambda] = lambda^2 * 3/2 + (eta - 2) * lambda^2/2 * 
+    (1 - (eta - b[b > 2 * lambda] / lambda)^2 / (eta - 2)^2)
+  out[b > eta * lambda] = lambda^2 * 3/2 + (eta - 2) * lambda^2/2
+  exp(-out)
+}
+
+R.mcp = function(b, lambda = 1, eta = 2) {
+  b     = abs(b)
+  out   = lambda^2/2 + (eta - 1) * lambda^2 / 2 * 
+    (1 - (eta - b / lambda)^2 / (eta - 1)^2)
+  out[b > eta * lambda] = lambda^2 / 2 + (eta - 1) * lambda^2 / 2 
+  out[b <= lambda] = b[b <= lambda]^2/2
+  exp(-out)
+}
+
+R.enet = function(b, lambda = 1, eta = 0.5) {
+  b     = abs(b)
+  r     = 1 + (1 - eta) * lambda
+  out   = (r - 1) / r * (b - eta * lambda)^2 / 2 + eta * lambda * (b - eta * lambda) + (eta * lambda)^2 / 2
+  out[b <= eta * lambda] = b[b <= eta * lambda]^2/2
+  exp(-out)
+}
+```
+
+```{r}
+pen.hardt = function(b, lambda = 1) {
+  rep(lambda, length(b))
+}
+
+pen.softt = function(b, lambda = 1) {
+  lambda * abs(b)
+}
+
+pen.scad = function(b, lambda = 1, eta = 3) {
+  lambda * abs(b) * (abs(b) <= lambda) +
+    (eta * lambda * abs(b) - 0.5 * (b^2 + lambda^2)) / (eta - 1) * ((abs(b) > lambda) & (abs(b) <= eta * lambda)) +
+    lambda^2 * (eta + 1) / 2 * (abs(b) > eta * lambda)
+}
+
+pen.mcp = function(b, lambda = 1, eta = 2) {
+  (lambda * abs(b) - b^2 / 2 / eta) * (abs(b) <= eta * lambda) +
+    lambda^2 * eta / 2 * (abs(b) > eta * lambda)
+}
+
+pen.enet = function(b, lambda = 1, eta = 0.5) {
+  (1 - eta) * lambda / 2 * b^2 + eta * lambda * abs(b)
+}
+```
+
+```{r}
+postmean = function(b, pi, sa2 = 0:100, sigma2 = 1){
+  phi       = outer(b^2, 1 / 2 / (1 + 1 / sa2) / sigma2);
+  phi       = exp(phi - apply(phi, 1, max))
+  
+  phi       = t(pi * t(phi) / sqrt(1 + sa2));
+  phi       = phi / rowSums(phi);
+  out       = c(colSums(t(phi) / (1 + 1 / sa2))) * b
+  return (out)
+}
+
+postmeaninv = function(b, pi, sa2 = 0:100, sigma = 1){
+  out     = double(length(b))
+  for (i in 1:length(b)) {
+    out[i]  = uniroot(function(x) postmean(x, pi, sa2, sigma2) - b[i], lower = 0, upper = 100)$root
+  }
+  return (out)
+}
+
+marginal    = function(b, pi, sa2 = 0:100, sigma = 1){
+  S         = outer(rep(sigma2,length(b)), sa2, '+')
+  L         = dnorm(b, 0, S, log = TRUE)
+  l         = apply(L, 1, max)
+  a         = c(colSums(pi * t(exp(L - l))))
+  a         = a * exp(l)
+  a
+}
+
+sa2 = 0:100
+b = seq(0,20,0.001)
+pi = exp(-sa2)
+pi = pi / sum(pi)
+b_softt    = postmean(b, pi)
+b_softt2   = softt(b, lambda = 1.43)
+b_softtinv = postmeaninv(b, pi)
+pen_softt  = cumsum(b_softtinv - b)  / 1000
+R_softt    = marginal(b, pi)
+R_softt    = cumsum(b - b_softt)  / 1000
+
+pi = double(101)
+pi[1] = 0.8; pi[101] = 0.2
+b_mcp    = postmean(b, pi)
+b_mcp2   = mcp(b, lambda = 2)
+b_mcpinv = postmeaninv(b, pi)
+pen_mcp  = cumsum(b_mcpinv - b)  / 1000
+R_mcp    = marginal(b, pi)
+R_mcp    = cumsum(b - b_mcp)  / 1000
+
+pi = double(101)
+pi[1] = 0.9; pi[101] = 0.1
+b_hardt    = postmean(b, pi, sa2 = sa2^5)
+b_hardt2   = hardt(b, lambda = 5)
+pi = double(101)
+pi[1] = 0.8; pi[7] = 0.2
+b_hardtinv = postmeaninv(b, pi, sa2 = sa2^5)
+pen_hardt  = cumsum(b_hardtinv - b)  / 1000
+R_hardt    = marginal(b, pi, sa2 = sa2^5)
+R_hardt    = cumsum(b - b_hardt)  / 1000
+
+pi = double(101)
+pi[1] = 0.5; pi[2:51] = 0.2/50; pi[101] = 0.3
+b_scad    = postmean(b, pi, sa2 = sa2)
+b_scad2   = scad(b, lambda = 1, eta = 4)
+b_scadinv = postmeaninv(b, pi, sa2 = sa2)
+pen_scad  = cumsum(b_scadinv - b)  / 1000
+R_scad    = marginal(b, pi, sa2 = sa2)
+R_scad    = cumsum(b - b_scad)  / 1000
+
+postmeaninv = function(b, pi, sa2 = 0:100, sigma = 1){
+  out     = double(length(b))
+  for (i in 1:length(b)) {
+    out[i]  = uniroot(function(x) postmean(x, pi, sa2, sigma2) - b[i], lower = 0, upper = 100)$root
+  }
+  return (out)
+}
+
+pi = double(2)
+pi[1] = 0.9; pi[2] = 0.1
+b_enet    = postmean(b, pi, sa2 = c(0,9) / 15)
+b_enet2   = enett(b, lambda = 3, eta = 0.5)
+b_enetinv = postmeaninv(b, pi, sa2 = c(0,9) / 15)
+pen_enet  = cumsum(b_enetinv - b)  / 1000
+R_enet    = marginal(b, pi, sa2 = c(0,9) / 15)
+R_enet    = cumsum(b - b_enet)  / 1000
+
+# plot(b, b_softt, t = "l", col = 2)
+# lines(b, b_mcp, col = 3)
+# lines(b, b_hardt, col = 4)
+# lines(b, b_scad, col = 5)
+# lines(b, b_enet, col = 6)
+# 
+# plot(b, softt(b, lambda = 1.43), t = "l", col = 2)
+# lines(b, mcp(b, lambda = 2), col = 3)
+# lines(b, hardt(b, lambda = 5), col = 4)
+# lines(b, scad(b, lambda = 1, eta = 4), col = 5)
+# lines(b, enett(b, lambda = 3, eta = 0.5), col = 6)
+```
+
+```{r}
+df1 = rbind(data.frame(method = "SOFT", sb = b_softt, sb2 = b_softt2, pen = pen_softt, r = exp(-R_softt),
+                       r2 = R.softt(b), pen2 = pen.softt(b, lambda = 1.43), b = b),
+           data.frame(method = "HARD", sb = b_hardt, sb2 = b_hardt2, pen = pen_hardt, r =  exp(-R_hardt),
+                      r2 = R.hardt(b), pen2 = pen.hardt(b, lambda = 5), b = b),
+           data.frame(method = "MCP", sb = b_mcp, sb2 = b_mcp2, pen = pen_mcp, r = exp(-R_mcp),
+                      r2 = R.mcp(b), pen2 = pen.mcp(b, lambda = 2), b = b),
+           data.frame(method = "SCAD", sb = b_scad, sb2 = b_scad2, pen = pen_scad, r = exp(-R_scad),
+                      r2 = R.scad(b), pen2 = pen.scad(b, lambda = 1, eta = 4), b = b),
+           data.frame(method = "E-NET", sb = b_enet, sb2 = b_enet2, pen = pen_enet, r = exp(-R_enet),
+                      r2 = R.enet(b), pen2 = pen.enet(b, lambda = 3, eta = 0.5), b = b))
+
+saveRDS(df1, "../results/fig1_1.RDS")
+```
+
+
