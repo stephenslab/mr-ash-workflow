@@ -26,7 +26,7 @@ Scenario 1 (Low-dimensional setting): $n = \textrm{500}$, $p = \textrm{200}$, $s
 
 ```{r fig1_7, fig.height=11, fig.width=15, fig.align = "center"}
 res_df = readRDS("./results/scenario7.RDS")
-method_list  = c("Mr.ASH","VarBVS","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
 df           = data.frame()
 n_range      = c(50,100,200,500,1000,2000,5000)
 for (i in 3:7) {
@@ -73,10 +73,10 @@ Scenario 8 (Varying PVE): $n = \textrm{500}$, $p = \textrm{2,000}$, $s = \textrm
 
 ```{r fig1_8, fig.height=11, fig.width=15, fig.align = "center"}
 res_df = readRDS("./results/scenario8.RDS")
-method_list  = c("Mr.ASH","VarBVS","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
 method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
                  "SCAD","MCP","L0Learn",
-                 "VarBVS","BayesB","B-Lasso","SuSiE")
+                 "varbvs","BayesB","B-Lasso","SuSiE")
 col          = gg_color_hue(13)[1:11]
 shape        = c(19,17,24,25,9,3,11,4,5,7,8)
 pve_list     = seq(0,0.9,0.1)
@@ -129,10 +129,10 @@ for $h \in \{t_1,t_2, t_4, t_8, \mathcal{L}(1), \mathcal{N}(0,1), \mathcal{U}(-1
 
 ```{r fig1_9, fig.height=11, fig.width=15, fig.align = "center"}
 res_df = readRDS("./results/scenario9.RDS")
-method_list  = c("Mr.ASH","VarBVS","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
 method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
                  "SCAD","MCP","L0Learn",
-                 "VarBVS","BayesB","B-Lasso","SuSiE")
+                 "varbvs","BayesB","B-Lasso","SuSiE")
 x_range      = 2^(c(1,2,3,4,5,6,7,8) - 1)
 df           = data.frame()
 for (i in 1:8) {
@@ -179,10 +179,10 @@ Scenario 10 (Varying SignalShape with a sparse signal): $n = \textrm{500}$, $p =
 
 ```{r fig1_10, fig.height=11, fig.width=15, fig.align = "center"}
 res_df = readRDS("./results/scenario10.RDS")
-method_list  = c("Mr.ASH","VarBVS","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
 method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
                  "SCAD","MCP","L0Learn",
-                 "VarBVS","BayesB","B-Lasso","SuSiE")
+                 "varbvs","BayesB","B-Lasso","SuSiE")
 x_range      = 2^(c(1,2,3,4,5,6,7,8) - 1)
 df           = data.frame()
 for (i in 1:8) {

@@ -369,3 +369,4 @@ figure2  = plot_grid(plot_grid(plot_grid(yaxis, plot_grid(figure2, xaxis,
                      legend, nrow = 1, rel_widths = c(0.9,0.1))
 ggsave("figure2_for_paper.pdf", figure2, width = 18, height = 22)
 ```
+
