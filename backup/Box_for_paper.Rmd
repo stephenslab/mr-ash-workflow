@@ -427,8 +427,8 @@ fig2_5    = plot_grid(suptitle, subtitle, fig_main, ncol = 1, rel_heights = c(0.
 ```
 
 ```{r}
-#df_tot = rbind(df2_2, df2_3, df2_4, df2_5)
-#saveRDS(df_tot,"results/dataframe_for_box2.RDS")
+# df_tot = rbind(df2_2, df2_3, df2_4, df2_5)
+# saveRDS(df_tot,"results/dataframe_for_box2.RDS")
 df_tot = readRDS("results/dataframe_for_box2.RDS")
 col      = gg_color_hue(13)[1:11]
 shape    = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[1:11]

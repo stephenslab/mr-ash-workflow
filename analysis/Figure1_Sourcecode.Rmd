@@ -117,7 +117,7 @@ postmean = function(b, pi, sa2 = 0:100, sigma2 = 1){
   return (out)
 }
 
-postmeaninv = function(b, pi, sa2 = 0:100, sigma = 1){
+postmeaninv = function(b, pi, sa2 = 0:100, sigma2 = 1){
   out     = double(length(b))
   for (i in 1:length(b)) {
     out[i]  = uniroot(function(x) postmean(x, pi, sa2, sigma2) - b[i], lower = 0, upper = 100)$root
@@ -125,7 +125,7 @@ postmeaninv = function(b, pi, sa2 = 0:100, sigma = 1){
   return (out)
 }
 
-marginal    = function(b, pi, sa2 = 0:100, sigma = 1){
+marginal    = function(b, pi, sa2 = 0:100, sigma2 = 1){
   S         = outer(rep(sigma2,length(b)), sa2, '+')
   L         = dnorm(b, 0, S, log = TRUE)
   l         = apply(L, 1, max)
@@ -134,7 +134,7 @@ marginal    = function(b, pi, sa2 = 0:100, sigma = 1){
   a
 }
 
-sa2 = 0:100
+sa2 = 0:100; sigma2 = 1;
 b = seq(0,20,0.001)
 pi = exp(-sa2)
 pi = pi / sum(pi)
@@ -158,8 +158,6 @@ pi = double(101)
 pi[1] = 0.9; pi[101] = 0.1
 b_hardt    = postmean(b, pi, sa2 = sa2^5)
 b_hardt2   = hardt(b, lambda = 5)
-pi = double(101)
-pi[1] = 0.8; pi[7] = 0.2
 b_hardtinv = postmeaninv(b, pi, sa2 = sa2^5)
 pen_hardt  = cumsum(b_hardtinv - b)  / 1000
 R_hardt    = marginal(b, pi, sa2 = sa2^5)
@@ -174,7 +172,7 @@ pen_scad  = cumsum(b_scadinv - b)  / 1000
 R_scad    = marginal(b, pi, sa2 = sa2)
 R_scad    = cumsum(b - b_scad)  / 1000
 
-postmeaninv = function(b, pi, sa2 = 0:100, sigma = 1){
+postmeaninv = function(b, pi, sa2 = 0:100, sigma2 = 1){
   out     = double(length(b))
   for (i in 1:length(b)) {
     out[i]  = uniroot(function(x) postmean(x, pi, sa2, sigma2) - b[i], lower = 0, upper = 100)$root
@@ -216,7 +214,7 @@ df1 = rbind(data.frame(method = "SOFT", sb = b_softt, sb2 = b_softt2, pen = pen_
            data.frame(method = "E-NET", sb = b_enet, sb2 = b_enet2, pen = pen_enet, r = exp(-R_enet),
                       r2 = R.enet(b), pen2 = pen.enet(b, lambda = 3, eta = 0.5), b = b))
 
-saveRDS(df1, "../results/fig1_1.RDS")
+saveRDS(df1, "results/flexibility.RDS")
 ```
 
 
