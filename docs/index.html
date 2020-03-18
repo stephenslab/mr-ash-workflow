@@ -332,7 +332,7 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2019-10-31
+<strong>Last updated:</strong> 2020-03-17
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 2 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -363,10 +363,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree48b4de27f7ab96273dac42ddc2d3b9256c0917batargetblank48b4de2a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/48b4de27f7ab96273dac42ddc2d3b9256c0917ba" target="_blank">48b4de2</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree209369528c3f4f63efbc186b86f3114761f759b7targetblank2093695a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/209369528c3f4f63efbc186b86f3114761f759b7" target="_blank">2093695</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree48b4de27f7ab96273dac42ddc2d3b9256c0917batargetblank48b4de2a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree209369528c3f4f63efbc186b86f3114761f759b7targetblank2093695a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -375,22 +375,219 @@ Great! You are using Git for version control. Tracking code development and conn
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    ETA_1_lambda.dat
-    Ignored:    ETA_1_parBayesB.dat
-    Ignored:    analysis/ETA_1_lambda.dat
-    Ignored:    analysis/ETA_1_parBayesB.dat
-    Ignored:    analysis/mu.dat
-    Ignored:    analysis/varE.dat
-    Ignored:    mu.dat
-    Ignored:    varE.dat
 
 Untracked files:
     Untracked:  .DS_Store
-    Untracked:  docs/.DS_Store
-    Untracked:  docs/figure/.DS_Store
+    Untracked:  .gitignore
+    Untracked:  analysis/Figure1_Sourcecode.Rmd
+    Untracked:  analysis/Figure2_Plot.Rmd
+    Untracked:  analysis/Figure2_Sourcecode.Rmd
+    Untracked:  analysis/Figure3_Plot.Rmd
+    Untracked:  analysis/Figure3_Sourcecode.Rmd
+    Untracked:  analysis/Figure4_Plot.Rmd
+    Untracked:  analysis/Figure5_Plot.Rmd
+    Untracked:  analysis/Figure6_Plot.Rmd
+    Untracked:  analysis/Figure6_Sourcecode.Rmd
+    Untracked:  backup/
+    Untracked:  docs/figure/Figure3_Plot.Rmd/
+    Untracked:  figure1_for_paper.pdf
+    Untracked:  figure2_for_paper.pdf
+    Untracked:  figure3_for_paper.pdf
+    Untracked:  figure4_for_paper.pdf
+    Untracked:  figure5_for_paper.pdf
+    Untracked:  figure6_for_paper.pdf
+    Untracked:  results/fig1_1.RDS
+    Untracked:  results/scenario1.RDS
+    Untracked:  results/scenario10.RDS
+    Untracked:  results/scenario11.RDS
+    Untracked:  results/scenario2.RDS
+    Untracked:  results/scenario3.RDS
+    Untracked:  results/scenario4.RDS
+    Untracked:  results/scenario5.RDS
+    Untracked:  results/scenario6.RDS
+    Untracked:  results/scenario7.RDS
+    Untracked:  results/scenario8.RDS
+    Untracked:  results/scenario9.RDS
 
 Unstaged changes:
-    Modified:   analysis/Result2_Nonconvex.Rmd
+    Deleted:    MR.ASH.Rmd
+    Deleted:    Plots_for_paper.Rmd
+    Modified:   README.md
+    Modified:   analysis/.DS_Store
+    Deleted:    analysis/Plots_for_paper.Rmd
+    Deleted:    analysis/Result10_Correlation.Rmd
+    Deleted:    analysis/Result11_UpdateOrder.Rmd
+    Deleted:    analysis/Result12_Initialization.Rmd
+    Deleted:    analysis/Result13_LocalCorrelation.Rmd
+    Deleted:    analysis/Result15_EstimationOfSigma.Rmd
+    Deleted:    analysis/Result16.Rmd
+    Deleted:    analysis/Result19_Design.Rmd
+    Deleted:    analysis/Result1_Ridge.Rmd
+    Deleted:    analysis/Result25_SignalShape.Rmd
+    Deleted:    analysis/Result2_Nonconvex.Rmd
+    Deleted:    analysis/Result35_CrossValidation.Rmd
+    Deleted:    analysis/Result3_Sparse.Rmd
+    Deleted:    analysis/Result4_Highdim.Rmd
+    Deleted:    analysis/Result5_SparseSignal.Rmd
+    Deleted:    analysis/Result6_PVE.Rmd
+    Deleted:    analysis/Result7_LowdimIndepGauss.Rmd
+    Deleted:    analysis/Result8_RealGenotype.Rmd
+    Deleted:    analysis/Result9_Changepoint.Rmd
+    Deleted:    analysis/Results105_Correlation2.Rmd
+    Deleted:    analysis/Results17_AccuracyofVariational.Rmd
+    Modified:   code/sim_wrapper.R
+    Deleted:    dsc/Makefile
+    Deleted:    dsc/explore_results.R
+    Deleted:    dsc/functions/fit.R
+    Deleted:    dsc/functions/predict.R
+    Deleted:    dsc/functions/score.R
+    Deleted:    dsc/functions/simulate.R
+    Deleted:    dsc/modules/fit/elastic_net.R
+    Deleted:    dsc/modules/fit/lasso.R
+    Deleted:    dsc/modules/fit/mr_ash.R
+    Deleted:    dsc/modules/fit/ridge.R
+    Deleted:    dsc/modules/fit/varbvs.R
+    Deleted:    dsc/modules/predict/predict_linear.R
+    Deleted:    dsc/modules/score/rsse.R
+    Deleted:    dsc/modules/simulate/sparse_normal.R
+    Deleted:    dsc/modules/simulate/sparse_t.R
+    Deleted:    dsc/mr_ash.dsc
+    Deleted:    figure/Plots_for_paper.Rmd/.figure1-1.png-DbQE
+    Deleted:    figures/figure0_paper.pdf
+    Deleted:    figures/figure10_paper.pdf
+    Deleted:    figures/figure12_paper.pdf
+    Deleted:    figures/figure1_paper.pdf
+    Deleted:    figures/figure2_paper.pdf
+    Deleted:    figures/figure3_paper.pdf
+    Deleted:    figures/figure4_paper.pdf
+    Deleted:    figures/figure5_paper.pdf
+    Deleted:    figures/figure6_paper.pdf
+    Deleted:    figures/figure7_paper.pdf
+    Deleted:    figures/figure8_paper.pdf
+    Deleted:    figures/figure9_paper.pdf
+    Modified:   results/.DS_Store
+    Deleted:    results/.Rapp.history
+    Deleted:    results/BayesLinReg1.RDS
+    Deleted:    results/BayesLinReg2.RDS
+    Deleted:    results/BayesShape1.RDS
+    Deleted:    results/CaisaMethods.RDS
+    Deleted:    results/Ridge_for_paper.RDS
+    Deleted:    results/blockacc50020.RDS
+    Deleted:    results/changepoint1.RDS
+    Deleted:    results/changepoint2.RDS
+    Deleted:    results/design.RDS
+    Deleted:    results/design4.RDS
+    Deleted:    results/diffpve.RDS
+    Deleted:    results/diffpve500200020.RDS
+    Deleted:    results/diffrho.RDS
+    Deleted:    results/dsc.RData
+    Deleted:    results/ecorr5001000020.RDS
+    Deleted:    results/ecorr500200020.RDS
+    Deleted:    results/ecorr50020020.RDS
+    Deleted:    results/equicorr.RDS
+    Deleted:    results/equicorr100050020.RDS
+    Deleted:    results/equicorr20.RDS
+    Deleted:    results/equicorr30.RDS
+    Deleted:    results/equicorr40.RDS
+    Deleted:    results/equicorr50.RDS
+    Deleted:    results/equicorr500200020.RDS
+    Deleted:    results/equicorr50020020.RDS
+    Deleted:    results/equicorrfdr500200020.RDS
+    Deleted:    results/equicorrfdr50020020.RDS
+    Deleted:    results/equicorrnew500200020.RDS
+    Deleted:    results/equicorrnew50020020.RDS
+    Deleted:    results/estsigma.RDS
+    Deleted:    results/highdim2.RDS
+    Deleted:    results/highdim25020.RDS
+    Deleted:    results/highdim50020
+    Deleted:    results/highdim50020.RDS
+    Deleted:    results/highdim_pve0.5.RDS
+    Deleted:    results/highdimdiffnpnew.RDS
+    Deleted:    results/highdimdiffp2.RDS
+    Deleted:    results/highdimresults.RDS
+    Deleted:    results/initialization.RDS
+    Deleted:    results/initialization1.RDS
+    Deleted:    results/initialization500200020.RDS
+    Deleted:    results/initialization50020020.RDS
+    Deleted:    results/initialization50020020.RDS.backup
+    Deleted:    results/largen200020.RDS
+    Deleted:    results/largen20020.RDS
+    Deleted:    results/localcorr.RDS
+    Deleted:    results/localcorr100050020.RDS
+    Deleted:    results/localcorr20.RDS
+    Deleted:    results/localcorr40.RDS
+    Deleted:    results/localcorr50.RDS
+    Deleted:    results/localcorr500200020.RDS
+    Deleted:    results/localcorr50020020.RDS
+    Deleted:    results/localcorrfdr500200020.RDS
+    Deleted:    results/localcorrfdr50020020.RDS
+    Deleted:    results/mcmc50020.RDS
+    Deleted:    results/mcmc50020.RDS.backup
+    Deleted:    results/mcmccorr500200020.RDS
+    Deleted:    results/mcmcecorr500200020.RDS
+    Deleted:    results/mcmcecorr50020020.RDS
+    Deleted:    results/mcmcecorr50020020.RDS.backup
+    Deleted:    results/newhighdim.RDS
+    Deleted:    results/newridge10.RDS
+    Deleted:    results/newridge20.RDS
+    Deleted:    results/newupdateorder_rho0.95.RDS
+    Deleted:    results/nonconvexnew.RDS
+    Deleted:    results/onebigchange1.RDS
+    Deleted:    results/onesmallchange1.RDS
+    Deleted:    results/onesmallchange2.RDS
+    Deleted:    results/pve100050020.RDS
+    Deleted:    results/pve5001000020.RDS
+    Deleted:    results/pve5001000020.RDS.backup
+    Deleted:    results/pve500200020.RDS
+    Deleted:    results/pve500200020.RDS.backup
+    Deleted:    results/pve50020020.RDS
+    Deleted:    results/pve50020020.RDS.backup
+    Deleted:    results/realgenotype+random.RDS
+    Deleted:    results/realgenotype.RDS
+    Deleted:    results/realgenotype22.RDS
+    Deleted:    results/realgenotype_pve0.5.RDS
+    Deleted:    results/realgenotypepve.RDS
+    Deleted:    results/ridge1.RDS
+    Deleted:    results/ridge2.RDS
+    Deleted:    results/ridge_pve0.5.RDS
+    Deleted:    results/ridgediffnp copy.RDS
+    Deleted:    results/ridgediffnp.RDS
+    Deleted:    results/signalshape100050020.RDS
+    Deleted:    results/signalshape25
+    Deleted:    results/signalshape25.RDS
+    Deleted:    results/signalshape30.RDS
+    Deleted:    results/signalshape50.RDS
+    Deleted:    results/signalshape500200020.RDS
+    Deleted:    results/signalshape500200020.RDS.backup
+    Deleted:    results/signalshape50020020.RDS
+    Deleted:    results/signalshape50020020.RDS.backup
+    Deleted:    results/signalshape_pve0.99.RDS
+    Deleted:    results/signalshapetotal.RDS
+    Deleted:    results/sparse50010000.RDS
+    Deleted:    results/sparsediffnp.RDS
+    Deleted:    results/sparsesignal.RDS
+    Deleted:    results/sparsesignal_pve0.5.RDS
+    Deleted:    results/sparsity50010000.RDS
+    Deleted:    results/sparsity50010000.RDS.backup
+    Deleted:    results/sparsity500200.RDS
+    Deleted:    results/sparsity5002000.RDS
+    Deleted:    results/sparsity5002000.RDS.backup
+    Deleted:    results/sparsity500200020.RDS
+    Deleted:    results/sparsity50020020.RDS
+    Deleted:    results/sparsityconst50010000.RDS
+    Deleted:    results/sparsityconst500200.RDS
+    Deleted:    results/sparsityconst5002000.RDS
+    Deleted:    results/subogdancandes.RDS
+    Deleted:    results/subogdancandes1010100020.RDS
+    Deleted:    results/subogdancandesnew.RDS
+    Deleted:    results/temp1.RDS
+    Deleted:    results/updateg.RDS
+    Deleted:    results/updateorder500200020.RDS
+    Deleted:    results/updateorder500200020.RDS.backup
+    Deleted:    results/updateorder50020020.RDS
+    Deleted:    results/updateorder_rho0.95.RDS
+    Deleted:    results/updateordernew1.RDS
+    Deleted:    results/updateordernew2.RDS
 
 </code></pre>
 <p>
@@ -429,6 +626,23 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/cc096edcbae5c5d6b7a2bdc8a9ac1a94c581d438/docs/index.html" target="_blank">cc096ed</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2019-10-31
+</td>
+<td>
+Build site.
+</td>
+</tr>
 <tr>
 <td>
 Rmd
