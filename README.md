@@ -19,10 +19,10 @@ which can be found in [MR.ASH github][mr-ash-alpha].
 
 To install the latest version of the R package `mr.ash.alpha` from [MR.ASH github][mr-ash-alpha], clone or
 download the git repository, then use the `install_local` function from
-`devtools`:
+`devtools`, replacing "path/to/repo" with the appropriate directory path:
 
 ```r
-devtools::install_local()
+devtools::install_local("path/to/repo")
 ```
 
 ### Quick Start for Other comparision methods
@@ -37,7 +37,7 @@ install.packages("ncvreg")
 # Penalized linear regression based on L0 penalty (or L0+L1, L0+L2), fitted by CV (L0Learn)
 install.packages("L0Learn")
 # Bayesian linear regression based on additive single effect model, fitted by VB (SuSiE)
-install.packages("susieR")
+install_github("stephenslab/susieR")
 # Bayesian linear regression based on hieararchical spike-and-slab prior, fitted by MCMC (BayesB, BLasso)
 install.packages("BGLR")
 # Bayesian linear regression based on hieararchical spike-and-slab prior, fitted by VB and discrete BMA (varbvs)
