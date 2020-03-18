@@ -25,6 +25,12 @@ download the git repository, then use the `install_local` function from
 devtools::install_local("path/to/repo")
 ```
 
+Also, one can install the package via
+
+```r
+devtools::install_github("stephenslab/mr.ash.alpha")
+```
+
 ### Quick Start for Other comparision methods
 
 The list of competitors is as follows.
