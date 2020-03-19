@@ -417,7 +417,7 @@ fit.susie = function(X, y, X.test, y.test, seed = 1, L = 20) {
   # run varbvs
   t.susie           = system.time(
     fit.susie        <- susie(X = X, Y = y, standardize = standardize, L = L))
-  beta              = coef(fit.susie)
+  beta              = coef(fit.susie)[-1]
   pip               = fit.susie$pip
   
   return (list(fit = fit.susie, t = t.susie[3], beta = beta, pip = pip,
