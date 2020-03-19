@@ -25,6 +25,12 @@ download the git repository, then use the `install_local` function from
 devtools::install_local("path/to/repo")
 ```
 
+Also, one can install the package via
+
+```r
+devtools::install_github("stephenslab/mr.ash.alpha")
+```
+
 ### Quick Start for Other comparision methods
 
 The list of competitors is as follows.
@@ -70,6 +76,7 @@ We provide `analysis/plots_for_the_paper.RDS` for reproducing all the figures in
 | `Figure 4` | Adaptation to Sparsity (Bayesian Linear Regression)                      | `analysis/Figure2_Sourcecode`          | `analysis/Figure4_Plot`  |   |
 | `Figure 5` | Sample size, signal strength, signal shape (Bayesian Linear Regression)  | `analysis/Figure3_Sourcecode`          | `analysis/Figure5_Plot`  |   |
 | `Figure 6` | Computation time (scalability)                                           | `analysis/Figure6_Sourcecode`          | `analysis/Figure6_Plot`  |   |
+| `Figure 7` | Relative Performance                                                     | -          | `analysis/Figure7_Plot`  |   |
 
 
 ---------------------------------------------------------------
