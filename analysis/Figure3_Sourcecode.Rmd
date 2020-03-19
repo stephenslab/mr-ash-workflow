@@ -120,7 +120,7 @@ for $h \in \{t_1,t_2, t_4, t_8, \mathcal{L}(1), \mathcal{N}(0,1), \mathcal{U}(-1
 ```{r code9, eval = TRUE}
 tdat9        = list()
 n            = 500
-p            = 200
+p            = 2000
 s            = 200
 method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
 method_list2 = c("mr.ash", method_list, "enet2","lasso2","ridge2")

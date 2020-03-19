@@ -26,16 +26,16 @@ gg_color_hue <- function(n) {
 res_df   = readRDS("results/scenario7-10_box.RDS")
 col      = gg_color_hue(13)[1:11]
 shape    = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[1:11]
-baseline = mean(res_df$pred[res_df$fit == "Mr.ASH"])
+baseline = mean(res_df$rrmse[res_df$fit == "Mr.ASH"])
 fig_main = ggplot(res_df) +
-  stat_summary(aes(x = fit, y = pred), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
-  stat_summary(aes(x = fit, y = pred), colour = col, fun.y = mean, geom = "point") + 
-  geom_boxplot(alpha = 0.1, aes(x = fit, y = pred, color = fit, fill = fit, lower = quantile(pred, .25), 
-                                middle = mean(pred), upper = quantile(pred, .75)), outlier.alpha = 0, fatten = 0.9) +
+  stat_summary(aes(x = fit, y = rrmse), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
+  stat_summary(aes(x = fit, y = rrmse), colour = col, fun.y = mean, geom = "point") + 
+  geom_boxplot(alpha = 0.1, aes(x = fit, y = rrmse, color = fit, fill = fit, lower = quantile(rrmse, .25), 
+                                middle = mean(rrmse), upper = quantile(rrmse, .75)), outlier.alpha = 0, fatten = 0.9) +
   scale_alpha_manual(values = 0.1) +
   scale_fill_manual(values = col, guide = "none") +
   scale_color_manual(values = col, guide = "none") +
-  labs(x           = "") + coord_cartesian(ylim = c(1,1.4)) + 
+  labs(x           = "") + coord_cartesian(ylim = c(1,1.3)) + 
   theme_cowplot(font_size = 20) + 
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
@@ -49,19 +49,19 @@ fig2_1    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 ### Scenario 6
 
 ```{r fig2_2, fig.height=11, fig.width=15, fig.align = "center"}
-res_df   = readRDS("results/scenario6_box.RDS")
+res_df   = readRDS("./results/scenario6_box.RDS")
 col      = gg_color_hue(13)[1:11]
 shape    = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[1:11]
-baseline = mean(res_df$pred[res_df$fit == "Mr.ASH"])
+baseline = mean(res_df$rrmse[res_df$fit == "Mr.ASH"])
 fig_main = ggplot(res_df) +
-  stat_summary(aes(x = fit, y = pred), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
-  stat_summary(aes(x = fit, y = pred), colour = col, fun.y = mean, geom = "point") + 
-  geom_boxplot(alpha = 0.1, aes(x = fit, y = pred, color = fit, fill = fit, lower = quantile(pred, .25), 
-                                middle = mean(pred), upper = quantile(pred, .75)), outlier.alpha = 0, fatten = 0.9) +
+  stat_summary(aes(x = fit, y = rrmse), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
+  stat_summary(aes(x = fit, y = rrmse), colour = col, fun.y = mean, geom = "point") + 
+  geom_boxplot(alpha = 0.1, aes(x = fit, y = rrmse, color = fit, fill = fit, lower = quantile(rrmse, .25), 
+                                middle = mean(rrmse), upper = quantile(rrmse, .75)), outlier.alpha = 0, fatten = 0.9) +
   scale_alpha_manual(values = 0.1) +
   scale_fill_manual(values = col, guide = "none") +
   scale_color_manual(values = col, guide = "none") +
-  labs(x           = "") + coord_cartesian(ylim = c(1,1.4)) + 
+  labs(x           = "") + coord_cartesian(ylim = c(1,1.3)) + 
   theme_cowplot(font_size = 20) + 
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
@@ -75,19 +75,19 @@ fig2_2    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 ### Scenario 11
 
 ```{r fig2_3, fig.height=11, fig.width=15, fig.align = "center"}
-res_df   = readRDS("results/scenario11_box.RDS")
+res_df   = readRDS("./results/scenario11_box.RDS")
 col      = gg_color_hue(13)[1:11]
 shape    = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[1:11]
-baseline = mean(res_df$pred[res_df$fit == "Mr.ASH"])
+baseline = mean(res_df$rrmse[res_df$fit == "Mr.ASH"])
 fig_main = ggplot(res_df) +
-  stat_summary(aes(x = fit, y = pred), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
-  stat_summary(aes(x = fit, y = pred), colour = col, fun.y = mean, geom = "point") + 
-  geom_boxplot(alpha = 0.1, aes(x = fit, y = pred, color = fit, fill = fit, lower = quantile(pred, .25), 
-                                middle = mean(pred), upper = quantile(pred, .75)), outlier.alpha = 0, fatten = 0.9) +
+  stat_summary(aes(x = fit, y = rrmse), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
+  stat_summary(aes(x = fit, y = rrmse), colour = col, fun.y = mean, geom = "point") + 
+  geom_boxplot(alpha = 0.1, aes(x = fit, y = rrmse, color = fit, fill = fit, lower = quantile(rrmse, .25), 
+                                middle = mean(rrmse), upper = quantile(rrmse, .75)), outlier.alpha = 0, fatten = 0.9) +
   scale_alpha_manual(values = 0.1) +
   scale_fill_manual(values = col, guide = "none") +
   scale_color_manual(values = col, guide = "none") +
-  labs(x           = "") + coord_cartesian(ylim = c(1,1.4)) + 
+  labs(x           = "") + coord_cartesian(ylim = c(1,1.3)) + 
   theme_cowplot(font_size = 20) + 
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
@@ -104,16 +104,16 @@ fig2_3    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 res_df   = readRDS("results/scenario1-5_box.RDS")
 col      = gg_color_hue(13)[1:11]
 shape    = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[1:11]
-baseline = mean(res_df$pred[res_df$fit == "Mr.ASH"])
+baseline = mean(res_df$rrmse[res_df$fit == "Mr.ASH"])
 fig_main = ggplot(res_df) +
-  stat_summary(aes(x = fit, y = pred), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
-  stat_summary(aes(x = fit, y = pred), colour = col, fun.y = mean, geom = "point") + 
-  geom_boxplot(alpha = 0.1, aes(x = fit, y = pred, color = fit, fill = fit, lower = quantile(pred, .25), 
-                                middle = mean(pred), upper = quantile(pred, .75)), outlier.alpha = 0, fatten = 0.9) +
+  stat_summary(aes(x = fit, y = rrmse), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
+  stat_summary(aes(x = fit, y = rrmse), colour = col, fun.y = mean, geom = "point") + 
+  geom_boxplot(alpha = 0.1, aes(x = fit, y = rrmse, color = fit, fill = fit, lower = quantile(rrmse, .25), 
+                                middle = mean(rrmse), upper = quantile(rrmse, .75)), outlier.alpha = 0, fatten = 0.9) +
   scale_alpha_manual(values = 0.1) +
   scale_fill_manual(values = col, guide = "none") +
   scale_color_manual(values = col, guide = "none") +
-  labs(x           = "") + coord_cartesian(ylim = c(1,1.4)) + 
+  labs(x           = "") + coord_cartesian(ylim = c(1,1.3)) + 
   theme_cowplot(font_size = 20) + 
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
@@ -129,7 +129,7 @@ fig2_4    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 ```{r figure7}
 figure7  = plot_grid(fig2_4,fig2_2,fig2_1,fig2_3, ncol = 2, rel_widths = c(0.5,0.5))
 #title    = ggdraw() + draw_label("Adaptation to Sparsity (Penalized Linear Regression)", fontface = 'bold', size = 24)
-yaxis    = ggdraw() + draw_label("relative prediction error (pred / min(pred))", size = 25, angle = 90)
+yaxis    = ggdraw() + draw_label("relative prediction error (RRMSE) ", size = 25, angle = 90)
 figure7  = plot_grid(yaxis, figure7,
                      nrow = 1, rel_widths = c(0.03,0.97))
 ggsave("figure7_for_paper.pdf", figure7, width = 18, height = 15)

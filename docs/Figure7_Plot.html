@@ -472,7 +472,7 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 </div>
 <div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
@@ -527,10 +527,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreebc4226c30fa7ce40c636f70c57644edfa7e9ee6etargetblankbc4226ca"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/bc4226c30fa7ce40c636f70c57644edfa7e9ee6e" target="_blank">bc4226c</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree85cd00683df9928ecc34c50739c345d29b560436targetblank85cd006a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/85cd00683df9928ecc34c50739c345d29b560436" target="_blank">85cd006</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreebc4226c30fa7ce40c636f70c57644edfa7e9ee6etargetblankbc4226ca" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree85cd00683df9928ecc34c50739c345d29b560436targetblank85cd006a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -543,24 +543,14 @@ Ignored files:
 Untracked files:
     Untracked:  .DS_Store
     Untracked:  .gitignore
-    Untracked:  analysis/Figure1_Plot.Rmd
-    Untracked:  analysis/Figure7_Plot.Rmd
-    Untracked:  figure7_for_paper.pdf
-    Untracked:  results/flexibility.RDS
-    Untracked:  results/scenario1-5_box.RDS
-    Untracked:  results/scenario11_box.RDS
-    Untracked:  results/scenario5_box.RDS
-    Untracked:  results/scenario6_box.RDS
-    Untracked:  results/scenario7-10_box.RDS
 
 Unstaged changes:
-    Modified:   analysis/Figure1_Sourcecode.Rmd
-    Modified:   analysis/Figure2_Plot.Rmd
-    Modified:   analysis/Figure3_Plot.Rmd
-    Modified:   backup/.DS_Store
-    Modified:   backup/Box_for_paper.Rmd
-    Modified:   backup/figures/box2_summary_for_paper.pdf
-    Deleted:    results/fig1_1.RDS
+    Modified:   analysis/Figure7_Plot.Rmd
+    Modified:   figure7_for_paper.pdf
+    Modified:   results/scenario1-5_box.RDS
+    Modified:   results/scenario11_box.RDS
+    Modified:   results/scenario6_box.RDS
+    Modified:   results/scenario7-10_box.RDS
 
 </code></pre>
 <p>
@@ -573,9 +563,69 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the R Markdown and HTML files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view them.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/85cd00683df9928ecc34c50739c345d29b560436/analysis/Figure7_Plot.Rmd" target="_blank">85cd006</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2020-03-18
+</td>
+<td>
+set eval = TRUE, and fix errors
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/85cd00683df9928ecc34c50739c345d29b560436/docs/Figure7_Plot.html" target="_blank">85cd006</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2020-03-18
+</td>
+<td>
+set eval = TRUE, and fix errors
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -593,16 +643,16 @@ gg_color_hue &lt;- function(n) {
 <pre class="r"><code>res_df   = readRDS(&quot;results/scenario7-10_box.RDS&quot;)
 col      = gg_color_hue(13)[1:11]
 shape    = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[1:11]
-baseline = mean(res_df$pred[res_df$fit == &quot;Mr.ASH&quot;])
+baseline = mean(res_df$rrmse[res_df$fit == &quot;Mr.ASH&quot;])
 fig_main = ggplot(res_df) +
-  stat_summary(aes(x = fit, y = pred), fun.y = mean, colour = col, geom = &quot;point&quot;, shape = 18, size = 3) + 
-  stat_summary(aes(x = fit, y = pred), colour = col, fun.y = mean, geom = &quot;point&quot;) + 
-  geom_boxplot(alpha = 0.1, aes(x = fit, y = pred, color = fit, fill = fit, lower = quantile(pred, .25), 
-                                middle = mean(pred), upper = quantile(pred, .75)), outlier.alpha = 0, fatten = 0.9) +
+  stat_summary(aes(x = fit, y = rrmse), fun.y = mean, colour = col, geom = &quot;point&quot;, shape = 18, size = 3) + 
+  stat_summary(aes(x = fit, y = rrmse), colour = col, fun.y = mean, geom = &quot;point&quot;) + 
+  geom_boxplot(alpha = 0.1, aes(x = fit, y = rrmse, color = fit, fill = fit, lower = quantile(rrmse, .25), 
+                                middle = mean(rrmse), upper = quantile(rrmse, .75)), outlier.alpha = 0, fatten = 0.9) +
   scale_alpha_manual(values = 0.1) +
   scale_fill_manual(values = col, guide = &quot;none&quot;) +
   scale_color_manual(values = col, guide = &quot;none&quot;) +
-  labs(x           = &quot;&quot;) + coord_cartesian(ylim = c(1,1.4)) + 
+  labs(x           = &quot;&quot;) + coord_cartesian(ylim = c(1,1.3)) + 
   theme_cowplot(font_size = 20) + 
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
@@ -614,19 +664,19 @@ fig2_1    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 </div>
 <div id="scenario-6" class="section level3">
 <h3>Scenario 6</h3>
-<pre class="r"><code>res_df   = readRDS(&quot;results/scenario6_box.RDS&quot;)
+<pre class="r"><code>res_df   = readRDS(&quot;./results/scenario6_box.RDS&quot;)
 col      = gg_color_hue(13)[1:11]
 shape    = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[1:11]
-baseline = mean(res_df$pred[res_df$fit == &quot;Mr.ASH&quot;])
+baseline = mean(res_df$rrmse[res_df$fit == &quot;Mr.ASH&quot;])
 fig_main = ggplot(res_df) +
-  stat_summary(aes(x = fit, y = pred), fun.y = mean, colour = col, geom = &quot;point&quot;, shape = 18, size = 3) + 
-  stat_summary(aes(x = fit, y = pred), colour = col, fun.y = mean, geom = &quot;point&quot;) + 
-  geom_boxplot(alpha = 0.1, aes(x = fit, y = pred, color = fit, fill = fit, lower = quantile(pred, .25), 
-                                middle = mean(pred), upper = quantile(pred, .75)), outlier.alpha = 0, fatten = 0.9) +
+  stat_summary(aes(x = fit, y = rrmse), fun.y = mean, colour = col, geom = &quot;point&quot;, shape = 18, size = 3) + 
+  stat_summary(aes(x = fit, y = rrmse), colour = col, fun.y = mean, geom = &quot;point&quot;) + 
+  geom_boxplot(alpha = 0.1, aes(x = fit, y = rrmse, color = fit, fill = fit, lower = quantile(rrmse, .25), 
+                                middle = mean(rrmse), upper = quantile(rrmse, .75)), outlier.alpha = 0, fatten = 0.9) +
   scale_alpha_manual(values = 0.1) +
   scale_fill_manual(values = col, guide = &quot;none&quot;) +
   scale_color_manual(values = col, guide = &quot;none&quot;) +
-  labs(x           = &quot;&quot;) + coord_cartesian(ylim = c(1,1.4)) + 
+  labs(x           = &quot;&quot;) + coord_cartesian(ylim = c(1,1.3)) + 
   theme_cowplot(font_size = 20) + 
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
@@ -638,19 +688,19 @@ fig2_2    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 </div>
 <div id="scenario-11" class="section level3">
 <h3>Scenario 11</h3>
-<pre class="r"><code>res_df   = readRDS(&quot;results/scenario11_box.RDS&quot;)
+<pre class="r"><code>res_df   = readRDS(&quot;./results/scenario11_box.RDS&quot;)
 col      = gg_color_hue(13)[1:11]
 shape    = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[1:11]
-baseline = mean(res_df$pred[res_df$fit == &quot;Mr.ASH&quot;])
+baseline = mean(res_df$rrmse[res_df$fit == &quot;Mr.ASH&quot;])
 fig_main = ggplot(res_df) +
-  stat_summary(aes(x = fit, y = pred), fun.y = mean, colour = col, geom = &quot;point&quot;, shape = 18, size = 3) + 
-  stat_summary(aes(x = fit, y = pred), colour = col, fun.y = mean, geom = &quot;point&quot;) + 
-  geom_boxplot(alpha = 0.1, aes(x = fit, y = pred, color = fit, fill = fit, lower = quantile(pred, .25), 
-                                middle = mean(pred), upper = quantile(pred, .75)), outlier.alpha = 0, fatten = 0.9) +
+  stat_summary(aes(x = fit, y = rrmse), fun.y = mean, colour = col, geom = &quot;point&quot;, shape = 18, size = 3) + 
+  stat_summary(aes(x = fit, y = rrmse), colour = col, fun.y = mean, geom = &quot;point&quot;) + 
+  geom_boxplot(alpha = 0.1, aes(x = fit, y = rrmse, color = fit, fill = fit, lower = quantile(rrmse, .25), 
+                                middle = mean(rrmse), upper = quantile(rrmse, .75)), outlier.alpha = 0, fatten = 0.9) +
   scale_alpha_manual(values = 0.1) +
   scale_fill_manual(values = col, guide = &quot;none&quot;) +
   scale_color_manual(values = col, guide = &quot;none&quot;) +
-  labs(x           = &quot;&quot;) + coord_cartesian(ylim = c(1,1.4)) + 
+  labs(x           = &quot;&quot;) + coord_cartesian(ylim = c(1,1.3)) + 
   theme_cowplot(font_size = 20) + 
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
@@ -665,16 +715,16 @@ fig2_3    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 <pre class="r"><code>res_df   = readRDS(&quot;results/scenario1-5_box.RDS&quot;)
 col      = gg_color_hue(13)[1:11]
 shape    = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[1:11]
-baseline = mean(res_df$pred[res_df$fit == &quot;Mr.ASH&quot;])
+baseline = mean(res_df$rrmse[res_df$fit == &quot;Mr.ASH&quot;])
 fig_main = ggplot(res_df) +
-  stat_summary(aes(x = fit, y = pred), fun.y = mean, colour = col, geom = &quot;point&quot;, shape = 18, size = 3) + 
-  stat_summary(aes(x = fit, y = pred), colour = col, fun.y = mean, geom = &quot;point&quot;) + 
-  geom_boxplot(alpha = 0.1, aes(x = fit, y = pred, color = fit, fill = fit, lower = quantile(pred, .25), 
-                                middle = mean(pred), upper = quantile(pred, .75)), outlier.alpha = 0, fatten = 0.9) +
+  stat_summary(aes(x = fit, y = rrmse), fun.y = mean, colour = col, geom = &quot;point&quot;, shape = 18, size = 3) + 
+  stat_summary(aes(x = fit, y = rrmse), colour = col, fun.y = mean, geom = &quot;point&quot;) + 
+  geom_boxplot(alpha = 0.1, aes(x = fit, y = rrmse, color = fit, fill = fit, lower = quantile(rrmse, .25), 
+                                middle = mean(rrmse), upper = quantile(rrmse, .75)), outlier.alpha = 0, fatten = 0.9) +
   scale_alpha_manual(values = 0.1) +
   scale_fill_manual(values = col, guide = &quot;none&quot;) +
   scale_color_manual(values = col, guide = &quot;none&quot;) +
-  labs(x           = &quot;&quot;) + coord_cartesian(ylim = c(1,1.4)) + 
+  labs(x           = &quot;&quot;) + coord_cartesian(ylim = c(1,1.3)) + 
   theme_cowplot(font_size = 20) + 
   theme(axis.line    = element_blank(),
         axis.text.x  = element_text(angle = 45,hjust = 1),
@@ -689,7 +739,7 @@ fig2_4    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 <h2>Draw Figure</h2>
 <pre class="r"><code>figure7  = plot_grid(fig2_4,fig2_2,fig2_1,fig2_3, ncol = 2, rel_widths = c(0.5,0.5))
 #title    = ggdraw() + draw_label(&quot;Adaptation to Sparsity (Penalized Linear Regression)&quot;, fontface = &#39;bold&#39;, size = 24)
-yaxis    = ggdraw() + draw_label(&quot;relative prediction error (pred / min(pred))&quot;, size = 25, angle = 90)
+yaxis    = ggdraw() + draw_label(&quot;relative prediction error (RRMSE) &quot;, size = 25, angle = 90)
 figure7  = plot_grid(yaxis, figure7,
                      nrow = 1, rel_widths = c(0.03,0.97))
 ggsave(&quot;figure7_for_paper.pdf&quot;, figure7, width = 18, height = 15)</code></pre>
@@ -719,16 +769,16 @@ other attached packages:
 [1] cowplot_0.9.4 ggplot2_3.2.1
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.3       knitr_1.22       magrittr_1.5     workflowr_1.3.0 
- [5] tidyselect_0.2.5 munsell_0.5.0    colorspace_1.4-1 R6_2.4.1        
- [9] rlang_0.4.2      dplyr_0.8.3      stringr_1.4.0    tools_3.5.3     
-[13] grid_3.5.3       gtable_0.3.0     xfun_0.6         withr_2.1.2     
-[17] git2r_0.25.2     htmltools_0.4.0  assertthat_0.2.1 yaml_2.2.0      
-[21] lazyeval_0.2.2   rprojroot_1.3-2  digest_0.6.23    tibble_2.1.3    
-[25] lifecycle_0.1.0  crayon_1.3.4     farver_2.0.3     purrr_0.3.3     
-[29] fs_1.3.0         glue_1.3.1       evaluate_0.13    rmarkdown_1.12  
-[33] labeling_0.3     stringi_1.4.5    pillar_1.4.3     compiler_3.5.3  
-[37] scales_1.1.0     backports_1.1.5  pkgconfig_2.0.3 </code></pre>
+ [1] Rcpp_1.0.3       compiler_3.5.3   pillar_1.4.3     git2r_0.25.2    
+ [5] workflowr_1.3.0  tools_3.5.3      digest_0.6.23    evaluate_0.13   
+ [9] lifecycle_0.1.0  tibble_2.1.3     gtable_0.3.0     pkgconfig_2.0.3 
+[13] rlang_0.4.2      yaml_2.2.0       xfun_0.6         withr_2.1.2     
+[17] stringr_1.4.0    dplyr_0.8.3      knitr_1.22       fs_1.3.0        
+[21] rprojroot_1.3-2  grid_3.5.3       tidyselect_0.2.5 glue_1.3.1      
+[25] R6_2.4.1         rmarkdown_1.12   purrr_0.3.3      farver_2.0.3    
+[29] magrittr_1.5     whisker_0.3-2    backports_1.1.5  scales_1.1.0    
+[33] htmltools_0.4.0  assertthat_0.2.1 colorspace_1.4-1 labeling_0.3    
+[37] stringi_1.4.5    lazyeval_0.2.2   munsell_0.5.0    crayon_1.3.4    </code></pre>
 </div>
 </div>
 
