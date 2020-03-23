@@ -113,3 +113,10 @@ title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bo
 subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 20-10000, s = 20, pve = 0.5", fontface  = 'bold', size = 18) 
 fig1.1    = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.05,0.95))
 ```
+
+```{r remove}
+try(system("rm *.dat"))
+try(system("rm ../*.dat"))
+try(system("rm analysis/*.dat"))
+try(system("rm ../analysis/*.dat"))
+```
