@@ -1,0 +1,115 @@
+---
+title: "Figure9_Sourcecode"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Source Code
+
+```{r library, message = FALSE}
+library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(mr.ash.alpha); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
+source('code/method_wrapper.R')
+source('code/sim_wrapper.R')
+```
+
+## Scenarios
+
+### Scenario 1
+
+Scenario 1 (Low-dimensional setting): $n = \textrm{500}$, $p = \textrm{200}$, $s \in [1,p]$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and $\textrm{SignalShape} = \textrm{PointNormal}$.
+
+```{r code1, eval = FALSE}
+tdat1        = list()
+n            = 500
+s            = 20
+p_range      = c(20,50,200,500,2000,10000,20000)
+method_list  = c("mcmc")
+method_list2 = c("mr.ash.g",method_list,"mcmc2","mr.ash.g.lasso")
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+u            = length(method_list)
+
+
+for (iter in 1:6) {
+  p               = p_range[iter]
+  for (i in 1:20) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.5,
+                                  design = "equicorrgauss", rho = 0.95)
+    
+    for (j in 1:u) {
+      fit.method    = get(paste("fit.",method_list[j],sep = ""))
+      fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+      pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+      time[i,j+1]   = fit$t
+      fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i, burnIn = 10000, nIter = 30000)
+      pred[i,j+u+1]   = fit$rsse / data$sigma / sqrt(n)
+      time[i,j+u+1]   = fit$t
+    }
+    
+    fit           = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                                sa2 = c(0, 1 / s), sigma2 = data$sigma^2,
+                                update.pi = FALSE, pi = c(1 - s/p, s/p),
+                                beta.init = NULL, update.order = NULL)
+    pred[i,1]  = fit$rsse / data$sigma / sqrt(n)
+    time[i,1]  = fit$t
+    
+    fit         = fit.lasso(data$X, data$y, data$X.test, data$y.test, seed = i)
+    lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
+    lasso.beta       = as.vector(coef(fit$fit))[-1]
+    lasso.time       = c(fit$t, fit$t2)
+    
+    fit           = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                                sa2 = c(0, 1 / s), sigma2 = data$sigma^2,
+                                update.pi = FALSE, pi = c(1 - s/p, s/p),
+                                beta.init = lasso.beta, update.order = NULL)
+    pred[i,method_num]  = fit$rsse / data$sigma / sqrt(n)
+    time[i,method_num]  = fit$t
+    
+    print(c(pred[i,]))
+  }
+  tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+}
+```
+
+```{r}
+res_df       = readRDS("mcmc2.RDS")
+method_list  = c("Mr.ASH.g","MCMC","Mr.ASH.g.init")
+method_level = c("MCMC","Mr.ASH.g","Mr.ASH.g.init")
+df           = data.frame()
+p_range      = c(20,50,200,500,2000,10000)
+for (i in 1:6) {
+res_df[[i]]$fit   = rep(method_list, each = 20)
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 9))),
+                                         time2 = apply(matrix(res_df[[i]]$time, 20, 9), 2, median),
+                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 9))),
+                                         p    = p_range[i],
+                                         fit  = method_list))
+}
+df$fit = factor(df$fit, levels = method_level)
+col   = c("darkblue","dodgerblue","darkgreen","limegreen","gold","orange","salmon","skyblue")[c(1,3,5)]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,1,2,6)[c(1,3,5)]
+p1    = ggplot(df) + geom_line(aes(x = p, y = pred, color = fit)) +
+  geom_point(aes(x = p, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 14) +
+  scale_x_continuous(trans = "log10", breaks = c(20,50,200,500,2000,10000)) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of coefficients (p)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 45,hjust = 1)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10")
+fig_main = p1
+title     = ggdraw() + draw_label("Prediction Error (log-scale)", fontface = 'bold', size = 20) 
+subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 20-10000, s = 20, pve = 0.5", fontface  = 'bold', size = 18) 
+fig1.1    = plot_grid(title,subtitle,fig_main, ncol = 1, rel_heights = c(0.05,0.05,0.95))
+```
