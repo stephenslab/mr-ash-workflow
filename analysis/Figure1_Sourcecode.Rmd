@@ -138,39 +138,47 @@ sa2 = 0:100; sigma2 = 1;
 b = seq(0,20,0.001)
 pi = exp(-sa2)
 pi = pi / sum(pi)
-b_softt    = postmean(b, pi)
-b_softt2   = softt(b, lambda = 1.43)
-b_softtinv = postmeaninv(b, pi)
-pen_softt  = cumsum(b_softtinv - b)  / 1000
-R_softt    = marginal(b, pi)
-R_softt    = cumsum(b - b_softt)  / 1000
+b_softt     = postmean(b, pi)
+b_softt2    = softt(b, lambda = 1.43)
+b_softtinv  = postmeaninv(b, pi)
+pen_softt   = cumsum(b_softtinv - b)  / 1000
+R_softt     = marginal(b, pi)
+R_softt     = cumsum(b - b_softt)  / 1000
+b_softtinv2 = b + 1.43
+pen_softt2  = cumsum(b_softtinv2 - b)  / 1000
 
 pi = double(101)
 pi[1] = 0.8; pi[101] = 0.2
-b_mcp    = postmean(b, pi)
-b_mcp2   = mcp(b, lambda = 2)
-b_mcpinv = postmeaninv(b, pi)
-pen_mcp  = cumsum(b_mcpinv - b)  / 1000
-R_mcp    = marginal(b, pi)
-R_mcp    = cumsum(b - b_mcp)  / 1000
+b_mcp     = postmean(b, pi)
+b_mcp2    = mcp(b, lambda = 2)
+b_mcpinv  = postmeaninv(b, pi)
+pen_mcp   = cumsum(b_mcpinv - b)  / 1000
+R_mcp     = marginal(b, pi)
+R_mcp     = cumsum(b - b_mcp)  / 1000
+b_mcpinv2 = pmax(2 + 0.5 * b, b)
+pen_mcp2  = cumsum(b_mcpinv2 - b)  / 1000
 
 pi = double(101)
 pi[1] = 0.9; pi[101] = 0.1
-b_hardt    = postmean(b, pi, sa2 = sa2^5)
-b_hardt2   = hardt(b, lambda = 5)
-b_hardtinv = postmeaninv(b, pi, sa2 = sa2^5)
-pen_hardt  = cumsum(b_hardtinv - b)  / 1000
-R_hardt    = marginal(b, pi, sa2 = sa2^5)
-R_hardt    = cumsum(b - b_hardt)  / 1000
+b_hardt     = postmean(b, pi, sa2 = sa2^5)
+b_hardt2    = hardt(b, lambda = 5)
+b_hardtinv  = postmeaninv(b, pi, sa2 = sa2^5)
+pen_hardt   = cumsum(b_hardtinv - b)  / 1000
+R_hardt     = marginal(b, pi, sa2 = sa2^5)
+R_hardt     = cumsum(b - b_hardt)  / 1000
+b_hardtinv2 = pmax(b, 5)
+pen_hardt2  = cumsum(b_hardtinv2 - b)  / 1000
 
 pi = double(101)
 pi[1] = 0.5; pi[2:51] = 0.2/50; pi[101] = 0.3
-b_scad    = postmean(b, pi, sa2 = sa2)
-b_scad2   = scad(b, lambda = 1, eta = 4)
-b_scadinv = postmeaninv(b, pi, sa2 = sa2)
-pen_scad  = cumsum(b_scadinv - b)  / 1000
-R_scad    = marginal(b, pi, sa2 = sa2)
-R_scad    = cumsum(b - b_scad)  / 1000
+b_scad     = postmean(b, pi, sa2 = sa2)
+b_scad2    = scad(b, lambda = 1, eta = 4)
+b_scadinv  = postmeaninv(b, pi, sa2 = sa2)
+pen_scad   = cumsum(b_scadinv - b)  / 1000
+R_scad     = marginal(b, pi, sa2 = sa2)
+R_scad     = cumsum(b - b_scad)  / 1000
+b_scadinv2 = pmax(pmin(1 + b, 2 + 2/3 * (b-1)), b)
+pen_scad2  = cumsum(b_scadinv2 - b)  / 1000
 
 postmeaninv = function(b, pi, sa2 = 0:100, sigma2 = 1){
   out     = double(length(b))
@@ -182,12 +190,14 @@ postmeaninv = function(b, pi, sa2 = 0:100, sigma2 = 1){
 
 pi = double(2)
 pi[1] = 0.9; pi[2] = 0.1
-b_enet    = postmean(b, pi, sa2 = c(0,9) / 15)
-b_enet2   = enett(b, lambda = 3, eta = 0.5)
-b_enetinv = postmeaninv(b, pi, sa2 = c(0,9) / 15)
-pen_enet  = cumsum(b_enetinv - b)  / 1000
-R_enet    = marginal(b, pi, sa2 = c(0,9) / 15)
-R_enet    = cumsum(b - b_enet)  / 1000
+b_enet     = postmean(b, pi, sa2 = c(0,9) / 15)
+b_enet2    = enett(b, lambda = 3, eta = 0.5)
+b_enetinv  = postmeaninv(b, pi, sa2 = c(0,9) / 15)
+pen_enet   = cumsum(b_enetinv - b)  / 1000
+R_enet     = marginal(b, pi, sa2 = c(0,9) / 15)
+R_enet     = cumsum(b - b_enet)  / 1000
+b_enetinv2 = 2.5 * b + 1.5
+pen_enet2  = cumsum(b_enetinv2 - b)  / 1000
 
 # plot(b, b_softt, t = "l", col = 2)
 # lines(b, b_mcp, col = 3)
@@ -203,16 +213,16 @@ R_enet    = cumsum(b - b_enet)  / 1000
 ```
 
 ```{r}
-df1 = rbind(data.frame(method = "SOFT", sb = b_softt, sb2 = b_softt2, pen = pen_softt, r = exp(-R_softt),
-                       r2 = R.softt(b), pen2 = pen.softt(b, lambda = 1.43), b = b),
-           data.frame(method = "HARD", sb = b_hardt, sb2 = b_hardt2, pen = pen_hardt, r =  exp(-R_hardt),
-                      r2 = R.hardt(b), pen2 = pen.hardt(b, lambda = 5), b = b),
+df1 = rbind(data.frame(method = "L1", sb = b_softt, sb2 = b_softt2, pen = pen_softt, r = exp(-R_softt),
+                       r2 = R.softt(b), pen2 = pen_softt2, b = b),
+           data.frame(method = "L0", sb = b_hardt, sb2 = b_hardt2, pen = pen_hardt, r =  exp(-R_hardt),
+                      r2 = R.hardt(b), pen2 = pen_hardt2, b = b),
            data.frame(method = "MCP", sb = b_mcp, sb2 = b_mcp2, pen = pen_mcp, r = exp(-R_mcp),
-                      r2 = R.mcp(b), pen2 = pen.mcp(b, lambda = 2), b = b),
+                      r2 = R.mcp(b), pen2 = pen_mcp2, b = b),
            data.frame(method = "SCAD", sb = b_scad, sb2 = b_scad2, pen = pen_scad, r = exp(-R_scad),
-                      r2 = R.scad(b), pen2 = pen.scad(b, lambda = 1, eta = 4), b = b),
+                      r2 = R.scad(b), pen2 = pen_scad2, b = b),
            data.frame(method = "E-NET", sb = b_enet, sb2 = b_enet2, pen = pen_enet, r = exp(-R_enet),
-                      r2 = R.enet(b), pen2 = pen.enet(b, lambda = 3, eta = 0.5), b = b))
+                      r2 = R.enet(b), pen2 = pen_enet2, b = b))
 
 saveRDS(df1, "results/flexibility.RDS")
 ```
