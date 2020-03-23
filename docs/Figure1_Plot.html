@@ -9,10 +9,9 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Youngseok Kim" />
 
 
-<title>Figure1_Sourcecode</title>
+<title>Figure1_for_the_paper</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -24,6 +23,7 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
@@ -261,6 +261,14 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 
 
@@ -405,11 +413,17 @@ div.section {
 
 <div class="fluid-row" id="header">
 
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
 
 
-<h1 class="title toc-ignore">Figure1_Sourcecode</h1>
-<h4 class="author">Youngseok Kim</h4>
-<h4 class="date">5/19/2019</h4>
+
+<h1 class="title toc-ignore">Figure1_for_the_paper</h1>
 
 </div>
 
@@ -546,12 +560,14 @@ Untracked files:
     Untracked:  signalshapedense5002000.RDS
 
 Unstaged changes:
+    Modified:   analysis/Figure1_Plot.Rmd
     Modified:   analysis/Figure1_Sourcecode.Rmd
     Modified:   analysis/Figure2_Sourcecode.Rmd
     Modified:   analysis/Figure3_Plot.Rmd
     Modified:   analysis/Figure3_Sourcecode.Rmd
     Modified:   analysis/Figure6_Plot.Rmd
     Modified:   backup/.DS_Store
+    Modified:   figure1_for_paper.pdf
     Modified:   figure3_for_paper.pdf
     Modified:   figure6_for_paper.pdf
     Modified:   results/flexibility.RDS
@@ -598,7 +614,7 @@ Message
 Rmd
 </td>
 <td>
-<a href="https://github.com/stephenslab/mr-ash-workflow/blob/85cd00683df9928ecc34c50739c345d29b560436/analysis/Figure1_Sourcecode.Rmd" target="_blank">85cd006</a>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/85cd00683df9928ecc34c50739c345d29b560436/analysis/Figure1_Plot.Rmd" target="_blank">85cd006</a>
 </td>
 <td>
 Youngseok Kim
@@ -608,40 +624,6 @@ Youngseok Kim
 </td>
 <td>
 set eval = TRUE, and fix errors
-</td>
-</tr>
-<tr>
-<td>
-html
-</td>
-<td>
-<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/85cd00683df9928ecc34c50739c345d29b560436/docs/Figure1_Sourcecode.html" target="_blank">85cd006</a>
-</td>
-<td>
-Youngseok Kim
-</td>
-<td>
-2020-03-18
-</td>
-<td>
-set eval = TRUE, and fix errors
-</td>
-</tr>
-<tr>
-<td>
-Rmd
-</td>
-<td>
-<a href="https://github.com/stephenslab/mr-ash-workflow/blob/bc4226c30fa7ce40c636f70c57644edfa7e9ee6e/analysis/Figure1_Sourcecode.Rmd" target="_blank">bc4226c</a>
-</td>
-<td>
-Youngseok Kim
-</td>
-<td>
-2020-03-17
-</td>
-<td>
-update analysis/, readme.md
 </td>
 </tr>
 </tbody>
@@ -651,208 +633,62 @@ update analysis/, readme.md
 </div>
 </div>
 </div>
-<pre class="r"><code>scad = function(b, lambda = 1, eta = 3) {
-  b1 = pmax(abs(b) - lambda, 0) * sign(b) * (abs(b) &lt;= 2 * lambda)
-  b2 = ((eta-1) * b - sign(b) * eta * lambda) / (eta-2) * (abs(b) &lt;= eta * lambda) * (abs(b) &gt; 2 * lambda)
-  b3 = b * (abs(b) &gt; eta * lambda)
-  return (b1+b2+b3)
-}
-
-mcp = function(b, lambda = 1, eta = 2) {
-  b1 = pmax(abs(b) - lambda, 0) * sign(b) * (b &lt;= eta * lambda) * eta / (eta-1)
-  b2 = b * (abs(b) &gt; eta * lambda)
-  return (b1+b2)
-}
-
-softt = function(b, lambda = 1) {
-  return (pmax(abs(b) - lambda, 0) * sign(b))
-}
-
-hardt = function(b, lambda = 1) {
-  return (b * (abs(b) &gt;= lambda))
-}
-
-enett = function(b, lambda = 1, eta = 0.5) {
-  r = 1 + (1 - eta) * lambda
-  return (softt(b / r, lambda * eta / r))
+<pre class="r"><code>library(ggplot2); library(cowplot);
+## function for color
+gg_color_hue &lt;- function(n) {
+  hues = seq(15, 375, length = n + 1)
+  hcl(h = hues, l = 65, c = 100)[1:n]
 }</code></pre>
-<pre class="r"><code>R.hardt = function(b, lambda = 1) {
-  b     = abs(b)
-  out   = b^2/2
-  out[b &gt; lambda] = lambda^2/2
-  exp(-out)
-}
+<div id="figure" class="section level2">
+<h2>Figure</h2>
+<div id="flexibility-of-mr.ash-shrinkage-operator" class="section level3">
+<h3>Flexibility of MR.ASH shrinkage operator</h3>
+<pre class="r"><code>df = readRDS(&quot;results/flexibility.RDS&quot;)
+df$Operator = df$method
+p1 = ggplot(df) + geom_line(aes(x = b, y = sb, color = Operator), size = 1) +
+  theme_cowplot(font_size = 20) + theme(axis.line = element_blank()) +
+  labs(y = &quot;shrinkage operator S(b)&quot;, title = &quot;MR.ASH shrinkage operators&quot;) +
+  theme(legend.position = &quot;none&quot;,
+        axis.title.x = element_blank()) +
+  coord_cartesian(xlim = c(0,10), ylim = c(0,10))
+p2 = ggplot(df) + geom_line(aes(x = b, y = sb2, color = Operator), size = 1) +
+  theme_cowplot(font_size = 20) + theme(axis.line = element_blank()) +
+  labs(title = &quot;123&quot;)  +
+  theme(legend.position = &quot;none&quot;) +
+  labs(y = &quot;shrinkage operator S(b)&quot;, title = &quot;Other shrinkage/thresholding operators&quot;) +
+  coord_cartesian(xlim = c(0,10), ylim = c(0,10)) +
+  theme(axis.title.y = element_blank(),
+        axis.title.x = element_blank())
 
-R.softt = function(b, lambda = 1) {
-  b     = abs(b)
-  out   = lambda^2/2 + (b - lambda) * lambda
-  out[b &lt;= lambda] = b[b &lt;= lambda]^2/2
-  exp(-out)
-}
-
-R.scad = function(b, lambda = 1, eta = 3) {
-  b     = abs(b)
-  out   = lambda^2/2 + (b - lambda) * lambda
-  out[b &lt;= lambda] = b[b &lt;= lambda]^2/2
-  out[b &gt; 2 * lambda] = lambda^2 * 3/2 + (eta - 2) * lambda^2/2 * 
-    (1 - (eta - b[b &gt; 2 * lambda] / lambda)^2 / (eta - 2)^2)
-  out[b &gt; eta * lambda] = lambda^2 * 3/2 + (eta - 2) * lambda^2/2
-  exp(-out)
-}
-
-R.mcp = function(b, lambda = 1, eta = 2) {
-  b     = abs(b)
-  out   = lambda^2/2 + (eta - 1) * lambda^2 / 2 * 
-    (1 - (eta - b / lambda)^2 / (eta - 1)^2)
-  out[b &gt; eta * lambda] = lambda^2 / 2 + (eta - 1) * lambda^2 / 2 
-  out[b &lt;= lambda] = b[b &lt;= lambda]^2/2
-  exp(-out)
-}
-
-R.enet = function(b, lambda = 1, eta = 0.5) {
-  b     = abs(b)
-  r     = 1 + (1 - eta) * lambda
-  out   = (r - 1) / r * (b - eta * lambda)^2 / 2 + eta * lambda * (b - eta * lambda) + (eta * lambda)^2 / 2
-  out[b &lt;= eta * lambda] = b[b &lt;= eta * lambda]^2/2
-  exp(-out)
-}</code></pre>
-<pre class="r"><code>pen.hardt = function(b, lambda = 1) {
-  rep(lambda, length(b))
-}
-
-pen.softt = function(b, lambda = 1) {
-  lambda * abs(b)
-}
-
-pen.scad = function(b, lambda = 1, eta = 3) {
-  lambda * abs(b) * (abs(b) &lt;= lambda) +
-    (eta * lambda * abs(b) - 0.5 * (b^2 + lambda^2)) / (eta - 1) * ((abs(b) &gt; lambda) &amp; (abs(b) &lt;= eta * lambda)) +
-    lambda^2 * (eta + 1) / 2 * (abs(b) &gt; eta * lambda)
-}
-
-pen.mcp = function(b, lambda = 1, eta = 2) {
-  (lambda * abs(b) - b^2 / 2 / eta) * (abs(b) &lt;= eta * lambda) +
-    lambda^2 * eta / 2 * (abs(b) &gt; eta * lambda)
-}
-
-pen.enet = function(b, lambda = 1, eta = 0.5) {
-  (1 - eta) * lambda / 2 * b^2 + eta * lambda * abs(b)
-}</code></pre>
-<pre class="r"><code>postmean = function(b, pi, sa2 = 0:100, sigma2 = 1){
-  phi       = outer(b^2, 1 / 2 / (1 + 1 / sa2) / sigma2);
-  phi       = exp(phi - apply(phi, 1, max))
-  
-  phi       = t(pi * t(phi) / sqrt(1 + sa2));
-  phi       = phi / rowSums(phi);
-  out       = c(colSums(t(phi) / (1 + 1 / sa2))) * b
-  return (out)
-}
-
-postmeaninv = function(b, pi, sa2 = 0:100, sigma2 = 1){
-  out     = double(length(b))
-  for (i in 1:length(b)) {
-    out[i]  = uniroot(function(x) postmean(x, pi, sa2, sigma2) - b[i], lower = 0, upper = 100)$root
-  }
-  return (out)
-}
-
-marginal    = function(b, pi, sa2 = 0:100, sigma2 = 1){
-  S         = outer(rep(sigma2,length(b)), sa2, &#39;+&#39;)
-  L         = dnorm(b, 0, S, log = TRUE)
-  l         = apply(L, 1, max)
-  a         = c(colSums(pi * t(exp(L - l))))
-  a         = a * exp(l)
-  a
-}
-
-sa2 = 0:100; sigma2 = 1;
-b = seq(0,20,0.001)
-pi = exp(-sa2)
-pi = pi / sum(pi)
-b_softt     = postmean(b, pi)
-b_softt2    = softt(b, lambda = 1.43)
-b_softtinv  = postmeaninv(b, pi)
-pen_softt   = cumsum(b_softtinv - b)  / 1000
-R_softt     = marginal(b, pi)
-R_softt     = cumsum(b - b_softt)  / 1000
-b_softtinv2 = b + 1.43
-pen_softt2  = cumsum(b_softtinv2 - b)  / 1000
-
-pi = double(101)
-pi[1] = 0.8; pi[101] = 0.2
-b_mcp     = postmean(b, pi)
-b_mcp2    = mcp(b, lambda = 2)
-b_mcpinv  = postmeaninv(b, pi)
-pen_mcp   = cumsum(b_mcpinv - b)  / 1000
-R_mcp     = marginal(b, pi)
-R_mcp     = cumsum(b - b_mcp)  / 1000
-b_mcpinv2 = pmax(2 + 0.5 * b, b)
-pen_mcp2  = cumsum(b_mcpinv2 - b)  / 1000
-
-pi = double(101)
-pi[1] = 0.9; pi[101] = 0.1
-b_hardt     = postmean(b, pi, sa2 = sa2^5)
-b_hardt2    = hardt(b, lambda = 5)
-b_hardtinv  = postmeaninv(b, pi, sa2 = sa2^5)
-pen_hardt   = cumsum(b_hardtinv - b)  / 1000
-R_hardt     = marginal(b, pi, sa2 = sa2^5)
-R_hardt     = cumsum(b - b_hardt)  / 1000
-b_hardtinv2 = pmax(b, 5)
-pen_hardt2  = cumsum(b_hardtinv2 - b)  / 1000
-
-pi = double(101)
-pi[1] = 0.5; pi[2:51] = 0.2/50; pi[101] = 0.3
-b_scad     = postmean(b, pi, sa2 = sa2)
-b_scad2    = scad(b, lambda = 1, eta = 4)
-b_scadinv  = postmeaninv(b, pi, sa2 = sa2)
-pen_scad   = cumsum(b_scadinv - b)  / 1000
-R_scad     = marginal(b, pi, sa2 = sa2)
-R_scad     = cumsum(b - b_scad)  / 1000
-b_scadinv2 = pmax(pmin(1 + b, 2 + 2/3 * (b-1)), b)
-pen_scad2  = cumsum(b_scadinv2 - b)  / 1000
-
-postmeaninv = function(b, pi, sa2 = 0:100, sigma2 = 1){
-  out     = double(length(b))
-  for (i in 1:length(b)) {
-    out[i]  = uniroot(function(x) postmean(x, pi, sa2, sigma2) - b[i], lower = 0, upper = 100)$root
-  }
-  return (out)
-}
-
-pi = double(2)
-pi[1] = 0.9; pi[2] = 0.1
-b_enet     = postmean(b, pi, sa2 = c(0,9) / 15)
-b_enet2    = enett(b, lambda = 3, eta = 0.5)
-b_enetinv  = postmeaninv(b, pi, sa2 = c(0,9) / 15)
-pen_enet   = cumsum(b_enetinv - b)  / 1000
-R_enet     = marginal(b, pi, sa2 = c(0,9) / 15)
-R_enet     = cumsum(b - b_enet)  / 1000
-b_enetinv2 = 2.5 * b + 1.5
-pen_enet2  = cumsum(b_enetinv2 - b)  / 1000
-
-# plot(b, b_softt, t = &quot;l&quot;, col = 2)
-# lines(b, b_mcp, col = 3)
-# lines(b, b_hardt, col = 4)
-# lines(b, b_scad, col = 5)
-# lines(b, b_enet, col = 6)
-# 
-# plot(b, softt(b, lambda = 1.43), t = &quot;l&quot;, col = 2)
-# lines(b, mcp(b, lambda = 2), col = 3)
-# lines(b, hardt(b, lambda = 5), col = 4)
-# lines(b, scad(b, lambda = 1, eta = 4), col = 5)
-# lines(b, enett(b, lambda = 3, eta = 0.5), col = 6)</code></pre>
-<pre class="r"><code>df1 = rbind(data.frame(method = &quot;SOFT&quot;, sb = b_softt, sb2 = b_softt2, pen = pen_softt, r = exp(-R_softt),
-                       r2 = R.softt(b), pen2 = pen_softt2, b = b),
-           data.frame(method = &quot;HARD&quot;, sb = b_hardt, sb2 = b_hardt2, pen = pen_hardt, r =  exp(-R_hardt),
-                      r2 = R.hardt(b), pen2 = pen_hardt2, b = b),
-           data.frame(method = &quot;MCP&quot;, sb = b_mcp, sb2 = b_mcp2, pen = pen_mcp, r = exp(-R_mcp),
-                      r2 = R.mcp(b), pen2 = pen_mcp2, b = b),
-           data.frame(method = &quot;SCAD&quot;, sb = b_scad, sb2 = b_scad2, pen = pen_scad, r = exp(-R_scad),
-                      r2 = R.scad(b), pen2 = pen_scad2, b = b),
-           data.frame(method = &quot;E-NET&quot;, sb = b_enet, sb2 = b_enet2, pen = pen_enet, r = exp(-R_enet),
-                      r2 = R.enet(b), pen2 = pen_enet2, b = b))
-
-saveRDS(df1, &quot;results/flexibility.RDS&quot;)</code></pre>
+fig1 = plot_grid(p1,p2, nrow = 1, rel_widths = c(0.463,0.5))
+title = ggdraw() + draw_label(&quot;MR.ASH Shrinkage operator may resemble the well-known shrinkage operators&quot;, fontface = &#39;bold&#39;, size = 20) 
+fig1 = plot_grid(title, fig1, nrow = 2, rel_heights = c(0.06,0.95))</code></pre>
+</div>
+<div id="flexibility-of-mr.ash-penalty-function" class="section level3">
+<h3>Flexibility of MR.ASH penalty function</h3>
+<pre class="r"><code>df = readRDS(&quot;results/flexibility.RDS&quot;)
+df$Operator = df$method
+p3 = ggplot(df) + geom_line(aes(x = b, y = pen, color = Operator), size = 1) +
+  theme_cowplot(font_size = 20) + theme(axis.line = element_blank()) +
+  labs(y = paste0(&quot;penalty &quot;,&quot;rho&quot;,&quot;(b)&quot;,sep = &quot;&quot;), title = &quot;MR.ASH penalties&quot;) +
+  theme(legend.position = &quot;none&quot;,
+        axis.title.x = element_blank()) +
+  coord_cartesian(xlim = c(0,10), ylim = c(0,15))
+p4 = ggplot(df) + geom_line(aes(x = b, y = pen2, color = Operator), size = 1) +
+  theme_cowplot(font_size = 20) + theme(axis.line = element_blank()) +
+  labs(title = &quot;123&quot;)  +
+  labs(y = &quot;shrinkage operator S(b)&quot;, title = &quot;Other penalties&quot;) +
+  coord_cartesian(xlim = c(0,10), ylim = c(0,15)) +
+  theme(axis.title.y = element_blank(),
+        axis.title.x = element_blank())
+legend = get_legend(p4 + theme_cowplot(font_size = 20) +
+                      theme(legend.box.margin = margin(0, 0, 0, 12),
+                            legend.key.size = unit(0.8, &quot;cm&quot;)))
+p4 = p4 + theme(legend.position = &quot;none&quot;)</code></pre>
+<pre class="r"><code>xaxis    = ggdraw() + draw_label(&quot;b&quot;, size = 20, angle = 0)
+figure1  = plot_grid(plot_grid(plot_grid(p1,p2,p3,p4,ncol = 2), xaxis, ncol = 1, rel_heights = c(0.95,0.05)),
+                     legend, nrow = 1, rel_widths = c(0.9,0.1))
+ggsave(&quot;figure1_for_paper.pdf&quot;, figure1, width = 18, height = 16)</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -875,13 +711,22 @@ locale:
 attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
+other attached packages:
+[1] cowplot_0.9.4 ggplot2_3.2.1
+
 loaded via a namespace (and not attached):
- [1] workflowr_1.3.0 Rcpp_1.0.3      digest_0.6.23   rprojroot_1.3-2
- [5] backports_1.1.5 git2r_0.25.2    magrittr_1.5    evaluate_0.13  
- [9] rlang_0.4.2     stringi_1.4.5   fs_1.3.0        whisker_0.3-2  
-[13] rmarkdown_1.12  tools_3.5.3     stringr_1.4.0   glue_1.3.1     
-[17] xfun_0.6        yaml_2.2.0      compiler_3.5.3  htmltools_0.4.0
-[21] knitr_1.22     </code></pre>
+ [1] Rcpp_1.0.3       compiler_3.5.3   pillar_1.4.3     git2r_0.25.2    
+ [5] workflowr_1.3.0  tools_3.5.3      digest_0.6.23    evaluate_0.13   
+ [9] lifecycle_0.1.0  tibble_2.1.3     gtable_0.3.0     pkgconfig_2.0.3 
+[13] rlang_0.4.2      yaml_2.2.0       xfun_0.6         withr_2.1.2     
+[17] stringr_1.4.0    dplyr_0.8.3      knitr_1.22       fs_1.3.0        
+[21] rprojroot_1.3-2  grid_3.5.3       tidyselect_0.2.5 glue_1.3.1      
+[25] R6_2.4.1         rmarkdown_1.12   purrr_0.3.3      farver_2.0.3    
+[29] magrittr_1.5     whisker_0.3-2    backports_1.1.5  scales_1.1.0    
+[33] htmltools_0.4.0  assertthat_0.2.1 colorspace_1.4-1 labeling_0.3    
+[37] stringi_1.4.5    lazyeval_0.2.2   munsell_0.5.0    crayon_1.3.4    </code></pre>
+</div>
+</div>
 </div>
 
 

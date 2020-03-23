@@ -23,7 +23,6 @@ gg_color_hue <- function(n) {
 ### Flexibility of MR.ASH shrinkage operator
 
 ```{r}
-setwd("~/git/mr-ash-workflow/")
 df = readRDS("results/flexibility.RDS")
 df$Operator = df$method
 p1 = ggplot(df) + geom_line(aes(x = b, y = sb, color = Operator), size = 1) +
@@ -49,7 +48,6 @@ fig1 = plot_grid(title, fig1, nrow = 2, rel_heights = c(0.06,0.95))
 ### Flexibility of MR.ASH penalty function
 
 ```{r}
-setwd("~/git/mr-ash-workflow/")
 df = readRDS("results/flexibility.RDS")
 df$Operator = df$method
 p3 = ggplot(df) + geom_line(aes(x = b, y = pen, color = Operator), size = 1) +

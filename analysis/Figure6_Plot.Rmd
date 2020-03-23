@@ -225,7 +225,7 @@ df$size = 0.5
 df$size[1:9] = 1.2
 col   = gg_color_hue(13)[c(1,8:11)]
 shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1,8:11)]
-fig_main = ggplot(df) + geom_line(aes(x = p, y = time, color = fit),
+fig_dummy8 = ggplot(df) + geom_line(aes(x = p, y = time, color = fit),
                               size = df$size) + 
     geom_point(aes(x = p, y = time, color = fit, shape = fit), size = 2.5) +
   theme_cowplot(font_size = 22) +

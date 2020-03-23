@@ -343,7 +343,7 @@ fit.bayesc = function(X, y, X.test, y.test, seed = 1, nIter = NULL, burnIn = NUL
 #'
 #'
 #' gibbs sampling
-fit.mcmc = function(X, y, X.test, y.test, seed = 1, nIter = NULL, burnIn = NULL) {
+fit.mcmc = function(X, y, X.test, y.test, seed = 1, nIter = NULL, burnIn = NULL, beta.init = data$beta + 0) {
   
   # set seed
   set.seed(seed)
@@ -355,7 +355,7 @@ fit.mcmc = function(X, y, X.test, y.test, seed = 1, nIter = NULL, burnIn = NULL)
   # run bayesb
   t.mcmc           = system.time(
     fit.mcmc <- gibbs.sampling(data$X, data$y, sa2 = c(0, 1 / s), burn.in = burnIn, max.iter = nIter,
-                               pi = c(1 - s/p, s/p), beta.init = data$beta + 0, sigma2 = data$sigma^2))
+                               pi = c(1 - s/p, s/p), beta.init = beta.init, sigma2 = data$sigma^2))
   fit.mcmc$data$sa2 = c(0, 1 / s)
   fit.mcmc$pi       = pi = c(1 - s/p, s/p)
   pip              = 1 - mr.ash.alpha:::get_phi(fit.mcmc)$phi[,1]

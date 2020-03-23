@@ -464,6 +464,13 @@ tdat6[[iter]] = data.frame(pred = c(pred), time = c(time), fdp = c(fdp),
 
 ## Save the results
 
+```{r remove}
+try(system("rm *.dat"))
+try(system("rm ../*.dat"))
+try(system("rm analysis/*.dat"))
+try(system("rm ../analysis/*.dat"))
+```
+
 ```{r saveresults}
 saveRDS(tdat1, "results/scenario1.RDS")
 saveRDS(tdat2, "results/scenario2.RDS")

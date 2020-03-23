@@ -219,6 +219,13 @@ for (i in 1:20) {
 
 ## Save the results
 
+```{r remove}
+try(system("rm *.dat"))
+try(system("rm ../*.dat"))
+try(system("rm analysis/*.dat"))
+try(system("rm ../analysis/*.dat"))
+```
+
 ```{r saveresults}
 saveRDS(tdat8, "results/scenario7.RDS")
 saveRDS(tdat9, "results/scenario8.RDS")
