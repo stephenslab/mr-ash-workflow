@@ -89,7 +89,6 @@ for (iter in 1:4) {
 
 ```{r}
 res_df       = readRDS("../backup/recentupdates/mcmc3.RDS")
-saveRDS()
 method_list  = c("Mr.ASH.g","MCMC","Mr.ASH.g","MCMC","Mr.ASH.g","MCMC")
 rho_list     = c(0,0,0.3,0.3,0.95,0.95)
 df           = data.frame()
