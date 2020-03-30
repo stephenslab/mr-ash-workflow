@@ -1,0 +1,1447 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Figure3_Sourcecode1</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">mr-ash-workflow</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/stephenslab/mr-ash-workflow">source</a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Figure3_Sourcecode1</h1>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2020-03-27
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>mr-ash-workflow/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.4.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20191007code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20191007)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20191007code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20191007)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree6831d0de514303f1d647220cef5df111954268f7targetblank6831d0da"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/6831d0de514303f1d647220cef5df111954268f7" target="_blank">6831d0d</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree6831d0de514303f1d647220cef5df111954268f7targetblank6831d0da" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    backup/.DS_Store
+
+Untracked files:
+    Untracked:  .DS_Store
+    Untracked:  .gitignore
+    Untracked:  analysis/Figure2_Sourcecode1.Rmd
+    Untracked:  analysis/Figure2_Sourcecode2.Rmd
+    Untracked:  analysis/Figure3_Sourcecode1.Rmd
+    Untracked:  analysis/Figure3_Sourcecode2.Rmd
+
+Unstaged changes:
+    Modified:   analysis/.DS_Store
+    Deleted:    analysis/Figure2_Sourcecode.Rmd
+    Deleted:    analysis/Figure3_Sourcecode.Rmd
+    Modified:   results/scenario1.RDS
+    Modified:   results/scenario10.RDS
+    Modified:   results/scenario2.RDS
+    Modified:   results/scenario3-2.RDS
+    Modified:   results/scenario3.RDS
+    Modified:   results/scenario4-2.RDS
+    Modified:   results/scenario4.RDS
+    Modified:   results/scenario5.RDS
+    Modified:   results/scenario6.RDS
+    Modified:   results/scenario8.RDS
+    Modified:   results/scenario9-2.RDS
+    Modified:   results/scenario9.RDS
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<div id="load-source-code" class="section level2">
+<h2>Load Source Code</h2>
+<pre class="r"><code>library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(mr.ash.alpha); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
+source(&#39;code/method_wrapper.R&#39;)
+source(&#39;code/sim_wrapper.R&#39;)</code></pre>
+</div>
+<div id="scenarios" class="section level2">
+<h2>Scenarios</h2>
+<div id="scenario-7" class="section level3">
+<h3>Scenario 7</h3>
+<p>Scenario 7 (Varying <span class="math inline">\(n\)</span>): <span class="math inline">\(n \in [\textrm{200}, \textrm{5,000}]\)</span>, <span class="math inline">\(p = \textrm{2,000}\)</span>, <span class="math inline">\(s = \textrm{20}\)</span>, <span class="math inline">\(\textrm{Design} = \textrm{IndepGauss}\)</span>, <span class="math inline">\(\textrm{PVE} = 0.5\)</span> and <span class="math inline">\(\textrm{SignalShape} = \textrm{PointNormal}\)</span>.</p>
+<pre class="r"><code>tdat7        = list()
+n_range      = c(200,500,1000,2000,5000,10000,20000,50000)
+p            = 2000
+s            = 20
+method_list  = c(&quot;varbvs&quot;,&quot;bayesb&quot;,&quot;blasso&quot;,&quot;susie&quot;,&quot;enet&quot;,&quot;lasso&quot;,&quot;ridge&quot;,&quot;scad2&quot;,&quot;mcp2&quot;,&quot;l0learn&quot;)
+method_list2 = c(&quot;mr.ash&quot;, method_list)
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+for (iter in 1:5) {
+  n               = n_range[iter]
+for (i in 1:20) {
+  
+  data          = simulate_data(n, p, s = s, seed = i, signal = &quot;normal&quot;, pve = 0.5)
+  
+  for (j in 1:length(method_list)) {
+    fit.method    = get(paste(&quot;fit.&quot;,method_list[j],sep = &quot;&quot;))
+    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+1]   = fit$t
+    
+    if (method_list[j] == &quot;lasso&quot;) {
+      pred[i,method_num - 1] = fit$rsse2 / data$sigma / sqrt(n)
+    } else if (method_list[j] == &quot;enet&quot;) {
+      pred[i,method_num - 2] = fit$rsse2 / data$sigma / sqrt(n)
+    } else if (method_list[j] == &quot;ridge&quot;) {
+      pred[i,method_num - 0] = fit$rsse2 / data$sigma / sqrt(n)
+    }
+  }
+ 
+  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                           sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  
+  print(c(time[i,]), digits = 4)
+  print(c(pred[i,]), digits = 4)
+}
+  print(&quot;-----------------------------------&quot;)
+  tdat7[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+}</code></pre>
+<pre><code> mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  5.037   3.419   1.837   1.979   0.999  11.443   0.830   2.576   2.679 
+   mcp2 l0learn 
+  1.474   0.777 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.268   1.264   1.289   1.368   1.259   1.295   1.306   1.381   1.303 
+   mcp2 l0learn 
+  1.268   1.367 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  2.078   2.643   2.027   1.925   2.398  11.636   0.884   2.983   3.431 
+   mcp2 l0learn 
+  1.688   0.787 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.148   1.149   1.302   1.478   1.275   1.273   1.264   1.502   1.185 
+   mcp2 l0learn 
+  1.163   1.175 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  8.185   1.839   1.839   1.976   1.963  12.084   0.844   2.862   2.943 
+   mcp2 l0learn 
+  1.604   0.842 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.081   1.085   1.175   1.311   1.172   1.144   1.184   1.343   1.086 
+   mcp2 l0learn 
+  1.082   1.108 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  4.222   2.396   2.149   2.499   1.010  11.473   0.821   2.886   3.722 
+   mcp2 l0learn 
+  1.918   0.773 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.250   1.249   1.327   1.368   1.277   1.322   1.351   1.395   1.208 
+   mcp2 l0learn 
+  1.172   1.261 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  3.105   3.625   2.367   1.944   2.044  11.278   1.158   2.689   2.774 
+   mcp2 l0learn 
+  1.711   1.211 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.162   1.173   1.293   1.317   1.355   1.224   1.219   1.365   1.223 
+   mcp2 l0learn 
+  1.157   1.215 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  3.024   2.117   2.237   2.265   2.073  11.188   0.841   2.555   3.267 
+   mcp2 l0learn 
+  1.822   0.816 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.260   1.264   1.292   1.338   1.312   1.284   1.345   1.358   1.243 
+   mcp2 l0learn 
+  1.263   1.284 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  6.698   2.194   1.766   1.939   1.914  10.744   0.797   2.514   2.998 
+   mcp2 l0learn 
+  1.688   0.774 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.007   1.010   1.269   1.329   1.214   1.170   1.201   1.375   1.053 
+   mcp2 l0learn 
+  1.049   1.082 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  3.323   2.650   1.788   1.910   0.987  10.792   0.819   2.435   3.354 
+   mcp2 l0learn 
+  1.735   0.740 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.134   1.154   1.254   1.307   1.242   1.269   1.299   1.322   1.205 
+   mcp2 l0learn 
+  1.183   1.090 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  2.244   3.120   1.783   1.879   2.895  10.860   0.808   2.620   2.519 
+   mcp2 l0learn 
+  1.622   0.712 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.183   1.186   1.283   1.361   1.228   1.251   1.251   1.365   1.182 
+   mcp2 l0learn 
+  1.196   1.182 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  6.682   2.475   1.742   1.912   1.484  10.801   0.817   2.518   3.207 
+   mcp2 l0learn 
+  1.834   0.693 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.283   1.285   1.337   1.409   1.340   1.351   1.387   1.444   1.306 
+   mcp2 l0learn 
+  1.286   1.357 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  3.495   1.097   1.670   1.896   0.940  10.703   0.815   2.448   2.337 
+   mcp2 l0learn 
+  1.457   0.763 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.115   1.116   1.136   1.329   1.121   1.156   1.196   1.349   1.129 
+   mcp2 l0learn 
+  1.128   1.119 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  6.736   1.621   1.655   1.905   2.449  10.869   0.826   2.519   2.936 
+   mcp2 l0learn 
+  1.683   0.674 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.273   1.278   1.292   1.384   1.290   1.276   1.293   1.409   1.246 
+   mcp2 l0learn 
+  1.237   1.334 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  3.810   1.003   1.588   1.908   1.286  10.846   0.817   2.461   2.918 
+   mcp2 l0learn 
+  1.594   0.744 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.159   1.162   1.170   1.349   1.199   1.248   1.252   1.375   1.204 
+   mcp2 l0learn 
+  1.169   1.224 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  6.729   2.619   1.786   1.896   0.760  10.869   0.823   2.559   2.975 
+   mcp2 l0learn 
+  1.494   0.832 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.315   1.316   1.409   1.533   1.375   1.388   1.378   1.547   1.315 
+   mcp2 l0learn 
+  1.312   1.386 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  2.130   2.611   1.746   1.900   1.543  10.895   0.795   2.587   3.278 
+   mcp2 l0learn 
+  1.719   0.757 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.319   1.310   1.416   1.438   1.416   1.384   1.414   1.495   1.346 
+   mcp2 l0learn 
+  1.316   1.344 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  3.605   2.703   1.736   1.902   0.574  10.786   0.800   2.449   3.747 
+   mcp2 l0learn 
+  1.809   0.745 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.280   1.285   1.316   1.335   1.320   1.273   1.286   1.365   1.290 
+   mcp2 l0learn 
+  1.286   1.416 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  4.588   1.860   1.675   1.898   0.568  10.905   0.815   2.442   2.714 
+   mcp2 l0learn 
+  1.532   0.770 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.119   1.118   1.147   1.372   1.196   1.190   1.241   1.396   1.152 
+   mcp2 l0learn 
+  1.137   1.178 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  2.192   1.643   1.582   1.883   0.576  10.713   0.809   2.400   2.638 
+   mcp2 l0learn 
+  1.500   0.706 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.177   1.178   1.208   1.392   1.309   1.249   1.253   1.435   1.166 
+   mcp2 l0learn 
+  1.172   1.185 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  3.107   1.267   1.796   1.894   1.319  12.527   0.837   2.576   3.236 
+   mcp2 l0learn 
+  1.740   0.765 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.159   1.163   1.242   1.341   1.180   1.198   1.192   1.349   1.142 
+   mcp2 l0learn 
+  1.130   1.194 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  6.801   2.075   1.812   1.988   1.945  11.055   0.835   2.543   2.813 
+   mcp2 l0learn 
+  1.703   0.728 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.111   1.109   1.361   1.444   1.374   1.300   1.288   1.451   1.108 
+   mcp2 l0learn 
+  1.140   1.140 
+[1] &quot;-----------------------------------&quot;
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  6.763   2.530   2.986   3.458   2.631  32.137   2.502   5.713  11.011 
+   mcp2 l0learn 
+  7.573   2.081 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.049   1.053   1.055   1.178   1.099   1.105   1.099   1.313   1.068 
+   mcp2 l0learn 
+  1.058   1.062 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  3.607   1.674   2.998   3.410   2.761  32.651   2.470   5.596   6.124 
+   mcp2 l0learn 
+  5.561   1.335 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.015   1.013   1.029   1.171   1.011   1.101   1.090   1.330   1.042 
+   mcp2 l0learn 
+  1.031   1.027 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  3.193   2.336   3.008   3.381   3.242  29.168   2.389   5.292   5.874 
+   mcp2 l0learn 
+  5.436   1.354 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.090   1.090   1.116   1.264   1.101   1.158   1.176   1.442   1.104 
+   mcp2 l0learn 
+  1.098   1.073 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  5.351   2.095   3.095   3.387   2.374  28.657   2.321   5.425   4.699 
+   mcp2 l0learn 
+  4.722   1.428 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.090   1.096   1.109   1.160   1.121   1.120   1.160   1.332   1.104 
+   mcp2 l0learn 
+  1.081   1.120 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  9.074   3.027   3.093   3.409   2.163  30.610   2.501   5.384  10.858 
+   mcp2 l0learn 
+  6.780   1.362 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.100   1.100   1.096   1.185   1.108   1.159   1.171   1.350   1.101 
+   mcp2 l0learn 
+  1.091   1.108 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  2.810   2.978   2.827   3.410   2.899  30.590   2.457   5.670  10.043 
+   mcp2 l0learn 
+  6.866   1.396 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.057   1.057   1.070   1.336   1.116   1.211   1.195   1.510   1.071 
+   mcp2 l0learn 
+  1.070   1.091 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  4.022   1.923   2.908   3.386   2.546  29.964   2.438   5.371   7.556 
+   mcp2 l0learn 
+  6.463   1.357 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 0.9909  0.9905  0.9944  1.1466  0.9969  1.0708  1.0906  1.4070  0.9953 
+   mcp2 l0learn 
+ 0.9882  0.9891 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  2.537   2.059   3.098   3.393   2.624  30.605   2.531   5.337  10.647 
+   mcp2 l0learn 
+  7.248   1.498 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.108   1.108   1.136   1.228   1.145   1.220   1.204   1.440   1.136 
+   mcp2 l0learn 
+  1.138   1.123 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  6.182   3.782   2.939   3.408   6.102  29.462   2.405   5.331   8.659 
+   mcp2 l0learn 
+  6.693   1.350 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.051   1.053   1.065   1.189   1.114   1.097   1.087   1.397   1.070 
+   mcp2 l0learn 
+  1.058   1.055 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  9.087   3.758   2.931   3.378   3.095  28.606   2.324   5.432   5.017 
+   mcp2 l0learn 
+  4.603   1.356 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.025   1.029   1.036   1.164   1.044   1.077   1.078   1.414   1.032 
+   mcp2 l0learn 
+  1.031   1.058 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  3.821   2.897   2.852   3.380   1.493  30.504   2.473   5.600  10.028 
+   mcp2 l0learn 
+  7.427   1.451 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.050   1.050   1.071   1.189   1.089   1.127   1.140   1.403   1.096 
+   mcp2 l0learn 
+  1.081   1.052 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  7.470   2.105   2.771   3.420   2.537  30.391   2.493   5.287   7.084 
+   mcp2 l0learn 
+  6.031   1.476 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.127   1.129   1.125   1.199   1.169   1.174   1.188   1.413   1.126 
+   mcp2 l0learn 
+  1.116   1.138 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  5.613   6.371   2.799   3.407   2.430  30.429   2.474   5.364   9.644 
+   mcp2 l0learn 
+  7.463   1.481 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.072   1.070   1.095   1.240   1.146   1.136   1.167   1.436   1.119 
+   mcp2 l0learn 
+  1.143   1.150 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  6.142   2.825   2.967   3.389   4.260  28.250   2.275   5.361   4.197 
+   mcp2 l0learn 
+  4.691   1.468 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.111   1.107   1.112   1.199   1.112   1.145   1.150   1.473   1.121 
+   mcp2 l0learn 
+  1.117   1.130 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  3.479   1.668   2.871   3.442   2.736  29.834   2.428   5.255   8.501 
+   mcp2 l0learn 
+  6.226   1.474 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 0.9872  0.9873  1.0067  1.1294  1.0291  1.0731  1.0875  1.3367  1.0196 
+   mcp2 l0learn 
+ 0.9995  0.9961 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  3.662   2.288   2.888   3.359   2.541  30.291   2.485   5.291   9.578 
+   mcp2 l0learn 
+  6.843   1.433 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.061   1.061   1.100   1.290   1.092   1.195   1.215   1.492   1.106 
+   mcp2 l0learn 
+  1.089   1.034 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  6.938   2.104   2.815   3.361   2.886  29.894   2.414   5.445   8.802 
+   mcp2 l0learn 
+  6.822   1.498 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.043   1.042   1.029   1.217   1.036   1.109   1.140   1.445   1.030 
+   mcp2 l0learn 
+  1.040   1.067 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  3.324   2.426   2.876   3.407   4.923  30.991   2.565   5.791  10.361 
+   mcp2 l0learn 
+  6.838   1.570 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.104   1.105   1.107   1.231   1.109   1.161   1.161   1.404   1.102 
+   mcp2 l0learn 
+  1.091   1.099 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  3.611   3.075   2.941   3.453   2.101  30.081   2.446   5.556   7.612 
+   mcp2 l0learn 
+  5.909   1.463 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 0.9868  0.9860  1.0016  1.1564  1.0065  1.0682  1.0633  1.4244  1.0134 
+   mcp2 l0learn 
+ 1.0113  1.0243 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  9.333   2.762   3.130   3.438   2.286  30.358   2.455   5.486   7.865 
+   mcp2 l0learn 
+  5.931   1.490 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.075   1.074   1.096   1.228   1.100   1.137   1.150   1.399   1.101 
+   mcp2 l0learn 
+  1.087   1.069 
+[1] &quot;-----------------------------------&quot;
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  8.083   2.963   4.993   5.923   6.457  69.238   5.907  10.740   6.415 
+   mcp2 l0learn 
+ 10.051   2.735 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.022   1.027   1.017   1.137   1.038   1.066   1.063   1.408   1.021 
+   mcp2 l0learn 
+  1.022   1.040 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 11.370   2.717   4.857   5.803   5.230  62.189   5.295  10.096   3.787 
+   mcp2 l0learn 
+  4.998   2.388 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.019   1.019   1.021   1.125   1.057   1.056   1.058   1.323   1.036 
+   mcp2 l0learn 
+  1.030   1.021 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 10.209   3.426   4.937   5.835   3.996  72.909   6.311  10.279  22.270 
+   mcp2 l0learn 
+ 24.367   2.909 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.061   1.061   1.064   1.173   1.073   1.097   1.098   1.366   1.070 
+   mcp2 l0learn 
+  1.062   1.063 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  9.555   2.729   4.805   5.801   3.184  70.454   6.027  10.301   8.760 
+   mcp2 l0learn 
+ 14.828   2.720 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.055   1.054   1.057   1.160   1.054   1.095   1.103   1.408   1.051 
+   mcp2 l0learn 
+  1.054   1.058 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 13.170   2.396   4.810   5.810   4.836  67.244   5.791   9.969   6.083 
+   mcp2 l0learn 
+ 11.127   2.695 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.023   1.024   1.024   1.114   1.032   1.083   1.093   1.379   1.032 
+   mcp2 l0learn 
+  1.032   1.030 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 10.329   3.161   4.684   5.830   4.944  71.691   6.197  10.101  16.021 
+   mcp2 l0learn 
+ 20.695   2.825 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.016   1.017   1.015   1.148   1.027   1.067   1.071   1.404   1.024 
+   mcp2 l0learn 
+  1.020   1.033 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 13.177   2.804   4.773   5.850   3.077  69.511   6.079  10.165   9.953 
+   mcp2 l0learn 
+ 15.998   2.718 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.045   1.047   1.039   1.124   1.044   1.053   1.061   1.390   1.038 
+   mcp2 l0learn 
+  1.040   1.059 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 13.168   2.814   4.787   5.828   6.525  65.898   5.619  10.269   4.307 
+   mcp2 l0learn 
+  8.427   2.861 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 0.9993  0.9992  0.9959  1.0835  0.9919  1.0421  1.0393  1.3369  0.9992 
+   mcp2 l0learn 
+ 0.9968  1.0053 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  5.905   2.594   4.840   5.856   3.634  71.690   6.237  10.049  19.751 
+   mcp2 l0learn 
+ 21.622   2.409 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.028   1.027   1.032   1.153   1.028   1.095   1.107   1.404   1.030 
+   mcp2 l0learn 
+  1.027   1.051 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 12.561   2.618   5.034   5.821   3.966  63.521   5.375  10.034   3.555 
+   mcp2 l0learn 
+  4.763   2.695 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.057   1.056   1.068   1.150   1.059   1.097   1.107   1.438   1.072 
+   mcp2 l0learn 
+  1.068   1.057 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  5.332   3.105   4.960   5.848   3.899  69.616   5.980   9.997  12.891 
+   mcp2 l0learn 
+ 15.458   2.666 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 0.9912  0.9909  0.9942  1.1320  0.9914  1.0457  1.0394  1.3691  0.9935 
+   mcp2 l0learn 
+ 0.9892  1.0020 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  4.497   2.397   4.580   5.823   4.181  73.608   6.480  10.159  26.693 
+   mcp2 l0learn 
+ 26.508   2.611 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 0.9932  0.9931  0.9952  1.1102  1.0054  1.0821  1.1041  1.4669  1.0065 
+   mcp2 l0learn 
+ 1.0001  1.0020 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 13.137   2.792   4.696   5.838   4.354  66.726   5.708   9.930   5.346 
+   mcp2 l0learn 
+  9.866   2.767 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.019   1.017   1.027   1.107   1.022   1.052   1.061   1.280   1.038 
+   mcp2 l0learn 
+  1.029   1.018 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  9.748   2.368   4.977   5.835   2.323  67.298   5.817  10.075   4.304 
+   mcp2 l0learn 
+  9.069   2.643 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.044   1.045   1.050   1.131   1.063   1.108   1.113   1.378   1.066 
+   mcp2 l0learn 
+  1.057   1.054 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  9.549   2.564   4.686   5.811   2.806  77.718   6.624  10.829  16.441 
+   mcp2 l0learn 
+ 22.564   3.088 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.025   1.026   1.033   1.155   1.057   1.103   1.118   1.411   1.049 
+   mcp2 l0learn 
+  1.038   1.024 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  4.574   2.499   4.862   6.059   4.379  71.762   6.189   9.966  15.321 
+   mcp2 l0learn 
+ 19.034   2.773 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 0.9902  0.9900  0.9978  1.1110  1.0124  1.0740  1.0807  1.3845  1.0164 
+   mcp2 l0learn 
+ 1.0057  0.9799 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  9.178   2.537   4.859   5.868   5.956  78.092   6.602  10.405  16.157 
+   mcp2 l0learn 
+ 20.586   3.272 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.094   1.095   1.098   1.196   1.107   1.127   1.146   1.433   1.105 
+   mcp2 l0learn 
+  1.099   1.099 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  7.252   2.902   4.978   8.480   8.175  84.181   6.926  11.366  25.557 
+   mcp2 l0learn 
+ 24.286   3.009 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 0.9822  0.9796  0.9878  1.1263  0.9891  1.0646  1.0601  1.3750  0.9861 
+   mcp2 l0learn 
+ 0.9807  0.9799 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  6.088   3.817   4.968   5.815   5.165  64.256   5.434  10.116   3.699 
+   mcp2 l0learn 
+  5.740   3.016 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 0.9789  0.9765  0.9842  1.0761  1.0274  1.0126  1.0207  1.3249  0.9881 
+   mcp2 l0learn 
+ 0.9831  0.9775 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  6.103   2.691   4.791   5.847   4.095  68.459   5.845  10.094   9.280 
+   mcp2 l0learn 
+ 13.823   2.884 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.038   1.037   1.045   1.182   1.042   1.088   1.092   1.399   1.045 
+   mcp2 l0learn 
+  1.046   1.040 
+[1] &quot;-----------------------------------&quot;
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 11.348   3.911   8.488  10.997   9.045 189.873  17.270  20.575   7.764 
+   mcp2 l0learn 
+  7.818   5.098 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 0.9999  0.9987  1.0016  1.0668  0.9960  1.0171  1.0176  1.3702  0.9985 
+   mcp2 l0learn 
+ 1.0000  1.0115 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  9.131   3.728   8.440  10.943   6.646 202.320  18.296  20.399   8.551 
+   mcp2 l0learn 
+  9.285   5.116 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.008   1.008   1.006   1.076   1.007   1.030   1.033   1.290   1.012 
+   mcp2 l0learn 
+  1.009   1.012 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  3.382   3.343   8.467  10.973   4.133 198.600  17.890  20.425   8.554 
+   mcp2 l0learn 
+ 11.393   5.060 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.010   1.010   1.010   1.066   1.011   1.030   1.040   1.334   1.010 
+   mcp2 l0learn 
+  1.011   1.010 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  6.365   4.132   8.762  11.226   8.417 212.548  19.355  21.246   8.889 
+   mcp2 l0learn 
+ 14.082   5.549 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.009   1.009   1.010   1.099   1.013   1.039   1.045   1.343   1.013 
+   mcp2 l0learn 
+  1.010   1.019 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 16.649   3.707   8.445  10.944   8.385 217.813  20.114  20.357   8.551 
+   mcp2 l0learn 
+  9.527   5.844 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.025   1.024   1.026   1.080   1.022   1.058   1.063   1.357   1.028 
+   mcp2 l0learn 
+  1.026   1.029 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 13.711   3.753   8.530  11.024   4.932 191.687  17.184  20.547   8.143 
+   mcp2 l0learn 
+  8.574   5.300 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 0.9955  0.9955  0.9954  1.0679  0.9949  1.0177  1.0211  1.3270  0.9930 
+   mcp2 l0learn 
+ 0.9932  1.0002 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 15.166   3.515   8.481  11.023   5.719 200.121  18.129  20.342   8.179 
+   mcp2 l0learn 
+  8.794   5.057 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.051   1.051   1.050   1.109   1.058   1.078   1.080   1.353   1.055 
+   mcp2 l0learn 
+  1.053   1.050 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  8.890   3.951   8.540  11.041   8.268 196.578  17.980  20.344   8.292 
+   mcp2 l0learn 
+ 11.116   5.313 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.035   1.035   1.036   1.092   1.033   1.054   1.055   1.333   1.039 
+   mcp2 l0learn 
+  1.039   1.038 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  7.303   3.985   8.354  10.973   4.998 227.505  20.810  20.500  10.681 
+   mcp2 l0learn 
+ 27.210   5.240 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.021   1.020   1.020   1.106   1.023   1.066   1.070   1.344   1.023 
+   mcp2 l0learn 
+  1.022   1.022 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  6.711   3.675   8.587  11.115   6.580 198.483  17.919  20.521   8.500 
+   mcp2 l0learn 
+  9.614   5.493 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 0.9873  0.9875  0.9872  1.0689  0.9932  1.0150  1.0142  1.3262  0.9886 
+   mcp2 l0learn 
+ 0.9878  0.9899 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 22.322   3.817   8.507  10.992   4.974 191.422  17.345  20.305   7.431 
+   mcp2 l0learn 
+  7.367   5.211 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.020   1.020   1.020   1.097   1.020   1.056   1.056   1.373   1.022 
+   mcp2 l0learn 
+  1.021   1.028 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 21.350   3.843   8.337  11.002   4.972 187.188  16.992  20.279   7.423 
+   mcp2 l0learn 
+  7.412   5.555 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.012   1.013   1.014   1.083   1.019   1.047   1.041   1.336   1.016 
+   mcp2 l0learn 
+  1.013   1.015 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 10.966   3.999   8.405  11.005   6.542 220.496  20.038  20.574   9.696 
+   mcp2 l0learn 
+ 24.413   6.012 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 0.9986  0.9986  0.9991  1.0641  1.0020  1.0414  1.0490  1.3557  1.0030 
+   mcp2 l0learn 
+ 1.0001  1.0007 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 20.747   3.923   8.653  11.062   8.223 183.110  16.399  20.472   7.147 
+   mcp2 l0learn 
+  7.170   4.720 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.027   1.027   1.028   1.094   1.030   1.053   1.063   1.330   1.033 
+   mcp2 l0learn 
+  1.032   1.028 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  6.400   3.858   8.487  10.994   7.515 224.371  20.776  20.560   9.694 
+   mcp2 l0learn 
+ 18.951   5.256 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.012   1.013   1.013   1.096   1.019   1.042   1.045   1.350   1.024 
+   mcp2 l0learn 
+  1.019   1.011 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 21.685   4.014   8.418  10.941  12.538 219.043  20.026  20.333   9.326 
+   mcp2 l0learn 
+ 16.258   5.397 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.009   1.008   1.009   1.074   1.011   1.044   1.043   1.335   1.011 
+   mcp2 l0learn 
+  1.010   1.011 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 19.725   4.236   8.513  10.945   9.686 216.549  19.920  20.400   9.557 
+   mcp2 l0learn 
+ 15.590   5.169 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 0.9948  0.9946  0.9934  1.0724  0.9990  1.0159  1.0152  1.2922  0.9943 
+   mcp2 l0learn 
+ 0.9947  0.9986 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 15.300   4.003   8.529  10.947   6.680 223.532  20.516  20.397   8.738 
+   mcp2 l0learn 
+ 12.807   5.639 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 0.9864  0.9859  0.9873  1.0566  0.9829  1.0112  1.0218  1.3160  0.9866 
+   mcp2 l0learn 
+ 0.9855  0.9920 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 14.924   3.947   8.549  10.950   5.852 212.015  23.005  24.672   9.424 
+   mcp2 l0learn 
+ 10.349   5.384 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.022   1.022   1.022   1.079   1.024   1.052   1.063   1.351   1.023 
+   mcp2 l0learn 
+  1.023   1.031 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 12.439   4.235   8.698  11.260  11.627 242.169  22.147  29.437   9.587 
+   mcp2 l0learn 
+ 11.929   5.340 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.016   1.015   1.017   1.101   1.022   1.053   1.066   1.367   1.024 
+   mcp2 l0learn 
+  1.021   1.017 
+[1] &quot;-----------------------------------&quot;
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 33.177   8.239  20.087  27.231   9.846 456.633  37.550  64.097 100.117 
+   mcp2 l0learn 
+114.361  13.152 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.014   1.013   1.014   1.046   1.013   1.028   1.031   1.188   1.013 
+   mcp2 l0learn 
+  1.013   1.014 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  17.22   10.58   21.08   30.18   12.89  464.91   41.60   65.68  105.38 
+   mcp2 l0learn 
+ 114.57   14.40 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.025   1.026   1.025   1.054   1.027   1.034   1.041   1.178   1.027 
+   mcp2 l0learn 
+  1.026   1.025 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 24.574   8.179  19.945  27.200  11.777 441.247  37.578  61.439 101.374 
+   mcp2 l0learn 
+108.877  13.183 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.005   1.005   1.005   1.046   1.005   1.010   1.010   1.170   1.006 
+   mcp2 l0learn 
+  1.005   1.007 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 50.717   7.687  19.610  27.141   9.794 445.394  38.841  61.371  97.533 
+   mcp2 l0learn 
+108.028  12.765 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.004   1.004   1.003   1.044   1.004   1.011   1.012   1.165   1.007 
+   mcp2 l0learn 
+  1.005   1.005 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 30.930   7.077  19.458  27.033   7.852 442.025  38.051  60.411  98.638 
+   mcp2 l0learn 
+109.370  14.381 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.000   1.000   1.000   1.036   1.000   1.012   1.019   1.171   1.001 
+   mcp2 l0learn 
+  1.001   1.001 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 49.301   7.414  19.623  27.100   7.963 444.811  38.395  62.098  97.971 
+   mcp2 l0learn 
+104.695  13.376 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 0.9933  0.9933  0.9935  1.0238  0.9949  1.0064  1.0089  1.1608  0.9940 
+   mcp2 l0learn 
+ 0.9935  0.9946 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 20.822   8.454  19.671  27.221  13.789 442.873  38.138  60.483  99.877 
+   mcp2 l0learn 
+110.646  13.563 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.000   1.000   1.000   1.035   1.003   1.013   1.019   1.165   1.003 
+   mcp2 l0learn 
+  1.001   1.001 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 14.943   7.904  19.569  27.186   7.888 440.555  37.574  60.120  99.024 
+   mcp2 l0learn 
+104.399  13.418 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.018   1.018   1.019   1.056   1.018   1.038   1.040   1.197   1.020 
+   mcp2 l0learn 
+  1.019   1.019 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 12.885   7.222  19.650  27.057  11.831 438.970  37.613  59.569  97.434 
+   mcp2 l0learn 
+106.143  12.980 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.012   1.012   1.012   1.045   1.014   1.035   1.032   1.182   1.015 
+   mcp2 l0learn 
+  1.014   1.012 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 33.148   7.406  19.657  27.222  11.624 443.032  38.051  60.718  98.548 
+   mcp2 l0learn 
+108.121  14.024 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.002   1.002   1.002   1.036   1.002   1.017   1.021   1.175   1.003 
+   mcp2 l0learn 
+  1.003   1.003 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 27.341   8.089  19.700  27.111  11.769 439.857  37.522  62.113  94.004 
+   mcp2 l0learn 
+104.106  14.128 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.002   1.002   1.003   1.037   1.003   1.015   1.020   1.173   1.003 
+   mcp2 l0learn 
+  1.004   1.003 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 23.521   7.499  19.520  27.038  11.653 440.677  37.264  61.295  94.166 
+   mcp2 l0learn 
+104.274  14.057 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 0.9997  0.9994  0.9991  1.0339  0.9986  1.0129  1.0152  1.1740  1.0008 
+   mcp2 l0learn 
+ 0.9997  1.0016 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 49.323   7.465  19.671  27.120   9.753 448.789  38.093  60.963 100.006 
+   mcp2 l0learn 
+109.616  12.926 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.025   1.025   1.025   1.064   1.025   1.038   1.039   1.208   1.026 
+   mcp2 l0learn 
+  1.025   1.026 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 34.604   8.084  19.731  27.116  15.525 443.076  37.735  60.678  98.961 
+   mcp2 l0learn 
+106.189  12.460 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.031   1.031   1.031   1.062   1.032   1.045   1.045   1.183   1.033 
+   mcp2 l0learn 
+  1.032   1.031 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 35.183   7.803  19.695  27.067  11.665 442.788  38.263  59.971 100.663 
+   mcp2 l0learn 
+108.177  13.518 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.012   1.012   1.012   1.047   1.014   1.029   1.032   1.178   1.014 
+   mcp2 l0learn 
+  1.013   1.012 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 18.511   7.406  19.548  27.050  11.764 440.608  38.296  60.510  97.750 
+   mcp2 l0learn 
+108.095  13.189 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 0.9978  0.9978  0.9982  1.0309  0.9981  1.0085  1.0106  1.1614  0.9990 
+   mcp2 l0learn 
+ 0.9985  0.9986 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 28.832   7.778  19.728  27.211  15.524 442.306  37.791  60.455  99.816 
+   mcp2 l0learn 
+110.959  12.560 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.005   1.005   1.005   1.040   1.007   1.030   1.029   1.186   1.011 
+   mcp2 l0learn 
+  1.007   1.005 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 34.570   7.768  19.635  27.106  21.257 443.994  38.162  60.746  97.648 
+   mcp2 l0learn 
+108.690  12.325 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 0.9973  0.9973  0.9974  1.0342  0.9974  1.0127  1.0160  1.1823  0.9994 
+   mcp2 l0learn 
+ 0.9980  0.9989 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  35.89    7.94   19.67   27.11   17.50  441.62   37.85   59.85   96.21 
+   mcp2 l0learn 
+ 107.42   12.53 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  1.012   1.012   1.012   1.046   1.014   1.033   1.035   1.179   1.016 
+   mcp2 l0learn 
+  1.014   1.013 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+  30.39    8.14   19.76   27.15   21.28  440.46   37.74   60.42   97.50 
+   mcp2 l0learn 
+ 108.47   14.06 
+ mr.ash  varbvs  bayesb  blasso   susie    enet   lasso   ridge   scad2 
+ 0.9843  0.9836  0.9840  1.0236  0.9838  1.0003  1.0017  1.1635  0.9868 
+   mcp2 l0learn 
+ 0.9853  0.9865 
+[1] &quot;-----------------------------------&quot;</code></pre>
+</div>
+</div>
+<div id="save-the-results" class="section level2">
+<h2>Save the results</h2>
+<pre class="r"><code>try(system(&quot;rm *.dat&quot;))
+try(system(&quot;rm ../*.dat&quot;))
+try(system(&quot;rm analysis/*.dat&quot;))
+try(system(&quot;rm ../analysis/*.dat&quot;))</code></pre>
+<pre class="r"><code>saveRDS(tdat7, &quot;results/scenario7.RDS&quot;)</code></pre>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 3.5.3 (2019-03-11)
+Platform: x86_64-apple-darwin15.6.0 (64-bit)
+Running under: macOS Mojave 10.14
+
+Matrix products: default
+BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] varbvs_2.5-16      L0Learn_1.2.0      ncvreg_3.11-1     
+ [4] mr.ash.alpha_0.1-4 glmnet_2.0-18      foreach_1.4.7     
+ [7] BGLR_1.0.8         susieR_0.8.0       cowplot_1.0.0     
+[10] ggplot2_3.2.1      Matrix_1.2-17     
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.3          RColorBrewer_1.1-2  plyr_1.8.5         
+ [4] compiler_3.5.3      pillar_1.4.3        git2r_0.26.1       
+ [7] workflowr_1.4.0     iterators_1.0.12    tools_3.5.3        
+[10] digest_0.6.23       evaluate_0.14       lifecycle_0.1.0    
+[13] tibble_2.1.3        gtable_0.3.0        lattice_0.20-38    
+[16] pkgconfig_2.0.3     rlang_0.4.2         yaml_2.2.0         
+[19] xfun_0.9            withr_2.1.2         stringr_1.4.0      
+[22] dplyr_0.8.3         knitr_1.25          fs_1.3.1           
+[25] rprojroot_1.3-2     grid_3.5.3          tidyselect_0.2.5   
+[28] glue_1.3.1          R6_2.4.1            rmarkdown_1.15     
+[31] latticeExtra_0.6-28 reshape2_1.4.3      purrr_0.3.2        
+[34] magrittr_1.5        codetools_0.2-16    backports_1.1.5    
+[37] scales_1.1.0        htmltools_0.3.6     assertthat_0.2.1   
+[40] colorspace_1.4-1    nor1mix_1.3-0       stringi_1.4.5      
+[43] lazyeval_0.2.2      munsell_0.5.0       truncnorm_1.0-8    
+[46] crayon_1.3.4       </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

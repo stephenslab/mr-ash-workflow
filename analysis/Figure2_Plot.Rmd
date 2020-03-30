@@ -70,7 +70,8 @@ fig_main = fig_dummy1 + theme(legend.position = "none")
 # suptitle  = ggdraw() + draw_label("Low-dimensional Setting", fontface  = 'bold', size = 14) 
 # subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.5", fontface  = 'bold', size = 14) 
 # fig1_1    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-subtitle  = ggdraw() + draw_label("Low-dimensional Setting (Scenario 1)", fontface  = 'bold', size = 22)  
+# subtitle  = ggdraw() + draw_label("Low-dimensional Setting (Scenario 1)", fontface  = 'bold', size = 22)  
+subtitle  = ggdraw() + draw_label("Low-dim", fontface  = 'bold', size = 22) 
 fig1_1    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
@@ -125,7 +126,8 @@ fig_main = p1
 # suptitle  = ggdraw() + draw_label("High-dimensional Setting", fontface  = 'bold', size = 14) 
 # subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 10000, s = 1-10000, pve = 0.5", fontface  = 'bold', size = 14) 
 # fig1_2    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-subtitle  = ggdraw() + draw_label("High-dimensional Setting (Scenario 2)", fontface  = 'bold', size = 22)  
+#subtitle  = ggdraw() + draw_label("High-dimensional Setting (Scenario 2)", fontface  = 'bold', size = 22)  
+subtitle  = ggdraw() + draw_label("High-dim", fontface  = 'bold', size = 22) 
 fig1_2    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
@@ -134,18 +136,18 @@ fig1_2    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 Scenario 3 (Constant SignalShape setting): $n = \textrm{500}$, $p = \textrm{200}$, $s \in [1,p]$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and $\textrm{SignalShape} = \textrm{PointConst}$. Here PointConst denotes the following distribution on $\beta$: $\beta_j = c$ if $j \in S$ and $\beta_j = 0$ otherwise. Again, $c$ is chosen according to $\textrm{PVE} = 0.5$.
 
 ```{r fig1_3, fig.height=11, fig.width=15, fig.align = "center"}
-res_df = readRDS("results/scenario3.RDS")
-out = matrix(0,8,14)
-lower = matrix(0,8,14)
-upper = matrix(0,8,14)
-for (i in 1:8) {
-  out[i,] = colMeans(matrix(res_df[[i]]$pred, 20, 14))
-  lower[i,] = apply(matrix(res_df[[i]]$pred, 20, 14), 2, function(x) quantile(x, probs = 0.1))
-  upper[i,] = apply(matrix(res_df[[i]]$pred, 20, 14), 2, function(x) quantile(x, probs = 0.9))
+res_df = readRDS("./results/scenario3.RDS")
+out = matrix(0,8,13)
+lower = matrix(0,8,13)
+upper = matrix(0,8,13)
+for (i in 1:6) {
+  out[i,] = colMeans(matrix(res_df[[i]]$pred, 20, 13))
+  lower[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.1))
+  upper[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.9))
 }
 colnames(out) = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge",
-                  "SCAD","MCP","L0Learn","E-NET2","Lasso2","Ridge2")
-ind = 1:12
+                  "SCAD","MCP","L0Learn","Mr.ASH.order","Mr.ASH.init")
+ind = 1:13
 out = out[,ind]
 lower = lower[,ind]
 upper = upper[,ind]
@@ -156,11 +158,10 @@ df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames
                 lower = c(lower), upper = c(upper))
 df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
                                     "SCAD","MCP","L0Learn",
-                                    "varbvs","BayesB","B-Lasso","SuSiE","Mr.ASH.opt"))
+                                    "varbvs","BayesB","B-Lasso","SuSiE","Mr.ASH.order","Mr.ASH.init"))
 df$size = 0.5
 df$size[1:9] = 1.2
-df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge",
-                                    "SCAD","MCP","L0Learn"),]
+df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn"),]
 p1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = fit), size = df$size) +
   geom_point(aes(x = s, y = pred, color = fit, shape = fit), size = 3) +
   theme_cowplot(font_size = 22) +
@@ -179,7 +180,8 @@ fig_main = p1
 # suptitle  = ggdraw() + draw_label("Sparse + Constant Signal", fontface  = 'bold', size = 14) 
 # subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointConst, n = 500, p = 200, s = 1-200, pve = 0.5", fontface  = 'bold', size = 14) 
 # fig1_3    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-subtitle  = ggdraw() + draw_label("PointConstant Signal (Scenario 3)", fontface  = 'bold', size = 22)  
+#subtitle  = ggdraw() + draw_label("PointConstant Signal (Scenario 3)", fontface  = 'bold', size = 22)  
+subtitle  = ggdraw() + draw_label("Point-const-signal", fontface  = 'bold', size = 22) 
 fig1_3    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
@@ -212,7 +214,7 @@ df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames
                 lower = c(lower), upper = c(upper))
 df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
                                     "SCAD","MCP","L0Learn",
-                                    "VarBVS","BayesB","Blasso","SuSiE","Mr.ASH.order","Mr.ASH.vanilla"))
+                                    "varbvs","BayesB","B-Lasso","SuSiE","Mr.ASH.order","Mr.ASH.vanilla"))
 df = df[df$s != 500, ]
 df$size = 0.5
 df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge",
@@ -236,7 +238,8 @@ fig_main = p1
 # suptitle  = ggdraw() + draw_label("High Proportion of Variance (or R squared)", fontface  = 'bold', size = 14) 
 # subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.9", fontface  = 'bold', size = 14) 
 # fig1_4    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-subtitle  = ggdraw() + draw_label("High PVE / Signal-to-Noise Ratio (Scenario 4)", fontface  = 'bold', size = 22)  
+#subtitle  = ggdraw() + draw_label("High PVE / Signal-to-Noise Ratio (Scenario 4)", fontface  = 'bold', size = 22)  
+subtitle  = ggdraw() + draw_label("Strong-signal", fontface  = 'bold', size = 22) 
 fig1_4    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
@@ -268,7 +271,7 @@ df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames
                 lower = c(lower), upper = c(upper))
 df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
                                     "SCAD","MCP","L0Learn",
-                                    "VarBVS","BayesB","Blasso","SuSiE","Mr.ASH.order","Mr.ASH.vanilla"))
+                                    "varbvs","BayesB","B-Lasso","SuSiE","Mr.ASH.order","Mr.ASH.vanilla"))
 df = df[df$s != 500, ]
 df$size = 0.5
 df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn"),]
@@ -291,7 +294,8 @@ fig_main = p1
 # suptitle  = ggdraw() + draw_label("Equicorrelated Design (rho = 0.95)", fontface  = 'bold', size = 14) 
 # subtitle  = ggdraw() + draw_label("Scenario: EquicorrGauss + PointNormal, n = 500, p = 2000, s = 1-2000, pve = 0.5", fontface  = 'bold', size = 14) 
 # fig1_5    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-subtitle  = ggdraw() + draw_label("Equicorrelated Design (Scenario 5)", fontface  = 'bold', size = 22)  
+#subtitle  = ggdraw() + draw_label("Equicorrelated Design (Scenario 5)", fontface  = 'bold', size = 22)  
+subtitle  = ggdraw() + draw_label("High-corr-design", fontface  = 'bold', size = 22) 
 fig1_5    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
@@ -324,7 +328,7 @@ df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames
                 lower = c(lower), upper = c(upper))
 df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
                                     "SCAD","MCP","L0Learn",
-                                    "VarBVS","BayesB","Blasso","SuSiE","Mr.ASH.order","Mr.ASH.vanilla"))
+                                    "varbvs","BayesB","B-Lasso","SuSiE","Mr.ASH.order","Mr.ASH.vanilla"))
 df$size = 0.5
 df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge",
                       "SCAD","MCP","L0Learn"),]
@@ -347,7 +351,8 @@ fig_main = p1
 #suptitle  = ggdraw() + draw_label("Equicorrelated Design (rho = 0.95)", fontface  = 'bold', size = 14) 
 #subtitle  = ggdraw() + draw_label("Scenario: EquicorrGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.5", fontface  = 'bold', size = 14) 
 #fig1_6    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-subtitle  = ggdraw() + draw_label("Real Genotype Design (Scenario 6)", fontface  = 'bold', size = 22)  
+#subtitle  = ggdraw() + draw_label("Real Genotype Design (Scenario 6)", fontface  = 'bold', size = 22)
+subtitle  = ggdraw() + draw_label("Realgenotype-design", fontface  = 'bold', size = 22)  
 fig1_6    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
