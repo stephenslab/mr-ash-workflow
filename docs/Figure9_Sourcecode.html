@@ -12,7 +12,7 @@
 
 
 
-<title>Figure8_Plot</title>
+<title>Figure9_Sourcecode</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -377,7 +377,7 @@ div.section {
 
 
 
-<h1 class="title toc-ignore">Figure8_Plot</h1>
+<h1 class="title toc-ignore">Figure9_Sourcecode</h1>
 
 </div>
 
@@ -505,11 +505,7 @@ Great! You are using Git for version control. Tracking code development and conn
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    ETA_1_lambda.dat
-    Ignored:    ETA_1_parBayesB.dat
     Ignored:    backup/.DS_Store
-    Ignored:    mu.dat
-    Ignored:    varE.dat
 
 Untracked files:
     Untracked:  .DS_Store
@@ -523,14 +519,12 @@ Unstaged changes:
     Modified:   analysis/.DS_Store
     Deleted:    analysis/Figure2_Sourcecode.Rmd
     Deleted:    analysis/Figure3_Sourcecode.Rmd
-    Modified:   analysis/Figure8_Plot.Rmd
     Modified:   analysis/Figure8_Sourcecode.Rmd
     Modified:   analysis/Figure9_Sourcecode.Rmd
     Modified:   results/.DS_Store
     Modified:   results/scenario1.RDS
     Modified:   results/scenario10.RDS
     Modified:   results/scenario11.RDS
-    Modified:   results/scenario12.RDS
     Modified:   results/scenario2.RDS
     Modified:   results/scenario3-2.RDS
     Modified:   results/scenario3.RDS
@@ -586,24 +580,24 @@ Message
 Rmd
 </td>
 <td>
-<a href="https://github.com/stephenslab/mr-ash-workflow/blob/969daae96038cc9015e4cff758ae31393151d372/analysis/Figure8_Plot.Rmd" target="_blank">969daae</a>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/6831d0de514303f1d647220cef5df111954268f7/analysis/Figure9_Sourcecode.Rmd" target="_blank">6831d0d</a>
 </td>
 <td>
-Youngseok Kim
+Youngseok
 </td>
 <td>
 2020-03-23
 </td>
 <td>
-update scenarios
+update figures
 </td>
 </tr>
 <tr>
 <td>
-html
+Rmd
 </td>
 <td>
-<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/969daae96038cc9015e4cff758ae31393151d372/docs/Figure8_Plot.html" target="_blank">969daae</a>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/969daae96038cc9015e4cff758ae31393151d372/analysis/Figure9_Sourcecode.Rmd" target="_blank">969daae</a>
 </td>
 <td>
 Youngseok Kim
@@ -622,123 +616,75 @@ update scenarios
 </div>
 </div>
 </div>
-<pre class="r"><code>library(ggplot2); library(cowplot);
-## function for color
-gg_color_hue &lt;- function(n) {
-  hues = seq(15, 375, length = n + 1)
-  hcl(h = hues, l = 65, c = 100)[1:n]
+<div id="load-source-code" class="section level2">
+<h2>Load Source Code</h2>
+<pre class="r"><code>library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(mr.ash.alpha); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
+source(&#39;code/method_wrapper.R&#39;)
+source(&#39;code/sim_wrapper.R&#39;)</code></pre>
+</div>
+<div id="scenarios" class="section level2">
+<h2>Scenarios</h2>
+<div id="scenario-1" class="section level3">
+<h3>Scenario 1</h3>
+<p>Scenario 1 (Low-dimensional setting): <span class="math inline">\(n = \textrm{500}\)</span>, <span class="math inline">\(p = \textrm{200}\)</span>, <span class="math inline">\(s \in [1,p]\)</span>, <span class="math inline">\(\textrm{Design} = \textrm{IndepGauss}\)</span>, <span class="math inline">\(\textrm{PVE} = 0.5\)</span> and <span class="math inline">\(\textrm{SignalShape} = \textrm{PointNormal}\)</span>.</p>
+<pre class="r"><code>tdat1        = list()
+n            = 500
+s            = 20
+p_range      = c(20,50,200,500,2000,10000,20000)
+method_list  = c(&quot;mcmc&quot;)
+method_list2 = c(&quot;mr.ash.g&quot;,method_list,&quot;mcmc2&quot;,&quot;mr.ash.g.lasso&quot;)
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+u            = length(method_list)
+
+
+for (iter in 1:6) {
+  p               = p_range[iter]
+  for (i in 1:20) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = &quot;normal&quot;, pve = 0.5,
+                                  design = &quot;equicorrgauss&quot;, rho = 0.95)
+    
+    for (j in 1:u) {
+      fit.method    = get(paste(&quot;fit.&quot;,method_list[j],sep = &quot;&quot;))
+      fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+      pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+      time[i,j+1]   = fit$t
+      fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i, burnIn = 10000, nIter = 30000)
+      pred[i,j+u+1]   = fit$rsse / data$sigma / sqrt(n)
+      time[i,j+u+1]   = fit$t
+    }
+    
+    fit           = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                                sa2 = c(0, 1 / s), sigma2 = data$sigma^2,
+                                update.pi = FALSE, pi = c(1 - s/p, s/p),
+                                beta.init = NULL, update.order = NULL)
+    pred[i,1]  = fit$rsse / data$sigma / sqrt(n)
+    time[i,1]  = fit$t
+    
+    fit         = fit.lasso(data$X, data$y, data$X.test, data$y.test, seed = i)
+    lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
+    lasso.beta       = as.vector(coef(fit$fit))[-1]
+    lasso.time       = c(fit$t, fit$t2)
+    
+    fit           = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                                sa2 = c(0, 1 / s), sigma2 = data$sigma^2,
+                                update.pi = FALSE, pi = c(1 - s/p, s/p),
+                                beta.init = lasso.beta, update.order = NULL)
+    pred[i,method_num]  = fit$rsse / data$sigma / sqrt(n)
+    time[i,method_num]  = fit$t
+    
+    print(c(pred[i,]))
+  }
+  tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
 }</code></pre>
-<div id="figure" class="section level2">
-<h2>Figure</h2>
-<div id="initialization-and-update-order" class="section level3">
-<h3>Initialization and Update order</h3>
-<div id="scenario-12" class="section level4">
-<h4>Scenario 12</h4>
-<pre class="r"><code>res_df = readRDS(&quot;./backup/recentupdates/initordercorr0.3.RDS&quot;)
-saveRDS(res_df,&quot;./results/scenario12.RDS&quot;)
-res_df = readRDS(&quot;./results/scenario12.RDS&quot;)
-#s_range = c(1,2,5,10,20,50,100,200)
-s_range = c(1,5,20,100,500,2000)
-a = length(s_range)
-out = matrix(0,a,5)
-lower = matrix(0,a,5)
-upper = matrix(0,a,5)
-for (i in 1:a) {
-  out[i,] = apply(matrix(res_df[[i]]$pred, 20, 5), 2, mean)
-  lower[i,] = apply(matrix(res_df[[i]]$pred, 20, 5), 2, function(x) quantile(x, probs = 0.1))
-  upper[i,] = apply(matrix(res_df[[i]]$pred, 20, 5), 2, function(x) quantile(x, probs = 0.9))
-}
-colnames(out) = c(&quot;Mr.ASH.vanilla&quot;,&quot;Lasso&quot;,&quot;Mr.ASH.order&quot;,&quot;Mr.ASH.init&quot;,&quot;Mr.ASH.both&quot;)
-ind = 1:5
-out = out[,ind]
-lower = lower[,ind]
-upper = upper[,ind]
-col   = c(gg_color_hue(13)[1],&quot;darkblue&quot;,&quot;dodgerblue&quot;,&quot;darkgreen&quot;,&quot;limegreen&quot;,&quot;orange&quot;,&quot;gold2&quot;,&quot;purple&quot;)[c(1,3,5,7)]
-shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1,4,8,10)]
-df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames(out), each = a),
-                lower = c(lower), upper = c(upper))
-df$fit = factor(df$fit, levels =  c(&quot;Mr.ASH.both&quot;,&quot;Lasso&quot;,&quot;Mr.ASH.order&quot;,&quot;Mr.ASH.init&quot;,&quot;Mr.ASH.vanilla&quot;))
-df$size = 0.5
-df = df[df$s != 500,]
-df = df[df$fit %in% c(&quot;Mr.ASH.vanilla&quot;,&quot;Mr.ASH.order&quot;,&quot;Mr.ASH.init&quot;,&quot;Mr.ASH.both&quot;),]
-df$size[1:5] = 1.2
-p1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = fit), size = df$size) +
-  geom_point(aes(x = s, y = pred, color = fit, shape = fit), size = 3) +
-  theme_cowplot(font_size = 20) +
-  scale_x_continuous(trans = &quot;log10&quot;, breaks = unique(df$s)) +
-  labs(y = &quot;predictior error (rmse / sigma)&quot;, x = &quot;number of nonzero coefficients (s)&quot;) +
-  theme(axis.line = element_blank(),
-        plot.title = element_text(hjust = 0.5),
-        axis.title.x = element_blank(), axis.title.y = element_blank()) +
-  scale_color_manual(values = col) +
-  scale_shape_manual(values = shape) +
-  scale_y_continuous(trans = &quot;log10&quot;, breaks = c(1,1.1,1.2,1.3,1.4)) +
-  coord_cartesian(ylim = c(1,1.35))
-fig_main = p1 + theme(legend.position = &quot;none&quot;)
-subtitle  = ggdraw() + draw_label(&quot;Low-corr-design&quot;, fontface  = &#39;bold&#39;, size = 22)  
-fig8_1    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))</code></pre>
-</div>
-<div id="scenario-13" class="section level4">
-<h4>Scenario 13</h4>
-<pre class="r"><code>res_df = readRDS(&quot;./backup/recentupdates/initordercorr0.95.RDS&quot;)
-saveRDS(res_df,&quot;./results/scenario13.RDS&quot;)
-res_df = readRDS(&quot;./results/scenario13.RDS&quot;)
-s_range = c(1,5,20,100,500,2000)
-a = length(s_range)
-out = matrix(0,a,5)
-lower = matrix(0,a,5)
-upper = matrix(0,a,5)
-for (i in 1:a) {
-  out[i,] = apply(matrix(res_df[[i]]$pred, 20, 5), 2, mean)
-  lower[i,] = apply(matrix(res_df[[i]]$pred, 20, 5), 2, function(x) quantile(x, probs = 0.1))
-  upper[i,] = apply(matrix(res_df[[i]]$pred, 20, 5), 2, function(x) quantile(x, probs = 0.9))
-}
-colnames(out) = c(&quot;Mr.ASH.vanilla&quot;,&quot;Lasso&quot;,&quot;Mr.ASH.order&quot;,&quot;Mr.ASH.init&quot;,&quot;Mr.ASH.both&quot;)
-ind = 1:5
-out = out[,ind]
-lower = lower[,ind]
-upper = upper[,ind]
-col   = c(gg_color_hue(13)[1],&quot;darkblue&quot;,&quot;dodgerblue&quot;,&quot;darkgreen&quot;,&quot;limegreen&quot;,&quot;orange&quot;,&quot;gold2&quot;,&quot;purple&quot;)[c(1,3,5,7)]
-shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1,4,8,10)]
-df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames(out), each = a),
-                lower = c(lower), upper = c(upper))
-df$fit = factor(df$fit, levels =  c(&quot;Mr.ASH.both&quot;,&quot;Lasso&quot;,&quot;Mr.ASH.order&quot;,&quot;Mr.ASH.init&quot;,&quot;Mr.ASH.vanilla&quot;))
-df$size = 0.5
-df = df[df$s != 500,]
-df = df[df$fit %in% c(&quot;Mr.ASH.vanilla&quot;,&quot;Mr.ASH.order&quot;,&quot;Mr.ASH.init&quot;,&quot;Mr.ASH.both&quot;),]
-df$size[1:5] = 1.2
-fig_dummy8 = ggplot(df) + geom_line(aes(x = s, y = pred, color = fit), size = df$size) +
-  geom_point(aes(x = s, y = pred, color = fit, shape = fit), size = 3) +
-  theme_cowplot(font_size = 20) +
-  scale_x_continuous(trans = &quot;log10&quot;, breaks = unique(df$s)) +
-  labs(y = &quot;predictior error (rmse / sigma)&quot;, x = &quot;number of nonzero coefficients (s)&quot;) +
-  theme(axis.line = element_blank(),
-        plot.title = element_text(hjust = 0.5),
-        axis.title.x = element_blank(), axis.title.y = element_blank()) +
-  scale_color_manual(values = col) +
-  scale_shape_manual(values = shape) +
-  scale_y_continuous(trans = &quot;log10&quot;, breaks = c(1,1.1,1.2,1.3,1.4)) +
-  coord_cartesian(ylim = c(1,1.15))
-fig_main = fig_dummy8 + theme(legend.position = &quot;none&quot;)
-subtitle  = ggdraw() + draw_label(&quot;High-corr-design&quot;, fontface  = &#39;bold&#39;, size = 22)  
-fig8_2    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))</code></pre>
-</div>
-</div>
-</div>
-<div id="draw-figure" class="section level2">
-<h2>Draw Figure</h2>
-<pre class="r"><code>yaxis1   = ggdraw() + draw_label(&quot;predictior error (rmse / sigma)&quot;, size = 25, angle = 90)
-yaxis2   = ggdraw() + draw_label(&quot;computation time (seconds)&quot;, size = 22, angle = 90)
-figure8  = plot_grid(yaxis1, fig8_1, fig8_2, ncol = 3, rel_widths = c(0.03,0.5,0.5))
-legend   &lt;- get_legend(fig_dummy8 +
-                         theme_cowplot(font_size = 22) +
-                         theme(legend.box.margin = margin(0, 0, 0, 12),
-                               legend.key.size = unit(0.8, &quot;cm&quot;)))
-xaxis    = ggdraw() + draw_label(&quot;number of nonzero coefficients (s)&quot;, size = 22, angle = 0)
-figure8  = plot_grid(plot_grid(plot_grid(figure8, xaxis, rel_heights = c(0.96,0.04), nrow = 2),
-                               ncol = 1, rel_heights = c(0.05,0.95)),
-                     legend, nrow = 1, rel_widths = c(0.9,0.15))
-ggsave(&quot;figure8_for_paper.pdf&quot;, figure8, width = 18, height = 8)</code></pre>
+<pre class="r"><code>try(system(&quot;rm *.dat&quot;))
+try(system(&quot;rm ../*.dat&quot;))
+try(system(&quot;rm analysis/*.dat&quot;))
+try(system(&quot;rm ../analysis/*.dat&quot;))</code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -762,19 +708,29 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] cowplot_1.0.0 ggplot2_3.2.1
+ [1] varbvs_2.5-16      L0Learn_1.2.0      ncvreg_3.11-1     
+ [4] mr.ash.alpha_0.1-4 glmnet_2.0-18      foreach_1.4.7     
+ [7] BGLR_1.0.8         susieR_0.8.0       cowplot_1.0.0     
+[10] ggplot2_3.2.1      Matrix_1.2-17     
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.3       compiler_3.5.3   pillar_1.4.3     git2r_0.26.1    
- [5] workflowr_1.4.0  tools_3.5.3      digest_0.6.23    evaluate_0.14   
- [9] lifecycle_0.1.0  tibble_2.1.3     gtable_0.3.0     pkgconfig_2.0.3 
-[13] rlang_0.4.2      yaml_2.2.0       xfun_0.9         withr_2.1.2     
-[17] stringr_1.4.0    dplyr_0.8.3      knitr_1.25       fs_1.3.1        
-[21] rprojroot_1.3-2  grid_3.5.3       tidyselect_0.2.5 glue_1.3.1      
-[25] R6_2.4.1         rmarkdown_1.15   purrr_0.3.2      farver_2.0.3    
-[29] magrittr_1.5     whisker_0.4      backports_1.1.5  scales_1.1.0    
-[33] htmltools_0.3.6  assertthat_0.2.1 colorspace_1.4-1 stringi_1.4.5   
-[37] lazyeval_0.2.2   munsell_0.5.0    crayon_1.3.4    </code></pre>
+ [1] Rcpp_1.0.3          RColorBrewer_1.1-2  plyr_1.8.5         
+ [4] compiler_3.5.3      pillar_1.4.3        git2r_0.26.1       
+ [7] workflowr_1.4.0     iterators_1.0.12    tools_3.5.3        
+[10] digest_0.6.23       evaluate_0.14       lifecycle_0.1.0    
+[13] tibble_2.1.3        gtable_0.3.0        lattice_0.20-38    
+[16] pkgconfig_2.0.3     rlang_0.4.2         yaml_2.2.0         
+[19] xfun_0.9            withr_2.1.2         stringr_1.4.0      
+[22] dplyr_0.8.3         knitr_1.25          fs_1.3.1           
+[25] rprojroot_1.3-2     grid_3.5.3          tidyselect_0.2.5   
+[28] glue_1.3.1          R6_2.4.1            rmarkdown_1.15     
+[31] latticeExtra_0.6-28 reshape2_1.4.3      purrr_0.3.2        
+[34] magrittr_1.5        whisker_0.4         codetools_0.2-16   
+[37] backports_1.1.5     scales_1.1.0        htmltools_0.3.6    
+[40] assertthat_0.2.1    colorspace_1.4-1    nor1mix_1.3-0      
+[43] stringi_1.4.5       lazyeval_0.2.2      munsell_0.5.0      
+[46] truncnorm_1.0-8     crayon_1.3.4       </code></pre>
+</div>
 </div>
 </div>
 

@@ -1,0 +1,146 @@
+---
+title: "Figure2_Sourcecode1"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Source Code
+
+```{r library, message = FALSE}
+library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(mr.ash.alpha); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
+source('code/method_wrapper.R')
+source('code/sim_wrapper.R')
+```
+
+## Scenarios
+
+### Scenario 1
+
+Scenario 1 (Low-dimensional setting): $n = \textrm{500}$, $p = \textrm{200}$, $s \in [1,p]$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and $\textrm{SignalShape} = \textrm{PointNormal}$.
+
+```{r code1, eval = TRUE}
+tdat1        = list()
+n            = 500
+p            = 200
+s_range      = c(1,2,5,10,20,50,100,200)
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+
+for (iter in 1:8) {
+  s               = s_range[iter]
+  for (i in 1:20) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.5)
+    
+    for (j in 1:length(method_list)) {
+      fit.method    = get(paste("fit.",method_list[j],sep = ""))
+      fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+      pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+      time[i,j+1]   = fit$t
+      
+      if (method_list[j] == "lasso") {
+        pred[i,method_num - 2] = fit$rsse2 / data$sigma / sqrt(n)
+      } else if (method_list[j] == "enet") {
+        pred[i,method_num - 3] = fit$rsse2 / data$sigma / sqrt(n)
+      } else if (method_list[j] == "ridge") {
+        pred[i,method_num - 1] = fit$rsse2 / data$sigma / sqrt(n)
+      }
+    }
+    
+    fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            sa2 = (2^((0:19)/20) - 1)^2)
+    pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,1]   = fit$t
+    
+    fit           = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                                sa2 = c(0, 1 / s), sigma2 = data$sigma^2,
+                                update.pi = FALSE, pi = c(1 - s/p, s/p),
+                                beta.init = NULL, update.order = NULL)
+    pred[i,method_num]  = fit$rsse / data$sigma / sqrt(n)
+    time[i,method_num]  = fit$t
+    cat(pred[i,method_num], " ", mean((data$beta[data$beta != 0]/data$sigma)^2), " ", 1/s, "\n")
+    
+    print(c(pred[i,]))
+  }
+  tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+}
+```
+
+### Scenario 2
+
+(High-dimensional setting): $n = \textrm{500}$, $p = \textrm{10,000}$, $s \in [1,p]$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and $\textrm{SignalShape} = \textrm{PointNormal}$.
+
+```{r code2, eval = TRUE}
+tdat2        = list()
+n            = 500
+p            = 10000
+s_range      = c(1,5,20,100,500,2000,10000)
+method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+for (iter in 1:7) {
+  s               = s_range[iter]
+  for (i in 1:20) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.5)
+    
+    for (j in 1:length(method_list)) {
+      fit.method    = get(paste("fit.",method_list[j],sep = ""))
+      fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+      pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+      time[i,j+1]   = fit$t
+      
+      if (method_list[j] == "lasso") {
+        pred[i,method_num - 2] = fit$rsse2 / data$sigma / sqrt(n)
+      } else if (method_list[j] == "enet") {
+        pred[i,method_num - 3] = fit$rsse2 / data$sigma / sqrt(n)
+      } else if (method_list[j] == "ridge") {
+        pred[i,method_num - 1] = fit$rsse2 / data$sigma / sqrt(n)
+      }
+    }
+    
+    fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            sa2 = (2^((0:19)/20) - 1)^2)
+    pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,1]   = fit$t
+    
+    fit           = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                                sa2 = c(0, 1 / s), sigma2 = data$sigma^2,
+                                update.pi = FALSE, pi = c(1 - s/p, s/p),
+                                beta.init = NULL, update.order = NULL)
+    pred[i,method_num]  = fit$rsse / data$sigma / sqrt(n)
+    time[i,method_num]  = fit$t
+    
+    print(c(pred[i,]))
+  }
+  tdat2[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+}
+```
+
+## Save the results
+
+```{r remove}
+try(system("rm *.dat"))
+try(system("rm ../*.dat"))
+try(system("rm analysis/*.dat"))
+try(system("rm ../analysis/*.dat"))
+```
+
+```{r saveresults}
+saveRDS(tdat1, "results/scenario1.RDS")
+saveRDS(tdat2, "results/scenario2.RDS")
+```

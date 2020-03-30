@@ -26,7 +26,7 @@ source('code/sim_wrapper.R')
 Scenario 1 (Low-dimensional setting): $n = \textrm{500}$, $p = \textrm{200}$, $s \in [1,p]$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and $\textrm{SignalShape} = \textrm{PointNormal}$.
 
 ```{r code1, eval = FALSE}
-tdat1        = list()
+tdat14        = list()
 n            = 500
 s            = 20
 p_range      = c(200,1000,5000,20000)
@@ -83,21 +83,38 @@ for (iter in 1:4) {
     
     print(c(pred[i,]))
   }
-  tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+  tdat14[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
 }
 ```
 
-```{r}
-res_df       = readRDS("../backup/recentupdates/mcmc3.RDS")
-method_list  = c("Mr.ASH.g","MCMC","Mr.ASH.g","MCMC","Mr.ASH.g","MCMC")
+## Save the results
+
+```{r remove}
+try(system("rm *.dat"))
+try(system("rm ../*.dat"))
+try(system("rm analysis/*.dat"))
+try(system("rm ../analysis/*.dat"))
+```
+
+```{r saveresults}
+saveRDS(tdat14, "results/scenario14.RDS")
+```
+
+## Figure
+
+The figure is not presented in the paper. We only use the table.
+
+```{r, eval = FALSE}
+res_df       = readRDS("resuls/scenario14.RDS")
+method_list  = c("Mr.ASH.g","MCMC","Mr.ASH.g","MCMC")
 rho_list     = c(0,0,0.3,0.3,0.95,0.95)
 df           = data.frame()
 p_range      = c(200,1000,5000,20000)
 for (i in 1:4) {
 res_df[[i]]$fit   = rep(method_list, each = 20)
-df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 6))),
-                                         time2 = apply(matrix(res_df[[i]]$time, 20, 6), 2, median),
-                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 6))),
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 4))),
+                                         time2 = apply(matrix(res_df[[i]]$time, 20, 4, 2, median),
+                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 4))),
                                          p    = p_range[i],
                                          rho  = factor(rho_list),
                                          fit  = method_list))

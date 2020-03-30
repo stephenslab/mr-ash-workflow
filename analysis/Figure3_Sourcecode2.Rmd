@@ -1,5 +1,5 @@
 ---
-  title: "Figure3_Adaptation_to_(n, PVE, SignalShape)"
+  title: "Figure3_Sourcecode2"
   output:
     workflowr::wflow_html:
     code_folding: hide
@@ -20,56 +20,6 @@ source('code/sim_wrapper.R')
 ```
 
 ## Scenarios
-
-### Scenario 7
-
-Scenario 7 (Varying $n$): $n \in [\textrm{200}, \textrm{5,000}]$, $p = \textrm{2,000}$, $s = \textrm{20}$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and $\textrm{SignalShape} = \textrm{PointNormal}$.
-
-```{r code7, eval = TRUE}
-tdat7        = list()
-n_range      = c(200,500,1000,2000,5000,10000,20000,50000)
-p            = 2000
-s            = 20
-method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
-method_list2 = c("mr.ash", method_list)
-method_num   = length(method_list2)
-iter_num     = 20
-pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
-time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
-
-for (iter in 1:5) {
-  n               = n_range[iter]
-for (i in 1:20) {
-  
-  data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.5)
-  
-  for (j in 1:length(method_list)) {
-    fit.method    = get(paste("fit.",method_list[j],sep = ""))
-    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
-    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
-    time[i,j+1]   = fit$t
-    
-    if (method_list[j] == "lasso") {
-      pred[i,method_num - 1] = fit$rsse2 / data$sigma / sqrt(n)
-    } else if (method_list[j] == "enet") {
-      pred[i,method_num - 2] = fit$rsse2 / data$sigma / sqrt(n)
-    } else if (method_list[j] == "ridge") {
-      pred[i,method_num - 0] = fit$rsse2 / data$sigma / sqrt(n)
-    }
-  }
- 
-  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
-                           sa2 = (2^((0:19) / 20) - 1)^2)
-  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
-  time[i,1]   = fit$t
-  
-  print(c(time[i,]), digits = 4)
-  print(c(pred[i,]), digits = 4)
-}
-  print("-----------------------------------")
-  tdat7[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
-}
-```
 
 ### Scenario 8
 
@@ -120,7 +70,7 @@ for $h \in \{t_1,t_2, t_4, t_8, \mathcal{L}(1), \mathcal{N}(0,1), \mathcal{U}(-1
 ```{r code9, eval = TRUE}
 tdat9        = list()
 n            = 500
-p            = 2000
+p            = 200
 s            = 200
 method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
 method_list2 = c("mr.ash", method_list, "enet2","lasso2","ridge2")
@@ -227,8 +177,7 @@ try(system("rm ../analysis/*.dat"))
 ```
 
 ```{r saveresults}
-saveRDS(tdat8, "results/scenario7.RDS")
-saveRDS(tdat9, "results/scenario8.RDS")
-saveRDS(tdat10, "results/scenario9.RDS")
-saveRDS(tdat11, "results/scenario10.RDS")
+saveRDS(tdat8, "results/scenario8.RDS")
+saveRDS(tdat9, "results/scenario9.RDS")
+saveRDS(tdat10, "results/scenario10.RDS")
 ```

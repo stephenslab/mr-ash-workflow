@@ -24,7 +24,7 @@ source('code/sim_wrapper.R')
 ### Scenario 12
 
 ```{r code2, eval = TRUE}
-tdat2        = list()
+tdat12        = list()
 n            = 500
 p            = 2000
 s_range      = c(1,5,20,100,500,2000)
@@ -61,49 +61,35 @@ for (iter in 1:6) {
                              sa2 = (2^((0:19) / 5) - 1)^2)
     pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
     time[i,1]   = fit$t
-    discoveries = (fit$pip > 0.5)
-    fdp[i,1]    = compute_fdp(discoveries, true_support)
-    pow[i,1]    = compute_pow(discoveries, true_support)
     
     fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                               update.order = lasso.path.order,
                              sa2 = (2^((0:19) / 5) - 1)^2)
     pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
     time[i,j+2] = fit$t + lasso.time[2]
-    discoveries = (fit$pip > 0.5)
-    fdp[i,j+2]  = compute_fdp(discoveries, true_support)
-    pow[i,j+2]  = compute_pow(discoveries, true_support)
     
     fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                               beta.init = lasso.beta,
                              sa2 = (2^((0:19) / 5) - 1)^2)
     pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
     time[i,j+3] = fit$t + lasso.time[1]
-    discoveries = (fit$pip > 0.5)
-    fdp[i,j+3]  = compute_fdp(discoveries, true_support)
-    pow[i,j+3]  = compute_pow(discoveries, true_support)
     
     fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                               beta.init = lasso.beta, update.order = lasso.path.order,
                              sa2 = (2^((0:19) / 5) - 1)^2)
     pred[i,j+4] = fit$rsse / data$sigma / sqrt(n)
     time[i,j+4] = fit$t + lasso.time[2]
-    discoveries = (fit$pip > 0.5)
-    fdp[i,j+4]  = compute_fdp(discoveries, true_support)
-    pow[i,j+4]  = compute_pow(discoveries, true_support)
     
     print(c(pred[i,]), digits = 3)
-    
-    print(c(pred[i,]))
   }
-  tdat2[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+  tdat12[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
 }
 ```
 
 ## Scenario 5
 
 ```{r code3, eval = TRUE}
-tdat3        = list()
+tdat13        = list()
 n            = 500
 p            = 2000
 s_range      = c(1,5,20,100,500,2000)
@@ -140,48 +126,42 @@ for (iter in 1:6) {
                              sa2 = (2^((0:19) / 5) - 1)^2)
     pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
     time[i,1]   = fit$t
-    discoveries = (fit$pip > 0.5)
-    fdp[i,1]    = compute_fdp(discoveries, true_support)
-    pow[i,1]    = compute_pow(discoveries, true_support)
     
     fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                               update.order = lasso.path.order,
                              sa2 = (2^((0:19) / 5) - 1)^2)
     pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
     time[i,j+2] = fit$t + lasso.time[2]
-    discoveries = (fit$pip > 0.5)
-    fdp[i,j+2]  = compute_fdp(discoveries, true_support)
-    pow[i,j+2]  = compute_pow(discoveries, true_support)
     
     fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                               beta.init = lasso.beta,
                              sa2 = (2^((0:19) / 5) - 1)^2)
     pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
     time[i,j+3] = fit$t + lasso.time[1]
-    discoveries = (fit$pip > 0.5)
-    fdp[i,j+3]  = compute_fdp(discoveries, true_support)
-    pow[i,j+3]  = compute_pow(discoveries, true_support)
     
     fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
                               beta.init = lasso.beta, update.order = lasso.path.order,
                              sa2 = (2^((0:19) / 5) - 1)^2)
     pred[i,j+4] = fit$rsse / data$sigma / sqrt(n)
     time[i,j+4] = fit$t + lasso.time[2]
-    discoveries = (fit$pip > 0.5)
-    fdp[i,j+4]  = compute_fdp(discoveries, true_support)
-    pow[i,j+4]  = compute_pow(discoveries, true_support)
     
     print(c(pred[i,]), digits = 3)
     
-    print(c(pred[i,]))
   }
-  tdat3[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+  tdat13[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
 }
 ```
+
+## Save the results
 
 ```{r remove}
 try(system("rm *.dat"))
 try(system("rm ../*.dat"))
 try(system("rm analysis/*.dat"))
 try(system("rm ../analysis/*.dat"))
+```
+
+```{r saveresults}
+saveRDS(tdat12, "results/scenario12.RDS")
+saveRDS(tdat13, "results/scenario13.RDS")
 ```

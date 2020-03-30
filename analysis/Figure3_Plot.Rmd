@@ -28,8 +28,8 @@ Scenario 1 (Low-dimensional setting): $n = \textrm{500}$, $p = \textrm{200}$, $s
 res_df = readRDS("./results/scenario7.RDS")
 method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
 df           = data.frame()
-n_range      = c(50,100,200,500,1000,2000,5000)
-for (i in 3:7) {
+n_range      = c(200,500,1000,2000,5000)
+for (i in 1:5) {
 res_df[[i]]$fit   = rep(method_list, each = 20)
 res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_list)
 df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 11))),
@@ -63,7 +63,8 @@ fig_main  = p1 + theme(legend.position = "none")
 #suptitle  = ggdraw() + draw_label("Varying n", fontface  = 'bold', size = 22) 
 #subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 200-5000, p = 2000, s = 20, pve = 0.5", fontface  = 'bold', size = 22) 
 #fig1_7     = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-subtitle   = ggdraw() + draw_label("Varying n (Scenario 7)", fontface  = 'bold', size = 22)  
+#subtitle   = ggdraw() + draw_label("Varying n (Scenario 7)", fontface  = 'bold', size = 22)  
+subtitle  = ggdraw() + draw_label("Varying-n", fontface  = 'bold', size = 22) 
 fig1_7    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
@@ -111,7 +112,8 @@ fig_main = p1
 #suptitle  = ggdraw() + draw_label("Varying PVE (or SNR, Noise Variance)", fontface  = 'bold', size = 22) 
 #subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 2000, s = 20, pve = 0-0.9", fontface  = 'bold', size = 22) 
 #fig1_8    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-subtitle   = ggdraw() + draw_label("Varying PVE / Signal-to-Noise Ratio (Scenario 8)", fontface  = 'bold', size = 22)  
+# subtitle   = ggdraw() + draw_label("Varying PVE / Signal-to-Noise Ratio (Scenario 8)", fontface  = 'bold', size = 22)  
+subtitle  = ggdraw() + draw_label("Signal-strength", fontface  = 'bold', size = 22) 
 fig1_8    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
@@ -128,7 +130,7 @@ $$
 for $h \in \{t_1,t_2, t_4, t_8, \mathcal{L}(1), \mathcal{N}(0,1), \mathcal{U}(-1,1),\mathcal{C}(1) \}$, where $t_{\rm df}$ is the $t$-density with degree of freedom df, and $\mathcal{L}$, $\mathcal{N}$, $\mathcal{U}$ and $\mathcal{C}$ denote Laplace, Normal, Uniform and Constant densities, respectively. Again, $\beta$ is rescaled after sampling to satisfy $\textrm{PVE} = 0.5$.
 
 ```{r fig1_9, fig.height=11, fig.width=15, fig.align = "center"}
-res_df = readRDS("./results/scenario9_2.RDS")
+res_df = readRDS("./results/scenario9.RDS")
 method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
 method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
                  "SCAD","MCP","L0Learn",
@@ -169,7 +171,8 @@ fig_main = p1
 #suptitle  = ggdraw() + draw_label("Varying Signal Shape (p = 200, s = 200)", fontface  = 'bold', size = 22) 
 #subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + Spike-and-Slab, n = 500, p = 200, s = 200, pve = 0.5", fontface  = 'bold', size = 22) 
 #fig1_9    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-subtitle   = ggdraw() + draw_label("Varying Signal Shape, Dense Signal (Scenario 9)", fontface  = 'bold', size = 22)  
+# subtitle   = ggdraw() + draw_label("Varying Signal Shape, Dense Signal (Scenario 9)", fontface  = 'bold', size = 22)
+subtitle  = ggdraw() + draw_label("Signal-shape-dense", fontface  = 'bold', size = 22) 
 fig1_9    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
@@ -219,7 +222,8 @@ fig_main = p1
 #suptitle  = ggdraw() + draw_label("Varying Signal Shape (p = 2000, s = 20)", fontface  = 'bold', size = 22) 
 #subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + Spike-and-Slab, n = 500, p = 2000, s = 20, pve = 0.5", fontface  = 'bold', size = 22) 
 #fig1_10    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-subtitle   = ggdraw() + draw_label("Varying Signal Shape, Sparse Signal (Scenario 10)", fontface  = 'bold', size = 22)  
+# subtitle   = ggdraw() + draw_label("Varying Signal Shape, Sparse Signal (Scenario 10)", fontface  = 'bold', size = 22)  
+subtitle  = ggdraw() + draw_label("Signal-shape-sparse", fontface  = 'bold', size = 22) 
 fig1_10    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
