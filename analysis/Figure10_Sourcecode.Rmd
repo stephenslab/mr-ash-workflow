@@ -21,7 +21,7 @@ source('code/sim_wrapper.R')
 
 ## Scenarios
 
-### Scenario 3-2
+### Point-const-signal2
 
 ```{r code1, eval = TRUE}
 tdat1        = list()
@@ -100,7 +100,7 @@ for (iter in 1:6) {
 }
 ```
 
-### Scenario 4-2
+### Strong-signal2
 
 ```{r code2, eval = TRUE}
 tdat2        = list()
@@ -179,7 +179,7 @@ for (iter in 1:6) {
 }
 ```
 
-### Scenario 9-2
+### Signal-shape-dense2
 
 ```{r code3, eval = TRUE}
 tdat3        = list()
