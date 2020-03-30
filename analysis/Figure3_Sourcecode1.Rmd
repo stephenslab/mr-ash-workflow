@@ -21,9 +21,7 @@ source('code/sim_wrapper.R')
 
 ## Scenarios
 
-### Scenario 7
-
-Scenario 7 (Varying $n$): $n \in [\textrm{200}, \textrm{5,000}]$, $p = \textrm{2,000}$, $s = \textrm{20}$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and $\textrm{SignalShape} = \textrm{PointNormal}$.
+### Varying-n
 
 ```{r code7, eval = TRUE}
 tdat7        = list()

@@ -21,9 +21,7 @@ source('code/sim_wrapper.R')
 
 ## Scenarios
 
-### Scenario 8
-
-Scenario 8 (Varying PVE): $n = \textrm{500}$, $p = \textrm{2,000}$, $s = \textrm{20}$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = \in [0,0.9]$ and $\textrm{SignalShape} = \textrm{PointNormal}$.
+### Signal-strength
 
 ```{r code8, eval = TRUE}
 tdat8        = list()
@@ -58,14 +56,7 @@ tdat8[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(c("mr.ash",
 }
 ```
 
-### Scenario 9
-
-Scenario 9 (Varying SignalShape with a dense signal): $n = \textrm{500}$, $p = \textrm{200}$, $s = \textrm{200}$, $\textrm{Design} = \textrm{IndepGauss}$ and $\textrm{PVE} = 0.5$. We sample $\beta$ from the point-$h$ density, i.e.
-\ba
-\beta_j = \left\{ \begin{array}{ll} \iid\, h, & j \in S \\
-= 0, & j \notin S \end{array} \right,
-\ea
-for $h \in \{t_1,t_2, t_4, t_8, \mathcal{L}(1), \mathcal{N}(0,1), \mathcal{U}(-1,1),\mathcal{C}(1) \}$, where $t_{\rm df}$ is the $t$-density with degree of freedom df, and $\mathcal{L}$, $\mathcal{N}$, $\mathcal{U}$ and $\mathcal{C}$ denote Laplace, Normal, Uniform and Constant densities, respectively. Again, $\beta$ is rescaled after sampling to satisfy $\textrm{PVE} = 0.5$.
+### Signal-shape-dense
 
 ```{r code9, eval = TRUE}
 tdat9        = list()
@@ -115,9 +106,7 @@ for (i in 1:20) {
 }
 ```
 
-### Scenario 10
-
-Scenario 10 (Varying SignalShape with a sparse signal): $n = \textrm{500}$, $p = \textrm{2,000}$, $s = \textrm{20}$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and varying signal shapes described in Scenario 9.
+### Signal-shape-sparse
 
 ```{r code10, eval = TRUE}
 tdat10        = list()

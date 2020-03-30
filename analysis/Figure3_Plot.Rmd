@@ -20,9 +20,7 @@ gg_color_hue <- function(n) {
 
 ## Figure
 
-### Scenario 7
-
-Scenario 1 (Low-dimensional setting): $n = \textrm{500}$, $p = \textrm{200}$, $s \in [1,p]$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and $\textrm{SignalShape} = \textrm{PointNormal}$.
+### Varying-n
 
 ```{r fig1_7, fig.height=11, fig.width=15, fig.align = "center"}
 res_df = readRDS("./results/scenario7.RDS")
@@ -68,9 +66,7 @@ subtitle  = ggdraw() + draw_label("Varying-n", fontface  = 'bold', size = 22)
 fig1_7    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
-### Scenario 8
-
-Scenario 8 (Varying PVE): $n = \textrm{500}$, $p = \textrm{2,000}$, $s = \textrm{20}$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = \in [0,0.9]$ and $\textrm{SignalShape} = \textrm{PointNormal}$.
+### Signal-strength
 
 ```{r fig1_8, fig.height=11, fig.width=15, fig.align = "center"}
 res_df = readRDS("./results/scenario8.RDS")
@@ -117,17 +113,7 @@ subtitle  = ggdraw() + draw_label("Signal-strength", fontface  = 'bold', size = 
 fig1_8    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
-### Scenario 9
-
-Scenario 9 (Varying SignalShape with a dense signal): $n = \textrm{500}$, $p = \textrm{200}$, $s = \textrm{200}$, $\textrm{Design} = \textrm{IndepGauss}$ and $\textrm{PVE} = 0.5$. We sample $\beta$ from the Point + $h$ density, i.e.
-
-$$
-\beta_j = \left\{ \begin{array}{ll} \sim\, h, & j \in S \\
-= 0, & j \notin S \end{array} \right.
-$$
-
-
-for $h \in \{t_1,t_2, t_4, t_8, \mathcal{L}(1), \mathcal{N}(0,1), \mathcal{U}(-1,1),\mathcal{C}(1) \}$, where $t_{\rm df}$ is the $t$-density with degree of freedom df, and $\mathcal{L}$, $\mathcal{N}$, $\mathcal{U}$ and $\mathcal{C}$ denote Laplace, Normal, Uniform and Constant densities, respectively. Again, $\beta$ is rescaled after sampling to satisfy $\textrm{PVE} = 0.5$.
+### Signal-shape-dense
 
 ```{r fig1_9, fig.height=11, fig.width=15, fig.align = "center"}
 res_df = readRDS("./results/scenario9.RDS")
@@ -176,9 +162,7 @@ subtitle  = ggdraw() + draw_label("Signal-shape-dense", fontface  = 'bold', size
 fig1_9    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
-### Scenario 10
-
-Scenario 10 (Varying SignalShape with a sparse signal): $n = \textrm{500}$, $p = \textrm{2,000}$, $s = \textrm{20}$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and varying signal shapes described in Scenario 9.
+### Signal-shape-sparse
 
 ```{r fig1_10, fig.height=11, fig.width=15, fig.align = "center"}
 res_df = readRDS("./results/scenario10.RDS")

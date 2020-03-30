@@ -71,7 +71,7 @@ We provide `analysis/plots_for_the_paper.RDS` for reproducing all the figures in
 | Figure     | Description                                                              | Source code for reproducing the result | Source code for plotting |   |
 |------------|--------------------------------------------------------------------------|----------------------------------------|--------------------------|---|
 | `Figure 1` | Flexibility of MR.ASH prior, in terms of shrinkage operator and penalty  | `analysis/Figure1_Sourcecode`          | `analysis/Figure1_Plot`  |   |
-| `Figure 2` | Adaptation to Sparsity (Penalized Linear Regression)                     | `analysis/Figure2_Sourcecode`          | `analysis/Figure2_Plot`  |   |
+| `Figure 2` | Adaptation to Sparsity (Penalized Linear Regression)                     | `analysis/Figure2_Sourcecode` \\ `analysis/Figure2_Sourcecode` | `analysis/Figure2_Plot`  |   |
 | `Figure 3` | Sample size, signal strength, signal shape (Penalized Linear Regression) | `analysis/Figure3_Sourcecode`          | `analysis/Figure3_Plot`  |   |
 | `Figure 4` | Adaptation to Sparsity (Bayesian Linear Regression)                      | `analysis/Figure2_Sourcecode`          | `analysis/Figure4_Plot`  |   |
 | `Figure 5` | Sample size, signal strength, signal shape (Bayesian Linear Regression)  | `analysis/Figure3_Sourcecode`          | `analysis/Figure5_Plot`  |   |
