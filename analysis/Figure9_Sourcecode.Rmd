@@ -25,8 +25,8 @@ source('code/sim_wrapper.R')
 
 Scenario 1 (Low-dimensional setting): $n = \textrm{500}$, $p = \textrm{200}$, $s \in [1,p]$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and $\textrm{SignalShape} = \textrm{PointNormal}$.
 
-```{r code1, eval = FALSE}
-tdat14        = list()
+```{r code1, eval = TRUE}
+tdat14       = list()
 n            = 500
 s            = 20
 p_range      = c(200,1000,5000,20000)
