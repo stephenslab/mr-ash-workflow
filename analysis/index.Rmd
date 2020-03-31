@@ -12,7 +12,7 @@ editor_options:
 
 For package version and information, please see `Session Information` at the end of this documentation.
 
-```{r package-info}
+```{r package-info, message = FALSE, echo = TRUE, warning = FALSE}
 library(mr.ash.alpha); # package implementing proposed methods in the paper
 library(Matrix); library(mvtnorm) # miscellaneous packages for matrices
 library(glmnet); library(ncvreg); library(L0Learn); # penalized regression methods
@@ -24,7 +24,7 @@ library(ggplot2); library(cowplot); # plotting
 
 ## Reproduce the results for the paper
 
-```{r run-simulation, message = FALSE, echo = FALSE, warning = FALSE, eval = FALSE}
+```{r run-simulation, message = FALSE, echo = TRUE, warning = FALSE, eval = FALSE}
 filelist          = paste("analysis/", list.files("analysis", pattern = "*_Sourcecode.Rmd"), sep = "")
 for (i in 1:length(filelist)) {
   workflowr::wflow_publish(filelist[i])
@@ -34,7 +34,7 @@ for (i in 1:length(filelist)) {
 
 ## Create Figures in the paper
 
-```{r create-plot, message = FALSE, echo = FALSE, warning = FALSE, eval = FALSE}
+```{r create-plot, message = FALSE, echo = TRUE, warning = FALSE, eval = FALSE}
 filelist          = paste("analysis/", list.files("analysis", pattern = "*_Plot.Rmd"), sep = "")
 for (i in 1:length(filelist)) {
   workflowr::wflow_publish(filelist[i])
