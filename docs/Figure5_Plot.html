@@ -7,7 +7,6 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -88,6 +87,7 @@ code {
 }
 img {
   max-width:100%;
+  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -248,12 +248,56 @@ $(document).ready(function () {
 }
 </style>
 
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
 <!-- code folding -->
 <style type="text/css">
 .code-folding-btn { margin-bottom: 4px; }
 </style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
 
 
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <style type="text/css">
 
@@ -302,6 +346,8 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -384,7 +430,7 @@ div.section {
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -393,7 +439,7 @@ div.section {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -402,17 +448,17 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-03-30
+<strong>Last updated:</strong> 2020-03-31
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>mr-ash-workflow/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
 </p>
 <p>
 This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
-  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.4.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.3.0). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
 </p>
 <hr>
 </div>
@@ -421,12 +467,12 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
 </div>
 </div>
 </div>
@@ -481,22 +527,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreefaff9701f5113be435a5c36da1cb6b07ddfbbafftargetblankfaff970a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/faff9701f5113be435a5c36da1cb6b07ddfbbaff" target="_blank">faff970</a> </a>
 </p>
 </div>
-<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
-<div class="panel-body">
-<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
-</div>
-</div>
-</div>
-<div class="panel panel-default">
-<div class="panel-heading">
-<p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree1c5a698fe26d210afa9daad2108c637d86adc462targetblank1c5a698a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/1c5a698fe26d210afa9daad2108c637d86adc462" target="_blank">1c5a698</a> </a>
-</p>
-</div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree1c5a698fe26d210afa9daad2108c637d86adc462targetblank1c5a698a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreefaff9701f5113be435a5c36da1cb6b07ddfbbafftargetblankfaff970a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -505,19 +539,32 @@ Great! You are using Git for version control. Tracking code development and conn
 Ignored files:
     Ignored:    .Rhistory
     Ignored:    .Rproj.user/
-    Ignored:    backup/.DS_Store
 
 Untracked files:
     Untracked:  .DS_Store
     Untracked:  .gitignore
-    Untracked:  backup/figure2_for_paper.pdf
+    Untracked:  backup/index.Rmd
 
 Unstaged changes:
-    Modified:   README.md
-    Modified:   analysis/Figure4_Plot.Rmd
-    Modified:   analysis/Figure5_Plot.Rmd
+    Modified:   analysis/.DS_Store
+    Deleted:    analysis/1.Rmd
+    Modified:   analysis/Figure7_Plot.Rmd
+    Modified:   analysis/Figure7_Sourcecode.Rmd
+    Deleted:    analysis/explore_dsc_results.Rmd
+    Modified:   analysis/index.Rmd
+    Modified:   figure10_for_paper.pdf
+    Modified:   figure1_for_paper.pdf
     Modified:   figure2_for_paper.pdf
+    Modified:   figure3_for_paper.pdf
     Modified:   figure4_for_paper.pdf
+    Modified:   figure5_for_paper.pdf
+    Modified:   figure6_for_paper.pdf
+    Modified:   figure7_for_paper.pdf
+    Modified:   figure8_for_paper.pdf
+    Modified:   results/scenario1-5_box.RDS
+    Modified:   results/scenario11_box.RDS
+    Modified:   results/scenario6_box.RDS
+    Modified:   results/scenario7-10_box.RDS
 
 </code></pre>
 <p>
@@ -561,13 +608,47 @@ Message
 Rmd
 </td>
 <td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/8eb968662abfbf99883248b568cb4e196b5fb7a0/analysis/Figure5_Plot.Rmd" target="_blank">8eb9686</a>
+</td>
+<td>
+Youngseok
+</td>
+<td>
+2020-03-30
+</td>
+<td>
+finalize results1
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/8eb968662abfbf99883248b568cb4e196b5fb7a0/docs/Figure5_Plot.html" target="_blank">8eb9686</a>
+</td>
+<td>
+Youngseok
+</td>
+<td>
+2020-03-30
+</td>
+<td>
+finalize results1
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
 <a href="https://github.com/stephenslab/mr-ash-workflow/blob/1c5a698fe26d210afa9daad2108c637d86adc462/analysis/Figure5_Plot.Rmd" target="_blank">1c5a698</a>
 </td>
 <td>
 Youngseok
 </td>
 <td>
-2020-03-31
+2020-03-30
 </td>
 <td>
 finalize results1
@@ -584,7 +665,7 @@ html
 Youngseok
 </td>
 <td>
-2020-03-31
+2020-03-30
 </td>
 <td>
 finalize results1
@@ -601,7 +682,7 @@ Rmd
 Youngseok Kim
 </td>
 <td>
-2020-03-18
+2020-03-17
 </td>
 <td>
 update analysis/, readme.md
@@ -618,7 +699,7 @@ html
 Youngseok Kim
 </td>
 <td>
-2020-03-18
+2020-03-17
 </td>
 <td>
 update analysis/, readme.md
@@ -842,7 +923,7 @@ ggsave(&quot;figure5_for_paper.pdf&quot;, figure5, width = 18, height = 16)</cod
 <pre class="r"><code>sessionInfo()</code></pre>
 <pre><code>R version 3.5.3 (2019-03-11)
 Platform: x86_64-apple-darwin15.6.0 (64-bit)
-Running under: macOS Mojave 10.14
+Running under: macOS High Sierra 10.13.3
 
 Matrix products: default
 BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib
@@ -855,19 +936,19 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] cowplot_1.0.0 ggplot2_3.2.1
+[1] cowplot_0.9.4 ggplot2_3.2.1
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.3       compiler_3.5.3   pillar_1.4.3     git2r_0.26.1    
- [5] workflowr_1.4.0  tools_3.5.3      digest_0.6.23    evaluate_0.14   
+ [1] Rcpp_1.0.3       compiler_3.5.3   pillar_1.4.3     git2r_0.25.2    
+ [5] workflowr_1.3.0  tools_3.5.3      digest_0.6.23    evaluate_0.13   
  [9] lifecycle_0.1.0  tibble_2.1.3     gtable_0.3.0     pkgconfig_2.0.3 
-[13] rlang_0.4.2      yaml_2.2.0       xfun_0.9         withr_2.1.2     
-[17] stringr_1.4.0    dplyr_0.8.3      knitr_1.25       fs_1.3.1        
+[13] rlang_0.4.2      yaml_2.2.0       xfun_0.6         withr_2.1.2     
+[17] stringr_1.4.0    dplyr_0.8.3      knitr_1.22       fs_1.3.0        
 [21] rprojroot_1.3-2  grid_3.5.3       tidyselect_0.2.5 glue_1.3.1      
-[25] R6_2.4.1         rmarkdown_1.15   purrr_0.3.2      farver_2.0.3    
-[29] magrittr_1.5     whisker_0.4      backports_1.1.5  scales_1.1.0    
-[33] htmltools_0.3.6  assertthat_0.2.1 colorspace_1.4-1 stringi_1.4.5   
-[37] lazyeval_0.2.2   munsell_0.5.0    crayon_1.3.4    </code></pre>
+[25] R6_2.4.1         rmarkdown_1.12   purrr_0.3.3      farver_2.0.3    
+[29] magrittr_1.5     whisker_0.3-2    backports_1.1.5  scales_1.1.0    
+[33] htmltools_0.4.0  assertthat_0.2.1 colorspace_1.4-1 labeling_0.3    
+[37] stringi_1.4.5    lazyeval_0.2.2   munsell_0.5.0    crayon_1.3.4    </code></pre>
 </div>
 </div>
 
@@ -901,54 +982,6 @@ $(document).ready(function () {
 });
 
 
-</script>
-
-<!-- tabsets -->
-
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
-<!-- code folding -->
-<script>
-$(document).ready(function () {
-  window.initializeCodeFolding("hide" === "show");
-});
-</script>
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
