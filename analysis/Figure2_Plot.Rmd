@@ -23,7 +23,7 @@ gg_color_hue <- function(n) {
 ### High-dim
 
 ```{r fig1_1, fig.height=11, fig.width=15, fig.align = "center"}
-res_df = readRDS("../results/scenario1.RDS")
+res_df = readRDS("./results/scenario1.RDS")
 out = matrix(0,8,13)
 lower = matrix(0,8,13)
 upper = matrix(0,8,13)
@@ -132,7 +132,7 @@ res_df = readRDS("./results/scenario3.RDS")
 out = matrix(0,8,13)
 lower = matrix(0,8,13)
 upper = matrix(0,8,13)
-for (i in 1:6) {
+for (i in 1:8) {
   out[i,] = colMeans(matrix(res_df[[i]]$pred, 20, 13))
   lower[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.1))
   upper[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.9))
@@ -151,9 +151,9 @@ df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames
 df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
                                     "SCAD","MCP","L0Learn",
                                     "varbvs","BayesB","B-Lasso","SuSiE","Mr.ASH.order","Mr.ASH.vanilla"))
-df$size = 0.5
-df$size[1:9] = 1.2
 df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn"),]
+df$size = 0.5
+df$size[1:8] = 1.2
 p1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = fit), size = df$size) +
   geom_point(aes(x = s, y = pred, color = fit, shape = fit), size = 3) +
   theme_cowplot(font_size = 22) +
