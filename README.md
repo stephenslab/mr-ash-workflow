@@ -10,6 +10,12 @@ This workflow is for reproducing the results used in the manuscript
 
 ---------------------------------------------------------------
 
+## Vignette
+
+See [Mr.ASH Vignette][mr-ash-vignette]
+
+---------------------------------------------------------------
+
 ## Reproducing the result using R
 
 The proposed VEB (Variational Empirical Bayes) approach can be implemented via our companion package `mr.ash.alpha`,
@@ -108,4 +114,5 @@ The mr.ash R package was developed by [Youngseok Kim][youngseok].
 [youngseok]: https://github.com/youngseok-kim
 [mr-ash-manu]: https://https://stephenslab.uchicago.edu/
 [mr-ash-alpha]: https://github.com/stephenslab/mr.ash.alpha
+[mr-ash-vignette]: https://bit.ly/2MgxzgE
 
