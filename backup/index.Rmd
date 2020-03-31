@@ -1,0 +1,211 @@
+---
+title: "Home"
+site: workflowr::wflow_site
+output:
+  workflowr::wflow_html:
+    toc: false
+editor_options:
+  chunk_output_type: console
+---
+
+## Plots for the paper
+
+[Plots](Plots_for_paper.html)
+
+---------------------
+
+## Results for external comparison
+
+This vignette is to plot results for the experiment MR.ASH and the comparison methods listed below.
+
+(1) `glmnet` R package: Ridge, Lasso, E-NET
+(2) `ncvreg` R package: SCAD, MCP
+(3) `L0Learn` R package: L0Learn
+(4) `BGLR` R package: BayesB, Blasso (Bayesian Lasso)
+(5) `susieR` R package: SuSiE (Sum of Single Effect)
+(6) `varbvs` R package: VarBVS (Variational Bayes Variable Selection)
+
+### Performance measure
+
+The prediction error we define here is
+$$
+\textrm{Pred.Err}(\hat\beta;y_{\rm test}, X_{\rm test}) = \frac{\textrm{RMSE}(\hat\beta;y_{\rm test} - X_{\rm test})}{\sigma} = \frac{\|y_{\rm test} - X_{\rm test} \hat\beta \|}{\sqrt{n}\sigma}
+$$
+where $y_{\rm test}$ and $X_{\rm test}$ are test data sample in the same way. If $\hat\beta$ is fairly accurate, then we expect that $\rm RMSE$ is similar to $\sigma$. Therefore in average $\textrm{Pred.Err} \geq 1$ and the smaller the better.
+
+Here RMSE is the root-mean-squared error, and 
+
+### Default setting
+
+Throughout the studies, the default setting is
+
+(1) The number of samples $n = 500$ and the number of coefficients $p = 2000$.
+(2) The number of nonzero coefficients $s = 20$ (sparsity)
+(3) Design: `IndepGauss`, i.e. $X_{ij} \sim N(0,1)$
+(4) Signal shape: `PointNormal`, i.e.
+$$
+\beta_j = \left\{ \begin{array}{ll} \textrm{a normal random sample }\sim N(0,1), & j \in S \\
+0, & j \notin S \end{array} \right.
+$$
+where $S$ is an index set of nonzero coefficients, sampled uniformly at random from $\{1,\cdots,p\}$. We define $s = |S|$ is a sparsity level. If $s$ is smaller, then we say the signal $\beta$ is sparser.
+
+(5) PVE (Proportion of Variance Explained): 0.5
+Given $X$ and $\beta$, we sample $y = X\beta + \epsilon$, where $\epsilon \sim N(0,\sigma^2 I_n)$. In this case, PVE is defined by
+$$
+{\rm PVE} = \frac{\textrm{Var}(X\beta)}{\textrm{Var}(X\beta) + \sigma^2},
+$$
+where $\textrm{Var}(a)$ denotes the sample variance of $a$ calculated using R function `var`. To this end, we set $\sigma^2 = \textrm{Var}(X\beta)$.
+(6) Update order: `increasing`, i.e. `(1,...,p) = 1:p` in this order.
+(7) Initialization: `null` i.e. a vector of zeros.
+
+## MR.ASH and the comparison methods
+
+### Some special cases
+
+(1) [Ridge case](Result1_Ridge.html).
+
+The ridge case is when the default setting applies to all but $s = p$.
+We observe that the relative performance is dependent on the value of $p$ (compared to $n$). Thus we consider $p = 50,100,200,500,1000,2000$ while $n = 500$ being fixed.
+
+- Result: 
+
+<p align="center">
+<img align="center" src=figure/Result1_Ridge.Rmd/fig1-1.png width="1000" height="500">
+</p>
+
+- Discussion: The message here is MR.ASH performs reasonably well, and the only penalized linear regression method that outperforms Ridge with cross-validation. However, let us mention that Blasso (Bayesian Lasso) performs the best, which uses a non-sparse Laplace prior on $\beta$. Also, BayesB performs better than MR.ASH, which uses a spike-and-slab prior on $\beta$.
+
+(2) [Nonconvex case](Result2_Nonconvex.html).
+
+This experiment is to compare the flexibility of convex/non-convex shrinkage operators (E-NET, SCAD, MCP, L0Learn) vs MR.ASH shrinkage operator. The default setting applies to all but the signal shape and PVE = 0.99.
+
+The reason why we set PVE = 0.99, the cross-validated solution of the method (E-NET, SCAD or MCP) acheives a nearly minimum prediction error on the solution path, i.e. the cross-validated solution is nearly the best the method can achieve. Thus we conclude that the cross-validation is fairly accurate. We have checked this by experiment.
+
+- Result: 
+
+<p align="center">
+<img src=figure/Result2_Nonconvex.Rmd/fig1-1.png width="1000" height="500">
+<img src=figure/Plots_for_paper.Rmd/fig1-1.png width="1000" height="500">
+</p>
+
+- Discussion: Clearly MR.ASH is an overall winner, outperforming all the other methods. Flexibility of MR.ASH Gaussian mixture prior is illustrated well in the above figure.
+
+### Important parameters for high-dimensional regression settings
+
+(3) [High-dimensionality $p$](Result4_Highdim.html).
+
+This experiment is to compare performance of the methods when $p$ varies while the rest being fixed. 
+
+- Result: 
+
+<p align="center">
+<img src=figure/Result4_Highdim.Rmd/fig1-1.png width="1000" height="500">
+<img src=figure/Result4_Highdim.Rmd/fig2-1.png width="1000" height="500">
+</p>
+
+
+- Discussion: It shows that MR.ASH and VarBVS outperform well. Since the theory says (e.g. [Slope meets Lasso: improved oracle bounds and
+optimality](https://arxiv.org/pdf/1605.08651.pdf) ) that the prediction error scales as $\sqrt{s\log(p/s)/n}$, and thus we can expect that the prediction error increaese log-linearly in $p$. One can check this in the above figure.
+
+Also, the computation time of MR.ASH scales linearly in $\log p$. We conclude that BayesB and Blasso do not scale well for large $p$.
+
+(4) [Sparsity $s$](Result5_SparseSignal.html).
+
+- Result:
+
+<p align="center">
+<img src=figure/Result5_SparseSignal.Rmd/fig2-1.png width="1000" height="500">
+<img src=figure/Result5_SparseSignal.Rmd/fig4-1.png width="1000" height="500">
+</p>
+
+- Discussion: Mr.ASH does well in sparse setting. VARBVS shows very similar performance compared to Mr.ASH. BayesB performs reasonably well for all cases, hence very balanced. Blasso does very well in non-sparse setting.
+
+| Method   | Mr.ASH | VARBVS | BayesB   | Blasso     | Susie | E-NET | Lasso | Ridge | SCAD | MCP  | L0Learn |
+|----------|--------|--------|----------|------------|-------|-------|-------|-------|------|------|---------|
+| s = 1    | **1.01**   | **1.01**   | **1.01**     | 1.06       | **1.01**  | 1.03  | 1.04  | 1.40  | **1.01** | **1.01** | 1.02    |
+| s = 5    | **1.02**   | **1.02**   | **1.02**     | 1.11       | **1.02**  | 1.08  | 1.08  | 1.43  | 1.03 | **1.02** | 1.03    |
+| s = 20   | **1.06**   | **1.06**   | 1.07     | 1.20       | 1.09  | 1.13  | 1.14  | 1.41  | 1.08 | 1.07 | 1.07    |
+| s = 100  | 1.28   | 1.28   | 1.28     | 1.33       | 1.35  | 1.30  | 1.31  | 1.39  | **1.27** | **1.27** | 1.34    |
+| s = 500  | 1.38   | 1.39   | **1.37**     | **1.37**       | 1.40  | 1.40  | 1.40  | 1.40  | 1.40 | 1.40 | 1.43    |
+| s = 2000 | 1.42   | 1.43   | 1.40     | **1.39**       | 1.43  | 1.43  | 1.44  | 1.43  | 1.44 | 1.44 | 1.45    |
+| Note     | sparse | sparse | balanced | non-sparse |       |       |       |       | sparse | sparse |         |
+
+(5) [PVE](Result6_PVE.html).
+
+- Result:
+
+<p align="center">
+<img src=figure/Result6_PVE.Rmd/fig1-1.png width="1000" height="500">
+<img src=figure/Result6_PVE.Rmd/fig2-1.png width="1000" height="500">
+</p>
+
+- Discussion: MR.ASH outperforms for all the PVEs. However this experiment setting is favorable for MR.ASH. Thus we can just conclude, for safety, that the relative performance does not depend very much on PVE, but Ridge, SuSiE and Blasso suffer for high PVE.
+
+### Performance on different design settings
+
+(6) [LowdimIndepGauss](Result7_LowdimIndepGauss.html)
+
+(7) [RealGenotype](Result8_RealGenotype.html)
+
+(8) [Changepoint](Result9_Changepoint.html)
+
+(9) [EquicorrGauss](Result10_Correlation.html)
+
+| Method                            | Mr.ASH | Mr.ASH.order | MR.ASH.init | VARBVS | BayesB | Blasso | SuSiE | ENET | Lasso | Ridge | SCAD  | MCP   | L0Learn |
+|-----------------------------------|--------|--------------|-------------|--------|--------|--------|-------|-------|-------|-------|-------|-------|---------|
+| LowdimIndepGauss + SuBogdanCandes | **1.012**  | **1.012**        | **1.012**       | **1.012**  | 2.315  | 46.19  | **1.012** | 94.60 | 96.82 | 2680  | **1.012** | **1.012** | 1.230   |
+| RealGenotype + PointNormal        | 1.160  | **1.145**        | 1.154       | 1.177  | 1.258  | 1.189  | 1.157 | 1.180 | 1.199 | 1.254 | 1.154 | 1.162 | 1.194   |
+| EquiCorrGauss + PointNormal       | 1.119  | 1.126        | 1.080       | 1.142  | 1.219  | 1.144  | 1.154 | 1.097 | 1.103 | 1.189 | **1.078** | 1.080 | 1.101   |
+| LocalCorrGauss + PointNormal      | 1.092  | 1.083        | **1.076**       | 1.096  | 1.144  | 1.193  | 1.098 | 1.119 | 1.128 | 1.270 | 1.078 | **1.076** | 1.082   |
+| Changepoint + BigSuddenChange     | 2.885  | 1.450        | **1.103**       | 5.086  | 1.890  | 3.636  | 9.518 | 3.991 | 5.320 | 9.810 | 1.765 | 1.956 | 2.346   |
+| Changepoint + OneSmallChange      | 2.195  | **1.168**        | 1.272       | 1.742  | 8.864  | 4.442  | 1.203 | 3.776 | 4.255 | 6.622 | 1.478 | 2.246 | 3.004   |
+|-----------------------------------|--------|--------------|-------------|--------|--------|--------|-------|-------|-------|-------|-------|-------|---------|
+| Computation time                  | 2.218  | 3.166        | 5.944       | 3.445  | 3.583  | 4.001  | 1.808 | 51.50 | 4.670 | 5.567 | 7.538 | 6.884 | 10.95   |
+
+---------------------
+
+## Results for internal comparison
+
+[MR.ASH update order](Result11_UpdateOrder.html)
+
+A list of the update orders we consider is as follows.
+
+(1) `random`: In each outer loop iteration, we sample a permuation map $\xi:\{1,\cdots,p\} \to \{1,\cdots,p\}$ uniformly at random and run inner loop iterations with the order based on $\xi$.
+(2) `increasing`: $(1,\cdots,p)$, i.e. in each outer loop iteration, we update $q_1,q_2,\cdots,q_p$ in this order.
+(3) `lasso.pathorder`: we update $q_j$ prior to $q_{j'}$ when $\beta_j$ appears earlier than $\beta_{j'}$ in the lasso path. If ties occur, then `increasing` order applies to those ties.
+(4) `scad.pathorder`: we update $q_j$ prior to $q_{j'}$ when $\beta_j$ appears earlier than $\beta_{j'}$ in the scad path. If ties occur, then `increasing` order applies to those ties.
+(5) `lasso.absorder`: we update $q_j$ prior to $q_{j'}$ when the lasso solution satisfies $|\hat\beta_j| \geq |\hat\beta_{j'}|$. If ties occur, then `increasing` order applies to those ties.
+(6) `univar.absorder`: we update $q_j$ prior to $q_{j'}$ when the univariate linear regression solution satisfies $|\hat\beta_j| \geq |\hat\beta_{j'}|$. If ties occur, then `increasing` order applies to those ties.
+
+[MR.ASH initialization](Result12_Initialization.html)
+
+A list of the initializations we consider is as follows.
+
+[Parametrization](Result15_EstimationOfSigma.html)
+
+An analysis for the update rule of $\sigma^2$, based on different parametrizations of the model.
+
+---------------------
+
+Our story is 
+
+(1) the MR.ASH's shrinkage operator (from a normal mixture prior) is more flexible than other popular shrinkage operators,
+which is a parametric form of $\lambda$ (and $\gamma$ if exists).
+
+(2) VEB can do better than cross validation.
+
+----------------------
+
+## Brief Summary of Comparison Methods
+
+### L0Learn
+
+`L0Learn` R package provides a fast coordinate descent algorithm for the best subset regression.
+
+[Fast Best Subset Selection: Coordinate Descent and Local Combinatorial Optimization Algorithms](https://arxiv.org/abs/1803.01454)
+
+### SCAD, MCP
+
+`ncvreg` R package provides a fast coordinate descent algorithm for the non-convex penalized linear regression method with well-known penalty functions SCAD and MCP.
+
+[Coordinate descent algorithms for nonconvex penalized regression, with applications to biological feature selection](http://myweb.uiowa.edu/pbreheny/pdf/Breheny2011.pdf)

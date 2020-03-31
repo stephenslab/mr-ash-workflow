@@ -24,68 +24,88 @@ source('code/sim_wrapper.R')
 ### Group 1
 
 ```{r group 1, eval = TRUE}
-res_df2  = readRDS("results/scenario1.RDS")
-method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE",
+                 "E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
 method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
                  "SCAD","MCP","L0Learn",
                  "varbvs","BayesB","B-Lasso","SuSiE")
-res_df1   = data.frame()
-for (i in 1:length(res_df2)) {
-  res_df1 = rbind(res_df1, res_df2[[i]][1:220,])
-}
-res_df1$fit = rep(method_list, each = 20)
-res_df1$fit = factor(res_df1$fit, levels = method_level)
+scenario_num = c(1,2,3,4,5)
 
-res_df2  = readRDS("results/scenario2.RDS")
-method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
-method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
-                 "SCAD","MCP","L0Learn",
-                 "varbvs","BayesB","B-Lasso","SuSiE")
-res_df3   = data.frame()
-for (i in 1:length(res_df2)) {
-  res_df3 = rbind(res_df3, res_df2[[i]][1:220,])
+df           = data.frame()
+for (iter in scenario_num) {
+  datafile   = paste0("./results/scenario",iter,".RDS",sep = "")
+  res_df     = readRDS(datafile)
+  for (i in 1:length(res_df)) {
+    temp       = res_df[[i]][c(241:260,21:220),c("pred","time","fit")]
+    temp$rrmse = temp$pred / temp$pred[1:20]
+    temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 11), 1, min)
+    df         = rbind(df, temp)
+  }
 }
-res_df3$fit = rep(method_list, each = 20)
-res_df3$fit = factor(res_df3$fit, levels = method_level)
+df$fit     = rep(method_list, each = 20)
+df$fit     = factor(df$fit, levels = method_level)
 
-res_df2  = readRDS("results/scenario3.RDS")
-method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
-method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
-                 "SCAD","MCP","L0Learn",
-                 "varbvs","BayesB","B-Lasso","SuSiE")
-res_df4   = data.frame()
-for (i in 1:length(res_df2)) {
-  res_df4 = rbind(res_df4, res_df2[[i]][1:220,])
+saveRDS(df,"./results/scenario1-5_box.RDS")
+```
+
+```{r group 2, eval = TRUE}
+scenario_num = c(6)
+
+df           = data.frame()
+for (iter in scenario_num) {
+  datafile   = paste0("./results/scenario",iter,".RDS",sep = "")
+  res_df     = readRDS(datafile)
+  for (i in 1:length(res_df)) {
+    temp       = res_df[[i]][c(241:260,21:220),c("pred","time","fit")]
+    temp$rrmse = temp$pred / temp$pred[1:20]
+    temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 11), 1, min)
+    df         = rbind(df, temp)
+  }
 }
-res_df4$fit = rep(method_list, each = 20)
-res_df4$fit = factor(res_df4$fit, levels = method_level)
+df$fit     = rep(method_list, each = 20)
+df$fit     = factor(df$fit, levels = method_level)
 
-res_df2  = readRDS("results/scenario4.RDS")
-method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
-method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
-                 "SCAD","MCP","L0Learn",
-                 "varbvs","BayesB","B-Lasso","SuSiE")
-res_df5   = data.frame()
-for (i in 1:length(res_df2)) {
-  res_df5 = rbind(res_df5, res_df2[[i]][c(241:260,21:220),c(1,2,5)])
+saveRDS(df,"./results/scenario6_box.RDS")
+```
+
+```{r group 3, eval = TRUE}
+scenario_num = c(7,8,9,10)
+
+df           = data.frame()
+for (iter in scenario_num) {
+  datafile   = paste0("./results/scenario",iter,".RDS",sep = "")
+  res_df     = readRDS(datafile)
+  for (i in 1:length(res_df)) {
+    temp       = res_df[[i]][1:220,c("pred","time","fit")]
+    temp$rrmse = temp$pred / temp$pred[1:20]
+    temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 11), 1, min)
+    df         = rbind(df, temp)
+  }
 }
-res_df5$fit = rep(method_list, each = 20)
-res_df5$fit = factor(res_df5$fit, levels = method_level)
+df$fit     = rep(method_list, each = 20)
+df$fit     = factor(df$fit, levels = method_level)
 
-res_df2  = readRDS("results/scenario5.RDS")
-method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
-method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
-                 "SCAD","MCP","L0Learn",
-                 "varbvs","BayesB","B-Lasso","SuSiE")
-res_df6   = data.frame()
-for (i in 1:length(res_df2)) {
-  res_df6 = rbind(res_df6, res_df2[[i]][c(241:260,21:220),c(1,2,5)])
+saveRDS(df,"./results/scenario7-10_box.RDS")
+```
+
+```{r group 4, eval = TRUE}
+scenario_num = c(11)
+
+df           = data.frame()
+for (iter in scenario_num) {
+  datafile   = paste0("./results/scenario",iter,".RDS",sep = "")
+  res_df     = readRDS(datafile)
+  for (i in 1:length(res_df)) {
+    temp       = res_df[[i]][1:220,c("pred","time","fit")]
+    temp$rrmse = temp$pred / temp$pred[1:20]
+    temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 11), 1, min)
+    df         = rbind(df, temp)
+  }
 }
-res_df6$fit = rep(method_list, each = 20)
-res_df6$fit = factor(res_df6$fit, levels = method_level)
+df$fit     = rep(method_list, each = 20)
+df$fit     = factor(df$fit, levels = method_level)
 
-res_df = rbind(res_df1, res_df3, res_df4, res_df5, res_df6)
-saveRDS(res_df,"results/scenario1-5_box.RDS")
+saveRDS(df,"./results/scenario11_box.RDS")
 ```
 
 ## Save the results
@@ -95,9 +115,4 @@ try(system("rm *.dat"))
 try(system("rm ../*.dat"))
 try(system("rm analysis/*.dat"))
 try(system("rm ../analysis/*.dat"))
-```
-
-```{r saveresults}
-saveRDS(tdat12, "results/scenario12.RDS")
-saveRDS(tdat13, "results/scenario13.RDS")
 ```
