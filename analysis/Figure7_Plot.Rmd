@@ -26,12 +26,12 @@ gg_color_hue <- function(n) {
 res_df   = readRDS("results/scenario7-10_box.RDS")
 col      = gg_color_hue(13)[1:11]
 shape    = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[1:11]
-baseline = mean(res_df$rrmse[res_df$fit == "Mr.ASH"])
+baseline = mean(res_df$rpred[res_df$fit == "Mr.ASH"])
 fig_main = ggplot(res_df) +
-  stat_summary(aes(x = fit, y = rrmse), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
-  stat_summary(aes(x = fit, y = rrmse), colour = col, fun.y = mean, geom = "point") + 
-  geom_boxplot(alpha = 0.1, aes(x = fit, y = rrmse, color = fit, fill = fit, lower = quantile(rrmse, .25), 
-                                middle = mean(rrmse), upper = quantile(rrmse, .75)), outlier.alpha = 0, fatten = 0.9) +
+  stat_summary(aes(x = fit, y = rpred), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
+  stat_summary(aes(x = fit, y = rpred), colour = col, fun.y = mean, geom = "point") + 
+  geom_boxplot(alpha = 0.1, aes(x = fit, y = rpred, color = fit, fill = fit, lower = quantile(rpred, .25), 
+                                middle = mean(rpred), upper = quantile(rpred, .75)), outlier.alpha = 0, fatten = 0.9) +
   scale_alpha_manual(values = 0.1) +
   scale_fill_manual(values = col, guide = "none") +
   scale_color_manual(values = col, guide = "none") +
@@ -41,7 +41,7 @@ fig_main = ggplot(res_df) +
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none", axis.title.y = element_blank()) +
   geom_hline(yintercept = baseline, color = col[1], linetype = "dashed")
-suptitle  = ggdraw() + draw_label("Scenarios 7, 8, 9, 10", fontface  = 'bold', size = 24)  
+suptitle  = ggdraw() + draw_label("Group 3 (Varying n, PVE, signal shape)", fontface  = 'bold', size = 24)  
 # subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.9", fontface  = 'bold', size = 14) 
 fig2_1    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 ```
@@ -52,12 +52,12 @@ fig2_1    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 res_df   = readRDS("./results/scenario6_box.RDS")
 col      = gg_color_hue(13)[1:11]
 shape    = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[1:11]
-baseline = mean(res_df$rrmse[res_df$fit == "Mr.ASH"])
+baseline = mean(res_df$rpred[res_df$fit == "Mr.ASH"])
 fig_main = ggplot(res_df) +
-  stat_summary(aes(x = fit, y = rrmse), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
-  stat_summary(aes(x = fit, y = rrmse), colour = col, fun.y = mean, geom = "point") + 
-  geom_boxplot(alpha = 0.1, aes(x = fit, y = rrmse, color = fit, fill = fit, lower = quantile(rrmse, .25), 
-                                middle = mean(rrmse), upper = quantile(rrmse, .75)), outlier.alpha = 0, fatten = 0.9) +
+  stat_summary(aes(x = fit, y = rpred), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
+  stat_summary(aes(x = fit, y = rpred), colour = col, fun.y = mean, geom = "point") + 
+  geom_boxplot(alpha = 0.1, aes(x = fit, y = rpred, color = fit, fill = fit, lower = quantile(rpred, .25), 
+                                middle = mean(rpred), upper = quantile(rpred, .75)), outlier.alpha = 0, fatten = 0.9) +
   scale_alpha_manual(values = 0.1) +
   scale_fill_manual(values = col, guide = "none") +
   scale_color_manual(values = col, guide = "none") +
@@ -67,7 +67,7 @@ fig_main = ggplot(res_df) +
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none", axis.title.y = element_blank()) +
   geom_hline(yintercept = baseline, color = col[1], linetype = "dashed")
-suptitle  = ggdraw() + draw_label("Scenario 6 (Real Genotype Design)", fontface  = 'bold', size = 24)  
+suptitle  = ggdraw() + draw_label("Group 2 (Realgenotype-design)", fontface  = 'bold', size = 24)  
 # subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.9", fontface  = 'bold', size = 14) 
 fig2_2    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 ```
@@ -78,12 +78,12 @@ fig2_2    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 res_df   = readRDS("./results/scenario11_box.RDS")
 col      = gg_color_hue(13)[1:11]
 shape    = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[1:11]
-baseline = mean(res_df$rrmse[res_df$fit == "Mr.ASH"])
+baseline = mean(res_df$rpred[res_df$fit == "Mr.ASH"])
 fig_main = ggplot(res_df) +
-  stat_summary(aes(x = fit, y = rrmse), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
-  stat_summary(aes(x = fit, y = rrmse), colour = col, fun.y = mean, geom = "point") + 
-  geom_boxplot(alpha = 0.1, aes(x = fit, y = rrmse, color = fit, fill = fit, lower = quantile(rrmse, .25), 
-                                middle = mean(rrmse), upper = quantile(rrmse, .75)), outlier.alpha = 0, fatten = 0.9) +
+  stat_summary(aes(x = fit, y = rpred), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
+  stat_summary(aes(x = fit, y = rpred), colour = col, fun.y = mean, geom = "point") + 
+  geom_boxplot(alpha = 0.1, aes(x = fit, y = rpred, color = fit, fill = fit, lower = quantile(rpred, .25), 
+                                middle = mean(rpred), upper = quantile(rpred, .75)), outlier.alpha = 0, fatten = 0.9) +
   scale_alpha_manual(values = 0.1) +
   scale_fill_manual(values = col, guide = "none") +
   scale_color_manual(values = col, guide = "none") +
@@ -93,7 +93,7 @@ fig_main = ggplot(res_df) +
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none", axis.title.y = element_blank()) +
   geom_hline(yintercept = baseline, color = col[1], linetype = "dashed")
-suptitle  = ggdraw() + draw_label("Scenario 11 (Varying p)", fontface  = 'bold', size = 24)  
+suptitle  = ggdraw() + draw_label("Group 4 (Varying-p)", fontface  = 'bold', size = 24)  
 # subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.9", fontface  = 'bold', size = 14) 
 fig2_3    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 ```
@@ -104,12 +104,12 @@ fig2_3    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 res_df   = readRDS("results/scenario1-5_box.RDS")
 col      = gg_color_hue(13)[1:11]
 shape    = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[1:11]
-baseline = mean(res_df$rrmse[res_df$fit == "Mr.ASH"])
+baseline = mean(res_df$rpred[res_df$fit == "Mr.ASH"])
 fig_main = ggplot(res_df) +
-  stat_summary(aes(x = fit, y = rrmse), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
-  stat_summary(aes(x = fit, y = rrmse), colour = col, fun.y = mean, geom = "point") + 
-  geom_boxplot(alpha = 0.1, aes(x = fit, y = rrmse, color = fit, fill = fit, lower = quantile(rrmse, .25), 
-                                middle = mean(rrmse), upper = quantile(rrmse, .75)), outlier.alpha = 0, fatten = 0.9) +
+  stat_summary(aes(x = fit, y = rpred), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
+  stat_summary(aes(x = fit, y = rpred), colour = col, fun.y = mean, geom = "point") + 
+  geom_boxplot(alpha = 0.1, aes(x = fit, y = rpred, color = fit, fill = fit, lower = quantile(rpred, .25), 
+                                middle = mean(rpred), upper = quantile(rpred, .75)), outlier.alpha = 0, fatten = 0.9) +
   scale_alpha_manual(values = 0.1) +
   scale_fill_manual(values = col, guide = "none") +
   scale_color_manual(values = col, guide = "none") +
@@ -119,7 +119,7 @@ fig_main = ggplot(res_df) +
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none", axis.title.y = element_blank()) +
   geom_hline(yintercept = baseline, color = col[1], linetype = "dashed")
-suptitle  = ggdraw() + draw_label("Scenarios 1, 2, 3, 4, 5", fontface  = 'bold', size = 24) 
+suptitle  = ggdraw() + draw_label("Group 1 (Varying-s)", fontface  = 'bold', size = 24) 
 # subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.9", fontface  = 'bold', size = 14) 
 fig2_4    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 ```
@@ -129,7 +129,7 @@ fig2_4    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 ```{r figure7}
 figure7  = plot_grid(fig2_4,fig2_2,fig2_1,fig2_3, ncol = 2, rel_widths = c(0.5,0.5))
 #title    = ggdraw() + draw_label("Adaptation to Sparsity (Penalized Linear Regression)", fontface = 'bold', size = 24)
-yaxis    = ggdraw() + draw_label("relative prediction error (RRMSE) ", size = 25, angle = 90)
+yaxis    = ggdraw() + draw_label("relative prediction error (rpred) ", size = 25, angle = 90)
 figure7  = plot_grid(yaxis, figure7,
                      nrow = 1, rel_widths = c(0.03,0.97))
 ggsave("figure7_for_paper.pdf", figure7, width = 18, height = 15)
