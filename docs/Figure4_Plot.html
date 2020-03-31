@@ -493,10 +493,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree2bbfdba6690b64de146155543de5b1873710432etargetblank2bbfdbaa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/2bbfdba6690b64de146155543de5b1873710432e" target="_blank">2bbfdba</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree1c5a698fe26d210afa9daad2108c637d86adc462targetblank1c5a698a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/1c5a698fe26d210afa9daad2108c637d86adc462" target="_blank">1c5a698</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree2bbfdba6690b64de146155543de5b1873710432etargetblank2bbfdbaa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree1c5a698fe26d210afa9daad2108c637d86adc462targetblank1c5a698a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -510,19 +510,12 @@ Ignored files:
 Untracked files:
     Untracked:  .DS_Store
     Untracked:  .gitignore
-    Untracked:  results/.Rapp.history
 
 Unstaged changes:
     Modified:   README.md
-    Modified:   analysis/Figure2_Plot.Rmd
     Modified:   analysis/Figure4_Plot.Rmd
     Modified:   figure2_for_paper.pdf
-    Modified:   figure3_for_paper.pdf
     Modified:   figure4_for_paper.pdf
-    Modified:   results/scenario3.RDS
-    Modified:   results/scenario4.RDS
-    Modified:   results/scenario5.RDS
-    Modified:   results/scenario6.RDS
 
 </code></pre>
 <p>
@@ -561,6 +554,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/1c5a698fe26d210afa9daad2108c637d86adc462/analysis/Figure4_Plot.Rmd" target="_blank">1c5a698</a>
+</td>
+<td>
+Youngseok
+</td>
+<td>
+2020-03-31
+</td>
+<td>
+finalize results1
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/1c5a698fe26d210afa9daad2108c637d86adc462/docs/Figure4_Plot.html" target="_blank">1c5a698</a>
+</td>
+<td>
+Youngseok
+</td>
+<td>
+2020-03-31
+</td>
+<td>
+finalize results1
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -610,9 +637,8 @@ gg_color_hue &lt;- function(n) {
 }</code></pre>
 <div id="figure" class="section level2">
 <h2>Figure</h2>
-<div id="scenario-1" class="section level3">
-<h3>Scenario 1</h3>
-<p>Scenario 1 (Low-dimensional setting): <span class="math inline">\(n = \textrm{500}\)</span>, <span class="math inline">\(p = \textrm{200}\)</span>, <span class="math inline">\(s \in [1,p]\)</span>, <span class="math inline">\(\textrm{Design} = \textrm{IndepGauss}\)</span>, <span class="math inline">\(\textrm{PVE} = 0.5\)</span> and <span class="math inline">\(\textrm{SignalShape} = \textrm{PointNormal}\)</span>.</p>
+<div id="low-dim" class="section level3">
+<h3>Low-dim</h3>
 <pre class="r"><code>res_df = readRDS(&quot;./results/scenario1.RDS&quot;)
 out = matrix(0,8,13)
 lower = matrix(0,8,13)
@@ -657,12 +683,11 @@ fig_main = fig_dummy3 + theme(legend.position = &quot;none&quot;)
 # suptitle  = ggdraw() + draw_label(&quot;Low-dimensional Setting&quot;, fontface  = &#39;bold&#39;, size = 14) 
 # subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 14) 
 # fig1_1    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-subtitle  = ggdraw() + draw_label(&quot;Low-dimensional Setting (Scenario 1)&quot;, fontface  = &#39;bold&#39;, size = 22)  
+subtitle  = ggdraw() + draw_label(&quot;Low-dim&quot;, fontface  = &#39;bold&#39;, size = 22)  
 fig1_1    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))</code></pre>
 </div>
-<div id="scenario-2" class="section level3">
-<h3>Scenario 2</h3>
-<p>(High-dimensional setting): <span class="math inline">\(n = \textrm{500}\)</span>, <span class="math inline">\(p = \textrm{10,000}\)</span>, <span class="math inline">\(s \in [1,p]\)</span>, <span class="math inline">\(\textrm{Design} = \textrm{IndepGauss}\)</span>, <span class="math inline">\(\textrm{PVE} = 0.5\)</span> and <span class="math inline">\(\textrm{SignalShape} = \textrm{PointNormal}\)</span>.</p>
+<div id="high-dim" class="section level3">
+<h3>High-dim</h3>
 <pre class="r"><code>res_df = readRDS(&quot;./results/scenario2.RDS&quot;)
 out = matrix(0,7,13)
 lower = matrix(0,7,13)
@@ -708,12 +733,11 @@ fig_main = p1
 # suptitle  = ggdraw() + draw_label(&quot;High-dimensional Setting&quot;, fontface  = &#39;bold&#39;, size = 14) 
 # subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + PointNormal, n = 500, p = 10000, s = 1-10000, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 14) 
 # fig1_2    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-subtitle  = ggdraw() + draw_label(&quot;High-dimensional Setting (Scenario 2)&quot;, fontface  = &#39;bold&#39;, size = 22)  
+subtitle  = ggdraw() + draw_label(&quot;High-dim&quot;, fontface  = &#39;bold&#39;, size = 22)  
 fig1_2    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))</code></pre>
 </div>
-<div id="scenario-3" class="section level3">
-<h3>Scenario 3</h3>
-<p>Scenario 3 (Constant SignalShape setting): <span class="math inline">\(n = \textrm{500}\)</span>, <span class="math inline">\(p = \textrm{200}\)</span>, <span class="math inline">\(s \in [1,p]\)</span>, <span class="math inline">\(\textrm{Design} = \textrm{IndepGauss}\)</span>, <span class="math inline">\(\textrm{PVE} = 0.5\)</span> and <span class="math inline">\(\textrm{SignalShape} = \textrm{PointConst}\)</span>. Here PointConst denotes the following distribution on <span class="math inline">\(\beta\)</span>: <span class="math inline">\(\beta_j = c\)</span> if <span class="math inline">\(j \in S\)</span> and <span class="math inline">\(\beta_j = 0\)</span> otherwise. Again, <span class="math inline">\(c\)</span> is chosen according to <span class="math inline">\(\textrm{PVE} = 0.5\)</span>.</p>
+<div id="point-const-signal" class="section level3">
+<h3>Point-const-signal</h3>
 <pre class="r"><code>res_df = readRDS(&quot;./results/scenario3.RDS&quot;)
 out = matrix(0,8,13)
 lower = matrix(0,8,13)
@@ -758,12 +782,11 @@ fig_main = p1 + theme(legend.position = &quot;none&quot;)
 # suptitle  = ggdraw() + draw_label(&quot;Sparse + Constant Signal&quot;, fontface  = &#39;bold&#39;, size = 14) 
 # subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + PointConst, n = 500, p = 200, s = 1-200, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 14) 
 # fig1_3    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-subtitle  = ggdraw() + draw_label(&quot;PointConstant Signal (Scenario 3)&quot;, fontface  = &#39;bold&#39;, size = 22)  
+subtitle  = ggdraw() + draw_label(&quot;Point-const-signal&quot;, fontface  = &#39;bold&#39;, size = 22)  
 fig1_3    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))</code></pre>
 </div>
-<div id="scenario-4" class="section level3">
-<h3>Scenario 4</h3>
-<p>Scenario 4 (High PVE setting): <span class="math inline">\(n = \textrm{500}\)</span>, <span class="math inline">\(p = \textrm{200}\)</span>, <span class="math inline">\(s \in [1,p]\)</span>, <span class="math inline">\(\textrm{Design} = \textrm{IndepGauss}\)</span>, <span class="math inline">\(\textrm{PVE} = 0.9\)</span> and <span class="math inline">\(\textrm{SignalShape} = \textrm{PointNormal}\)</span>.</p>
+<div id="strong-signal" class="section level3">
+<h3>Strong-signal</h3>
 <pre class="r"><code>res_df = readRDS(&quot;results/scenario4.RDS&quot;)
 s_range = c(1,2,5,10,20,50,100,200)
 #s_range = c(1,5,20,100,500,2000)
@@ -811,12 +834,11 @@ fig_main = p1 + theme(legend.position = &quot;none&quot;)
 # suptitle  = ggdraw() + draw_label(&quot;High Proportion of Variance (or R squared)&quot;, fontface  = &#39;bold&#39;, size = 14) 
 # subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.9&quot;, fontface  = &#39;bold&#39;, size = 14) 
 # fig1_4    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-subtitle  = ggdraw() + draw_label(&quot;High PVE / Signal-to-Noise Ratio (Scenario 4)&quot;, fontface  = &#39;bold&#39;, size = 22)  
+subtitle  = ggdraw() + draw_label(&quot;Strong-signal&quot;, fontface  = &#39;bold&#39;, size = 22)  
 fig1_4    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))</code></pre>
 </div>
-<div id="scenario-5" class="section level3">
-<h3>Scenario 5</h3>
-<p>Scenario 5 (Equicorrelated design setting with low dimension): <span class="math inline">\(n = \textrm{500}\)</span>, <span class="math inline">\(p = \textrm{200}\)</span>, <span class="math inline">\(s \in [1,p]\)</span>, <span class="math inline">\(\textrm{Design} = \textrm{EquicorrGauss}(0.95)\)</span>, <span class="math inline">\(\textrm{PVE} = 0.5\)</span> and <span class="math inline">\(\textrm{SignalShape} = \textrm{PointNormal}\)</span>. Here <span class="math inline">\(\textrm{EquicorrGauss}(\rho)\)</span> denotes the design matrix <span class="math inline">\(X \sim \mathcal{MN}(0,I_n, \Sigma_\rho)\)</span>, where <span class="math inline">\(\mathcal{MN}\)</span> is the matrix normal distribution and <span class="math inline">\(\Sigma_\rho\)</span> is the equicorrelated covariance matrix having unit diagonal entries and constant off-diagonal entries <span class="math inline">\(\rho\)</span>.</p>
+<div id="high-corr-design" class="section level3">
+<h3>High-corr-design</h3>
 <pre class="r"><code>res_df = readRDS(&quot;./results/scenario5.RDS&quot;)
 s_range = c(1,5,20,100,500,2000)
 a = length(s_range)
@@ -863,12 +885,11 @@ fig_main = p1 + theme(legend.position = &quot;none&quot;)
 # suptitle  = ggdraw() + draw_label(&quot;Equicorrelated Design (rho = 0.95)&quot;, fontface  = &#39;bold&#39;, size = 14) 
 # subtitle  = ggdraw() + draw_label(&quot;Scenario: EquicorrGauss + PointNormal, n = 500, p = 2000, s = 1-2000, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 14) 
 # fig1_5    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-subtitle  = ggdraw() + draw_label(&quot;Equicorrelated Design (Scenario 5)&quot;, fontface  = &#39;bold&#39;, size = 22)  
+subtitle  = ggdraw() + draw_label(&quot;High-corr-design&quot;, fontface  = &#39;bold&#39;, size = 22)  
 fig1_5    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))</code></pre>
 </div>
-<div id="scenario-6" class="section level3">
-<h3>Scenario 6</h3>
-<p>Scenario 6 (Real Genotype design): <span class="math inline">\(n = \textrm{287}\)</span>, <span class="math inline">\(p = [\textrm{4,012}, \textrm{8,760}]\)</span>, <span class="math inline">\(s \in [1,500]\)</span>, <span class="math inline">\(\textrm{Design} = \textrm{RealGenotype}\)</span>, <span class="math inline">\(\textrm{PVE} = 0.5\)</span> and <span class="math inline">\(\textrm{SignalShape} = \textrm{PointNormal}\)</span>.</p>
+<div id="realgenotype-design" class="section level3">
+<h3>Realgenotype-design</h3>
 <pre class="r"><code>res_df = readRDS(&quot;./results/scenario6.RDS&quot;)
 s_range = c(1,5,20,100,500)
 a = length(s_range)
@@ -915,7 +936,7 @@ fig_main = p1 + theme(legend.position = &quot;none&quot;)
 # suptitle  = ggdraw() + draw_label(&quot;Equicorrelated Design (rho = 0.95)&quot;, fontface  = &#39;bold&#39;, size = 14) 
 # subtitle  = ggdraw() + draw_label(&quot;Scenario: EquicorrGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 14) 
 # fig1_6    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-subtitle  = ggdraw() + draw_label(&quot;Real Genotype Design (Scenario 6)&quot;, fontface  = &#39;bold&#39;, size = 22)  
+subtitle  = ggdraw() + draw_label(&quot;Realgenotype-design&quot;, fontface  = &#39;bold&#39;, size = 22)  
 fig1_6    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))</code></pre>
 </div>
 </div>

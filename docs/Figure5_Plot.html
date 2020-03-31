@@ -493,10 +493,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree2bbfdba6690b64de146155543de5b1873710432etargetblank2bbfdbaa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/2bbfdba6690b64de146155543de5b1873710432e" target="_blank">2bbfdba</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree1c5a698fe26d210afa9daad2108c637d86adc462targetblank1c5a698a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/1c5a698fe26d210afa9daad2108c637d86adc462" target="_blank">1c5a698</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree2bbfdba6690b64de146155543de5b1873710432etargetblank2bbfdbaa" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree1c5a698fe26d210afa9daad2108c637d86adc462targetblank1c5a698a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -510,20 +510,14 @@ Ignored files:
 Untracked files:
     Untracked:  .DS_Store
     Untracked:  .gitignore
-    Untracked:  results/.Rapp.history
+    Untracked:  backup/figure2_for_paper.pdf
 
 Unstaged changes:
     Modified:   README.md
-    Modified:   analysis/Figure2_Plot.Rmd
     Modified:   analysis/Figure4_Plot.Rmd
     Modified:   analysis/Figure5_Plot.Rmd
     Modified:   figure2_for_paper.pdf
-    Modified:   figure3_for_paper.pdf
     Modified:   figure4_for_paper.pdf
-    Modified:   results/scenario3.RDS
-    Modified:   results/scenario4.RDS
-    Modified:   results/scenario5.RDS
-    Modified:   results/scenario6.RDS
 
 </code></pre>
 <p>
@@ -562,6 +556,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/1c5a698fe26d210afa9daad2108c637d86adc462/analysis/Figure5_Plot.Rmd" target="_blank">1c5a698</a>
+</td>
+<td>
+Youngseok
+</td>
+<td>
+2020-03-31
+</td>
+<td>
+finalize results1
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/1c5a698fe26d210afa9daad2108c637d86adc462/docs/Figure5_Plot.html" target="_blank">1c5a698</a>
+</td>
+<td>
+Youngseok
+</td>
+<td>
+2020-03-31
+</td>
+<td>
+finalize results1
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -611,9 +639,8 @@ gg_color_hue &lt;- function(n) {
 }</code></pre>
 <div id="figure" class="section level2">
 <h2>Figure</h2>
-<div id="scenario-7" class="section level3">
-<h3>Scenario 7</h3>
-<p>Scenario 1 (Low-dimensional setting): <span class="math inline">\(n = \textrm{500}\)</span>, <span class="math inline">\(p = \textrm{200}\)</span>, <span class="math inline">\(s \in [1,p]\)</span>, <span class="math inline">\(\textrm{Design} = \textrm{IndepGauss}\)</span>, <span class="math inline">\(\textrm{PVE} = 0.5\)</span> and <span class="math inline">\(\textrm{SignalShape} = \textrm{PointNormal}\)</span>.</p>
+<div id="varying-n" class="section level3">
+<h3>Varying-n</h3>
 <pre class="r"><code>res_df = readRDS(&quot;./results/scenario7.RDS&quot;)
 method_list  = c(&quot;Mr.ASH&quot;,&quot;varbvs&quot;,&quot;BayesB&quot;,&quot;B-Lasso&quot;,&quot;SuSiE&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;)
 df           = data.frame()
@@ -652,12 +679,11 @@ fig_main  = p1 + theme(legend.position = &quot;none&quot;)
 #suptitle  = ggdraw() + draw_label(&quot;Varying n&quot;, fontface  = &#39;bold&#39;, size = 22) 
 #subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + PointNormal, n = 200-5000, p = 2000, s = 20, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 22) 
 #fig1_7     = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-subtitle   = ggdraw() + draw_label(&quot;Varying n (Scenario 7)&quot;, fontface  = &#39;bold&#39;, size = 22)  
+subtitle   = ggdraw() + draw_label(&quot;Varying-n&quot;, fontface  = &#39;bold&#39;, size = 22)  
 fig1_7    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))</code></pre>
 </div>
-<div id="scenario-8" class="section level3">
-<h3>Scenario 8</h3>
-<p>Scenario 8 (Varying PVE): <span class="math inline">\(n = \textrm{500}\)</span>, <span class="math inline">\(p = \textrm{2,000}\)</span>, <span class="math inline">\(s = \textrm{20}\)</span>, <span class="math inline">\(\textrm{Design} = \textrm{IndepGauss}\)</span>, <span class="math inline">\(\textrm{PVE} = \in [0,0.9]\)</span> and <span class="math inline">\(\textrm{SignalShape} = \textrm{PointNormal}\)</span>.</p>
+<div id="signal-strength" class="section level3">
+<h3>Signal-strength</h3>
 <pre class="r"><code>res_df = readRDS(&quot;./results/scenario8.RDS&quot;)
 method_list  = c(&quot;Mr.ASH&quot;,&quot;varbvs&quot;,&quot;BayesB&quot;,&quot;B-Lasso&quot;,&quot;SuSiE&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;)
 method_level = c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,
@@ -696,17 +722,11 @@ fig_main = p1
 #suptitle  = ggdraw() + draw_label(&quot;Varying PVE (or SNR, Noise Variance)&quot;, fontface  = &#39;bold&#39;, size = 22) 
 #subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + PointNormal, n = 500, p = 2000, s = 20, pve = 0-0.9&quot;, fontface  = &#39;bold&#39;, size = 22) 
 #fig1_8    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-subtitle   = ggdraw() + draw_label(&quot;Varying PVE / Signal-to-Noise Ratio (Scenario 8)&quot;, fontface  = &#39;bold&#39;, size = 22)  
+subtitle   = ggdraw() + draw_label(&quot;Signal-strength&quot;, fontface  = &#39;bold&#39;, size = 22)  
 fig1_8    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))</code></pre>
 </div>
-<div id="scenario-9" class="section level3">
-<h3>Scenario 9</h3>
-<p>Scenario 9 (Varying SignalShape with a dense signal): <span class="math inline">\(n = \textrm{500}\)</span>, <span class="math inline">\(p = \textrm{200}\)</span>, <span class="math inline">\(s = \textrm{200}\)</span>, <span class="math inline">\(\textrm{Design} = \textrm{IndepGauss}\)</span> and <span class="math inline">\(\textrm{PVE} = 0.5\)</span>. We sample <span class="math inline">\(\beta\)</span> from the Point + <span class="math inline">\(h\)</span> density, i.e.</p>
-<p><span class="math display">\[
-\beta_j = \left\{ \begin{array}{ll} \sim\, h, &amp; j \in S \\
-= 0, &amp; j \notin S \end{array} \right.
-\]</span></p>
-<p>for <span class="math inline">\(h \in \{t_1,t_2, t_4, t_8, \mathcal{L}(1), \mathcal{N}(0,1), \mathcal{U}(-1,1),\mathcal{C}(1) \}\)</span>, where <span class="math inline">\(t_{\rm df}\)</span> is the <span class="math inline">\(t\)</span>-density with degree of freedom df, and <span class="math inline">\(\mathcal{L}\)</span>, <span class="math inline">\(\mathcal{N}\)</span>, <span class="math inline">\(\mathcal{U}\)</span> and <span class="math inline">\(\mathcal{C}\)</span> denote Laplace, Normal, Uniform and Constant densities, respectively. Again, <span class="math inline">\(\beta\)</span> is rescaled after sampling to satisfy <span class="math inline">\(\textrm{PVE} = 0.5\)</span>.</p>
+<div id="signal-shape-dense" class="section level3">
+<h3>Signal-shape-dense</h3>
 <pre class="r"><code>res_df = readRDS(&quot;./results/scenario9.RDS&quot;)
 method_list  = c(&quot;Mr.ASH&quot;,&quot;varbvs&quot;,&quot;BayesB&quot;,&quot;B-Lasso&quot;,&quot;SuSiE&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;)
 method_level = c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,
@@ -748,12 +768,11 @@ fig_main = p1
 #suptitle  = ggdraw() + draw_label(&quot;Varying Signal Shape (p = 200, s = 200)&quot;, fontface  = &#39;bold&#39;, size = 22) 
 #subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + Spike-and-Slab, n = 500, p = 200, s = 200, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 22) 
 #fig1_9    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-subtitle   = ggdraw() + draw_label(&quot;Varying Signal Shape, Dense Signal (Scenario 9)&quot;, fontface  = &#39;bold&#39;, size = 22)  
+subtitle   = ggdraw() + draw_label(&quot;Signal-shape-dense&quot;, fontface  = &#39;bold&#39;, size = 22)  
 fig1_9    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))</code></pre>
 </div>
-<div id="scenario-10" class="section level3">
-<h3>Scenario 10</h3>
-<p>Scenario 10 (Varying SignalShape with a sparse signal): <span class="math inline">\(n = \textrm{500}\)</span>, <span class="math inline">\(p = \textrm{2,000}\)</span>, <span class="math inline">\(s = \textrm{20}\)</span>, <span class="math inline">\(\textrm{Design} = \textrm{IndepGauss}\)</span>, <span class="math inline">\(\textrm{PVE} = 0.5\)</span> and varying signal shapes described in Scenario 9.</p>
+<div id="signal-shape-sparse" class="section level3">
+<h3>Signal-shape-sparse</h3>
 <pre class="r"><code>res_df = readRDS(&quot;./results/scenario10.RDS&quot;)
 method_list  = c(&quot;Mr.ASH&quot;,&quot;varbvs&quot;,&quot;BayesB&quot;,&quot;B-Lasso&quot;,&quot;SuSiE&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,&quot;SCAD&quot;,&quot;MCP&quot;,&quot;L0Learn&quot;)
 method_level = c(&quot;Mr.ASH&quot;,&quot;E-NET&quot;,&quot;Lasso&quot;,&quot;Ridge&quot;,
@@ -795,7 +814,7 @@ fig_main = p1
 #suptitle  = ggdraw() + draw_label(&quot;Varying Signal Shape (p = 2000, s = 20)&quot;, fontface  = &#39;bold&#39;, size = 22) 
 #subtitle  = ggdraw() + draw_label(&quot;Scenario: IndepGauss + Spike-and-Slab, n = 500, p = 2000, s = 20, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 22) 
 #fig1_10    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-subtitle   = ggdraw() + draw_label(&quot;Varying Signal Shape, Sparse Signal (Scenario 10)&quot;, fontface  = &#39;bold&#39;, size = 22)  
+subtitle   = ggdraw() + draw_label(&quot;Signal-shape-sparse&quot;, fontface  = &#39;bold&#39;, size = 22)  
 fig1_10    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))</code></pre>
 </div>
 </div>

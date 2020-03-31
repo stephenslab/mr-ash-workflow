@@ -20,9 +20,7 @@ gg_color_hue <- function(n) {
 
 ## Figure
 
-### Scenario 11
-
-Scenario 11 (Varying $p$): $n = \textrm{500}$, $p \in [\textrm{20},\textrm{20,000}]$, $s = \textrm{20}$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and $\textrm{SignalShape} = \textrm{PointNormal}$.
+### Varying-p
 
 ```{r fig11_1, fig.height=11, fig.width=15}
 res_df       = readRDS("./results/scenario11.RDS")
@@ -251,7 +249,7 @@ yaxis1   = ggdraw() + draw_label("predictior error (rmse / sigma)", size = 25, a
 yaxis2   = ggdraw() + draw_label("computation time (seconds)", size = 25, angle = 90)
 figure6  = plot_grid(yaxis1, fig11_1, fig11_3, yaxis2, fig11_2, fig11_4, ncol = 3, rel_widths = c(0.03,0.5,0.5))
 # title    = ggdraw() + draw_label("Varying p (Scenario 11)", fontface = 'bold', size = 24)
-subtitle  = ggdraw() + draw_label("Varying-p", fontface  = 'bold', size = 24) 
+title  = ggdraw() + draw_label("Varying-p", fontface  = 'bold', size = 24) 
 legend   <- get_legend(fig_dummy4 +
                          theme_cowplot(font_size = 22) +
                          theme(legend.box.margin = margin(0, 0, 0, 12),
