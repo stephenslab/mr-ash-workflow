@@ -1,0 +1,103 @@
+---
+title: "Figure7_Sourcecode"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Source Code
+
+```{r library, message = FALSE}
+library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(mr.ash.alpha); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
+source('code/method_wrapper.R')
+source('code/sim_wrapper.R')
+```
+
+## Groups
+
+### Group 1
+
+```{r group 1, eval = TRUE}
+res_df2  = readRDS("results/scenario1.RDS")
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE")
+res_df1   = data.frame()
+for (i in 1:length(res_df2)) {
+  res_df1 = rbind(res_df1, res_df2[[i]][1:220,])
+}
+res_df1$fit = rep(method_list, each = 20)
+res_df1$fit = factor(res_df1$fit, levels = method_level)
+
+res_df2  = readRDS("results/scenario2.RDS")
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE")
+res_df3   = data.frame()
+for (i in 1:length(res_df2)) {
+  res_df3 = rbind(res_df3, res_df2[[i]][1:220,])
+}
+res_df3$fit = rep(method_list, each = 20)
+res_df3$fit = factor(res_df3$fit, levels = method_level)
+
+res_df2  = readRDS("results/scenario3.RDS")
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE")
+res_df4   = data.frame()
+for (i in 1:length(res_df2)) {
+  res_df4 = rbind(res_df4, res_df2[[i]][1:220,])
+}
+res_df4$fit = rep(method_list, each = 20)
+res_df4$fit = factor(res_df4$fit, levels = method_level)
+
+res_df2  = readRDS("results/scenario4.RDS")
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE")
+res_df5   = data.frame()
+for (i in 1:length(res_df2)) {
+  res_df5 = rbind(res_df5, res_df2[[i]][c(241:260,21:220),c(1,2,5)])
+}
+res_df5$fit = rep(method_list, each = 20)
+res_df5$fit = factor(res_df5$fit, levels = method_level)
+
+res_df2  = readRDS("results/scenario5.RDS")
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE")
+res_df6   = data.frame()
+for (i in 1:length(res_df2)) {
+  res_df6 = rbind(res_df6, res_df2[[i]][c(241:260,21:220),c(1,2,5)])
+}
+res_df6$fit = rep(method_list, each = 20)
+res_df6$fit = factor(res_df6$fit, levels = method_level)
+
+res_df = rbind(res_df1, res_df3, res_df4, res_df5, res_df6)
+saveRDS(res_df,"results/scenario1-5_box.RDS")
+```
+
+## Save the results
+
+```{r remove}
+try(system("rm *.dat"))
+try(system("rm ../*.dat"))
+try(system("rm analysis/*.dat"))
+try(system("rm ../analysis/*.dat"))
+```
+
+```{r saveresults}
+saveRDS(tdat12, "results/scenario12.RDS")
+saveRDS(tdat13, "results/scenario13.RDS")
+```
