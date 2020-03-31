@@ -22,6 +22,9 @@ library(ggplot2); library(cowplot); # plotting
 
 ## Tutorial for the Repository
 
+```{r tutorial}
+```
+
 ## Reproduce the results for the paper
 
 ```{r run-simulation, message = FALSE, echo = TRUE, warning = FALSE, eval = FALSE}
