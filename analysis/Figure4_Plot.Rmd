@@ -25,18 +25,18 @@ gg_color_hue <- function(n) {
 Scenario 1 (Low-dimensional setting): $n = \textrm{500}$, $p = \textrm{200}$, $s \in [1,p]$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and $\textrm{SignalShape} = \textrm{PointNormal}$.
 
 ```{r fig1_1, fig.height=11, fig.width=15, fig.align = "center"}
-res_df = readRDS("results/scenario1.RDS")
-out = matrix(0,8,15)
-lower = matrix(0,8,15)
-upper = matrix(0,8,15)
+res_df = readRDS("./results/scenario1.RDS")
+out = matrix(0,8,13)
+lower = matrix(0,8,13)
+upper = matrix(0,8,13)
 for (i in 1:8) {
-  out[i,] = colMeans(matrix(res_df[[i]]$pred, 20, 15))
-  lower[i,] = apply(matrix(res_df[[i]]$pred, 20, 15), 2, function(x) quantile(x, probs = 0.1))
-  upper[i,] = apply(matrix(res_df[[i]]$pred, 20, 15), 2, function(x) quantile(x, probs = 0.9))
+  out[i,] = colMeans(matrix(res_df[[i]]$pred, 20, 13))
+  lower[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.1))
+  upper[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.9))
 }
-colnames(out) = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge",
-                  "SCAD","MCP","L0Learn","E-NET2","Lasso2","Ridge2","Mr.ASH.opt")
-ind = 1:12
+colnames(out) = c("Mr.ASH.vanilla","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn","Mr.ASH.order","Mr.ASH")
+ind = 1:13
 out = out[,ind]
 lower = lower[,ind]
 upper = upper[,ind]
@@ -47,10 +47,10 @@ df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames
                 lower = c(lower), upper = c(upper))
 df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
                                     "SCAD","MCP","L0Learn",
-                                    "varbvs","BayesB","B-Lasso","SuSiE","Mr.ASH.opt"))
+                                    "varbvs","BayesB","B-Lasso","SuSiE","Mr.ASH.order","Mr.ASH.vanilla"))
+df = df[df$fit %in% c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE"),]
 df$size = 0.5
 df$size[1:8] = 1.2
-df = df[df$fit %in% c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE"),]
 df$Method = df$fit
 fig_dummy3 = ggplot(df) + geom_line(aes(x = s, y = pred, color = Method), size = df$size) +
   geom_point(aes(x = s, y = pred, color = Method, shape = Method), size = 3) +
@@ -78,18 +78,18 @@ fig1_1    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 (High-dimensional setting): $n = \textrm{500}$, $p = \textrm{10,000}$, $s \in [1,p]$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and $\textrm{SignalShape} = \textrm{PointNormal}$.
 
 ```{r fig1_2, fig.height=11, fig.width=15, fig.align = "center"}
-res_df = readRDS("results/scenario2.RDS")
-out = matrix(0,7,15)
-lower = matrix(0,7,15)
-upper = matrix(0,7,15)
+res_df = readRDS("./results/scenario2.RDS")
+out = matrix(0,7,13)
+lower = matrix(0,7,13)
+upper = matrix(0,7,13)
 for (i in 1:7) {
-  out[i,] = colMeans(matrix(res_df[[i]]$pred, 20, 15))
-  lower[i,] = apply(matrix(res_df[[i]]$pred, 20, 15), 2, function(x) quantile(x, probs = 0.1))
-  upper[i,] = apply(matrix(res_df[[i]]$pred, 20, 15), 2, function(x) quantile(x, probs = 0.9))
+  out[i,] = colMeans(matrix(res_df[[i]]$pred, 20, 13))
+  lower[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.1))
+  upper[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.9))
 }
-colnames(out) = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge",
-                  "SCAD","MCP","L0Learn","E-NET2","Lasso2","Ridge2","Mr.ASH.opt")
-ind = 1:12
+colnames(out) = c("Mr.ASH.vanilla","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn","Mr.ASH.order","Mr.ASH")
+ind = 1:13
 out = out[,ind]
 lower = lower[,ind]
 upper = upper[,ind]
@@ -100,11 +100,11 @@ df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames
                 lower = c(lower), upper = c(upper))
 df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
                                     "SCAD","MCP","L0Learn",
-                                    "varbvs","BayesB","B-Lasso","SuSiE","Mr.ASH.opt"))
-df$size = 0.5
-df$size[1:7] = 1.2
+                                    "varbvs","BayesB","B-Lasso","SuSiE","Mr.ASH.order","Mr.ASH.vanilla"))
 df = df[df$fit %in% c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE"),]
 df = df[df$s %in% c(1,5,20,100,500,10000), ]
+df$size = 0.5
+df$size[1:6] = 1.2
 p1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = fit), size = df$size) +
   geom_point(aes(x = s, y = pred, color = fit, shape = fit), size = 3) +
   theme_cowplot(font_size = 22) +
@@ -132,18 +132,18 @@ fig1_2    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 Scenario 3 (Constant SignalShape setting): $n = \textrm{500}$, $p = \textrm{200}$, $s \in [1,p]$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and $\textrm{SignalShape} = \textrm{PointConst}$. Here PointConst denotes the following distribution on $\beta$: $\beta_j = c$ if $j \in S$ and $\beta_j = 0$ otherwise. Again, $c$ is chosen according to $\textrm{PVE} = 0.5$.
 
 ```{r fig1_3, fig.height=11, fig.width=15, fig.align = "center"}
-res_df = readRDS("results/scenario3.RDS")
-out = matrix(0,8,14)
-lower = matrix(0,8,14)
-upper = matrix(0,8,14)
+res_df = readRDS("./results/scenario3.RDS")
+out = matrix(0,8,13)
+lower = matrix(0,8,13)
+upper = matrix(0,8,13)
 for (i in 1:8) {
-  out[i,] = colMeans(matrix(res_df[[i]]$pred, 20, 14))
-  lower[i,] = apply(matrix(res_df[[i]]$pred, 20, 14), 2, function(x) quantile(x, probs = 0.1))
-  upper[i,] = apply(matrix(res_df[[i]]$pred, 20, 14), 2, function(x) quantile(x, probs = 0.9))
+  out[i,] = colMeans(matrix(res_df[[i]]$pred, 20, 13))
+  lower[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.1))
+  upper[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.9))
 }
-colnames(out) = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge",
-                  "SCAD","MCP","L0Learn","E-NET2","Lasso2","Ridge2")
-ind = 1:12
+colnames(out) = c("Mr.ASH.vanilla","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn","Mr.ASH.order","Mr.ASH")
+ind = 1:13
 out = out[,ind]
 lower = lower[,ind]
 upper = upper[,ind]
@@ -154,10 +154,10 @@ df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames
                 lower = c(lower), upper = c(upper))
 df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
                                     "SCAD","MCP","L0Learn",
-                                    "varbvs","BayesB","B-Lasso","SuSiE","Mr.ASH.opt"))
+                                    "varbvs","BayesB","B-Lasso","SuSiE","Mr.ASH.order","Mr.ASH.vanilla"))
+df = df[df$fit %in% c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE"),]
 df$size = 0.5
 df$size[1:8] = 1.2
-df = df[df$fit %in% c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE"),]
 p1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = fit), size = df$size) +
   geom_point(aes(x = s, y = pred, color = fit, shape = fit), size = 3) +
   theme_cowplot(font_size = 22) +
