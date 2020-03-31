@@ -430,7 +430,7 @@ div.section {
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -439,7 +439,7 @@ div.section {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -448,10 +448,10 @@ div.section {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2020-03-21
+<strong>Last updated:</strong> 2020-03-31
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 5 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
 </p>
 <p>
 <strong>Knit directory:</strong> <code>mr-ash-workflow/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -467,12 +467,12 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
 <div class="panel-body">
-<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
 </div>
 </div>
 </div>
@@ -527,10 +527,10 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree734fb6031b55759038efd740343d1858aba4bce2targetblank734fb60a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/734fb6031b55759038efd740343d1858aba4bce2" target="_blank">734fb60</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreebd9b1e0e0610316c95522c8eeb9682916566ca53targetblankbd9b1e0a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/bd9b1e0e0610316c95522c8eeb9682916566ca53" target="_blank">bd9b1e0</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree734fb6031b55759038efd740343d1858aba4bce2targetblank734fb60a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtreebd9b1e0e0610316c95522c8eeb9682916566ca53targetblankbd9b1e0a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility. The version displayed above was the version of the Git repository at the time these results were generated. <br><br> Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -543,34 +543,28 @@ Ignored files:
 Untracked files:
     Untracked:  .DS_Store
     Untracked:  .gitignore
-    Untracked:  analysis/Figure8_Plot.Rmd
-    Untracked:  analysis/Figure8_Sourcecode.Rmd
-    Untracked:  analysis/Figure9_Sourcecode.Rmd
-    Untracked:  figure8_for_paper.pdf
-    Untracked:  highpve5002000.RDS
-    Untracked:  initordercorr0.3.RDS
-    Untracked:  initordercorr0.95.RDS
-    Untracked:  initordercorr0.RDS
-    Untracked:  mcmc.RDS
-    Untracked:  mcmc2.RDS
-    Untracked:  pointconstant5002000.RDS
-    Untracked:  results/scenario12.RDS
-    Untracked:  results/scenario13.RDS
-    Untracked:  results/scenario9_2.RDS
-    Untracked:  signalshapedense5002000.RDS
+    Untracked:  backup/index.Rmd
 
 Unstaged changes:
-    Modified:   analysis/Figure1_Plot.Rmd
-    Modified:   analysis/Figure1_Sourcecode.Rmd
-    Modified:   analysis/Figure2_Sourcecode.Rmd
-    Modified:   analysis/Figure3_Plot.Rmd
-    Modified:   analysis/Figure3_Sourcecode.Rmd
-    Modified:   analysis/Figure6_Plot.Rmd
-    Modified:   backup/.DS_Store
+    Modified:   analysis/.DS_Store
+    Deleted:    analysis/1.Rmd
+    Modified:   analysis/Figure7_Plot.Rmd
+    Modified:   analysis/Figure7_Sourcecode.Rmd
+    Deleted:    analysis/explore_dsc_results.Rmd
+    Modified:   analysis/index.Rmd
+    Modified:   figure10_for_paper.pdf
     Modified:   figure1_for_paper.pdf
+    Modified:   figure2_for_paper.pdf
     Modified:   figure3_for_paper.pdf
+    Modified:   figure4_for_paper.pdf
+    Modified:   figure5_for_paper.pdf
     Modified:   figure6_for_paper.pdf
-    Modified:   results/flexibility.RDS
+    Modified:   figure7_for_paper.pdf
+    Modified:   figure8_for_paper.pdf
+    Modified:   results/scenario1-5_box.RDS
+    Modified:   results/scenario11_box.RDS
+    Modified:   results/scenario6_box.RDS
+    Modified:   results/scenario7-10_box.RDS
 
 </code></pre>
 <p>
@@ -609,6 +603,57 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/bd9b1e0e0610316c95522c8eeb9682916566ca53/analysis/Figure1_Plot.Rmd" target="_blank">bd9b1e0</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2020-03-31
+</td>
+<td>
+workflowr::wflow_publish(filelist[i])
+</td>
+</tr>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/969daae96038cc9015e4cff758ae31393151d372/analysis/Figure1_Plot.Rmd" target="_blank">969daae</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2020-03-22
+</td>
+<td>
+update scenarios
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/969daae96038cc9015e4cff758ae31393151d372/docs/Figure1_Plot.html" target="_blank">969daae</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2020-03-22
+</td>
+<td>
+update scenarios
+</td>
+</tr>
 <tr>
 <td>
 Rmd
