@@ -108,3 +108,4 @@ The mr.ash R package was developed by [Youngseok Kim][youngseok].
 [youngseok]: https://github.com/youngseok-kim
 [mr-ash-manu]: https://https://stephenslab.uchicago.edu/
 [mr-ash-alpha]: https://github.com/stephenslab/mr.ash.alpha
+
