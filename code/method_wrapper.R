@@ -1,4 +1,17 @@
 #'
+if (exists("standardize")) {
+  if (is.logical(standardize)) {
+    
+  } else {
+    warning("standardize must be logical: set to FALSE")
+    standardize     = FALSE
+  }
+} else {
+  standardize       = FALSE
+}
+
+
+#'
 #'
 #'
 #' MR.ASH
