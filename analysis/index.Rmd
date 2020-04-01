@@ -8,9 +8,18 @@ editor_options:
   chunk_output_type: console
 ---
 
+## Build Info
+
+To build this vignette.
+
+```{r build}
+library(workflowr);
+wflow_publish("analysis/index.Rmd")
+```
+
 ## Package Info
 
-For package version and information, please see `Session Information` at the end of this documentation.
+For package version and information, see `Session Information` at the end of this documentation.
 
 ```{r package-info, message = FALSE, echo = TRUE, warning = FALSE}
 library(mr.ash.alpha); # package implementing proposed methods in the paper
@@ -23,9 +32,15 @@ library(ggplot2); library(cowplot); # plotting
 ## Tutorial for the Repository
 
 ```{r tutorial}
+source('code/method_wrapper.R')
+source('code/sim_wrapper.R')
 ```
 
 ## Reproduce the results for the paper
+
+To reproduce the results in the paper, run the following code.
+
+You need to install `workflowr` R package, or replace `workflowr::wflow_publish` by `rmarkdown::render`.
 
 ```{r run-simulation, message = FALSE, echo = TRUE, warning = FALSE, eval = FALSE}
 filelist          = paste("analysis/", list.files("analysis", pattern = "*_Sourcecode.Rmd"), sep = "")
@@ -37,6 +52,10 @@ for (i in 1:length(filelist)) {
 
 ## Create Figures in the paper
 
+To generate figures in the paper, run the following code.
+
+You need to have results from the code in the above chunk.
+
 ```{r create-plot, message = FALSE, echo = TRUE, warning = FALSE, eval = FALSE}
 filelist          = paste("analysis/", list.files("analysis", pattern = "*_Plot.Rmd"), sep = "")
 for (i in 1:length(filelist)) {
@@ -46,6 +65,8 @@ for (i in 1:length(filelist)) {
 ```
 
 ## Session Information
+
+The below is for providing R version and package information.
 
 ```{r session-info}
 sessionInfo()
