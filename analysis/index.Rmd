@@ -10,11 +10,10 @@ editor_options:
 
 ## Build Info
 
-To build this vignette.
+To build this vignette, run `workflowr::wflow_publish("analysis/index.Rmd")` from R console.
 
 ```{r build}
 library(workflowr);
-wflow_publish("analysis/index.Rmd")
 ```
 
 ## Package Info
