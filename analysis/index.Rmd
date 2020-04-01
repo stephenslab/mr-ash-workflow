@@ -10,9 +10,13 @@ editor_options:
 
 ## Build Info
 
-To build this vignette, run `workflowr::wflow_publish("analysis/index.Rmd")` from R console.
+To build this vignette, run
 
-```{r build}
+`workflowr::wflow_publish("analysis/index.Rmd")` or `rmarkdown::render("analysis/index.Rmd")`
+
+from your R console.
+
+```{r build, message = FALSE, echo = TRUE, warning = FALSE}
 library(workflowr);
 ```
 
@@ -30,16 +34,45 @@ library(ggplot2); library(cowplot); # plotting
 
 ## Tutorial for the Repository
 
+First, load the main functions.
+
 ```{r tutorial}
 source('code/method_wrapper.R')
 source('code/sim_wrapper.R')
 ```
+
+One can generate the data as follows.
+
+```{r generate-data}
+data = simulate_data(n = 100, p = 200, s = 5,
+                     design = "indepgauss", # "equicorrgauss",
+                     signal = "normal", # "lap", "t", etc.
+                     pve = 0.5)
+str(data)
+```
+
+One can run each method by calling the wrapper. For instacne, for fitting `mr.ash` simply call `fit.mr.ash`.
+
+```{r run-method}
+method_list  = c("mr.ash","varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad2","mcp2","l0learn")
+fit.function = get(paste0("fit.", method_list[1], sep = ""))
+
+fit          = fit.function(data$X, data$y, data$X.test, data$y.test)
+```
+
+Each `fit.function` runs under the default setting of each method.
+
+It can accept non-default argument, for instance, `fit.susie(..., L = 20)`.
 
 ## Reproduce the results for the paper
 
 To reproduce the results in the paper, run the following code.
 
 You need to install `workflowr` R package, or replace `workflowr::wflow_publish` by `rmarkdown::render`.
+
+In `analysis` folder of the repository, `*_Sourcecode.Rmd` files (e.g. Figure2_Sourcecode1.Rmd) contain source codes.
+
+Each `*_Sourcecode.Rmd` file requires minutes/hours/days to be rendered by MacBook Pro (15-inch, 2016) 2.6 GHz Intel Core i7 16GB RAM.
 
 ```{r run-simulation, message = FALSE, echo = TRUE, warning = FALSE, eval = FALSE}
 filelist          = paste("analysis/", list.files("analysis", pattern = "*_Sourcecode.Rmd"), sep = "")
