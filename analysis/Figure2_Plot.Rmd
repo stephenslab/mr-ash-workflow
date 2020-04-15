@@ -68,7 +68,7 @@ fig_main = fig_dummy1 + theme(legend.position = "none")
 # subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.5", fontface  = 'bold', size = 14) 
 # fig1_1    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
 # subtitle  = ggdraw() + draw_label("Low-dimensional Setting (Scenario 1)", fontface  = 'bold', size = 22)  
-subtitle  = ggdraw() + draw_label("Low-dim", fontface  = 'bold', size = 22) 
+subtitle  = ggdraw() + draw_label("Low-dimension", fontface  = 'bold.italic', size = 22) 
 fig1_1    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
@@ -121,7 +121,7 @@ fig_main = p1
 # subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 10000, s = 1-10000, pve = 0.5", fontface  = 'bold', size = 14) 
 # fig1_2    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
 #subtitle  = ggdraw() + draw_label("High-dimensional Setting (Scenario 2)", fontface  = 'bold', size = 22)  
-subtitle  = ggdraw() + draw_label("High-dim", fontface  = 'bold', size = 22) 
+subtitle  = ggdraw() + draw_label("High-dimension", fontface  = 'bold.italic', size = 22) 
 fig1_2    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
@@ -173,7 +173,7 @@ fig_main = p1
 # subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointConst, n = 500, p = 200, s = 1-200, pve = 0.5", fontface  = 'bold', size = 14) 
 # fig1_3    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
 #subtitle  = ggdraw() + draw_label("PointConstant Signal (Scenario 3)", fontface  = 'bold', size = 22)  
-subtitle  = ggdraw() + draw_label("Point-const-signal", fontface  = 'bold', size = 22) 
+subtitle  = ggdraw() + draw_label("Point-constant-signal", fontface  = 'bold.italic', size = 22) 
 fig1_3    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
@@ -229,7 +229,7 @@ fig_main = p1
 # subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.9", fontface  = 'bold', size = 14) 
 # fig1_4    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
 #subtitle  = ggdraw() + draw_label("High PVE / Signal-to-Noise Ratio (Scenario 4)", fontface  = 'bold', size = 22)  
-subtitle  = ggdraw() + draw_label("Strong-signal", fontface  = 'bold', size = 22) 
+subtitle  = ggdraw() + draw_label("Strong-signal", fontface  = 'bold.italic', size = 22) 
 fig1_4    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
@@ -283,7 +283,7 @@ fig_main = p1
 # subtitle  = ggdraw() + draw_label("Scenario: EquicorrGauss + PointNormal, n = 500, p = 2000, s = 1-2000, pve = 0.5", fontface  = 'bold', size = 14) 
 # fig1_5    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
 #subtitle  = ggdraw() + draw_label("Equicorrelated Design (Scenario 5)", fontface  = 'bold', size = 22)  
-subtitle  = ggdraw() + draw_label("High-corr-design", fontface  = 'bold', size = 22) 
+subtitle  = ggdraw() + draw_label("Equicorr(rho = 0.95)", fontface  = 'bold.italic', size = 22) 
 fig1_5    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
@@ -338,7 +338,7 @@ fig_main = p1
 #subtitle  = ggdraw() + draw_label("Scenario: EquicorrGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.5", fontface  = 'bold', size = 14) 
 #fig1_6    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
 #subtitle  = ggdraw() + draw_label("Real Genotype Design (Scenario 6)", fontface  = 'bold', size = 22)
-subtitle  = ggdraw() + draw_label("Realgenotype-design", fontface  = 'bold', size = 22)  
+subtitle  = ggdraw() + draw_label("RealGenotype", fontface  = 'bold.italic', size = 22)  
 fig1_6    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 

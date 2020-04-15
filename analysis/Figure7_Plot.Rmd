@@ -23,7 +23,7 @@ gg_color_hue <- function(n) {
 ### Scenario 7-10
 
 ```{r fig2_1, fig.height=11, fig.width=15, fig.align = "center"}
-res_df   = readRDS("results/scenario7-10_box.RDS")
+res_df   = readRDS("./results/scenario7-10_box.RDS")
 col      = gg_color_hue(13)[1:11]
 shape    = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[1:11]
 baseline = mean(res_df$rpred[res_df$fit == "Mr.ASH"])
@@ -41,15 +41,15 @@ fig_main = ggplot(res_df) +
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none", axis.title.y = element_blank()) +
   geom_hline(yintercept = baseline, color = col[1], linetype = "dashed")
-suptitle  = ggdraw() + draw_label("Group 3 (Varying n, PVE, signal shape)", fontface  = 'bold', size = 24)  
+suptitle  = ggdraw() + draw_label("Group 2 (Varying n, PVE, signal shape)", fontface  = 'bold.italic', size = 24)  
 # subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.9", fontface  = 'bold', size = 14) 
 fig2_1    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 ```
 
-### Scenario 6
+### Scenario 5-6
 
 ```{r fig2_2, fig.height=11, fig.width=15, fig.align = "center"}
-res_df   = readRDS("./results/scenario6_box.RDS")
+res_df   = readRDS("./results/scenario5-6_box.RDS")
 col      = gg_color_hue(13)[1:11]
 shape    = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[1:11]
 baseline = mean(res_df$rpred[res_df$fit == "Mr.ASH"])
@@ -67,7 +67,7 @@ fig_main = ggplot(res_df) +
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none", axis.title.y = element_blank()) +
   geom_hline(yintercept = baseline, color = col[1], linetype = "dashed")
-suptitle  = ggdraw() + draw_label("Group 2 (Realgenotype-design)", fontface  = 'bold', size = 24)  
+suptitle  = ggdraw() + draw_label("Group 1b (Varying s, correlated design)", fontface  = 'bold.italic', size = 24)  
 # subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.9", fontface  = 'bold', size = 14) 
 fig2_2    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 ```
@@ -93,7 +93,7 @@ fig_main = ggplot(res_df) +
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none", axis.title.y = element_blank()) +
   geom_hline(yintercept = baseline, color = col[1], linetype = "dashed")
-suptitle  = ggdraw() + draw_label("Group 4 (Varying-p)", fontface  = 'bold', size = 24)  
+suptitle  = ggdraw() + draw_label("Group 3 (Varying-p)", fontface  = 'bold.italic', size = 24)  
 # subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.9", fontface  = 'bold', size = 14) 
 fig2_3    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 ```
@@ -101,7 +101,7 @@ fig2_3    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 ### Scenario 1-5
 
 ```{r fig2_4, fig.height=11, fig.width=15, fig.align = "center"}
-res_df   = readRDS("results/scenario1-5_box.RDS")
+res_df   = readRDS("results/scenario1-4_box.RDS")
 col      = gg_color_hue(13)[1:11]
 shape    = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[1:11]
 baseline = mean(res_df$rpred[res_df$fit == "Mr.ASH"])
@@ -119,7 +119,7 @@ fig_main = ggplot(res_df) +
         axis.text.x  = element_text(angle = 45,hjust = 1),
         legend.position = "none", axis.title.y = element_blank()) +
   geom_hline(yintercept = baseline, color = col[1], linetype = "dashed")
-suptitle  = ggdraw() + draw_label("Group 1 (Varying-s)", fontface  = 'bold', size = 24) 
+suptitle  = ggdraw() + draw_label("Group 1a (Varying s, independent design)", fontface  = 'bold.italic', size = 24) 
 # subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.9", fontface  = 'bold', size = 14) 
 fig2_4    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 ```

@@ -29,7 +29,7 @@ method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE",
 method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
                  "SCAD","MCP","L0Learn",
                  "varbvs","BayesB","B-Lasso","SuSiE")
-scenario_num = c(1,2,3,4,5)
+scenario_num = c(1,2,3,4)
 
 df           = data.frame()
 for (iter in scenario_num) {
@@ -45,11 +45,11 @@ for (iter in scenario_num) {
 df$fit     = rep(method_list, each = 20)
 df$fit     = factor(df$fit, levels = method_level)
 
-saveRDS(df,"./results/scenario1-5_box.RDS")
+saveRDS(df,"./results/scenario1-4_box.RDS")
 ```
 
 ```{r group 2, eval = TRUE}
-scenario_num = c(6)
+scenario_num = c(5,6)
 
 df           = data.frame()
 for (iter in scenario_num) {
@@ -65,7 +65,7 @@ for (iter in scenario_num) {
 df$fit     = rep(method_list, each = 20)
 df$fit     = factor(df$fit, levels = method_level)
 
-saveRDS(df,"./results/scenario6_box.RDS")
+saveRDS(df,"./results/scenario5-6_box.RDS")
 ```
 
 ```{r group 3, eval = TRUE}
