@@ -1,5 +1,5 @@
 ---
-title: "Figure6_Sourcecode"
+title: "Figure7_Sourcecode"
 output:
   workflowr::wflow_html:
     code_folding: hide
@@ -19,62 +19,100 @@ source('code/method_wrapper.R')
 source('code/sim_wrapper.R')
 ```
 
-## Scenarios
+## Groups
 
-### Scenario 11
+### Group 1
 
-```{r code11, eval = TRUE}
-tdat11        = list()
-n            = 500
-p_range      = c(20,50,100,200,500,1000,2000,5000,10000,20000)
-s            = 20
-method_list  = c("varbvs","bayesb","blasso","susie","enet","lasso","ridge","scad","mcp","scad2","mcp2","l0learn")
-method_list2 = c("mr.ash", method_list, "mr.ash.init")
-method_num   = length(method_list2)
-iter_num     = 20
-pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
-time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+```{r group 1, eval = TRUE}
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE",
+                 "E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE")
+scenario_num = c(1,2,3,4)
 
-for (iter in 1:10) {
-  p               = p_range[iter]
-for (i in 1:20) {
-  
-  data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.5)
-  
-  for (j in 1:length(method_list)) {
-    fit.method    = get(paste("fit.",method_list[j],sep = ""))
-    fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
-    pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
-    time[i,j+1]   = fit$t
-    
-    if (method_list[j] == "lasso") {
-      lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
-      lasso.beta       = as.vector(coef(fit$fit))[-1]
-      lasso.time       = c(fit$t, fit$t2)
-    }
+df           = data.frame()
+for (iter in scenario_num) {
+  datafile   = paste0("./results/scenario",iter,".RDS",sep = "")
+  res_df     = readRDS(datafile)
+  for (i in 1:length(res_df)) {
+    temp       = res_df[[i]][c(241:260,21:220),c("pred","time","fit")]
+    temp$rrmse = temp$pred / temp$pred[1:20]
+    temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 11), 1, min)
+    df         = rbind(df, temp)
   }
- 
-  fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
-                           sa2 = (2^((0:19) / 20) - 1)^2)
-  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
-  time[i,1]   = fit$t
-  
-  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
-                            beta.init = lasso.beta,
-                            sa2 = (2^((0:19) / 20) - 1)^2)
-  pred[i,j+1] = fit$rsse / data$sigma / sqrt(n)
-  time[i,j+1] = fit$t + lasso.time[1]
-  
-  print(c(time[i,]), digits = 4)
-  print(c(pred[i,]), digits = 4)
 }
-  print("-----------------------------------")
-  tdat11[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+df$fit     = rep(method_list, each = 20)
+df$fit     = factor(df$fit, levels = method_level)
+
+saveRDS(df,"./results/scenario1-4_box.RDS")
+```
+
+```{r group 2, eval = TRUE}
+scenario_num = c(5,6)
+
+df           = data.frame()
+for (iter in scenario_num) {
+  datafile   = paste0("./results/scenario",iter,".RDS",sep = "")
+  res_df     = readRDS(datafile)
+  for (i in 1:length(res_df)) {
+    temp       = res_df[[i]][c(241:260,21:220),c("pred","time","fit")]
+    temp$rrmse = temp$pred / temp$pred[1:20]
+    temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 11), 1, min)
+    df         = rbind(df, temp)
+  }
 }
+df$fit     = rep(method_list, each = 20)
+df$fit     = factor(df$fit, levels = method_level)
+
+saveRDS(df,"./results/scenario5-6_box.RDS")
+```
+
+```{r group 3, eval = TRUE}
+scenario_num = c(7,8,9,10)
+
+df           = data.frame()
+for (iter in scenario_num) {
+  datafile   = paste0("./results/scenario",iter,".RDS",sep = "")
+  res_df     = readRDS(datafile)
+  for (i in 1:length(res_df)) {
+    temp       = res_df[[i]][1:220,c("pred","time","fit")]
+    temp$rrmse = temp$pred / temp$pred[1:20]
+    temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 11), 1, min)
+    df         = rbind(df, temp)
+  }
+}
+df$fit     = rep(method_list, each = 20)
+df$fit     = factor(df$fit, levels = method_level)
+
+saveRDS(df,"./results/scenario7-10_box.RDS")
+```
+
+```{r group 4, eval = TRUE}
+scenario_num = c(11)
+
+df           = data.frame()
+for (iter in scenario_num) {
+  datafile   = paste0("./results/scenario",iter,".RDS",sep = "")
+  res_df     = readRDS(datafile)
+  for (i in 1:length(res_df)) {
+    temp       = res_df[[i]][1:220,c("pred","time","fit")]
+    temp$rrmse = temp$pred / temp$pred[1:20]
+    temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 11), 1, min)
+    df         = rbind(df, temp)
+  }
+}
+df$fit     = rep(method_list, each = 20)
+df$fit     = factor(df$fit, levels = method_level)
+
+saveRDS(df,"./results/scenario11_box.RDS")
 ```
 
 ## Save the results
 
-```{r saveresults}
-saveRDS(tdat11, "results/scenario11.RDS")
+```{r remove}
+try(system("rm *.dat"))
+try(system("rm ../*.dat"))
+try(system("rm analysis/*.dat"))
+try(system("rm ../analysis/*.dat"))
 ```
