@@ -29,7 +29,8 @@ p1 = ggplot(df) + geom_line(aes(x = b, y = sb, color = Operator), size = 1) +
   theme_cowplot(font_size = 20) + theme(axis.line = element_blank()) +
   labs(y = "shrinkage operator S(b)", title = "MR.ASH shrinkage operators") +
   theme(legend.position = "none",
-        axis.title.x = element_blank()) +
+        axis.title.x = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
   coord_cartesian(xlim = c(0,10), ylim = c(0,10))
 p2 = ggplot(df) + geom_line(aes(x = b, y = sb2, color = Operator), size = 1) +
   theme_cowplot(font_size = 20) + theme(axis.line = element_blank()) +
@@ -38,7 +39,8 @@ p2 = ggplot(df) + geom_line(aes(x = b, y = sb2, color = Operator), size = 1) +
   labs(y = "shrinkage operator S(b)", title = "Other shrinkage/thresholding operators") +
   coord_cartesian(xlim = c(0,10), ylim = c(0,10)) +
   theme(axis.title.y = element_blank(),
-        axis.title.x = element_blank())
+        axis.title.x = element_blank(),
+        plot.title = element_text(hjust = 0.5))
 
 fig1 = plot_grid(p1,p2, nrow = 1, rel_widths = c(0.463,0.5))
 title = ggdraw() + draw_label("MR.ASH Shrinkage operator may resemble the well-known shrinkage operators", fontface = 'bold', size = 20) 
@@ -54,7 +56,8 @@ p3 = ggplot(df) + geom_line(aes(x = b, y = pen, color = Operator), size = 1) +
   theme_cowplot(font_size = 20) + theme(axis.line = element_blank()) +
   labs(y = paste0("penalty ","rho","(b)",sep = ""), title = "MR.ASH penalties") +
   theme(legend.position = "none",
-        axis.title.x = element_blank()) +
+        axis.title.x = element_blank(),
+        plot.title = element_text(hjust = 0.5)) +
   coord_cartesian(xlim = c(0,10), ylim = c(0,15))
 p4 = ggplot(df) + geom_line(aes(x = b, y = pen2, color = Operator), size = 1) +
   theme_cowplot(font_size = 20) + theme(axis.line = element_blank()) +
@@ -62,7 +65,8 @@ p4 = ggplot(df) + geom_line(aes(x = b, y = pen2, color = Operator), size = 1) +
   labs(y = "shrinkage operator S(b)", title = "Other penalties") +
   coord_cartesian(xlim = c(0,10), ylim = c(0,15)) +
   theme(axis.title.y = element_blank(),
-        axis.title.x = element_blank())
+        axis.title.x = element_blank(),
+        plot.title = element_text(hjust = 0.5))
 legend = get_legend(p4 + theme_cowplot(font_size = 20) +
                       theme(legend.box.margin = margin(0, 0, 0, 12),
                             legend.key.size = unit(0.8, "cm")))
@@ -71,7 +75,7 @@ p4 = p4 + theme(legend.position = "none")
 
 ```{r}
 xaxis    = ggdraw() + draw_label("b", size = 20, angle = 0)
-figure1  = plot_grid(plot_grid(plot_grid(p1,p2,p3,p4,ncol = 2), xaxis, ncol = 1, rel_heights = c(0.95,0.05)),
+figure1  = plot_grid(plot_grid(plot_grid(p1,p2,ncol = 2), xaxis, ncol = 1, rel_heights = c(0.95,0.05)),
                      legend, nrow = 1, rel_widths = c(0.9,0.1))
-ggsave("figure1_for_paper.pdf", figure1, width = 18, height = 16)
+ggsave("figure1_for_paper.pdf", figure1, width = 18, height = 8)
 ```

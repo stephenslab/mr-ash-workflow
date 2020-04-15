@@ -21,27 +21,26 @@ source('code/sim_wrapper.R')
 
 ## Scenarios
 
-### Scenario 12
-
-```{r code2, eval = TRUE}
-tdat12        = list()
+```{r code11, eval = TRUE}
+tdat11       = list()
 n            = 500
 p            = 2000
-s_range      = c(1,5,20,100,500,2000)
+s            = 20
+rho_range    = c(0.99,0.95,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0)
 method_list  = c("lasso")
 method_list2 = c("mr.ash.vanilla", method_list, "mr.ash.order", "mr.ash.init","mr.ash.both")
 method_num   = length(method_list2)
-iter_num     = 20
+iter_num     = 100
 pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
 time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
 
 
-for (iter in 1:6) {
-  s               = s_range[iter]
+for (iter in 1:12) {
+  rho             = rho_range[iter]
   
-  for (i in 1:20) {
+  for (i in 1:100) {
     data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.5,
-                                  design = "equicorrgauss", rho = 0.3)
+                                  design = "equicorrgauss", rho = rho)
     
     for (j in 1:length(method_list)) {
       fit.method    = get(paste("fit.",method_list[j],sep = ""))
@@ -82,31 +81,32 @@ for (iter in 1:6) {
     
     print(c(pred[i,]), digits = 3)
   }
-  tdat12[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+  tdat11[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 100))
 }
 ```
 
-## Scenario 5
+### Scenario 12
 
-```{r code3, eval = TRUE}
-tdat13        = list()
+```{r code12, eval = TRUE}
+tdat12       = list()
 n            = 500
-p            = 2000
-s_range      = c(1,5,20,100,500,2000)
+p            = 200
+s            = 20
+rho_range    = c(0.99,0.95,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0)
 method_list  = c("lasso")
 method_list2 = c("mr.ash.vanilla", method_list, "mr.ash.order", "mr.ash.init","mr.ash.both")
 method_num   = length(method_list2)
-iter_num     = 20
+iter_num     = 100
 pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
 time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
 
 
-for (iter in 1:6) {
-  s               = s_range[iter]
+for (iter in 3:5) {
+  rho             = rho_range[iter]
   
-  for (i in 1:20) {
+  for (i in 1:100) {
     data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.5,
-                                  design = "equicorrgauss", rho = 0.95)
+                                  design = "equicorrgauss", rho = rho)
     
     for (j in 1:length(method_list)) {
       fit.method    = get(paste("fit.",method_list[j],sep = ""))
@@ -119,7 +119,7 @@ for (iter in 1:6) {
         lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
         lasso.beta       = as.vector(coef(fit$fit))[-1]
         lasso.time       = c(fit$t, fit$t2)
-      }                                                                                                                            
+      }
     }
     
     fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
@@ -146,9 +146,8 @@ for (iter in 1:6) {
     time[i,j+4] = fit$t + lasso.time[2]
     
     print(c(pred[i,]), digits = 3)
-    
   }
-  tdat13[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+  tdat12[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 100))
 }
 ```
 

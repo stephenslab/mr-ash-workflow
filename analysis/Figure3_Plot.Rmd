@@ -20,210 +20,335 @@ gg_color_hue <- function(n) {
 
 ## Figure
 
-### Varying-n
+### Low-dim
 
-```{r fig1_7, fig.height=11, fig.width=15, fig.align = "center"}
-res_df = readRDS("./results/scenario7.RDS")
-method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
-df           = data.frame()
-n_range      = c(200,500,1000,2000,5000)
-for (i in 1:5) {
-res_df[[i]]$fit   = rep(method_list, each = 20)
-res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_list)
-df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 11))),
-                                         time2 = apply(matrix(res_df[[i]]$time, 20, 11), 2, median),
-                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 11))),
-                                         n    = n_range[i],
-                                         fit  = method_list))
+```{r fig1_1, fig.height=11, fig.width=15, fig.align = "center"}
+res_df = readRDS("./results/scenario1.RDS")
+out = matrix(0,8,13)
+lower = matrix(0,8,13)
+upper = matrix(0,8,13)
+for (i in 1:8) {
+  out[i,] = colMeans(matrix(res_df[[i]]$pred, 20, 13))
+  lower[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.1))
+  upper[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.9))
 }
-df$fit = factor(df$fit, levels = method_list)
-df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn"),]
+colnames(out) = c("Mr.ASH.vanilla","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn","Mr.ASH.order","Mr.ASH")
+ind = 1:13
+out = out[,ind]
+lower = lower[,ind]
+upper = upper[,ind]
+s_range = c(1,2,5,10,20,50,100,200)
+col   = gg_color_hue(13)[c(1,8:11)]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,1)[c(1,8:11)]
+df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames(out), each = 8),
+                lower = c(lower), upper = c(upper))
+df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn",
+                                    "varbvs","BayesB","B-Lasso","SuSiE","Mr.ASH.order","Mr.ASH.vanilla"))
+df = df[df$fit %in% c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE"),]
 df$size = 0.5
-df$size[1:5] = 1.2
-col   = gg_color_hue(13)[1:7]
-shape = c(19,17,24,25,9,3,11,4,5,7,8,1,2,6)[1:7]
+df$size[1:8] = 1.2
 df$Method = df$fit
-p1    = ggplot(df) + geom_line(aes(x = n, y = pred, color = Method), size = df$size) +
-  geom_point(aes(x = n, y = pred, color = Method, shape = Method), size = 2.5) +
+fig_dummy3 = ggplot(df) + geom_line(aes(x = s, y = pred, color = Method), size = df$size) +
+  geom_point(aes(x = s, y = pred, color = Method, shape = Method), size = 3) +
   theme_cowplot(font_size = 22) +
-  scale_x_continuous(trans = "log10", breaks = n_range) +
-  labs(y = "predictior error (rmse / sigma)", x = "number of coefficients (p)") +
+  scale_x_continuous(trans = "log10", breaks = c(1,2,5,10,20,50,100,200)) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of nonzero coefficients (s)") +
   theme(axis.line = element_blank(),
         plot.title = element_text(hjust = 0.5),
-        axis.text.x  = element_text(angle = 45,hjust = 1),
-        axis.title.y = element_blank()) +
-  scale_color_manual(values = col) +
-  scale_shape_manual(values = shape) +
-  scale_y_continuous(trans = "log10", breaks = c(1,1.1,1.2,1.3,1.4)) +
-  coord_cartesian(ylim = c(1,1.4))
-fig_dummy2 = p1
-fig_main  = p1 + theme(legend.position = "none")
-#suptitle  = ggdraw() + draw_label("Varying n", fontface  = 'bold', size = 22) 
-#subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 200-5000, p = 2000, s = 20, pve = 0.5", fontface  = 'bold', size = 22) 
-#fig1_7     = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-#subtitle   = ggdraw() + draw_label("Varying n (Scenario 7)", fontface  = 'bold', size = 22)  
-subtitle  = ggdraw() + draw_label("Varying-n", fontface  = 'bold', size = 22) 
-fig1_7    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
-```
-
-### Signal-strength
-
-```{r fig1_8, fig.height=11, fig.width=15, fig.align = "center"}
-res_df = readRDS("./results/scenario8.RDS")
-method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
-method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
-                 "SCAD","MCP","L0Learn",
-                 "varbvs","BayesB","B-Lasso","SuSiE")
-col          = gg_color_hue(13)[1:11]
-shape        = c(19,17,24,25,9,3,11,4,5,7,8)
-pve_list     = seq(0,0.9,0.1)
-sdat         = data.frame()
-for (i in 1:10) {
-  sdat = rbind(sdat, data.frame(pred = colMeans(matrix(res_df[[i]]$pred, 20, 11)),
-                                time = colMeans(matrix(res_df[[i]]$time, 20, 11)),
-                                fit  = method_list,
-                                pve  = pve_list[i]))
-}
-sdat$fit = factor(sdat$fit, levels = method_level)
-sdat     = sdat[sdat$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge",
-                 "SCAD","MCP","L0Learn"),]
-sdat$size = 0.5
-sdat$size[1:10] = 1.2
-
-p1 = ggplot(sdat) + geom_line(aes(x = pve, y = pred, color = fit), size = sdat$size) +
-  geom_point(aes(x = pve, y = pred, color = fit, shape = fit), size = 2.5) +
-  scale_x_continuous(breaks = pve_list) +
-  theme_cowplot(font_size = 22) +
-  labs(y = "predictior error (rmse / sigma)", x = "proportion of variance explained (pve)") +
-  theme(axis.line = element_blank(),
-        plot.title = element_text(hjust = 0.5),
-        axis.text.x  = element_text(angle = 45,hjust = 1),
-        axis.title.y = element_blank(),
-        legend.position = "none") +
+        axis.text.x  = element_text(angle = 0,hjust = 1),
+        axis.title.y = element_blank(), axis.title.x = element_blank()) +
   scale_color_manual(values = col) +
   scale_shape_manual(values = shape) +
   scale_y_continuous(trans = "log10", breaks = c(1,1.1,1.2,1.3,1.4)) +
   coord_cartesian(ylim = c(1,1.35))
-fig_main = p1
-#suptitle  = ggdraw() + draw_label("Varying PVE (or SNR, Noise Variance)", fontface  = 'bold', size = 22) 
-#subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 2000, s = 20, pve = 0-0.9", fontface  = 'bold', size = 22) 
-#fig1_8    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-# subtitle   = ggdraw() + draw_label("Varying PVE / Signal-to-Noise Ratio (Scenario 8)", fontface  = 'bold', size = 22)  
-subtitle  = ggdraw() + draw_label("Signal-strength", fontface  = 'bold', size = 22) 
-fig1_8    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+fig_main = fig_dummy3 + theme(legend.position = "none") 
+# suptitle  = ggdraw() + draw_label("Low-dimensional Setting", fontface  = 'bold', size = 14) 
+# subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.5", fontface  = 'bold', size = 14) 
+# fig1_1    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
+subtitle  = ggdraw() + draw_label("Low-dimension", fontface  = 'bold.italic', size = 22)  
+fig1_1    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
-### Signal-shape-dense
+### High-dim
 
-```{r fig1_9, fig.height=11, fig.width=15, fig.align = "center"}
-res_df = readRDS("./results/scenario9.RDS")
-method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
-method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
-                 "SCAD","MCP","L0Learn",
-                 "varbvs","BayesB","B-Lasso","SuSiE")
-x_range      = 2^(c(1,2,3,4,5,6,7,8) - 1)
-df           = data.frame()
-for (i in 1:8) {
-res_df[[i]]       = res_df[[i]][1:220,]
-res_df[[i]]$fit   = rep(method_list, each = 20)
-res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_level)
-df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 11))),
-                                         df   = x_range[i],
-                                         fit  = method_list))
+```{r fig1_2, fig.height=11, fig.width=15, fig.align = "center"}
+res_df = readRDS("./results/scenario2.RDS")
+out = matrix(0,7,13)
+lower = matrix(0,7,13)
+upper = matrix(0,7,13)
+for (i in 1:7) {
+  out[i,] = colMeans(matrix(res_df[[i]]$pred, 20, 13))
+  lower[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.1))
+  upper[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.9))
 }
-df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn"),]
-df$fit = factor(df$fit, levels = method_level)
+colnames(out) = c("Mr.ASH.vanilla","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn","Mr.ASH.order","Mr.ASH")
+ind = 1:13
+out = out[,ind]
+lower = lower[,ind]
+upper = upper[,ind]
+s_range = c(1,5,20,100,500,2000,10000)
+col   = gg_color_hue(13)[c(1,8:11)]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,1)[c(1,8:11)]
+df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames(out), each = 7),
+                lower = c(lower), upper = c(upper))
+df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn",
+                                    "varbvs","BayesB","B-Lasso","SuSiE","Mr.ASH.order","Mr.ASH.vanilla"))
+df = df[df$fit %in% c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE"),]
+df = df[df$s %in% c(1,5,20,100,500,10000), ]
 df$size = 0.5
-df$size[1:8] = 1.2
-col   = gg_color_hue(13)[1:7]
-shape = c(19,17,24,25,9,3,11,4,5,7,8,1)[1:7]
-p1    = ggplot(df) + geom_line(aes(x = df, y = pred, color = fit), size = df$size) +
-  geom_point(aes(x = df, y = pred, color = fit, shape = fit), size = 2.5) +
+df$size[1:6] = 1.2
+p1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = fit), size = df$size) +
+  geom_point(aes(x = s, y = pred, color = fit, shape = fit), size = 3) +
   theme_cowplot(font_size = 22) +
-  scale_x_continuous(trans = "log10", breaks = c(1,2,4,8,16,32,64,128),
-                     labels = c("t (df=1)","t (df=2)","t (df=4)","t (df=8)","Laplace",
-                                "Normal","Uniform","Constant")) +
-  labs(y = "predictior error (rmse / sigma)", x = "signal shape (distribution of nonzero coefficients)") +
+  scale_x_continuous(trans = "log10", breaks = s_range) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of nonzero coefficients (s)") +
   theme(axis.line = element_blank(),
         plot.title = element_text(hjust = 0.5),
-        axis.text.x  = element_text(angle = 45,hjust = 1),
-        axis.title.y = element_blank(),
+        axis.text.x  = element_text(angle = 0,hjust = 1),
+        axis.title.y = element_blank(), axis.title.x = element_blank(),
         legend.position = "none") +
   scale_color_manual(values = col) +
   scale_shape_manual(values = shape) +
   scale_y_continuous(trans = "log10", breaks = c(1,1.1,1.2,1.3,1.4)) +
-  coord_cartesian(ylim = c(1,1.5))
+  coord_cartesian(ylim = c(1,1.45))
 fig_main = p1
-#suptitle  = ggdraw() + draw_label("Varying Signal Shape (p = 200, s = 200)", fontface  = 'bold', size = 22) 
-#subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + Spike-and-Slab, n = 500, p = 200, s = 200, pve = 0.5", fontface  = 'bold', size = 22) 
-#fig1_9    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-# subtitle   = ggdraw() + draw_label("Varying Signal Shape, Dense Signal (Scenario 9)", fontface  = 'bold', size = 22)
-subtitle  = ggdraw() + draw_label("Signal-shape-dense", fontface  = 'bold', size = 22) 
-fig1_9    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+# suptitle  = ggdraw() + draw_label("High-dimensional Setting", fontface  = 'bold', size = 14) 
+# subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 10000, s = 1-10000, pve = 0.5", fontface  = 'bold', size = 14) 
+# fig1_2    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
+subtitle  = ggdraw() + draw_label("High-dimension", fontface  = 'bold.italic', size = 22)  
+fig1_2    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
-### Signal-shape-sparse
+### Point-const-signal
 
-```{r fig1_10, fig.height=11, fig.width=15, fig.align = "center"}
-res_df = readRDS("./results/scenario10.RDS")
-method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
-method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
-                 "SCAD","MCP","L0Learn",
-                 "varbvs","BayesB","B-Lasso","SuSiE")
-x_range      = 2^(c(1,2,3,4,5,6,7,8) - 1)
-df           = data.frame()
+```{r fig1_3, fig.height=11, fig.width=15, fig.align = "center"}
+res_df = readRDS("./results/scenario3.RDS")
+out = matrix(0,8,13)
+lower = matrix(0,8,13)
+upper = matrix(0,8,13)
 for (i in 1:8) {
-res_df[[i]]       = res_df[[i]][1:220,]
-res_df[[i]]$fit   = rep(method_list, each = 20)
-res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_level)
-df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 11))),
-                                         df   = x_range[i],
-                                         fit  = method_list))
+  out[i,] = colMeans(matrix(res_df[[i]]$pred, 20, 13))
+  lower[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.1))
+  upper[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.9))
 }
-df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn"),]
-df$fit = factor(df$fit, levels = method_level)
+colnames(out) = c("Mr.ASH.vanilla","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn","Mr.ASH.order","Mr.ASH")
+ind = 1:13
+out = out[,ind]
+lower = lower[,ind]
+upper = upper[,ind]
+s_range = c(1,2,5,10,20,50,100,200)
+col   = gg_color_hue(13)[c(1,8:11)]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,1)[c(1,8:11)]
+df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames(out), each = 8),
+                lower = c(lower), upper = c(upper))
+df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn",
+                                    "varbvs","BayesB","B-Lasso","SuSiE","Mr.ASH.order","Mr.ASH.vanilla"))
+df = df[df$fit %in% c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE"),]
 df$size = 0.5
 df$size[1:8] = 1.2
-col   = gg_color_hue(13)[1:7]
-shape = c(19,17,24,25,9,3,11,4,5,7,8,1)[1:7]
-p1    = ggplot(df) + geom_line(aes(x = df, y = pred, color = fit), size = df$size) +
-  geom_point(aes(x = df, y = pred, color = fit, shape = fit), size = 2.5) +
+p1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = fit), size = df$size) +
+  geom_point(aes(x = s, y = pred, color = fit, shape = fit), size = 3) +
   theme_cowplot(font_size = 22) +
-  scale_x_continuous(trans = "log10", breaks = c(1,2,4,8,16,32,64,128),
-                     labels = c("t (df=1)","t (df=2)","t (df=4)","t (df=8)","Laplace",
-                                "Normal","Uniform","Constant")) +
-  labs(y = "predictior error (rmse / sigma)", x = "signal shape (distribution of nonzero coefficients)") +
+  scale_x_continuous(trans = "log10", breaks = c(1,2,5,10,20,50,100,200)) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of nonzero coefficients (s)") +
   theme(axis.line = element_blank(),
         plot.title = element_text(hjust = 0.5),
-        axis.text.x  = element_text(angle = 45,hjust = 1),
-        axis.title.y = element_blank(),
+        axis.text.x  = element_text(angle = 0,hjust = 1),
+        axis.title.y = element_blank(), axis.title.x = element_blank(),
+        legend.position = "none") +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(1,1.1,1.2,1.3,1.4)) +
+  coord_cartesian(ylim = c(1,sqrt(2)))
+fig_main = p1 + theme(legend.position = "none")
+# suptitle  = ggdraw() + draw_label("Sparse + Constant Signal", fontface  = 'bold', size = 14) 
+# subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointConst, n = 500, p = 200, s = 1-200, pve = 0.5", fontface  = 'bold', size = 14) 
+# fig1_3    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
+subtitle  = ggdraw() + draw_label("Point-constant-signal", fontface  = 'bold.italic', size = 22)  
+fig1_3    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+
+### Strong-signal
+
+```{r fig1_4, fig.height=11, fig.width=15, fig.align = "center"}
+res_df = readRDS("results/scenario4.RDS")
+s_range = c(1,2,5,10,20,50,100,200)
+#s_range = c(1,5,20,100,500,2000)
+a = length(s_range)
+out = matrix(0,a,13)
+lower = matrix(0,a,13)
+upper = matrix(0,a,13)
+for (i in 1:a) {
+  out[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, mean)
+  lower[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.1))
+  upper[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.9))
+}
+colnames(out) = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn","Mr.ASH.order","Mr.ASH.init")
+ind = 1:13
+out = out[,ind]
+lower = lower[,ind]
+upper = upper[,ind]
+col   = gg_color_hue(13)[c(1,8:11)]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,1)[c(1,8:11)]
+df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames(out), each = a),
+                lower = c(lower), upper = c(upper))
+df$fit = factor(df$fit, levels =  c("Mr.ASH.init","Mr.ASH","E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn",
+                                    "varbvs","BayesB","B-Lasso","SuSiE","Mr.ASH.order"))
+df = df[df$s != 500, ]
+df$size = 0.5
+df = df[df$fit %in% c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE"),]
+df$size[1:8] = 1.2
+p1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = fit), size = df$size) +
+  geom_point(aes(x = s, y = pred, color = fit, shape = fit), size = 3) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = unique(df$s)) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of nonzero coefficients (s)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 0,hjust = 1),
+        axis.title.y = element_blank(), axis.title.x = element_blank(),
+        legend.position = "none") +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(1,1.1,1.2,1.3,1.4)) +
+  coord_cartesian(ylim = c(1,sqrt(2)))
+fig_main = p1 + theme(legend.position = "none")
+# suptitle  = ggdraw() + draw_label("High Proportion of Variance (or R squared)", fontface  = 'bold', size = 14) 
+# subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.9", fontface  = 'bold', size = 14) 
+# fig1_4    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
+subtitle  = ggdraw() + draw_label("Strong-signal", fontface  = 'bold.italic', size = 22)  
+fig1_4    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+
+### High-corr-design
+
+```{r fig1_5, fig.height=11, fig.width=15, fig.align = "center"}
+res_df = readRDS("./results/scenario5.RDS")
+s_range = c(1,5,20,100,500,2000)
+a = length(s_range)
+out = matrix(0,a,13)
+lower = matrix(0,a,13)
+upper = matrix(0,a,13)
+for (i in 1:a) {
+  out[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, mean)
+  lower[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.1))
+  upper[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.9))
+}
+colnames(out) = c("Mr.ASH.vanilla","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn","Mr.ASH.order","Mr.ASH")
+ind = 1:13
+out = out[,ind]
+lower = lower[,ind]
+upper = upper[,ind]
+col   = gg_color_hue(13)[c(1,8:11)]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,1)[c(1,8:11)]
+df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames(out), each = a),
+                lower = c(lower), upper = c(upper))
+df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn",
+                                    "varbvs","BayesB","B-Lasso","SuSiE","Mr.ASH.order","Mr.ASH.vanilla"))
+df = df[df$s != 500, ]
+df$size = 0.5
+df = df[df$fit %in% c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE"),]
+df$size[1:5] = 1.2
+p1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = fit), size = df$size) +
+  geom_point(aes(x = s, y = pred, color = fit, shape = fit), size = 3) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = unique(df$s)) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of nonzero coefficients (s)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 0,hjust = 1),
+        axis.title.y = element_blank(), axis.title.x = element_blank(),
+        legend.position = "none") +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(1,1.1,1.2,1.3,1.4)) +
+  coord_cartesian(ylim = c(1,1.3))
+fig_main = p1 + theme(legend.position = "none")
+# suptitle  = ggdraw() + draw_label("Equicorrelated Design (rho = 0.95)", fontface  = 'bold', size = 14) 
+# subtitle  = ggdraw() + draw_label("Scenario: EquicorrGauss + PointNormal, n = 500, p = 2000, s = 1-2000, pve = 0.5", fontface  = 'bold', size = 14) 
+# fig1_5    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
+subtitle  = ggdraw() + draw_label("Equicorr(rho = 0.95)", fontface  = 'bold.italic', size = 22)  
+fig1_5    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+
+### RealGenotype
+
+```{r fig1_6, fig.height=11, fig.width=15, fig.align = "center"}
+res_df = readRDS("./results/scenario6.RDS")
+s_range = c(1,5,20,100,500)
+a = length(s_range)
+out = matrix(0,a,13)
+lower = matrix(0,a,13)
+upper = matrix(0,a,13)
+for (i in 1:a) {
+  out[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, mean)
+  lower[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.1))
+  upper[i,] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.9))
+}
+colnames(out) = c("Mr.ASH.vanilla","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn","Mr.ASH.order","Mr.ASH")
+ind = 1:13
+out = out[,ind]
+lower = lower[,ind]
+upper = upper[,ind]
+col   = gg_color_hue(13)[c(1,8:11)]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,1)[c(1,8:11)]
+df = df[df$s != 50, ]
+df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames(out), each = a),
+                lower = c(lower), upper = c(upper))
+df$fit = factor(df$fit, levels =  c("Mr.ASH","E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn",
+                                    "varbvs","BayesB","B-Lasso","SuSiE","Mr.ASH.order","Mr.ASH.vanilla"))
+df$size = 0.5
+df = df[df$fit %in% c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE"),]
+df$size[1:5] = 1.2
+p1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = fit), size = df$size) +
+  geom_point(aes(x = s, y = pred, color = fit, shape = fit), size = 3) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = unique(df$s)) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of nonzero coefficients (s)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 0,hjust = 1),
+        axis.title.y = element_blank(), axis.title.x = element_blank(),
         legend.position = "none") +
   scale_color_manual(values = col) +
   scale_shape_manual(values = shape) +
   scale_y_continuous(trans = "log10", breaks = c(1,1.1,1.2,1.3,1.4)) +
   coord_cartesian(ylim = c(1,1.4))
-fig_main = p1
-#suptitle  = ggdraw() + draw_label("Varying Signal Shape (p = 2000, s = 20)", fontface  = 'bold', size = 22) 
-#subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + Spike-and-Slab, n = 500, p = 2000, s = 20, pve = 0.5", fontface  = 'bold', size = 22) 
-#fig1_10    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
-# subtitle   = ggdraw() + draw_label("Varying Signal Shape, Sparse Signal (Scenario 10)", fontface  = 'bold', size = 22)  
-subtitle  = ggdraw() + draw_label("Signal-shape-sparse", fontface  = 'bold', size = 22) 
-fig1_10    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+fig_main = p1 + theme(legend.position = "none")
+# suptitle  = ggdraw() + draw_label("Equicorrelated Design (rho = 0.95)", fontface  = 'bold', size = 14) 
+# subtitle  = ggdraw() + draw_label("Scenario: EquicorrGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.5", fontface  = 'bold', size = 14) 
+# fig1_6    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
+subtitle  = ggdraw() + draw_label("RealGenotype", fontface  = 'bold.italic', size = 22)  
+fig1_6    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
 ## Draw Figure
 
 ```{r figure3}
-figure3  = plot_grid(fig1_7, fig1_8, fig1_9, fig1_10, ncol = 2, rel_heights = c(0.5,0.55))
-title    = ggdraw() + draw_label("Adaptation to Dimension, Signal Shape and PVE (Penalized Linear Regression)", fontface = 'bold', size = 22)
-legend   <- get_legend(fig_dummy2 +
+figure3  = plot_grid(fig1_1, fig1_2, fig1_3, fig1_4, fig1_5, fig1_6, ncol = 2, rel_heights = c(0.5,0.5))
+title    = ggdraw() + draw_label("Adaptation to Sparsity (Bayesian Linear Regression)", fontface = 'bold', size = 22)
+legend   <- get_legend(fig_dummy3 +
                          theme_cowplot(font_size = 22) +
                          theme(legend.box.margin = margin(0, 0, 0, 12),
                                legend.key.size = unit(0.8, "cm")))
 yaxis    = ggdraw() + draw_label("predictior error (rmse / sigma)", size = 25, angle = 90)
-figure3  = plot_grid(plot_grid(plot_grid(yaxis,
-                                                figure3, rel_widths = c(0.03,0.97), nrow = 1),
+xaxis    = ggdraw() + draw_label("number of nonzero coefficients (s)", size = 25, angle = 0)
+figure3  = plot_grid(plot_grid(plot_grid(yaxis, plot_grid(figure3, xaxis,
+                                                          rel_heights = c(0.97,0.03), ncol = 1),
+                                         rel_widths = c(0.03,0.97), nrow = 1),
                                ncol = 1, rel_heights = c(0.05,0.95)),
                      legend, nrow = 1, rel_widths = c(0.9,0.1))
-ggsave("figure3_for_paper.pdf", figure3, width = 18, height = 16)
+ggsave("figure3_for_paper.pdf", figure3, width = 18, height = 22)
 ```

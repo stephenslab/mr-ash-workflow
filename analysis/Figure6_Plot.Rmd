@@ -25,33 +25,34 @@ gg_color_hue <- function(n) {
 ```{r fig11_1, fig.height=11, fig.width=15}
 res_df       = readRDS("./results/scenario11.RDS")
 method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso",
-                 "Ridge","SCAD.2tuning","MCP.2tuning","SCAD.1tuning","MCP.1tuning","L0Learn")
+                 "Ridge","SCAD.2tuning","MCP.2tuning","SCAD","MCP","L0Learn","Mr.ASH.null")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE","SCAD.2tuning","MCP.2tuning","Mr.ASH.null")
 df           = data.frame()
 p_range      = c(20,50,100,200,500,1000,2000,5000,10000,20000)
 for (i in 1:10) {
 res_df[[i]]$fit   = rep(method_list, each = 20)
 res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_list)
-df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 13))),
-                                         time2 = apply(matrix(res_df[[i]]$time, 20, 13), 2, median),
-                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 13))),
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 14))),
+                                         time2 = apply(matrix(res_df[[i]]$time, 20, 14), 2, median),
+                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 14))),
                                          p    = p_range[i],
                                          fit  = method_list))
 }
-df$fit = factor(df$fit, levels = method_list)
-df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD.2tuning",
-                      "MCP.2tuning","SCAD.1tuning","MCP.1tuning","L0Learn"),]
+df$fit = factor(df$fit, levels = method_level)
+df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn","Mr.ASH.null"),]
 df = df[df$p %in% c(20,50,200,500,1000,2000,10000,20000),]
 df$size = 0.5
 df$size[1:8] = 1.2
-col   = gg_color_hue(13)[c(1:6,5,6,7)]
+col   = gg_color_hue(13)[c(1:7,13)]
 df$lt = "solid"
-df$lt[49:64] = "dashed"
-shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1:6,5,6,7)]
+#df$lt[57:72] = "dashed"
+shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1:7,13)]
 p1    = ggplot(df) + geom_line(aes(x = p, y = pred, color = fit), size = df$size, linetype = df$lt) +
   geom_point(aes(x = p, y = pred, color = fit, shape = fit), size = 2.5) +
   theme_cowplot(font_size = 22) +
   scale_x_continuous(trans = "log10", breaks = c(20,50,200,500,1000,2000,10000,20000)) +
-  labs(y = "predictior error (rmse / sigma)", x = "number of coefficients (p)") +
+  labs(y = "predictior error (rmse / sigma)", x = "number of predictors (p)") +
   theme(axis.line = element_blank(),
         plot.title = element_text(hjust = 0.5),
         axis.title.x = element_blank(),
@@ -61,37 +62,35 @@ p1    = ggplot(df) + geom_line(aes(x = p, y = pred, color = fit), size = df$size
   scale_shape_manual(values = shape) +
   scale_y_continuous(trans = "log10", breaks = c(1,1.1,1.2,1.3,1.4)) +
   coord_cartesian(ylim = c(1,1.3))
-fig_dummy4 = p1
 fig_main = p1 + theme(legend.position = "none")
-suptitle   = ggdraw() + draw_label("Varying p", fontface  = 'bold', size = 14) 
+suptitle   = ggdraw() + draw_label("Varying p", fontface  = 'bold.italic', size = 14) 
 subtitle   = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 20-20000, s = 20, pve = 0.5", fontface  = 'bold', size = 14) 
 fig11_1    = plot_grid(fig_main, ncol = 1, rel_heights = c(0.05,0.95))
 ```
 
 ```{r fig11_2, fig.height=11, fig.width=15}
 res_df       = readRDS("./results/scenario11.RDS")
-method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso",
-                 "Ridge","SCAD.2tuning","MCP.2tuning","SCAD.1tuning","MCP.1tuning","L0Learn")
 df           = data.frame()
 p_range      = c(20,50,100,200,500,1000,2000,5000,10000,20000)
 for (i in 1:10) {
 res_df[[i]]$fit   = rep(method_list, each = 20)
 res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_list)
-df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 13))),
-                                         time2 = apply(matrix(res_df[[i]]$time, 20, 13), 2, median),
-                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 13))),
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 14))),
+                                         time2 = apply(matrix(res_df[[i]]$time, 20, 14), 2, median),
+                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 14))),
                                          p    = p_range[i],
                                          fit  = method_list))
 }
-df$fit = factor(df$fit, levels = method_list)
-df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD.2tuning",
-                      "MCP.2tuning","SCAD.1tuning","MCP.1tuning","L0Learn"),]
+df$fit = factor(df$fit, levels = method_level)
+df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD",
+                      "MCP","L0Learn","Mr.ASH.null"),]
 df$size = 0.5
-df$size[1:5] = 1.2; df$size[46:50] = 1.2;
-col   = gg_color_hue(13)[c(1:6,5,6,7)]
+df$size[1:5] = 1.2; #df$size[36:40] = 1.2;
+df$size[41:45] = 1.2;
+col   = gg_color_hue(13)[c(1:7,13)]
 df$lt = "solid"
-df$lt[c(31:40,76:85)] = "dashed"
-shape = c(19,17,24,25,9,3,11,4,5,7,8,1,2,6)[c(1:6,5,6,7)]
+#df$lt[c(36:45,81:90)] = "dashed"
+shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1:7,13)]
 p1    = ggplot() + geom_line(aes(x = df$p[df$p <= 500], y = df$time[df$p <= 500], color = df$fit[df$p <= 500]),
                                  size = df$size[df$p <= 500], linetype = df$lt[df$p <= 500]) +
   geom_point(aes(x = df$p[df$p <= 500], y = df$time[df$p <= 500], color = df$fit[df$p <= 500],
@@ -119,34 +118,33 @@ fig11_2    = plot_grid(fig_main, ncol = 1, rel_heights = c(0.05,0.95))
 
 ```{r fig_dummy}
 res_df       = readRDS("./results/scenario11.RDS")
-method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso",
-                 "Ridge","SCAD.2tuning","MCP.2tuning","SCAD.1tuning","MCP.1tuning","L0Learn")
 df           = data.frame()
 p_range      = c(20,50,100,200,500,1000,2000,5000,10000,20000)
 for (i in 1:10) {
 res_df[[i]]$fit   = rep(method_list, each = 20)
 res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_list)
-df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 13))),
-                                         time2 = apply(matrix(res_df[[i]]$time, 20, 13), 2, median),
-                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 13))),
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 14))),
+                                         time2 = apply(matrix(res_df[[i]]$time, 20, 14), 2, median),
+                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 14))),
                                          p    = p_range[i],
                                          fit  = method_list))
 }
-df$fit = factor(df$fit, levels = c("Mr.ASH","E-NET","Lasso", "Ridge","SCAD.2tuning","MCP.2tuning","L0Learn",
-                                   "varbvs","BayesB","B-Lasso","SuSiE","SCAD.1tuning","MCP.1tuning"))
+df$fit = factor(df$fit, levels = method_level)
+df = df[df$fit %in% c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso",
+                 "Ridge","SCAD","MCP","L0Learn","Mr.ASH.null"),]
 df = df[df$p %in% c(20,50,200,500,1000,2000,10000,20000),]
 df$size = 0.5
 df$size[1:8] = 1.2
-col   = gg_color_hue(13)[c(1:11,5,6)]
+col   = gg_color_hue(13)[c(1:11,13)]
 df$lt = "solid"
-shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1:11,5,6)]
-df$lt[89:104] = "dashed"
+shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1:11,13)]
+#df$lt[89:104] = "dashed"
 df$Method = df$fit
 fig_dummy4 = ggplot(df) + geom_line(aes(x = p, y = pred, color = Method), size = df$size, linetype = df$lt) +
   geom_point(aes(x = p, y = pred, color = Method, shape = Method), size = 2.5) +
   theme_cowplot(font_size = 22) +
   scale_x_continuous(trans = "log10", breaks = c(20,50,200,500,1000,2000,10000,20000)) +
-  labs(y = "predictior error (rmse / sigma)", x = "number of coefficients (p)") +
+  labs(y = "predictior error (rmse / sigma)", x = "number of predictors (p)") +
   theme(axis.line = element_blank(),
         plot.title = element_text(hjust = 0.5),
         axis.title.x = element_blank(),
@@ -160,32 +158,30 @@ fig_dummy4 = ggplot(df) + geom_line(aes(x = p, y = pred, color = Method), size =
 
 ```{r fig11_3, fig.height=11, fig.width=15}
 res_df       = readRDS("./results/scenario11.RDS")
-method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso",
-                 "Ridge","SCAD.2tuning","MCP.2tuning","SCAD.1tuning","MCP.1tuning","L0Learn")
 df           = data.frame()
 p_range      = c(20,50,100,200,500,1000,2000,5000,10000,20000)
 for (i in 1:10) {
 res_df[[i]]$fit   = rep(method_list, each = 20)
 res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_list)
-df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 13))),
-                                         time2 = apply(matrix(res_df[[i]]$time, 20, 13), 2, median),
-                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 13))),
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 14))),
+                                         time2 = apply(matrix(res_df[[i]]$time, 20, 14), 2, median),
+                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 14))),
                                          p    = p_range[i],
                                          fit  = method_list))
 }
-df$fit = factor(df$fit, levels = method_list)
+df$fit = factor(df$fit, levels = method_level)
 df = df[df$p %in% c(20,50,200,500,1000,2000,10000,20000),]
-df = df[df$fit %in% c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE"),]
+df = df[df$fit %in% c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","Mr.ASH.null"),]
 df$size = 0.5
 df$size[1:8] = 1.2
-col   = gg_color_hue(13)[c(1,8:11)]
+col   = gg_color_hue(13)[c(1,8:11,13)]
 df$lt = "solid"
-shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1,8:11)]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1,8:11,13)]
 p1    = ggplot(df) + geom_line(aes(x = p, y = pred, color = fit), size = df$size, linetype = df$lt) +
   geom_point(aes(x = p, y = pred, color = fit, shape = fit), size = 2.5) +
   theme_cowplot(font_size = 22) +
   scale_x_continuous(trans = "log10", breaks = c(20,50,200,500,1000,2000,10000,20000)) +
-  labs(y = "predictior error (rmse / sigma)", x = "number of coefficients (p)") +
+  labs(y = "predictior error (rmse / sigma)", x = "number of predictors (p)") +
   theme(axis.line = element_blank(),
         plot.title = element_text(hjust = 0.5),
         axis.title.x = element_blank(),
@@ -203,26 +199,23 @@ fig11_3    = plot_grid(fig_main, ncol = 1, rel_heights = c(0.05,0.95))
 
 ```{r fig11_4, fig.height=11, fig.width=15}
 res_df       = readRDS("./results/scenario11.RDS")
-method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso",
-                 "Ridge","SCAD.2tuning","MCP.2tuning","SCAD.1tuning","MCP.1tuning","L0Learn")
 df           = data.frame()
 p_range      = c(20,50,100,200,500,1000,2000,5000,10000,20000)
 for (i in 1:10) {
 res_df[[i]]$fit   = rep(method_list, each = 20)
 res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_list)
-df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 13))),
-                                         time2 = apply(matrix(res_df[[i]]$time, 20, 13), 2, median),
-                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 13))),
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 14))),
+                                         time2 = apply(matrix(res_df[[i]]$time, 20, 14), 2, median),
+                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 14))),
                                          p    = p_range[i],
                                          fit  = method_list))
 }
-df$fit = factor(df$fit, levels = c("Mr.ASH","E-NET","Lasso", "Ridge","SCAD.1tuning","MCP.1tuning","L0Learn",
-                      "varbvs","BayesB","B-Lasso","SuSiE","SCAD.2tuning","MCP.2tuning"))
-df = df[df$fit %in% c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE"),]
+df$fit = factor(df$fit, levels = method_level)
+df = df[df$fit %in% c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","Mr.ASH.null"),]
 df$size = 0.5
 df$size[1:9] = 1.2
-col   = gg_color_hue(13)[c(1,8:11)]
-shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1,8:11)]
+col   = gg_color_hue(13)[c(1,8:11,13)]
+shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1,8:11,13)]
 fig_main = ggplot(df) + geom_line(aes(x = p, y = time, color = fit),
                               size = df$size) + 
     geom_point(aes(x = p, y = time, color = fit, shape = fit), size = 2.5) +
@@ -245,18 +238,21 @@ fig11_4    = plot_grid(fig_main, ncol = 1, rel_heights = c(0.05,0.95))
 ## Draw Figure
 
 ```{r figure6}
-yaxis1   = ggdraw() + draw_label("predictior error (rmse / sigma)", size = 25, angle = 90)
+yaxis1   = ggdraw() + draw_label("prediction error (rmse / sigma)", size = 25, angle = 90)
 yaxis2   = ggdraw() + draw_label("computation time (seconds)", size = 25, angle = 90)
-figure6  = plot_grid(yaxis1, fig11_1, fig11_3, yaxis2, fig11_2, fig11_4, ncol = 3, rel_widths = c(0.03,0.5,0.5))
+blank1 = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
+figure6  = plot_grid(yaxis1, fig11_1, fig11_3,
+                     blank1, blank1, blank1, yaxis2, fig11_2, fig11_4, ncol = 3, rel_widths = c(0.03,0.5,0.5),
+                     rel_heights = c(0.5,0.05,0.5))
 # title    = ggdraw() + draw_label("Varying p (Scenario 11)", fontface = 'bold', size = 24)
-title  = ggdraw() + draw_label("Varying-p", fontface  = 'bold', size = 24) 
+title  = ggdraw() + draw_label("Varying p", fontface  = 'bold.italic', size = 24) 
 legend   <- get_legend(fig_dummy4 +
                          theme_cowplot(font_size = 22) +
                          theme(legend.box.margin = margin(0, 0, 0, 12),
                                legend.key.size = unit(0.8, "cm")))
-xaxis    = ggdraw() + draw_label("number of coefficients (p)", size = 25, angle = 0)
-figure6  = plot_grid(plot_grid(title, plot_grid(figure6, xaxis, rel_heights = c(0.97,0.03), nrow = 2),
-                               ncol = 1, rel_heights = c(0.05,0.95)),
+xaxis    = ggdraw() + draw_label("number of predictors (p)", size = 25, angle = 0)
+figure6  = plot_grid(plot_grid(title, blank1, plot_grid(figure6, xaxis, rel_heights = c(0.97,0.03), nrow = 2),
+                               ncol = 1, rel_heights = c(0.05, 0.02, 0.95)),
                      legend, nrow = 1, rel_widths = c(0.9,0.15))
-ggsave("./figure6_for_paper.pdf", figure6, width = 18, height = 15)
+ggsave("./figure6_for_paper.pdf", figure6, width = 18, height = 17)
 ```

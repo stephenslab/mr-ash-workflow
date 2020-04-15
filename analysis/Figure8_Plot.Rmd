@@ -25,91 +25,90 @@ gg_color_hue <- function(n) {
 #### Scenario 12
 
 ```{r fig8_1, fig.height=11, fig.width=15}
-res_df = readRDS("./results/scenario12.RDS")
-#s_range = c(1,2,5,10,20,50,100,200)
-s_range = c(1,5,20,100,500,2000)
-a = length(s_range)
+res_df = readRDS("../results/scenario21.RDS")[c(12:3,1)]
+rho_range = c(0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99)
+a = length(rho_range)
 out = matrix(0,a,5)
 lower = matrix(0,a,5)
 upper = matrix(0,a,5)
+ind   = 1:100
 for (i in 1:a) {
-  out[i,] = apply(matrix(res_df[[i]]$pred, 20, 5), 2, mean)
-  lower[i,] = apply(matrix(res_df[[i]]$pred, 20, 5), 2, function(x) quantile(x, probs = 0.1))
-  upper[i,] = apply(matrix(res_df[[i]]$pred, 20, 5), 2, function(x) quantile(x, probs = 0.9))
+  out[i,] = apply(matrix(res_df[[i]]$pred, 100, 5)[ind,], 2, mean)
+  lower[i,] = apply(matrix(res_df[[i]]$pred, 100, 5)[ind,], 2, function(x) quantile(x, probs = 0.1))
+  upper[i,] = apply(matrix(res_df[[i]]$pred, 100, 5)[ind,], 2, function(x) quantile(x, probs = 0.9))
 }
-colnames(out) = c("Mr.ASH.vanilla","Lasso","Mr.ASH.order","Mr.ASH.init","Mr.ASH.both")
+colnames(out) = c("Mr.ASH.null","Lasso","Mr.ASH.order","Mr.ASH.init","Mr.ASH.init&order")
 ind = 1:5
 out = out[,ind]
 lower = lower[,ind]
 upper = upper[,ind]
-col   = c(gg_color_hue(13)[1],"darkblue","dodgerblue","darkgreen","limegreen","orange","gold2","purple")[c(1,3,5,7)]
+col   = c(gg_color_hue(13)[1],"darkblue","dodgerblue","darkgreen","limegreen","orange","gold2","purple")[c(1,2,3,5)]
 shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1,4,8,10)]
-df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames(out), each = a),
+df = data.frame(rho = rep(1:11, length(ind)), pred = c(out), fit = rep(colnames(out), each = a),
                 lower = c(lower), upper = c(upper))
-df$fit = factor(df$fit, levels =  c("Mr.ASH.both","Lasso","Mr.ASH.order","Mr.ASH.init","Mr.ASH.vanilla"))
+df$fit = factor(df$fit, levels =  c("Mr.ASH.init","Lasso","Mr.ASH.order","Mr.ASH.init&order","Mr.ASH.null"))
 df$size = 0.5
-df = df[df$s != 500,]
-df = df[df$fit %in% c("Mr.ASH.vanilla","Mr.ASH.order","Mr.ASH.init","Mr.ASH.both"),]
-df$size[1:5] = 1.2
-p1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = fit), size = df$size) +
-  geom_point(aes(x = s, y = pred, color = fit, shape = fit), size = 3) +
+df = df[df$fit %in% c("Mr.ASH.null","Mr.ASH.order","Mr.ASH.init","Mr.ASH.init&order"),]
+df$size[1:11] = 1.2
+p1 = ggplot(df) + geom_line(aes(x = rho, y = pred, color = fit), size = df$size) +
+  geom_point(aes(x = rho, y = pred, color = fit, shape = fit), size = 3) +
   theme_cowplot(font_size = 20) +
-  scale_x_continuous(trans = "log10", breaks = unique(df$s)) +
+  scale_x_continuous(breaks = 1:11, labels = rho_range) +
   labs(y = "predictior error (rmse / sigma)", x = "number of nonzero coefficients (s)") +
   theme(axis.line = element_blank(),
         plot.title = element_text(hjust = 0.5),
         axis.title.x = element_blank(), axis.title.y = element_blank()) +
   scale_color_manual(values = col) +
   scale_shape_manual(values = shape) +
-  scale_y_continuous(trans = "log10", breaks = c(1,1.1,1.2,1.3,1.4)) +
-  coord_cartesian(ylim = c(1,1.35))
+  scale_y_continuous(trans = "log10", breaks = c(1,1.05,1.1,1.2,1.3,1.4)) +
+  coord_cartesian(ylim = c(1,1.15))
+fig_dummy8 = p1
 fig_main = p1 + theme(legend.position = "none")
-subtitle  = ggdraw() + draw_label("Low-corr-design", fontface  = 'bold', size = 22)  
+subtitle  = ggdraw() + draw_label("Varyig rho (p = 200)", fontface  = 'bold.italic', size = 22)  
 fig8_1    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
-#### Scenario 13
-
 ```{r fig8_2, fig.height=11, fig.width=15}
-res_df = readRDS("./results/scenario13.RDS")
-s_range = c(1,5,20,100,500,2000)
-a = length(s_range)
+res_df = readRDS("../results/scenario22.RDS")[c(12:3,1)]
+rho_range = c(0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99)
+a = length(rho_range)
 out = matrix(0,a,5)
 lower = matrix(0,a,5)
 upper = matrix(0,a,5)
+ind   = 1:100
 for (i in 1:a) {
-  out[i,] = apply(matrix(res_df[[i]]$pred, 20, 5), 2, mean)
-  lower[i,] = apply(matrix(res_df[[i]]$pred, 20, 5), 2, function(x) quantile(x, probs = 0.1))
-  upper[i,] = apply(matrix(res_df[[i]]$pred, 20, 5), 2, function(x) quantile(x, probs = 0.9))
+  out[i,] = apply(matrix(res_df[[i]]$pred, 100, 5)[ind,], 2, mean)
+  lower[i,] = apply(matrix(res_df[[i]]$pred, 100, 5)[ind,], 2, function(x) quantile(x, probs = 0.1))
+  upper[i,] = apply(matrix(res_df[[i]]$pred, 100, 5)[ind,], 2, function(x) quantile(x, probs = 0.9))
 }
-colnames(out) = c("Mr.ASH.vanilla","Lasso","Mr.ASH.order","Mr.ASH.init","Mr.ASH.both")
+colnames(out) = c("Mr.ASH.null","Lasso","Mr.ASH.order","Mr.ASH.init","Mr.ASH.init&order")
 ind = 1:5
 out = out[,ind]
 lower = lower[,ind]
 upper = upper[,ind]
-col   = c(gg_color_hue(13)[1],"darkblue","dodgerblue","darkgreen","limegreen","orange","gold2","purple")[c(1,3,5,7)]
+col   = c(gg_color_hue(13)[1],"darkblue","dodgerblue","darkgreen","limegreen","orange","gold2","purple")[c(1,2,3,5)]
 shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(1,4,8,10)]
-df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames(out), each = a),
+df = data.frame(rho = rep(1:11, length(ind)), pred = c(out), fit = rep(colnames(out), each = a),
                 lower = c(lower), upper = c(upper))
-df$fit = factor(df$fit, levels =  c("Mr.ASH.both","Lasso","Mr.ASH.order","Mr.ASH.init","Mr.ASH.vanilla"))
+df$fit = factor(df$fit, levels =  c("Mr.ASH.init","Lasso","Mr.ASH.order","Mr.ASH.init&order","Mr.ASH.null"))
 df$size = 0.5
-df = df[df$s != 500,]
-df = df[df$fit %in% c("Mr.ASH.vanilla","Mr.ASH.order","Mr.ASH.init","Mr.ASH.both"),]
-df$size[1:5] = 1.2
-fig_dummy8 = ggplot(df) + geom_line(aes(x = s, y = pred, color = fit), size = df$size) +
-  geom_point(aes(x = s, y = pred, color = fit, shape = fit), size = 3) +
+df = df[df$fit %in% c("Mr.ASH.null","Mr.ASH.order","Mr.ASH.init","Mr.ASH.init&order"),]
+df$size[1:11] = 1.2
+p1 = ggplot(df) + geom_line(aes(x = rho, y = pred, color = fit), size = df$size) +
+  geom_point(aes(x = rho, y = pred, color = fit, shape = fit), size = 3) +
   theme_cowplot(font_size = 20) +
-  scale_x_continuous(trans = "log10", breaks = unique(df$s)) +
+  scale_x_continuous(breaks = 1:11, labels = rho_range) +
   labs(y = "predictior error (rmse / sigma)", x = "number of nonzero coefficients (s)") +
   theme(axis.line = element_blank(),
         plot.title = element_text(hjust = 0.5),
         axis.title.x = element_blank(), axis.title.y = element_blank()) +
   scale_color_manual(values = col) +
   scale_shape_manual(values = shape) +
-  scale_y_continuous(trans = "log10", breaks = c(1,1.1,1.2,1.3,1.4)) +
+  scale_y_continuous(trans = "log10", breaks = c(1,1.05,1.1,1.2,1.3,1.4)) +
   coord_cartesian(ylim = c(1,1.15))
-fig_main = fig_dummy8 + theme(legend.position = "none")
-subtitle  = ggdraw() + draw_label("High-corr-design", fontface  = 'bold', size = 22)  
+fig_dummy8 = p1
+fig_main = p1 + theme(legend.position = "none")
+subtitle  = ggdraw() + draw_label("Varying rho (p = 2000)", fontface  = 'bold.italic', size = 22)  
 fig8_2    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
@@ -123,9 +122,9 @@ legend   <- get_legend(fig_dummy8 +
                          theme_cowplot(font_size = 22) +
                          theme(legend.box.margin = margin(0, 0, 0, 12),
                                legend.key.size = unit(0.8, "cm")))
-xaxis    = ggdraw() + draw_label("number of nonzero coefficients (s)", size = 22, angle = 0)
+xaxis    = ggdraw() + draw_label("correlation across columns of X (rho)", size = 22, angle = 0)
 figure8  = plot_grid(plot_grid(plot_grid(figure8, xaxis, rel_heights = c(0.96,0.04), nrow = 2),
                                ncol = 1, rel_heights = c(0.05,0.95)),
-                     legend, nrow = 1, rel_widths = c(0.9,0.15))
+                     legend, nrow = 1, rel_widths = c(0.9,0.2))
 ggsave("figure8_for_paper.pdf", figure8, width = 18, height = 8)
 ```

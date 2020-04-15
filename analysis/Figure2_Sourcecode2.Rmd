@@ -338,8 +338,6 @@ for (i in 1:20) {
   pow[i,j+3]  = compute_pow(discoveries, true_support)
   
   print(c(pred[i,]), digits = 3)
-  print(c(fdp[i,]), digits = 3)
-  print(c(pow[i,]), digits = 3)
 }
 cat("-------------------------------\n")
 print(c(colMeans(pred)), digits = 3)
