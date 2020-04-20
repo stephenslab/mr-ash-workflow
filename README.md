@@ -1,8 +1,8 @@
 # MR.ASH (github: mr-ash-workflow)
 
-Numerical experiments for evaluating the "multiple regression with adaptive
-shrinkage" (MR.ASH) method and other linear regression methods that
-are well suited for large-scale data sets.
+Numerical experiments for evaluating the "multiple regression with
+adaptive shrinkage" (MR.ASH) method and other linear regression
+methods that are well suited for large-scale data sets.
 
 This workflow is for reproducing the results used in the manuscript
 
