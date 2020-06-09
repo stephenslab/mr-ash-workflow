@@ -10,6 +10,24 @@ if (exists("standardize")) {
   standardize       = FALSE
 }
 
+#'
+#'
+#'
+get_phi <- function(fit) {
+  # compute residual
+  r            = fit$data$y - fit$data$X %*% fit$beta
+  
+  # compute bw and S2inv
+  bw           = as.vector((t(fit$data$X) %*% r) + fit$data$w * fit$beta)
+  S2inv        = 1 / outer(fit$data$w, 1/fit$data$sa2, '+');
+  
+  # compute mu, phi
+  mu           = bw * S2inv;
+  phi          = -log(1 + outer(fit$data$w, fit$data$sa2))/2 + mu * (bw / 2 / fit$sigma2);
+  phi          = c(fit$pi) * t(exp(phi - apply(phi,1,max)));
+  phi          = t(phi) / colSums(phi);
+  return (list(phi = phi, mu = mu, r = r))
+}
 
 #'
 #'
@@ -27,7 +45,31 @@ fit.mr.ash = function(X, y, X.test, y.test, seed = 1, sa2 = NULL) {
                                 standardize = standardize,
                                 tol = list(epstol = 1e-12, convtol = 1e-8)))
   beta               = fit.mr.ash$beta
-  pip                = 1 - mr.ash.alpha:::get_phi(fit.mr.ash)$phi[,1]
+  pip                = 1 - get_phi(fit.mr.ash)$phi[,1]
+  
+  return (list(fit = fit.mr.ash, t = t.mr.ash[3], beta = beta, pip = pip,
+               rsse = norm(y.test - predict(fit.mr.ash, X.test), '2')))
+}
+
+#'
+#'
+#'
+#' MR.ASH different sigma2 update
+fit.mr.ash.sigma2 = function(X, y, X.test, y.test, beta.init = NULL, update.order = NULL,
+                             seed = 1, sa2 = NULL) {
+  
+  # set seed
+  set.seed(seed)
+  
+  # run mr.ash
+  t.mr.ash           = system.time(
+    fit.mr.ash        <- mr.ash(X = X, y = y, sa2 = sa2, method = "sigma",
+                                max.iter = 2000, beta.init = beta.init,
+                                update.order = update.order,
+                                standardize = standardize,
+                                tol = list(epstol = 1e-12, convtol = 1e-8)))
+  beta               = fit.mr.ash$beta
+  pip                = 1 - get_phi(fit.mr.ash)$phi[,1]
   
   return (list(fit = fit.mr.ash, t = t.mr.ash[3], beta = beta, pip = pip,
                rsse = norm(y.test - predict(fit.mr.ash, X.test), '2')))
@@ -55,7 +97,7 @@ fit.mr.ash2 = function(X, y, X.test, y.test, seed = 1,
                                 standardize = standardize, sigma2 = sigma2,
                                 tol = list(epstol = 1e-12, convtol = 1e-8)))
   beta               = fit.mr.ash$beta
-  pip                = 1 - mr.ash.alpha:::get_phi(fit.mr.ash)$phi[,1]
+  pip                = 1 - get_phi(fit.mr.ash)$phi[,1]
   
   return (list(fit = fit.mr.ash, t = t.mr.ash[3], beta = beta, pip = pip,
                rsse = norm(y.test - predict(fit.mr.ash, X.test), '2')))
@@ -371,7 +413,7 @@ fit.mcmc = function(X, y, X.test, y.test, seed = 1, nIter = NULL, burnIn = NULL,
                                pi = c(1 - s/p, s/p), beta.init = beta.init, sigma2 = data$sigma^2))
   fit.mcmc$data$sa2 = c(0, 1 / s)
   fit.mcmc$pi       = pi = c(1 - s/p, s/p)
-  pip              = 1 - mr.ash.alpha:::get_phi(fit.mcmc)$phi[,1]
+  pip              = 1 - get_phi(fit.mcmc)$phi[,1]
   
   return (list(fit = fit.mcmc, t = t.mcmc[3], beta = fit.mcmc$beta, pip = pip, 
                rsse = norm(y.test - X.test %*% fit.mcmc$beta - fit.mcmc$mu, '2')))

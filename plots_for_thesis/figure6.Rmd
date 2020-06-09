@@ -20,10 +20,36 @@ gg_color_hue <- function(n) {
 
 ## Figure
 
+```{r}
+newlist = readRDS("./results/newsimulation.RDS")
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE",
+                 "E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE")
+```
+
 ### Scenario 7-10
 
 ```{r fig2_1, fig.height=11, fig.width=15, fig.align = "center"}
-res_df   = readRDS("./results/scenario7-10_box.RDS")
+scenario_num = c(7,8,9,10)
+
+df           = data.frame()
+for (iter in scenario_num) {
+  datafile   = paste0("./results/scenario",iter,".RDS",sep = "")
+  res_df     = readRDS(datafile)
+  for (i in 1:length(res_df)) {
+    res_df[[i]]$pred[1:20] = newlist[[iter]][[i]]$pred[21:40]
+    temp       = res_df[[i]][1:220,c("pred","time","fit")]
+    temp$rrmse = temp$pred / temp$pred[1:20]
+    temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 11), 1, min)
+    df         = rbind(df, temp)
+  }
+}
+df$fit     = rep(method_list, each = 20)
+df$fit     = factor(df$fit, levels = method_level)
+
+res_df   = df
 col      = gg_color_hue(13)[1:11]
 shape    = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[1:11]
 baseline = mean(res_df$rpred[res_df$fit == "Mr.ASH"])
@@ -49,7 +75,24 @@ fig2_1    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 ### Scenario 5-6
 
 ```{r fig2_2, fig.height=11, fig.width=15, fig.align = "center"}
-res_df   = readRDS("./results/scenario5-6_box.RDS")
+scenario_num = c(5,6)
+
+df           = data.frame()
+for (iter in scenario_num) {
+  datafile   = paste0("./results/scenario",iter,".RDS",sep = "")
+  res_df     = readRDS(datafile)
+  for (i in 1:length(res_df)) {
+    res_df[[i]]$pred[241:260] = newlist[[iter]][[i]]$pred[21:40]
+    temp       = res_df[[i]][c(241:260,21:220),c("pred","time","fit")]
+    temp$rrmse = temp$pred / temp$pred[1:20]
+    temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 11), 1, min)
+    df         = rbind(df, temp)
+  }
+}
+df$fit     = rep(method_list, each = 20)
+df$fit     = factor(df$fit, levels = method_level)
+
+res_df   = df
 col      = gg_color_hue(13)[1:11]
 shape    = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[1:11]
 baseline = mean(res_df$rpred[res_df$fit == "Mr.ASH"])
@@ -75,7 +118,24 @@ fig2_2    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 ### Scenario 11
 
 ```{r fig2_3, fig.height=11, fig.width=15, fig.align = "center"}
-res_df   = readRDS("./results/scenario11_box.RDS")
+scenario_num = c(11)
+
+df           = data.frame()
+for (iter in scenario_num) {
+  datafile   = paste0("./results/scenario",iter,".RDS",sep = "")
+  res_df     = readRDS(datafile)
+  for (i in 1:length(res_df)) {
+    res_df[[i]]$pred[261:280] = newlist[[iter]][[i]]$pred[21:40]
+    temp       = res_df[[i]][c(261:280,21:220),c("pred","time","fit")]
+    temp$rrmse = temp$pred / temp$pred[1:20]
+    temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 11), 1, min)
+    df         = rbind(df, temp)
+  }
+}
+df$fit     = rep(method_list, each = 20)
+df$fit     = factor(df$fit, levels = method_level)
+
+res_df   = df
 col      = gg_color_hue(13)[1:11]
 shape    = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[1:11]
 baseline = mean(res_df$rpred[res_df$fit == "Mr.ASH"])
@@ -101,7 +161,24 @@ fig2_3    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
 ### Scenario 1-5
 
 ```{r fig2_4, fig.height=11, fig.width=15, fig.align = "center"}
-res_df   = readRDS("results/scenario1-4_box.RDS")
+scenario_num = c(1,2,3,4)
+
+df           = data.frame()
+for (iter in scenario_num) {
+  datafile   = paste0("./results/scenario",iter,".RDS",sep = "")
+  res_df     = readRDS(datafile)
+  for (i in 1:length(res_df)) {
+    res_df[[i]]$pred[241:260] = newlist[[iter]][[i]]$pred[21:40]
+    temp       = res_df[[i]][c(241:260,21:220),c("pred","time","fit")]
+    temp$rrmse = temp$pred / temp$pred[1:20]
+    temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 11), 1, min)
+    df         = rbind(df, temp)
+  }
+}
+df$fit     = rep(method_list, each = 20)
+df$fit     = factor(df$fit, levels = method_level)
+
+res_df   = df
 col      = gg_color_hue(13)[1:11]
 shape    = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[1:11]
 baseline = mean(res_df$rpred[res_df$fit == "Mr.ASH"])

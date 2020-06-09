@@ -25,7 +25,7 @@ gg_color_hue <- function(n) {
 #### Scenario 12
 
 ```{r fig8_1, fig.height=11, fig.width=15}
-res_df = readRDS("./results/scenario21.RDS")[c(12:3,1)]
+res_df = readRDS("./results/newsimulation.RDS")[[13]][c(12:4,2:1)]
 rho_range = c(0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99)
 a = length(rho_range)
 out = matrix(0,a,5)
@@ -61,7 +61,7 @@ p1 = ggplot(df) + geom_line(aes(x = rho, y = pred, color = fit), size = df$size)
   scale_color_manual(values = col) +
   scale_shape_manual(values = shape) +
   scale_y_continuous(trans = "log10", breaks = c(1,1.05,1.1,1.2,1.3,1.4)) +
-  coord_cartesian(ylim = c(1,1.15))
+  coord_cartesian(ylim = c(1,1.1))
 fig_dummy8 = p1
 fig_main = p1 + theme(legend.position = "none")
 subtitle  = ggdraw() + draw_label("Varyig rho (p = 200)", fontface  = 'bold.italic', size = 22)  
@@ -69,7 +69,7 @@ fig8_1    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 
 ```{r fig8_2, fig.height=11, fig.width=15}
-res_df = readRDS("./results/scenario22.RDS")[c(12:3,1)]
+res_df = readRDS("./results/newsimulation.RDS")[[12]][c(12:4,2:1)]
 rho_range = c(0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.99)
 a = length(rho_range)
 out = matrix(0,a,5)
@@ -105,7 +105,7 @@ p1 = ggplot(df) + geom_line(aes(x = rho, y = pred, color = fit), size = df$size)
   scale_color_manual(values = col) +
   scale_shape_manual(values = shape) +
   scale_y_continuous(trans = "log10", breaks = c(1,1.05,1.1,1.2,1.3,1.4)) +
-  coord_cartesian(ylim = c(1,1.15))
+  coord_cartesian(ylim = c(1,1.13))
 fig_dummy8 = p1
 fig_main = p1 + theme(legend.position = "none")
 subtitle  = ggdraw() + draw_label("Varying rho (p = 2000)", fontface  = 'bold.italic', size = 22)  

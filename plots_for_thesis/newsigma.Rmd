@@ -1,0 +1,693 @@
+---
+title: "Figure2_Sourcecode2"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Source Code
+
+```{r library, message = FALSE}
+library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(mr.ash.alpha); library(ncvreg); library(L0Learn); library(varbvs);
+standardize = FALSE
+source('code/method_wrapper.R')
+source('code/sim_wrapper.R')
+```
+
+## Scenarios
+
+### Low-dimension
+
+```{r code1, eval = TRUE}
+tdat1        = list()
+n            = 500
+p            = 200
+s_range      = c(1,2,5,10,20,50,100,200)
+iter_num     = 20
+pred         = matrix(0, iter_num, 2)
+time         = matrix(0, iter_num, 2)
+niter        = matrix(0, iter_num, 2)
+
+
+for (iter in 1:8) {
+s               = s_range[iter]
+for (i in 1:20) {
+  data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.5)
+  
+  fit         = fit.lasso(data$X, data$y, data$X.test, data$y.test, seed = i)
+  lasso.beta  = as.vector(coef(fit$fit))[-1]
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta, sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  niter[i,1]  = fit$fit$iter 
+  
+  fit         = fit.mr.ash.sigma2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                                  beta.init = lasso.beta, sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,2]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,2]   = fit$t
+  niter[i,2]  = fit$fit$iter 
+  
+}
+cat("-------------------------------\n")
+print(c(colMeans(pred), colMeans(niter), colMeans(time)), digits = 3)
+tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), niter = c(niter))
+}
+```
+
+### High-dimension
+
+```{r code2, eval = TRUE}
+tdat2        = list()
+n            = 500
+p            = 10000
+s_range      = c(1,5,20,100,500,2000,10000)
+iter_num     = 20
+pred         = matrix(0, iter_num, 2)
+time         = matrix(0, iter_num, 2)
+niter        = matrix(0, iter_num, 2)
+
+for (iter in 1:7) {
+s               = s_range[iter]
+for (i in 1:20) {
+  data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.5)
+  
+  fit         = fit.lasso(data$X, data$y, data$X.test, data$y.test, seed = i)
+  lasso.beta  = as.vector(coef(fit$fit))[-1]
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta, sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  niter[i,1]  = fit$fit$iter 
+  
+  fit         = fit.mr.ash.sigma2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                                  beta.init = lasso.beta, sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,2]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,2]   = fit$t
+  niter[i,2]  = fit$fit$iter 
+  
+}
+cat("-------------------------------\n")
+print(c(colMeans(pred), colMeans(niter), colMeans(time)), digits = 3)
+tdat2[[iter]] = data.frame(pred = c(pred), time = c(time), niter = c(niter))
+}
+```
+
+### Point-const-signal
+
+```{r code3, eval = TRUE}
+tdat3        = list()
+n            = 500
+p            = 200
+s_range      = c(1,2,5,10,20,50,100,200)
+iter_num     = 20
+pred         = matrix(0, iter_num, 2)
+time         = matrix(0, iter_num, 2)
+niter        = matrix(0, iter_num, 2)
+
+
+for (iter in 1:8) {
+s            = s_range[iter]
+for (i in 1:20) {
+  data          = simulate_data(n, p, s = s, seed = i, signal = "const", pve = 0.5)
+  
+  fit         = fit.lasso(data$X, data$y, data$X.test, data$y.test, seed = i)
+  lasso.beta  = as.vector(coef(fit$fit))[-1]
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta, sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  niter[i,1]  = fit$fit$iter 
+  
+  fit         = fit.mr.ash.sigma2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                                  beta.init = lasso.beta, sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,2]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,2]   = fit$t
+  niter[i,2]  = fit$fit$iter 
+  
+}
+cat("-------------------------------\n")
+print(c(colMeans(pred), colMeans(niter), colMeans(time)), digits = 3)
+tdat3[[iter]] = data.frame(pred = c(pred), time = c(time), niter = c(niter))
+}
+```
+
+### Strong-signal
+
+```{r code4, eval = TRUE}
+tdat4        = list()
+n            = 500
+p            = 200
+s_range      = c(1,2,5,10,20,50,100,200)
+iter_num     = 20
+pred         = matrix(0, iter_num, 2)
+time         = matrix(0, iter_num, 2)
+niter        = matrix(0, iter_num, 2)
+
+
+for (iter in 1:8) {
+s            = s_range[iter]
+for (i in 1:20) {
+  data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.9)
+  
+  fit         = fit.lasso(data$X, data$y, data$X.test, data$y.test, seed = i)
+  lasso.beta  = as.vector(coef(fit$fit))[-1]
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta, sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  niter[i,1]  = fit$fit$iter 
+  
+  fit         = fit.mr.ash.sigma2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                                  beta.init = lasso.beta, sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,2]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,2]   = fit$t
+  niter[i,2]  = fit$fit$iter 
+  
+}
+cat("-------------------------------\n")
+print(c(colMeans(pred), colMeans(niter), colMeans(time)), digits = 3)
+tdat4[[iter]] = data.frame(pred = c(pred), time = c(time), niter = c(niter))
+}
+```
+
+### High-corr-design
+
+```{r code5, eval = TRUE}
+tdat5        = list()
+n            = 500
+p            = 2000
+s_range      = c(1,5,20,100,500,2000)
+iter_num     = 20
+pred         = matrix(0, iter_num, 2)
+time         = matrix(0, iter_num, 2)
+niter        = matrix(0, iter_num, 2)
+
+
+for (iter in 1:6) {
+s            = s_range[iter]
+for (i in 1:20) {
+  data          = simulate_data(n, p, s = s, seed = i, signal = "normal", rho = 0.95,
+                                design = "equicorrgauss", pve = 0.5)
+    
+  fit         = fit.lasso(data$X, data$y, data$X.test, data$y.test, seed = i)
+  lasso.beta  = as.vector(coef(fit$fit))[-1]
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta, sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  niter[i,1]  = fit$fit$iter 
+  
+  fit         = fit.mr.ash.sigma2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                                  beta.init = lasso.beta, sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,2]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,2]   = fit$t
+  niter[i,2]  = fit$fit$iter 
+  
+}
+cat("-------------------------------\n")
+print(c(colMeans(pred), colMeans(niter), colMeans(time)), digits = 3)
+tdat5[[iter]] = data.frame(pred = c(pred), time = c(time), niter = c(niter))
+}
+```
+
+### Realgenotype-design
+
+```{r code6, eval = TRUE}
+tdat6        = list()
+n            = 287
+s_range      = c(1,5,20,100,500)
+iter_num     = 20
+pred         = matrix(0, iter_num, 2)
+time         = matrix(0, iter_num, 2)
+niter        = matrix(0, iter_num, 2)
+filelist     = paste("../data/", list.files("../data", pattern = "*.RDS"), sep = "")
+
+
+for (iter in 1:5) {
+s            = s_range[iter]
+for (i in 1:20) {
+  sa2           = (2^((0:19) / 20) - 1)^2
+  if (iter < 4) {
+    sa2         = (2^((0:19) / 5) - 1)^2
+  }
+  data          = simulate_data(s = s, seed = i, signal = "normal",
+                                design = "realgenotype", filepath = filelist[i], pve = 0.5)
+  
+  fit         = fit.lasso(data$X, data$y, data$X.test, data$y.test, seed = i)
+  lasso.beta  = as.vector(coef(fit$fit))[-1]
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta, sa2 = sa2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  niter[i,1]  = fit$fit$iter 
+  
+  fit         = fit.mr.ash.sigma2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                                  beta.init = lasso.beta, sa2 = sa2)
+  pred[i,2]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,2]   = fit$t
+  niter[i,2]  = fit$fit$iter 
+  
+}
+cat("-------------------------------\n")
+print(c(colMeans(pred), colMeans(niter), colMeans(time)), digits = 3)
+tdat6[[iter]] = data.frame(pred = c(pred), time = c(time), niter = c(niter))
+}
+```
+
+### Varying-n
+
+```{r code7, eval = TRUE}
+tdat7        = list()
+n_range      = c(200,500,1000,2000,5000)
+p            = 2000
+s            = 20
+iter_num     = 20
+pred         = matrix(0, iter_num, 2)
+time         = matrix(0, iter_num, 2)
+niter        = matrix(0, iter_num, 2)
+
+for (iter in 1:5) {
+n               = n_range[iter]
+for (i in 1:20) {
+  
+  data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.5)
+  
+  fit         = fit.lasso(data$X, data$y, data$X.test, data$y.test, seed = i)
+  lasso.beta  = as.vector(coef(fit$fit))[-1]
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta, sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  niter[i,1]  = fit$fit$iter 
+  
+  fit         = fit.mr.ash.sigma2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                                  beta.init = lasso.beta, sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,2]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,2]   = fit$t
+  niter[i,2]  = fit$fit$iter 
+  
+}
+cat("-------------------------------\n")
+print(c(colMeans(pred), colMeans(niter), colMeans(time)), digits = 3)
+tdat7[[iter]] = data.frame(pred = c(pred), time = c(time), niter = c(niter))
+}
+```
+
+### Signal-strength
+
+```{r code8, eval = TRUE}
+tdat8        = list()
+n            = 500
+p            = 2000
+pve_range    = seq(0,0.9,0.1)
+s            = 20
+iter_num     = 20
+pred         = matrix(0, iter_num, 2)
+time         = matrix(0, iter_num, 2)
+niter        = matrix(0, iter_num, 2)
+
+for (iter in 1:10) {
+for (i in 1:20) {
+  data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = pve_range[iter])
+   
+  fit         = fit.lasso(data$X, data$y, data$X.test, data$y.test, seed = i)
+  lasso.beta  = as.vector(coef(fit$fit))[-1]
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta, sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  niter[i,1]  = fit$fit$iter 
+  
+  fit         = fit.mr.ash.sigma2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                                  beta.init = lasso.beta, sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,2]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,2]   = fit$t
+  niter[i,2]  = fit$fit$iter 
+  
+}
+cat("-------------------------------\n")
+print(c(colMeans(pred), colMeans(niter), colMeans(time)), digits = 3)
+tdat8[[iter]] = data.frame(pred = c(pred), time = c(time), niter = c(niter))
+}
+```
+
+### Signal-shape-dense
+
+```{r code9, eval = TRUE}
+tdat9        = list()
+n            = 500
+p            = 200
+s            = 200
+iter_num     = 20
+pred         = matrix(0, iter_num, 2)
+time         = matrix(0, iter_num, 2)
+niter        = matrix(0, iter_num, 2)
+
+for (iter in 1:8) {
+  df           = c(1,2,4,8)
+  signal_shape = c("lap","normal","unif","const")
+for (i in 1:20) {
+  
+  if (iter <= 4) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = "t", df = df[iter], pve = 0.5)
+  } else if (iter > 4) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = signal_shape[iter - 4], pve = 0.5)
+  }
+
+  
+  fit         = fit.lasso(data$X, data$y, data$X.test, data$y.test, seed = i)
+  lasso.beta  = as.vector(coef(fit$fit))[-1]
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta, sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  niter[i,1]  = fit$fit$iter 
+  
+  fit         = fit.mr.ash.sigma2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                                  beta.init = lasso.beta, sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,2]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,2]   = fit$t
+  niter[i,2]  = fit$fit$iter 
+  
+}
+cat("-------------------------------\n")
+print(c(colMeans(pred), colMeans(niter), colMeans(time)), digits = 3)
+tdat9[[iter]] = data.frame(pred = c(pred), time = c(time), niter = c(niter))
+}
+```
+
+### Signal-shape-sparse
+
+```{r code10, eval = TRUE}
+tdat10        = list()
+n            = 500
+p            = 2000
+s            = 20
+iter_num     = 20
+pred         = matrix(0, iter_num, 2)
+time         = matrix(0, iter_num, 2)
+niter        = matrix(0, iter_num, 2)
+
+for (iter in 1:8) {
+  df           = c(1,2,4,8)
+  signal_shape = c("lap","normal","unif","const")
+for (i in 1:20) {
+  
+  if (iter <= 4) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = "t", df = df[iter], pve = 0.5)
+  } else if (iter > 4) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = signal_shape[iter - 4], pve = 0.5)
+  }
+
+    fit         = fit.lasso(data$X, data$y, data$X.test, data$y.test, seed = i)
+  lasso.beta  = as.vector(coef(fit$fit))[-1]
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta, sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  niter[i,1]  = fit$fit$iter 
+  
+  fit         = fit.mr.ash.sigma2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                                  beta.init = lasso.beta, sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,2]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,2]   = fit$t
+  niter[i,2]  = fit$fit$iter 
+  
+}
+cat("-------------------------------\n")
+print(c(colMeans(pred), colMeans(niter), colMeans(time)), digits = 3)
+tdat10[[iter]] = data.frame(pred = c(pred), time = c(time), niter = c(niter))
+}
+```
+
+## Varying p
+
+```{r code11, eval = TRUE}
+tdat11        = list()
+n            = 500
+p_range      = c(20,50,100,200,500,1000,2000,5000,10000,20000)
+s            = 20
+iter_num     = 20
+pred         = matrix(0, iter_num, 2)
+time         = matrix(0, iter_num, 2)
+niter        = matrix(0, iter_num, 2)
+
+for (iter in 1:10) {
+  p               = p_range[iter]
+for (i in 1:20) {
+  
+  data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.5)
+  
+  fit         = fit.lasso(data$X, data$y, data$X.test, data$y.test, seed = i)
+  lasso.beta  = as.vector(coef(fit$fit))[-1]
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta, sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,1]   = fit$t
+  niter[i,1]  = fit$fit$iter 
+  
+  fit         = fit.mr.ash.sigma2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                                  beta.init = lasso.beta, sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,2]   = fit$rsse / data$sigma / sqrt(n)
+  time[i,2]   = fit$t
+  niter[i,2]  = fit$fit$iter 
+  
+}
+cat("-------------------------------\n")
+print(c(colMeans(pred), colMeans(niter), colMeans(time)), digits = 3)
+tdat11[[iter]] = data.frame(pred = c(pred), time = c(time), niter = c(niter))
+}
+```
+
+## initialization/update order 2000
+
+```{r code12, eval = TRUE}
+tdat12       = list()
+n            = 500
+p            = 2000
+s            = 20
+rho_range    = c(0.99,0.95,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0)
+method_list  = c("lasso")
+method_list2 = c("mr.ash.vanilla", method_list, "mr.ash.order", "mr.ash.init","mr.ash.both")
+method_num   = length(method_list2)
+iter_num     = 100
+pred2        = matrix(0, iter_num, method_num); colnames(pred2) = method_list2
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+
+for (iter in 1:12) {
+  rho             = rho_range[iter]
+  
+  for (i in 1:100) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.5,
+                                  design = "equicorrgauss", rho = rho)
+    
+    for (j in 1:length(method_list)) {
+      fit.method    = get(paste("fit.",method_list[j],sep = ""))
+      suppressWarnings(
+      fit          <- fit.method(data$X, data$y, data$X.test, data$y.test, seed = i))
+      pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+      time[i,j+1]   = fit$t
+      
+      if (method_list[j] == "lasso") {
+        lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
+        lasso.beta       = as.vector(coef(fit$fit))[-1]
+        lasso.time       = c(fit$t, fit$t2)
+      }
+    }
+    pred2[i,j+1] = pred[i,j+1]
+    
+    fit         = fit.mr.ash.sigma2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                             sa2 = (2^((0:19) / 5) - 1)^2)
+    pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,1]   = fit$t
+    
+    fit         = fit.mr.ash.sigma2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                              update.order = lasso.path.order,
+                             sa2 = (2^((0:19) / 5) - 1)^2)
+    pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+2] = fit$t + lasso.time[2]
+    
+    fit         = fit.mr.ash.sigma2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                              beta.init = lasso.beta,
+                             sa2 = (2^((0:19) / 5) - 1)^2)
+    pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+3] = fit$t + lasso.time[1]
+    
+    fit         = fit.mr.ash.sigma2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                              beta.init = lasso.beta, update.order = lasso.path.order,
+                             sa2 = (2^((0:19) / 5) - 1)^2)
+    pred[i,j+4] = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+4] = fit$t + lasso.time[2]
+    
+    fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                             sa2 = (2^((0:19) / 5) - 1)^2)
+    pred2[i,1]   = fit$rsse / data$sigma / sqrt(n)
+    
+    fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                              update.order = lasso.path.order,
+                             sa2 = (2^((0:19) / 5) - 1)^2)
+    pred2[i,j+2] = fit$rsse / data$sigma / sqrt(n)
+    
+    fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                              beta.init = lasso.beta,
+                             sa2 = (2^((0:19) / 5) - 1)^2)
+    pred2[i,j+3] = fit$rsse / data$sigma / sqrt(n)
+    
+    fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                              beta.init = lasso.beta, update.order = lasso.path.order,
+                             sa2 = (2^((0:19) / 5) - 1)^2)
+    pred2[i,j+4] = fit$rsse / data$sigma / sqrt(n)
+    
+    cat("======================================\n")
+    print(c(pred[i,]), digits = 3)
+    print(c(pred2[i,]), digits = 3)
+  }
+  tdat12[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 100))
+}
+```
+
+## initialization/update order 200
+
+```{r code13, eval = TRUE}
+tdat13       = list()
+n            = 500
+p            = 200
+s            = 20
+rho_range    = c(0.99,0.95,0.9,0.8,0.7,0.6,0.5,0.4,0.3,0.2,0.1,0)
+method_list  = c("lasso")
+method_list2 = c("mr.ash.vanilla", method_list, "mr.ash.order", "mr.ash.init","mr.ash.both")
+method_num   = length(method_list2)
+iter_num     = 100
+pred2        = matrix(0, iter_num, method_num); colnames(pred2) = method_list2
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+
+for (iter in 1:12) {
+  rho             = rho_range[iter]
+  
+  for (i in 1:100) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.5,
+                                  design = "equicorrgauss", rho = rho)
+    
+    for (j in 1:length(method_list)) {
+      fit.method    = get(paste("fit.",method_list[j],sep = ""))
+      suppressWarnings(
+      fit          <- fit.method(data$X, data$y, data$X.test, data$y.test, seed = i))
+      pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+      time[i,j+1]   = fit$t
+      
+      if (method_list[j] == "lasso") {
+        lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
+        lasso.beta       = as.vector(coef(fit$fit))[-1]
+        lasso.time       = c(fit$t, fit$t2)
+      }
+    }
+    pred2[i,j+1] = pred[i,j+1]
+    
+    fit         = fit.mr.ash.sigma2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                             sa2 = (2^((0:19) / 5) - 1)^2)
+    pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,1]   = fit$t
+    
+    fit         = fit.mr.ash.sigma2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                              update.order = lasso.path.order,
+                             sa2 = (2^((0:19) / 5) - 1)^2)
+    pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+2] = fit$t + lasso.time[2]
+    
+    fit         = fit.mr.ash.sigma2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                              beta.init = lasso.beta,
+                             sa2 = (2^((0:19) / 5) - 1)^2)
+    pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+3] = fit$t + lasso.time[1]
+    
+    fit         = fit.mr.ash.sigma2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                              beta.init = lasso.beta, update.order = lasso.path.order,
+                             sa2 = (2^((0:19) / 5) - 1)^2)
+    pred[i,j+4] = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+4] = fit$t + lasso.time[2]
+    
+    fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                             sa2 = (2^((0:19) / 5) - 1)^2)
+    pred2[i,1]   = fit$rsse / data$sigma / sqrt(n)
+    
+    fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                              update.order = lasso.path.order,
+                             sa2 = (2^((0:19) / 5) - 1)^2)
+    pred2[i,j+2] = fit$rsse / data$sigma / sqrt(n)
+    
+    fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                              beta.init = lasso.beta,
+                             sa2 = (2^((0:19) / 5) - 1)^2)
+    pred2[i,j+3] = fit$rsse / data$sigma / sqrt(n)
+    
+    fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                              beta.init = lasso.beta, update.order = lasso.path.order,
+                             sa2 = (2^((0:19) / 5) - 1)^2)
+    pred2[i,j+4] = fit$rsse / data$sigma / sqrt(n)
+    
+    cat("======================================\n")
+    print(c(pred[i,]), digits = 3)
+    print(c(pred2[i,]), digits = 3)
+  }
+  tdat13[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 100))
+}
+```
+
+## Save the results
+
+```{r remove}
+try(system("rm *.dat"))
+try(system("rm ../*.dat"))
+try(system("rm analysis/*.dat"))
+try(system("rm ../analysis/*.dat"))
+```
+
+```{r saveresults}
+list1 = list(tdat1, tdat2, tdat3, tdat4, tdat5, tdat6, tdat7, tdat8, tdat9, tdat10, tdat11, tdat12, tdat13)
+saveRDS(list1, "results/newsimulation.RDS")
+```
+
+## Show the results
+
+```{r}
+p_list = list()
+for (i in 1:11) {
+  df = data.frame()
+  for (j in 1:length(list1[[i]])) {
+    #df   = rbind(df, data.frame(pred = list1[[i]][[j]]$pred, method = rep(c("sigma_dep_q", "sigma_indep_q"), each = 20)))
+    df   = rbind(df, data.frame(x = list1[[i]][[j]]$pred[1:20], y = list1[[i]][[j]]$pred[21:40]))
+  }
+  p_list[[i]] = ggplot(df) + geom_point(aes(x = x, y = y), size = 1.5) + geom_abline(intercept = 0, slope = 1, color = "red")
+}
+```
+
+```{r}
+for (i in 1:11) {
+  df = data.frame()
+  for (j in 1:length(list1[[i]])) {
+    print(paste0("Scenario ",i,", Argument ",j,"", sep = ""))
+    print(colMeans(matrix(list1[[i]][[j]]$pred, 20, 2)), digits = 6)
+  }
+}
+```

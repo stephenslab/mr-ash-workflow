@@ -101,7 +101,7 @@ pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
 time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
 
 
-for (iter in 3:5) {
+for (iter in 1:12) {
   rho             = rho_range[iter]
   
   for (i in 1:100) {
