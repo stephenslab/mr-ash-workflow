@@ -298,7 +298,7 @@ fig_main = p1
 # subtitle  = ggdraw() + draw_label("Scenario: EquicorrGauss + PointNormal, n = 500, p = 2000, s = 1-2000, pve = 0.5", fontface  = 'bold', size = 14) 
 # fig1_5    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
 #subtitle  = ggdraw() + draw_label("Equicorrelated Design (Scenario 5)", fontface  = 'bold', size = 22)  
-subtitle  = ggdraw() + draw_label("Equicorr(𝜌 = 0.95)", fontface  = 'bold.italic', size = 22) 
+subtitle  = ggdraw() + draw_label("Equicorr(ρ = 0.95)", fontface  = 'bold.italic', size = 22) 
 fig1_5    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
 ```
 

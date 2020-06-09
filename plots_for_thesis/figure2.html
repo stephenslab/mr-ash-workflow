@@ -447,7 +447,7 @@ summary {
 
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
-<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span>
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
 </button>
 </p>
 <div id="workflowr-report" class="collapse">
@@ -456,7 +456,7 @@ summary {
 <a data-toggle="tab" href="#summary">Summary</a>
 </li>
 <li>
-<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> </a>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
 </li>
 <li>
 <a data-toggle="tab" href="#versions">Past versions</a>
@@ -468,7 +468,7 @@ summary {
 <strong>Last updated:</strong> 2020-06-09
 </p>
 <p>
-<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
 </p>
 <p>
 <strong>Knit directory:</strong> <code>mr-ash-workflow/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
@@ -483,12 +483,12 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguptodate"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>R Markdown file:</strong> up-to-date </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
 </p>
 </div>
-<div id="strongRMarkdownfilestronguptodate" class="panel-collapse collapse">
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
 <div class="panel-body">
-<p>Great! Since the R Markdown file has been committed to the Git repository, you know the exact version of the code that produced these results.</p>
+<p>The R Markdown file has unstaged changes. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
 </div>
 </div>
 </div>
@@ -555,51 +555,32 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree0720454f9d0586afdc6f3f8239e4f781d0a68caatargetblank0720454a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/0720454f9d0586afdc6f3f8239e4f781d0a68caa" target="_blank">0720454</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree1cd7c20a0e305baa9773f747eab13e139e992140targetblank1cd7c20a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/stephenslab/mr-ash-workflow/tree/1cd7c20a0e305baa9773f747eab13e139e992140" target="_blank">1cd7c20</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree0720454f9d0586afdc6f3f8239e4f781d0a68caatargetblank0720454a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomstephenslabmrashworkflowtree1cd7c20a0e305baa9773f747eab13e139e992140targetblank1cd7c20a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/stephenslab/mr-ash-workflow/tree/0720454f9d0586afdc6f3f8239e4f781d0a68caa" target="_blank">0720454</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/stephenslab/mr-ash-workflow/tree/1cd7c20a0e305baa9773f747eab13e139e992140" target="_blank">1cd7c20</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
 </p>
 <pre><code>
 Ignored files:
+    Ignored:    .DS_Store
     Ignored:    .Rproj.user/
 
 Untracked files:
-    Untracked:  .DS_Store
+    Untracked:  .Rhistory
     Untracked:  .gitignore
-    Untracked:  data/
-    Untracked:  plots_for_thesis/
-    Untracked:  results/newsigma2.RDS
-    Untracked:  results/newsimulation.RDS
-    Untracked:  results/scenario11.RDS.backup
 
 Unstaged changes:
-    Modified:   analysis/Figure5_Plot.Rmd
-    Modified:   analysis/Figure6_Plot.Rmd
-    Modified:   analysis/Figure7_Plot.Rmd
-    Modified:   analysis/Figure7_Sourcecode.Rmd
-    Modified:   code/method_wrapper.R
-    Modified:   docs/Figure5_Plot.html
-    Modified:   docs/site_libs/navigation-1.1/codefolding.js
-    Modified:   docs/site_libs/tocify-1.9.1/jquery.tocify.css
-    Modified:   docs/site_libs/tocify-1.9.1/jquery.tocify.js
-    Modified:   figure2_for_paper.pdf
-    Modified:   figure3_for_paper.pdf
-    Modified:   figure4_for_paper.pdf
-    Modified:   figure4and5_for_paper.pdf
-    Modified:   figure5_for_paper.pdf
-    Modified:   figure6_for_paper.pdf
-    Modified:   figure7_for_paper.pdf
-    Modified:   figure8_for_paper.pdf
+    Modified:   plots_for_thesis/figure2.Rmd
+    Modified:   plots_for_thesis/figure2.html
 
 </code></pre>
 <p>
@@ -612,9 +593,69 @@ Note that any generated files, e.g. HTML, png, CSS, etc., are not included in t
 <hr>
 </div>
 <div id="versions" class="tab-pane fade">
+
 <p>
-There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+These are the previous versions of the repository in which changes were made to the R Markdown (<code>plots_for_thesis/figure2.Rmd</code>) and HTML (<code>plots_for_thesis/figure2.html</code>) files. If you’ve configured a remote Git repository (see <code>?wflow_git_remote</code>), click on the hyperlinks in the table below to view the files as they were in that past version.
 </p>
+<div class="table-responsive">
+<table class="table table-condensed table-hover">
+<thead>
+<tr>
+<th>
+File
+</th>
+<th>
+Version
+</th>
+<th>
+Author
+</th>
+<th>
+Date
+</th>
+<th>
+Message
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/stephenslab/mr-ash-workflow/blob/1cd7c20a0e305baa9773f747eab13e139e992140/plots_for_thesis/figure2.Rmd" target="_blank">1cd7c20</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2020-06-09
+</td>
+<td>
+update figures
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/stephenslab/mr-ash-workflow/1cd7c20a0e305baa9773f747eab13e139e992140/plots_for_thesis/figure2.html" target="_blank">1cd7c20</a>
+</td>
+<td>
+Youngseok Kim
+</td>
+<td>
+2020-06-09
+</td>
+<td>
+update figures
+</td>
+</tr>
+</tbody>
+</table>
+</div>
 <hr>
 </div>
 </div>
@@ -893,7 +934,7 @@ fig_main = p1
 # subtitle  = ggdraw() + draw_label(&quot;Scenario: EquicorrGauss + PointNormal, n = 500, p = 2000, s = 1-2000, pve = 0.5&quot;, fontface  = &#39;bold&#39;, size = 14) 
 # fig1_5    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
 #subtitle  = ggdraw() + draw_label(&quot;Equicorrelated Design (Scenario 5)&quot;, fontface  = &#39;bold&#39;, size = 22)  
-subtitle  = ggdraw() + draw_label(&quot;Equicorr(𝜌 = 0.95)&quot;, fontface  = &#39;bold.italic&#39;, size = 22) 
+subtitle  = ggdraw() + draw_label(&quot;Equicorr(ρ = 0.95)&quot;, fontface  = &#39;bold.italic&#39;, size = 22) 
 fig1_5    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))</code></pre>
 </div>
 <div id="realgenotype-design" class="section level3">
@@ -1001,10 +1042,10 @@ loaded via a namespace (and not attached):
 [17] withr_2.2.0      stringr_1.4.0    dplyr_0.8.5      knitr_1.28      
 [21] fs_1.4.1         vctrs_0.3.0      rprojroot_1.3-2  grid_4.0.0      
 [25] tidyselect_1.1.0 glue_1.4.1       R6_2.4.1         rmarkdown_2.1   
-[29] farver_2.0.3     purrr_0.3.4      magrittr_1.5     backports_1.1.7 
-[33] scales_1.1.1     promises_1.1.0   htmltools_0.4.0  ellipsis_0.3.1  
-[37] assertthat_0.2.1 colorspace_1.4-1 httpuv_1.5.2     stringi_1.4.6   
-[41] munsell_0.5.0    crayon_1.3.4    </code></pre>
+[29] farver_2.0.3     purrr_0.3.4      magrittr_1.5     whisker_0.4     
+[33] backports_1.1.7  scales_1.1.1     promises_1.1.0   htmltools_0.4.0 
+[37] ellipsis_0.3.1   assertthat_0.2.1 colorspace_1.4-1 httpuv_1.5.2    
+[41] stringi_1.4.6    munsell_0.5.0    crayon_1.3.4    </code></pre>
 </div>
 </div>
 
