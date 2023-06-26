@@ -1,5 +1,5 @@
 % https://github.com/tal-amir/sparse-approximation-gsm
-% sinteractive -p broadwl --mem=16G -c 4 --time=60:00:00
+% sinteractive -p broadwl --mem=16G -c 4 --time=200:00:00
 % module load gcc/10.2.0
 % module load matlab/2022b
 % matlab -nosplash -nodesktop

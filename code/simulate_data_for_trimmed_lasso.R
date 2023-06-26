@@ -1,4 +1,4 @@
-# module load  R/3.5.1
+# module load R/4.2.0
 library(R.matlab)
 source("sim_wrapper.R")
 n <- 500
