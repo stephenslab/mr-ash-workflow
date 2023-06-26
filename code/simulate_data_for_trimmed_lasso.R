@@ -9,7 +9,7 @@ for (iter in 1:7) {
   for (i in 1:20) {
     cat("s = ",s,", i = ",i,"\n",sep="")
     dat <- simulate_data(n,p,s = s,seed = i,signal = "normal",pve = 0.5)
-    fname <- sprintf("n%dp%ds%d_normal_seed%d.mat",n,p,s,i)
+    fname <- sprintf("matdata/n%dp%ds%d_normal_seed%d.mat",n,p,s,i)
     writeMat(fname,X = dat$X,y = dat$y)
   }
 }
