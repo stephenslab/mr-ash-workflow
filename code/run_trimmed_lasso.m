@@ -1,5 +1,5 @@
 % https://github.com/tal-amir/sparse-approximation-gsm
-% sinteractive -p broadwl --mem=16G -c 4 --time=200:00:00
+% sinteractive -p broadwl --mem=24G -c 4 --time=80:00:00
 % module load gcc/10.2.0
 % module load matlab/2022b
 % matlab -nosplash -nodesktop
@@ -12,6 +12,7 @@ for ss = [1 5 20 100 500 2000 10000]
     load(nn);
     disp("file:" + nn);
     disp("sparsity:" + ss);
+    disp("ii:" + ii);
     k = [1 2 3 5 10 20 100 500];
     n = length(k);
     m = size(X,2);
@@ -20,8 +21,7 @@ for ss = [1 5 20 100 500 2000 10000]
     t = 0;
     aa = randperm(500);
     for i = 1:n
-      disp(i);
-      disp("fold 1");
+      disp("k:" + k(i));
       cv_error = 0;
       X1 = X(aa,:); y1 = y(aa);
       X2 = X1(1:100,:); y2 = y1(1:100);
@@ -31,7 +31,6 @@ for ss = [1 5 20 100 500 2000 10000]
       cv_error = cv_error + norm(X2*b1 - y2)^2;
       t = t + out.tElapsed;
       
-      disp("fold 2");
       X1 = X(aa,:); y1 = y(aa);
       X2 = X1(101:200,:); y2 = y1(101:200);
       X1(101:200,:) = [];
@@ -40,7 +39,6 @@ for ss = [1 5 20 100 500 2000 10000]
       cv_error = cv_error + norm(X2*b1 - y2)^2;
       t = t + out.tElapsed;
 
-      disp("fold 3");
       X1 = X(aa,:); y1 = y(aa);
       X2 = X1(201:300,:); y2 = y1(201:300);
       X1(201:300,:) = [];
@@ -49,7 +47,6 @@ for ss = [1 5 20 100 500 2000 10000]
       cv_error = cv_error + norm(X2*b1 - y2)^2;
       t = t + out.tElapsed;
 
-      disp("fold 4");
       X1 = X(aa,:); y1 = y(aa);
       X2 = X1(301:400,:); y2 = y1(301:400);
       X1(301:400,:) = [];
@@ -58,7 +55,6 @@ for ss = [1 5 20 100 500 2000 10000]
       cv_error = cv_error + norm(X2*b1 - y2)^2;
       t = t + out.tElapsed;
 
-      disp("fold 5");
       X1 = X(aa,:); y1 = y(aa);
       X2 = X1(401:500,:); y2 = y1(401:500);
       X1(401:500,:) = [];
@@ -69,7 +65,7 @@ for ss = [1 5 20 100 500 2000 10000]
 
       cv(i) = cv_error;
     end
-    disp(cv);
+    % disp(cv);
     [minval, minind] = min(cv);
     disp("minimum k:" + k(minind));
     evalc("[b out] = sparse_approx_gsm_v1_22(X,y,k(minind),'profile','fast')");
