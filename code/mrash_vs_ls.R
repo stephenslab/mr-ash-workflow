@@ -60,14 +60,16 @@ for (i in 1:np) {
   }
 }
 
+rmse_null <- 1/sqrt(0.5)
+
 # Summarize the results in a plot.
 pdat <- data.frame(p   = as.vector(matrix(p,np,ns,byrow = FALSE)),
                    sim = as.vector(matrix(1:ns,np,ns,byrow = TRUE)),
-                   y   = as.vector(rmse_mrash - rmse_glmnet),
+                   y   = as.vector((rmse_mrash - rmse_glmnet)/rmse_null),
                    stringsAsFactors = FALSE)
 pdat <- transform(pdat,p = factor(p))
 p1 <- ggplot(pdat,aes(x = p,y = y)) +
   geom_boxplot(width = 0.5) +
-  labs(x = "number of predictors",y = "RMSE(mr.ash) - RMSE(OLS)") +
+  labs(x = "number of predictors",y = "scaled RMSE mr.ash - OLS") +
   theme_cowplot(font_size = 12)
 ggsave("mrash_vs_ls.eps",p1,height = 2.75,width = 3)
