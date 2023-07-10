@@ -1,0 +1,211 @@
+---
+title: "Revision3"
+author: "Youngseok Kim"
+date: "4/13/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r library, message = FALSE}
+library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(ncvreg); library(L0Learn); library(varbvs); library(mr.ash.alpha);
+library(EMVS); library(SSLASSO); library(bayeslm); library(horseshoe);
+library(R.matlab)
+standardize = FALSE
+source('../code/method_wrapper.R')
+source('../code/sim_wrapper.R')
+```
+
+```{r new1, eval = TRUE}
+tdat1        = list()
+n            = 500
+p            = 1000
+s            = 1000
+method_list  = c("l0l1learn", "l0l2learn", "horseshoe", "emvscv", "sslassocv", "bayeslm", "sslasso", "emvs")
+method_list2 = c("mr.ash", method_list)
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+for (iter in 3:8) {
+  df           = c(1,2,4,8)
+  signal_shape = c("lap","normal","unif","const")
+  for (i in 1:20) {
+    
+    if (iter <= 4) {
+      data          = simulate_data(n, p, s = s, seed = i, signal = "t", df = df[iter], pve = 0.5)
+      ssss = paste("t", iter, sep = "")
+    } else if (iter > 4) {
+      data          = simulate_data(n, p, s = s, seed = i, signal = signal_shape[iter - 4], pve = 0.5)
+      ssss = signal_shape[iter - 4]
+    }
+  
+    for (j in 1:length(method_list)) {
+      fit.method    = get(paste("fit.",method_list[j],sep = ""))
+      fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+      pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+      time[i,j+1]   = fit$t
+      cat(method_list[j], time[i, j+1], ",")
+    }
+   
+    fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i, sa2 = (2^((0:19) / 20) - 1)^2)
+    pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,1]   = fit$t
+    name = sprintf("matdata/n%dp%ds%d_%s_seed%d.mat", n,p,s,ssss,i)
+    writeMat(name, X = data$X, y = data$y)
+    print(c(pred[i,]))
+    print(name)
+  }
+  tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+}
+```
+
+```{r new2, eval = TRUE}
+tdat2        = list()
+n            = 500
+p            = 1000
+s            = 500
+method_list  = c("l0l1learn", "l0l2learn", "horseshoe", "emvscv", "sslassocv", "bayeslm", "sslasso", "emvs")
+method_list2 = c("mr.ash", method_list)
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+for (iter in 1:8) {
+  df           = c(1,2,4,8)
+  signal_shape = c("lap","normal","unif","const")
+  for (i in 1:20) {
+    
+    if (iter <= 4) {
+      data          = simulate_data(n, p, s = s, seed = i, signal = "t", df = df[iter], pve = 0.5)
+      ssss = paste("t", iter, sep = "")
+    } else if (iter > 4) {
+      data          = simulate_data(n, p, s = s, seed = i, signal = signal_shape[iter - 4], pve = 0.5)
+      ssss = signal_shape[iter - 4]
+    }
+  
+    for (j in 1:length(method_list)) {
+      fit.method    = get(paste("fit.",method_list[j],sep = ""))
+      fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+      pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+      time[i,j+1]   = fit$t
+      cat(method_list[j], time[i, j+1], ",")
+    }
+   
+    fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                             sa2 = (2^((0:19) / 20) - 1)^2)
+    pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,1]   = fit$t
+    name = sprintf("matdata/n%dp%ds%d_%s_seed%d.mat", n,p,s,ssss,i)
+    writeMat(name, X = data$X, y = data$y)
+    print(c(pred[i,]))
+    print(name)
+  }
+  tdat2[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+}
+```
+
+```{r new3, eval = TRUE}
+tdat3        = list()
+n            = 500
+p            = 1000
+s            = 5
+method_list  = c("l0l1learn", "l0l2learn", "horseshoe", "emvscv", "sslassocv", "bayeslm", "sslasso", "emvs")
+method_list2 = c("mr.ash", method_list)
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+for (iter in 1:8) {
+  df           = c(1,2,4,8)
+  signal_shape = c("lap","normal","unif","const")
+  for (i in 1:20) {
+    
+    if (iter <= 4) {
+      data          = simulate_data(n, p, s = s, seed = i, signal = "t", df = df[iter], pve = 0.5)
+      ssss = paste("t", iter, sep = "")
+    } else if (iter > 4) {
+      data          = simulate_data(n, p, s = s, seed = i, signal = signal_shape[iter - 4], pve = 0.5)
+      ssss = signal_shape[iter - 4]
+    }
+  
+    for (j in 1:length(method_list)) {
+      fit.method    = get(paste("fit.",method_list[j],sep = ""))
+      fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+      pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+      time[i,j+1]   = fit$t
+      cat(method_list[j], time[i, j+1], ",")
+    }
+   
+    fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                             sa2 = (2^((0:19) / 20) - 1)^2)
+    pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,1]   = fit$t
+    name = sprintf("matdata/n%dp%ds%d_%s_seed%d.mat", n,p,s,ssss,i)
+    writeMat(name, X = data$X, y = data$y)
+    print(c(pred[i,]))
+    print(name)
+  }
+  tdat3[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+}
+```
+
+```{r new4, eval = TRUE}
+tdat4        = list()
+n            = 500
+p            = 1000
+s            = 20
+method_list  = c("l0l1learn", "l0l2learn", "horseshoe", "emvscv", "sslassocv", "bayeslm", "sslasso", "emvs")
+method_list2 = c("mr.ash", method_list)
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+for (iter in 1:8) {
+  df           = c(1,2,4,8)
+  signal_shape = c("lap","normal","unif","const")
+  for (i in 1:20) {
+    
+    if (iter <= 4) {
+      data          = simulate_data(n, p, s = s, seed = i, signal = "t", df = df[iter], pve = 0.5)
+      ssss = paste("t", iter, sep = "")
+    } else if (iter > 4) {
+      data          = simulate_data(n, p, s = s, seed = i, signal = signal_shape[iter - 4], pve = 0.5)
+      ssss = signal_shape[iter - 4]
+    }
+  
+    for (j in 1:length(method_list)) {
+      fit.method    = get(paste("fit.",method_list[j],sep = ""))
+      fit           = fit.method(data$X, data$y, data$X.test, data$y.test, seed = i)
+      pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+      time[i,j+1]   = fit$t
+      cat(method_list[j], time[i, j+1], ",")
+    }
+   
+    fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                             sa2 = (2^((0:19) / 20) - 1)^2)
+    pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,1]   = fit$t
+    name = sprintf("matdata/n%dp%ds%d_%s_seed%d.mat", n,p,s,ssss,i)
+    writeMat(name, X = data$X, y = data$y)
+    print(c(pred[i,]))
+    print(name)
+  }
+  tdat4[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+}
+```
+
+```{r saveresults}
+saveRDS(tdat1, "results/revision3_1.RDS")
+saveRDS(tdat2, "results/revision3_2.RDS")
+saveRDS(tdat3, "results/revision3_3.RDS")
+saveRDS(tdat4, "results/revision3_4.RDS")
+saveRDS(tdat5, "results/revision3_5.RDS")
+```

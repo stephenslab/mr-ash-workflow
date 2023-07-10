@@ -1,0 +1,452 @@
+---
+title: "Revision1"
+author: "Youngseok Kim"
+date: "4/13/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r library, message = FALSE}
+library(Matrix); library(ggplot2); library(cowplot); library(susieR); library(BGLR);
+library(glmnet); library(ncvreg); library(L0Learn); library(varbvs); library(mr.ash.alpha);
+library(EMVS); library(SSLASSO); library(bayeslm); library(horseshoe);
+library(R.matlab)
+standardize = FALSE
+source('../code/method_wrapper.R')
+source('../code/sim_wrapper.R')
+
+################################################################
+n = 500
+p = 1000
+s = 500
+ols19          = matrix(0, 20, 7)
+trimmedlasso19 = matrix(0, 20, 7)
+signalname = c("t", "t", "t", "t", "lap", "normal", "unif", "const")
+for (kk in 3:8) {
+  for (i in 1:20) {
+    if (kk <= 4){
+      sname       = sprintf("t%s", kk)
+    } else {
+      sname       = signalname[kk]
+    }
+    print(sname)
+    data          = simulate_data(n, p, s = s, seed = i, signal = 'normal', noise = sname, df = 2^(kk-1), pve = 0.5)
+    name = sprintf("result_fast_n%dp%ds%d_noise=%s_seed%d.mat", n,p, s, sname, i)
+    name = paste("C:/Users/bions/Documents/MATLAB/", name, sep = "")
+    b = readMat(name)$b
+    ols19[i,kk] = compute_oracle_ols(data)
+    trimmedlasso19[i,kk] = norm(data$y.test - data$X.test %*% as.vector(b), '2') / data$sigma / sqrt(n)
+    cat(name,iter,i,s,trimmedlasso19[i,kk],"\n")
+  }
+}
+olsres19 = colMeans(ols19)
+tlasso19 = colMeans(trimmedlasso19)
+################################################################
+```
+
+### Scenario 1-1
+
+(Default setting): $n = \textrm{500}$, $p = \textrm{1,000}$, $s \in [1,p]$, $\textrm{Design} = \textrm{IndepGauss}$, $\textrm{PVE} = 0.5$ and $\textrm{SignalShape} = \textrm{PointNormal}$.
+
+```{r code1, eval = TRUE}
+tdat1        = list()
+n            = 500
+p            = 1000
+s_range      = c(1,3,10,30,100,300,1000)
+method_list  = c("lasso", "ridge", "varbvs", "bayesb")
+method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+for (iter in 2:7) {
+  s               = s_range[iter]
+  for (i in 1:20) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.5)
+    
+    for (j in 1:length(method_list)) {
+      fit.method   <- get(paste("fit.",method_list[j],sep = ""))
+      temp          = capture.output(
+      fit          <- fit.method(data$X, data$y, data$X.test, data$y.test, seed = i))
+      pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+      time[i,j+1]   = fit$t
+      
+      if (method_list[j] == "lasso") {
+        lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
+        lasso.beta       = as.vector(coef(fit$fit))[-1]
+        lasso.time       = c(fit$t, fit$t2)
+      }
+    }
+    
+    fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                             sa2 = (2^((0:19)/20) - 1)^2)
+    pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,1]   = fit$t
+    
+    fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                              update.order = lasso.path.order,
+                             sa2 = (2^((0:19) / 20) - 1)^2)
+    pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+2] = fit$t + lasso.time[2]
+    
+    fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                              beta.init = lasso.beta,
+                              sa2 = (2^((0:19) / 20) - 1)^2)
+    pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+3] = fit$t + lasso.time[1]
+    
+    #name = sprintf("matdata/n%dp%ds%d_normal_seed%d.mat", n,p, s, i)
+    #writeMat(name, X = data$X, y = data$y)
+    print(c(pred[i,]))
+    print(name)
+  }
+  tdat1[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+}
+```
+
+```{r code2, eval = TRUE}
+tdat2        = list()
+n            = 500
+p            = 200
+s_range      = c(1,2,5,10,20,50,100,200)
+method_list  = c("lasso")
+method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+for (iter in 1:8) {
+  s               = s_range[iter]
+  for (i in 1:20) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.5)
+    
+    for (j in 1:length(method_list)) {
+      fit.method   <- get(paste("fit.",method_list[j],sep = ""))
+      temp          = capture.output(
+      fit          <- fit.method(data$X, data$y, data$X.test, data$y.test, seed = i))
+      pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+      time[i,j+1]   = fit$t
+      
+      if (method_list[j] == "lasso") {
+        lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
+        lasso.beta       = as.vector(coef(fit$fit))[-1]
+        lasso.time       = c(fit$t, fit$t2)
+      }
+    }
+    suppressWarnings(
+    fit         <- fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                             sa2 = (2^((0:19)/20) - 1)^2))
+    pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,1]   = fit$t
+    
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            update.order = lasso.path.order,
+                           sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+2] = fit$t + lasso.time[2]
+  
+  fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                            beta.init = lasso.beta,
+                           sa2 = (2^((0:19) / 20) - 1)^2)
+  pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
+  time[i,j+3] = fit$t + lasso.time[1]
+    
+    #name = sprintf("matdata/n%dp%ds%d_normal_seed%d.mat", n,p, s, i)
+    #writeMat(name, X = data$X, y = data$y)
+    print(c(pred[i,]))
+    print(name)
+  }
+  tdat2[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+}
+```
+
+```{r code3, eval = TRUE}
+tdat3        = list()
+n            = 500
+p            = 5000
+s_range      = c(1,5,20,50,200,500,2000,5000)
+method_list  = c("sslasso", "emvs")
+method_list2 = c("mr.ash", method_list)
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+for (iter in 1:7) {
+  s               = s_range[iter]
+  for (i in 1:20) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.5)
+    
+    for (j in 1:length(method_list)) {
+      fit.method   <- get(paste("fit.",method_list[j],sep = ""))
+      temp          = capture.output(
+      fit          <- fit.method(data$X, data$y, data$X.test, data$y.test, seed = i))
+      pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+      time[i,j+1]   = fit$t
+      
+      if (method_list[j] == "lasso") {
+        lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
+        lasso.beta       = as.vector(coef(fit$fit))[-1]
+        lasso.time       = c(fit$t, fit$t2)
+      }
+    }
+    
+    fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                             sa2 = (2^((0:19)/20) - 1)^2)
+    pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,1]   = fit$t
+    
+    name = sprintf("matdata/n%dp%ds%d_normal_seed%d.mat", n,p, s, i)
+    writeMat(name, X = data$X, y = data$y)
+    print(c(pred[i,]))
+    print(name)
+  }
+  tdat3[[iter]] = data.frame(pred = c(pred), time = c(time), fit = rep(method_list2, each = 20))
+}
+```
+
+```{r code5, eval = TRUE}
+tdat5        = list()
+n            = 500
+p            = 1000
+s_range      = c(1,3,10,30,100,300,1000)
+method_list  = c("sslassocv")
+method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+for (iter in 1:7) {
+  s            = s_range[iter]
+  for (i in 1:20) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = "normal", rho = 0.95,
+                                  design = "equicorrgauss", pve = 0.5)
+   
+    for (j in 1:length(method_list)) {
+      fit.method    = get(paste("fit.",method_list[j],sep = ""))
+      suppressWarnings(
+      fit          <- fit.method(data$X, data$y, data$X.test, data$y.test, seed = i))
+      pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+    }
+   
+    fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                             sa2 = (2^((0:19) / 5) - 1)^2)
+    pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,1]   = fit$t
+    
+    fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                              update.order = lasso.path.order,
+                             sa2 = (2^((0:19) / 5) - 1)^2)
+    pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+2] = fit$t + lasso.time[2]
+    
+    fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                              update.order = lasso.path.order,
+                              beta.init = lasso.beta,
+                             sa2 = (2^((0:19) / 5) - 1)^2)
+    pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+3] = fit$t + lasso.time[1]
+    
+    #name = sprintf("matdata/n%dp%ds%d_rho095_seed%d.mat", n,p, s, i)
+    #writeMat(name, X = data$X, y = data$y)
+    print(c(pred[i,]))
+    print(name)
+  }
+  cat("-------------------------------\n")
+  print(c(colMeans(pred)), digits = 3)
+  tdat5[[iter]] = data.frame(pred = c(pred), time = c(time),
+                             fit = rep(method_list2, each = 20))
+}
+```
+
+```{r code4, eval = TRUE}
+tdat4        = list()
+n            = 500
+p            = 1000
+s_range      = c(1,3,10,30,100,300,1000)
+method_list  = c("bayeslm", "sslasso", "emvs")
+method_list2 = c("mr.ash", method_list)
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+for (iter in 1:7) {
+  s            = s_range[iter]
+  for (i in 1:20) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = "normal", rho = 0.5,
+                                  design = "equicorrgauss", pve = 0.5)
+   
+    for (j in 1:length(method_list)) {
+      fit.method    = get(paste("fit.",method_list[j],sep = ""))
+      suppressWarnings(
+      fit          <- fit.method(data$X, data$y, data$X.test, data$y.test, seed = i))
+      pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+      time[i,j+1]   = fit$t
+    }
+   
+    fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                             sa2 = (2^((0:19) / 5) - 1)^2)
+    pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,1]   = fit$t
+    
+    name = sprintf("matdata/n%dp%ds%d_rho050_seed%d.mat", n,p, s, i)
+    writeMat(name, X = data$X, y = data$y)
+    print(c(pred[i,]))
+    print(name)
+  }
+  cat("-------------------------------\n")
+  print(c(colMeans(pred)), digits = 3)
+  tdat4[[iter]] = data.frame(pred = c(pred), time = c(time),
+                             fit = rep(method_list2, each = 20))
+}
+```
+
+```{r code2, eval = TRUE}
+tdat5        = list()
+n            = 500
+p            = 10000
+s_range      = c(1,5,20,100,500,2000,10000)
+method_list  = c("sslassocv")
+method_list2 = c("mr.ash", method_list)
+method_num   = length(method_list2)
+iter_num     = 20
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+
+for (iter in 1:1) {
+  s            = s_range[iter]
+  for (i in 1:1) {
+    data          = simulate_data(n, p, s = s, seed = i, signal = "normal", pve = 0.5)
+   
+    for (j in 1:length(method_list)) {
+      fit.method    = get(paste("fit.",method_list[j],sep =
+                                  ""))
+      suppressWarnings(
+      fit          <- fit.method(data$X, data$y, data$X.test, data$y.test, seed = i))
+      pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+      time[i,j+1]   = fit$t
+      
+      if (method_list[j] == "lasso") {
+        lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
+        lasso.beta       = as.vector(coef(fit$fit))[-1]
+        lasso.time       = c(fit$t, fit$t2)
+      }
+    }
+   
+    fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                             sa2 = (2^((0:19) / 5) - 1)^2)
+    pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,1]   = fit$t
+    
+    #name = sprintf("matdata/n%dp%ds%d_normal_seed%d.mat", n,p, s, i)
+    #writeMat(name, X = data$X, y = data$y)
+    print(c(pred[i,]))
+    print(name)
+  }
+  cat("-------------------------------\n")
+  print(c(colMeans(pred)), digits = 3)
+  tdat5[[iter]] = data.frame(pred = c(pred), time = c(time),
+                             fit = rep(method_list2, each = 20))
+}
+```
+
+```{r code6, eval = TRUE}
+tdat6        = list()
+n            = 287
+s_range      = c(1,5,20,100,500)
+method_list  = c("sslassocv", "lasso")
+method_list2 = c("mr.ash", method_list, "mr.ash.order", "mr.ash.init")
+method_num   = length(method_list2)
+iter_num     = 20
+filelist     = paste("../data/", list.files("../data", pattern = "*.RDS"), sep = "")
+pred         = matrix(0, iter_num, method_num); colnames(pred) = method_list2
+time         = matrix(0, iter_num, method_num); colnames(time) = method_list2
+fdp          = matrix(0, iter_num, method_num); colnames(fdp) = method_list2
+pow          = matrix(0, iter_num, method_num); colnames(pow) = method_list2
+
+
+for (iter in 1:5) {
+  s            = s_range[iter]
+  for (i in 1:20) {
+    data          = simulate_data(s = s, seed = i, signal = "normal",
+                                  design = "realgenotype", filepath = filelist[i], pve = 0.5)
+    p             = dim(data$X)[2]
+    true_support  = (data$beta != 0)
+    sa2           = (2^((0:19) / 20) - 1)^2
+    if (iter < 4) {
+      sa2         = (2^((0:19) / 5) - 1)^2
+    }
+   
+    for (j in 1:length(method_list)) {
+      fit.method    = get(paste("fit.",method_list[j],sep = ""))
+      suppressWarnings(
+      fit          <- fit.method(data$X, data$y, data$X.test, data$y.test, seed = i))
+      pred[i,j+1]   = fit$rsse / data$sigma / sqrt(n)
+      time[i,j+1]   = fit$t
+      if (method_list[j] %in% c("varbvs","bayesb","susie")) {
+        discoveries       = (fit$pip > 0.5)
+      } else {
+        discoveries       = (fit$beta != 0)
+      }
+      
+      if (method_list[j] == "lasso") {
+        lasso.path.order = mr.ash.alpha:::path.order(fit$fit$glmnet.fit)
+        lasso.beta       = as.vector(coef(fit$fit))[-1]
+        lasso.time       = c(fit$t, fit$t2)
+      }
+    }
+   
+    fit         = fit.mr.ash(data$X, data$y, data$X.test, data$y.test, seed = i,
+                             sa2 = sa2)
+    pred[i,1]   = fit$rsse / data$sigma / sqrt(n)
+    time[i,1]   = fit$t
+    discoveries = (fit$pip > 0.5)
+    fdp[i,1]    = compute_fdp(discoveries, true_support)
+    pow[i,1]    = compute_pow(discoveries, true_support)
+    
+    fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                              update.order = lasso.path.order,
+                             sa2 = sa2)
+    pred[i,j+2] = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+2] = fit$t + lasso.time[2]
+    discoveries = (fit$pip > 0.5)
+    fdp[i,j+2]  = compute_fdp(discoveries, true_support)
+    pow[i,j+2]  = compute_pow(discoveries, true_support)
+    
+    fit         = fit.mr.ash2(data$X, data$y, data$X.test, data$y.test, seed = i,
+                              beta.init = lasso.beta,
+                             sa2 = sa2)
+    pred[i,j+3] = fit$rsse / data$sigma / sqrt(n)
+    time[i,j+3] = fit$t + lasso.time[1]
+    discoveries = (fit$pip > 0.5)
+    fdp[i,j+3]  = compute_fdp(discoveries, true_support)
+    pow[i,j+3]  = compute_pow(discoveries, true_support)
+    
+    name = sprintf("matdata/n%ds%d_geno_seed%d.mat", n, s, i)
+    writeMat(name, X = data$X, y = data$y)
+    
+    print(c(pred[i,]), digits = 3)
+  }
+  cat("-------------------------------\n")
+  print(c(colMeans(pred)), digits = 3)
+  tdat6[[iter]] = data.frame(pred = c(pred), time = c(time), fdp = c(fdp),
+                             pow = c(pow), fit = rep(method_list2, each = 20))
+}
+```
+
+```{r saveresults}
+saveRDS(tdat1, "results/revision1_1.RDS")
+saveRDS(tdat2, "results/revision1_2.RDS")
+saveRDS(tdat3, "results/revision1_3.RDS")
+saveRDS(tdat4, "results/revision1_4.RDS")
+saveRDS(tdat5, "results/revision1_5.RDS")
+saveRDS(tdat6, "results/newrevision1_7.RDS")
+saveRDS(tdat6, "results/newrevision_geno.RDS")
+```

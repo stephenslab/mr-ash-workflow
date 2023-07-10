@@ -1,0 +1,1996 @@
+---
+title: "Figure2_for_the_paper"
+output:
+  workflowr::wflow_html:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, message = FALSE}
+library(ggplot2); library(cowplot);
+## function for color
+gg_color_hue <- function(n) {
+  hues = seq(15, 375, length = n + 1)
+  hcl(h = hues, l = 65, c = 100)[1:n]
+}
+```
+
+## Figure
+
+```{r fig1_1, fig.height=11, fig.width=15, fig.align = "center"}
+res_df = readRDS("../results/scenario1.RDS")
+res_df2 = readRDS("../results/newrevision1_2.RDS")
+out = matrix(0,8,16)
+lower = matrix(0,8,16)
+upper = matrix(0,8,16)
+for (i in 1:8) {
+  out[i,1:13] = colMeans(matrix(res_df[[i]]$pred, 20, 13))
+  lower[i,1:13] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.1))
+  upper[i,1:13] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.9))
+  out[i,14] = mean(res_df2[[i]]$pred[101:120])
+  out[i,15] = tlasso1[i]
+  out[i,16] = olsres1[i]
+}
+colnames(out) = c("Mr.ASH.vanilla","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn","Mr.ASH.order","Mr.ASH", "SSLasso", "TrimLasso", "OracleOLS")
+ind = 1:16
+out = out[,ind]
+lower = lower[,ind]
+upper = upper[,ind]
+s_range = c(1,2,5,10,20,50,100,200)
+col          = gg_color_hue(13)[c(2,3,4,5,6,7,12,13,14,1)]
+shape        = c(17,24,25,9,3,11,8,15,33,19)
+df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames(out), each = 8),
+                lower = c(lower), upper = c(upper))
+df$pred = df$pred * sqrt(1 - 0.5)
+df$fit = factor(df$fit, levels =  c("E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn",
+                                    "varbvs","BayesB","B-Lasso","SuSiE","SSLasso","TrimLasso",
+                                    "OracleOLS","Mr.ASH.order","Mr.ASH.vanilla", "Mr.ASH"))
+df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn","SSLasso","TrimLasso","OracleOLS"),]
+df$size = 0.5
+df = df[order(df$fit),]
+df$size[73:80] = 1.2
+df$METHOD = df$fit
+fig_dummy_figure1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = METHOD), size = df$size) +
+  geom_point(aes(x = s, y = pred, color = METHOD, shape = METHOD), size = 3) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = c(1,2,5,10,20,50,100,200)) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of nonzero coefficients (s)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 0,hjust = 1),
+        axis.title.y = element_blank(), axis.title.x = element_blank()) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(0.7,0.8,0.9,1.0)) +
+  coord_cartesian(ylim = c(0.7,1.05))
+fig_main = fig_dummy_figure1 + theme(legend.position = "none")
+subtitle  = ggdraw() + draw_label("Low dimension (p=200)", fontface  = 'bold', size = 22)
+saveRDS(df, "../newresults/df_for_figure1_1.RDS")
+fig1_1    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+
+```{r fig1_2, fig.height=11, fig.width=15, fig.align = "center"}
+res_df = readRDS("../results/new11.RDS")
+res_df2 = readRDS("../results/newrevision1_1.RDS")
+out = matrix(0,7,16)
+lower = matrix(0,7,16)
+upper = matrix(0,7,16)
+for (i in 1:7) {
+  out[i,1:13] = colMeans(matrix(res_df[[i]]$pred, 20, 13))
+  lower[i,1:13] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.1))
+  upper[i,1:13] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.9))
+  out[i,14] = mean(res_df2[[i]]$pred[101:120])
+  out[i,15] = tlasso2[i]
+  out[i,16] = olsres2[i]
+}
+colnames(out) = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn","Mr.ASH.order","Mr.ASH.init", "SSLasso", "TrimLasso", "OracleOLS")
+ind = 1:16
+out = out[,ind]
+lower = lower[,ind]
+upper = upper[,ind]
+s_range = c(1,3,10,30,100,300,1000)
+col          = gg_color_hue(13)[c(2,3,4,5,6,7,12,13,14,1)]
+shape        = c(17,24,25,9,3,11,8,15,33,19)
+df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames(out), each = 7),
+                lower = c(lower), upper = c(upper))
+df$pred = df$pred * sqrt(1 - 0.5)
+df$fit = factor(df$fit, levels =  c("E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn",
+                                    "varbvs","BayesB","B-Lasso","SuSiE","SSLasso","TrimLasso",
+                                    "OracleOLS", "Mr.ASH.order","Mr.ASH.init", "Mr.ASH"))
+df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn","SSLasso","TrimLasso", "OracleOLS"),]
+df$size = 0.5
+df = df[order(df$fit),]
+df$size[64:70] = 1.2
+df$METHOD = df$fit
+fig_dummy1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = METHOD), size = df$size) +
+  geom_point(aes(x = s, y = pred, color = METHOD, shape = METHOD), size = 3) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = c(1,3,10,30,100,300,1000)) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of nonzero coefficients (s)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 0,hjust = 1),
+        axis.title.y = element_blank(), axis.title.x = element_blank()) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(0.7,0.8,0.9,1.0)) +
+  coord_cartesian(ylim = c(0.7,1.05))
+saveRDS(df, "../newresults/df_for_figure1_2.RDS")
+fig_main = fig_dummy1 + theme(legend.position = "none")
+subtitle  = ggdraw() + draw_label("Mid dimension (p=1000)", fontface  = 'bold', size = 22) 
+fig1_2    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+
+```{r fig1_3, fig.height=11, fig.width=15, fig.align = "center"}
+res_df = readRDS("../results/scenario2.RDS")
+res_df2 = readRDS("../results/newrevision1_5.RDS")
+out = matrix(0,7,16)
+lower = matrix(0,7,16)
+upper = matrix(0,7,16)
+for (i in 1:7) {
+  out[i,1:13] = colMeans(matrix(res_df[[i]]$pred, 20, 13))
+  lower[i,1:13] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.1))
+  upper[i,1:13] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.9))
+  out[i,14] = mean(res_df2[[i]]$pred[101:120])
+  out[i,15] = tlasso6[i]
+  out[i,16] = olsres6[i]
+}
+colnames(out) = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn","Mr.ASH.order","Mr.ASH.init", "SSLasso", "TrimLasso", "OracleOLS")
+ind = 1:16
+out = out[,ind]
+lower = lower[,ind]
+upper = upper[,ind]
+s_range = c(1,5,20,100,500,2000,10000)
+col          = gg_color_hue(13)[c(2,3,4,5,6,7,12,13,14,1)]
+shape        = c(17,24,25,9,3,11,8,15,33,19)
+df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames(out), each = 7),
+                lower = c(lower), upper = c(upper))
+df$pred = df$pred * sqrt(1 - 0.5)
+df$fit = factor(df$fit, levels =  c("E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn",
+                                    "varbvs","BayesB","B-Lasso","SuSiE","SSLasso","TrimLasso",
+                                    "OracleOLS", "Mr.ASH.order","Mr.ASH.init", "Mr.ASH"))
+df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn","SSLasso","TrimLasso","OracleOLS"),]
+df = df[df$s %in% c(1,5,20,100,500,10000),]
+df$size = 0.5
+df = df[order(df$fit),]
+df$size[55:60] = 1.2
+df$METHOD = df$fit
+fig_dummy1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = METHOD), size = df$size) +
+  geom_point(aes(x = s, y = pred, color = METHOD, shape = METHOD), size = 3) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = c(1,5,20,100,500,2000,10000)) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of nonzero coefficients (s)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 0,hjust = 1),
+        axis.title.y = element_blank(), axis.title.x = element_blank()) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(0.7,0.8,0.9,1.0)) +
+  coord_cartesian(ylim = c(0.7,1.05))
+saveRDS(df, "../newresults/df_for_figure1_3.RDS")
+fig_main = fig_dummy1 + theme(legend.position = "none")
+subtitle  = ggdraw() + draw_label("High dimension (p=10000)", fontface  = 'bold', size = 22) 
+fig1_3    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+
+
+```{r fig1_4, fig.height=11, fig.width=15, fig.align = "center"}
+res_df = readRDS("../results/new15.RDS")
+res_df2 = readRDS("../results/revision1_5.RDS")
+out = matrix(0,7,16)
+lower = matrix(0,7,16)
+upper = matrix(0,7,16)
+for (i in 1:7) {
+  out[i,1:13] = colMeans(matrix(res_df[[i]]$pred, 20, 13))
+  lower[i,1:13] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.1))
+  upper[i,1:13] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.9))
+  out[i,14] = mean(res_df2[[i]]$pred[61:80])
+  out[i,15] = tlasso5[i]
+  out[i,16] = olsres5[i]
+}
+colnames(out) = c("Mr.ASH.vanilla","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn","Mr.ASH.order","Mr.ASH", "SSLasso", "TrimLasso", "OracleOLS")
+ind = 1:16
+out = out[,ind]
+lower = lower[,ind]
+upper = upper[,ind]
+s_range = c(1,3,10,30,100,300,1000)
+col          = gg_color_hue(13)[c(2,3,4,5,6,7,12,13,14,1)]
+shape        = c(17,24,25,9,3,11,8,15,33,19)
+df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames(out), each = 7),
+                lower = c(lower), upper = c(upper))
+df$pred = df$pred * sqrt(1 - 0.5)
+df$fit = factor(df$fit, levels =  c("E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn",
+                                    "varbvs","BayesB","B-Lasso","SuSiE","SSLasso","TrimLasso",
+                                    "OracleOLS", "Mr.ASH.order","Mr.ASH.init", "Mr.ASH"))
+df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn","SSLasso","TrimLasso", "OracleOLS"),]
+df$size = 0.5
+df = df[order(df$fit),]
+df$size[64:70] = 1.2
+df$METHOD = df$fit
+fig_dummy1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = METHOD), size = df$size) +
+  geom_point(aes(x = s, y = pred, color = METHOD, shape = METHOD), size = 3) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = c(1,3,10,30,100,300,1000)) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of nonzero coefficients (s)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 0,hjust = 1),
+        axis.title.y = element_blank(), axis.title.x = element_blank()) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(0.7,0.8,0.9,1.0)) +
+  coord_cartesian(ylim = c(0.7,1.05))
+saveRDS(df, "../newresults/df_for_figure1_4.RDS")
+fig_main = fig_dummy1 + theme(legend.position = "none")
+subtitle  = ggdraw() + draw_label("Correlated predictors (rho = 0.95)", fontface  = 'bold', size = 22) 
+fig1_4    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+
+```{r fig1_5, fig.height=11, fig.width=15, fig.align = "center"}
+res_df = readRDS("../results/new14.RDS")
+res_df2 = readRDS("../results/revision1_4.RDS")
+out = matrix(0,7,16)
+lower = matrix(0,7,16)
+upper = matrix(0,7,16)
+for (i in 1:7) {
+  out[i,1:13] = colMeans(matrix(res_df[[i]]$pred, 20, 13))
+  lower[i,1:13] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.1))
+  upper[i,1:13] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.9))
+  out[i,14] = mean(res_df2[[i]]$pred[61:80])
+  out[i,15] = tlasso3[i]
+  out[i,16] = olsres3[i]
+}
+colnames(out) = c("Mr.ASH.vanilla","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn","Mr.ASH.order","Mr.ASH", "SSLasso", "TrimLasso", "OracleOLS")
+ind = 1:16
+out = out[,ind]
+lower = lower[,ind]
+upper = upper[,ind]
+s_range = c(1,3,10,30,100,300,1000)
+col          = gg_color_hue(13)[c(2,3,4,5,6,7,12,13,14,1)]
+shape        = c(17,24,25,9,3,11,8,15,33,19)
+df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames(out), each = 7),
+                lower = c(lower), upper = c(upper))
+df$pred = df$pred * sqrt(1 - 0.5)
+df$fit = factor(df$fit, levels =  c("E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn",
+                                    "varbvs","BayesB","B-Lasso","SuSiE","SSLasso","TrimLasso",
+                                    "OracleOLS", "Mr.ASH.order","Mr.ASH.init", "Mr.ASH"))
+df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn","SSLasso","TrimLasso", "OracleOLS"),]
+df$size = 0.5
+df = df[order(df$fit),]
+df$size[64:70] = 1.2
+df$METHOD = df$fit
+fig_dummy1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = METHOD), size = df$size) +
+  geom_point(aes(x = s, y = pred, color = METHOD, shape = METHOD), size = 3) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = c(1,3,10,30,100,300,1000)) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of nonzero coefficients (s)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 0,hjust = 1),
+        axis.title.y = element_blank(), axis.title.x = element_blank()) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(0.7,0.8,0.9,1.0)) +
+  coord_cartesian(ylim = c(0.7,1.05))
+saveRDS(df, "../newresults/df_for_figure1_5.RDS")
+fig_main = fig_dummy1 + theme(legend.position = "none")
+subtitle  = ggdraw() + draw_label("Correlated predictors (rho = 0.5)", fontface  = 'bold', size = 22) 
+fig1_5    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+
+```{r fig1_6, fig.height=11, fig.width=15, fig.align = "center"}
+res_df = readRDS("../results/scenario6.RDS")
+res_df2 = readRDS("../results/newrevision_geno.RDS")
+s_range = c(1, 5, 20, 100, 500)
+out = matrix(0,5,16)
+lower = matrix(0,5,16)
+upper = matrix(0,5,16)
+for (i in 1:5) {
+  out[i,1:13] = colMeans(matrix(res_df[[i]]$pred, 20, 13))
+  lower[i,1:13] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.1))
+  upper[i,1:13] = apply(matrix(res_df[[i]]$pred, 20, 13), 2, function(x) quantile(x, probs = 0.9))
+  out[i,14] = mean(res_df2[[i]]$pred[21:40])
+  out[i,15] = tlasso16[i]
+  out[i,16] = olsres16[i]
+}
+colnames(out) = c("Mr.ASH.vanilla","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge",
+                  "SCAD","MCP","L0Learn","Mr.ASH.order","Mr.ASH", "SSLasso", "TrimLasso", "OracleOLS")
+ind = 1:16
+out = out[,ind]
+lower = lower[,ind]
+upper = upper[,ind]
+col          = gg_color_hue(13)[c(2,3,4,5,6,7,12,13,14,1)]
+shape        = c(17,24,25,9,3,11,8,15,33,19)
+df = data.frame(s = rep(s_range, length(ind)), pred = c(out), fit = rep(colnames(out), each = 5),
+                lower = c(lower), upper = c(upper))
+df$pred = df$pred * sqrt(1 - 0.5)
+df$fit = factor(df$fit, levels =  c("E-NET","Lasso","Ridge",
+                                    "SCAD","MCP","L0Learn",
+                                    "varbvs","BayesB","B-Lasso","SuSiE","SSLasso","TrimLasso",
+                                    "OracleOLS", "Mr.ASH.order","Mr.ASH.init", "Mr.ASH"))
+df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn","SSLasso", "TrimLasso", "OracleOLS"),]
+df$size = 0.5
+df = df[order(df$fit),]
+df$size[46:50] = 1.2
+df$METHOD = df$fit
+fig_dummy1 = ggplot(df) + geom_line(aes(x = s, y = pred, color = METHOD), size = df$size) +
+  geom_point(aes(x = s, y = pred, color = METHOD, shape = METHOD), size = 3) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = c(1, 5, 20, 100, 500)) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of nonzero coefficients (s)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 0,hjust = 1),
+        axis.title.y = element_blank(), axis.title.x = element_blank()) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(0.7,0.8,0.9,1.0)) +
+  coord_cartesian(ylim = c(0.7,1.05))
+fig_main = fig_dummy1 + theme(legend.position = "none")
+subtitle  = ggdraw() + draw_label("Real genotype", fontface  = 'bold', size = 22)
+saveRDS(df, "../newresults/df_for_figure1_6.RDS")
+fig1_6    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+
+```{r plot4_1}
+res_df = readRDS("../results/realnew23.RDS")
+res_df2 = readRDS("../results/revision2_3.RDS")
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE")
+
+pve_list     = c(0,0.01,0.05,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.95,0.99)
+sdat         = data.frame()
+for (i in 1:14) {
+  sdat = rbind(sdat, data.frame(pred2 = colMeans(matrix(res_df[[i]]$pred, 20, 11)),
+                                time = colMeans(matrix(res_df[[i]]$time, 20, 11)),
+                                fit  = method_list,
+                                pve  = pve_list[i]))
+  
+  
+  sdat = rbind(sdat, data.frame(pred2 = mean(res_df2[[i]]$pred[61:80]),
+                                time = 0,
+                                fit  = "SSLasso",
+                                pve  = pve_list[i]))
+  
+  sdat = rbind(sdat, data.frame(pred2 = tlasso12[i],
+                                time = 0,
+                                fit  = "TrimLasso",
+                                pve  = pve_list[i]))
+  
+  sdat = rbind(sdat, data.frame(pred2 = olsres12[i],
+                                time = 0,
+                                fit  = "OracleOLS",
+                                pve  = pve_list[i]))
+}
+sdat$fit = factor(sdat$fit, levels = c("E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn", "SSLasso", "TrimLasso", "OracleOLS", "Mr.ASH"))
+sdat     = sdat[sdat$fit %in% c("Mr.ASH", "E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn", "SSLasso", "TrimLasso", "OracleOLS"),]
+sdat$size = 0.5
+sdat$pred = sdat$pred2 * sqrt(1 - sdat$pve)
+sdat = sdat[sdat$pve %in% unique(sdat$pve)[c(2,4,5,6,7,8,9,10,11,12,13)],]
+sdat = sdat[order(sdat$fit),]
+sdat$size[77:88] = 1
+
+p1 = ggplot(sdat) + geom_line(aes(x = pve, y = pred, color = fit), size = sdat$size) +
+  geom_point(aes(x = pve, y = pred, color = fit, shape = fit), size = 2.5) +
+  scale_x_continuous(breaks = seq(0,1,0.1)) +
+  theme_cowplot(font_size = 22) +
+  labs(y = "predictior error (rmse / sigma)", x = "signal strength (PVE)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        axis.title.y = element_blank()) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(breaks = c(0.2,0.4,0.6,0.8,1.0)) +
+  coord_cartesian(ylim = c(0.2,1.05))
+fig_dummy_figure4 = p1
+fig_main = p1 + theme(legend.position = "none")
+#suptitle  = ggdraw() + draw_label("Varying PVE (or SNR, Noise Variance)", fontface  = 'bold', size = 22) 
+#subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 2000, s = 20, pve = 0-0.9", fontface  = 'bold', size = 22) 
+#fig1_8    = plot_grid(suptitle, subtitle,fig_main, ncol = 1, rel_heights = c(0.04,0.04,0.95))
+# subtitle   = ggdraw() + draw_label("Varying PVE / Signal-to-Noise Ratio (Scenario 8)", fontface  = 'bold', size = 22)
+saveRDS(sdat, "../newresults/df_for_figure4_1.RDS")
+subtitle  = ggdraw() + draw_label("Very sparse, s = 5", fontface  = 'bold', size = 22) 
+fig4_1    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+
+```{r plot4_2}
+res_df = readRDS("../results/realnew24.RDS")
+res_df2 = readRDS("../results/newrevision2_4.RDS")
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE")
+
+pve_list     = c(0,0.01,0.05,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.95,0.99)
+sdat         = data.frame()
+for (i in 1:14) {
+  sdat = rbind(sdat, data.frame(pred2 = colMeans(matrix(res_df[[i]]$pred, 20, 11)),
+                                time = colMeans(matrix(res_df[[i]]$time, 20, 11)),
+                                fit  = method_list,
+                                pve  = pve_list[i]))
+  
+  sdat = rbind(sdat, data.frame(pred2 = mean(res_df2[[i]]$pred[21:40]),
+                                time = 0,
+                                fit  = "SSLasso",
+                                pve  = pve_list[i]))
+  
+  sdat = rbind(sdat, data.frame(pred2 = tlasso13[i],
+                                time = 0,
+                                fit  = "TrimLasso",
+                                pve  = pve_list[i]))
+
+  sdat = rbind(sdat, data.frame(pred2 = olsres13[i],
+                                time = 0,
+                                fit  = "OracleOLS",
+                                pve  = pve_list[i]))
+}
+sdat$fit = factor(sdat$fit, levels = c("E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn", "SSLasso", "TrimLasso", "OracleOLS", "Mr.ASH"))
+sdat     = sdat[sdat$fit %in% c("Mr.ASH", "E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn", "SSLasso", "TrimLasso", "OracleOLS"),]
+sdat$size = 0.5
+sdat$pred = sdat$pred2 * sqrt(1 - sdat$pve)
+sdat = sdat[sdat$pve %in% unique(sdat$pve)[c(2,4,5,6,7,8,9,10,11,12,13)],]
+sdat = sdat[order(sdat$fit),]
+sdat$size[77:88] = 1
+
+p1 = ggplot(sdat) + geom_line(aes(x = pve, y = pred, color = fit), size = sdat$size) +
+  geom_point(aes(x = pve, y = pred, color = fit, shape = fit), size = 2.5) +
+  scale_x_continuous(breaks = seq(0,1,0.1)) +
+  theme_cowplot(font_size = 22) +
+  labs(y = "predictior error (rmse / sigma)", x = "signal strength (PVE)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        axis.title.y = element_blank()) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(breaks = c(0.2,0.4,0.6,0.8,1.0)) +
+  coord_cartesian(ylim = c(0.2,1.05))
+fig_dummy = p1
+fig_main = p1 + theme(legend.position = "none") 
+saveRDS(sdat, "../newresults/df_for_figure4_2.RDS")
+subtitle  = ggdraw() + draw_label("Sparse, s = 20", fontface  = 'bold', size = 22) 
+fig4_2    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+
+```{r plot4_3}
+res_df = readRDS("../results/realnew21.RDS")
+res_df2 = readRDS("../results/revision2_1.RDS")
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE")
+
+pve_list     = c(0,0.01,0.05,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.95,0.99)
+sdat         = data.frame()
+for (i in 1:14) {
+  sdat = rbind(sdat, data.frame(pred2 = colMeans(matrix(res_df[[i]]$pred, 20, 11)),
+                                time = colMeans(matrix(res_df[[i]]$time, 20, 11)),
+                                fit  = method_list,
+                                pve  = pve_list[i]))
+  
+  sdat = rbind(sdat, data.frame(pred2 = mean(res_df2[[i]]$pred[61:80]),
+                                time = 0,
+                                fit  = "SSLasso",
+                                pve  = pve_list[i]))
+  
+  sdat = rbind(sdat, data.frame(pred2 = tlasso14[i],
+                                time = 0,
+                                fit  = "TrimLasso",
+                                pve  = pve_list[i]))
+  
+  sdat = rbind(sdat, data.frame(pred2 = olsres14[i],
+                                time = 0,
+                                fit  = "OracleOLS",
+                                pve  = pve_list[i]))
+}
+sdat$fit = factor(sdat$fit, levels = c("E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn", "SSLasso", "TrimLasso", "OracleOLS", "Mr.ASH"))
+sdat     = sdat[sdat$fit %in% c("Mr.ASH", "E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn", "SSLasso", "TrimLasso", "OracleOLS"),]
+sdat$size = 0.5
+sdat$pred = sdat$pred2 * sqrt(1 - sdat$pve)
+sdat = sdat[sdat$pve %in% unique(sdat$pve)[c(2,4,5,6,7,8,9,10,11,12,13)],]
+sdat = sdat[order(sdat$fit),]
+sdat$size[77:88] = 1
+
+p1 = ggplot(sdat) + geom_line(aes(x = pve, y = pred, color = fit), size = sdat$size) +
+  geom_point(aes(x = pve, y = pred, color = fit, shape = fit), size = 2.5) +
+  scale_x_continuous(breaks = seq(0,1,0.1)) +
+  theme_cowplot(font_size = 22) +
+  labs(y = "predictior error (rmse / sigma)", x = "signal strength (PVE)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        axis.title.y = element_blank()) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(breaks = c(0.2,0.4,0.6,0.8,1.0)) +
+  coord_cartesian(ylim = c(0.2,1.05))
+fig_dummy = p1
+fig_main = p1 + theme(legend.position = "none") 
+saveRDS(sdat, "../newresults/df_for_figure4_3.RDS")
+subtitle  = ggdraw() + draw_label("Half dense, s = 500", fontface  = 'bold', size = 22) 
+fig4_3    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+
+```{r plot4_4}
+res_df = readRDS("../results/realnew22.RDS")
+res_df2 = readRDS("../results/revision2_2.RDS")
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE")
+
+pve_list     = c(0,0.01,0.05,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,0.95,0.99)
+sdat         = data.frame()
+for (i in 1:14) {
+  sdat = rbind(sdat, data.frame(pred2 = colMeans(matrix(res_df[[i]]$pred, 20, 11)),
+                                time = colMeans(matrix(res_df[[i]]$time, 20, 11)),
+                                fit  = method_list,
+                                pve  = pve_list[i]))
+  
+  sdat = rbind(sdat, data.frame(pred2 = mean(res_df2[[i]]$pred[61:80]),
+                                time = 0,
+                                fit  = "SSLasso",
+                                pve  = pve_list[i]))
+  
+  sdat = rbind(sdat, data.frame(pred2 = tlasso15[i],
+                                time = 0,
+                                fit  = "TrimLasso",
+                                pve  = pve_list[i]))
+  
+  sdat = rbind(sdat, data.frame(pred2 = olsres15[i],
+                                time = 0,
+                                fit  = "OracleOLS",
+                                pve  = pve_list[i]))
+}
+sdat$fit = factor(sdat$fit, levels = c("E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn", "SSLasso", "TrimLasso", "OracleOLS", "Mr.ASH"))
+sdat     = sdat[sdat$fit %in% c("Mr.ASH", "E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn", "SSLasso", "TrimLasso", "OracleOLS"),]
+sdat$size = 0.5
+sdat$pred = sdat$pred2 * sqrt(1 - sdat$pve)
+sdat = sdat[sdat$pve %in% unique(sdat$pve)[c(2,4,5,6,7,8,9,10,11,12,13)],]
+sdat = sdat[order(sdat$fit),]
+sdat$size[77:88] = 1
+
+p1 = ggplot(sdat) + geom_line(aes(x = pve, y = pred, color = fit), size = sdat$size) +
+  geom_point(aes(x = pve, y = pred, color = fit, shape = fit), size = 2.5) +
+  scale_x_continuous(breaks = seq(0,1,0.1)) +
+  theme_cowplot(font_size = 22) +
+  labs(y = "predictior error (rmse / sigma)", x = "signal strength (PVE)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        axis.title.y = element_blank()) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(breaks = c(0.2,0.4,0.6,0.8,1.0)) +
+  coord_cartesian(ylim = c(0.2,1.05))
+fig_dummy = p1
+fig_main = p1 + theme(legend.position = "none")
+saveRDS(sdat, "../newresults/df_for_figure4_4.RDS")
+subtitle  = ggdraw() + draw_label("Full dense, s = 1000", fontface  = 'bold', size = 22) 
+fig4_4    = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+
+```{r plot3_1}
+res_df = readRDS("../results/new23.RDS")
+res_df2 = readRDS("../results/revision3_3.RDS")
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE")
+x_range      = 2^(c(1,2,3,4,5,6,7,8) - 1)
+df           = data.frame()
+for (i in 1:8) {
+res_df[[i]]       = res_df[[i]][1:220,]
+res_df[[i]]$fit   = rep(method_list, each = 20)
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_level)
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 11))),
+                                         df   = x_range[i],
+                                         fit  = method_list))
+df                = rbind(df, data.frame(pred = mean(res_df2[[i]]$pred[101:120]),
+                                         df   = x_range[i],
+                                         fit  = "SSLasso"))
+df                = rbind(df, data.frame(pred = tlasso8[i],
+                                         df   = x_range[i],
+                                         fit  = "TrimLasso"))
+df                = rbind(df, data.frame(pred = olsres8[i],
+                                         df   = x_range[i],
+                                         fit  = "OracleOLS"))
+}
+df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn","SSLasso","TrimLasso", "OracleOLS"),]
+df$fit = factor(df$fit, levels = c("E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE","SSLasso","TrimLasso", "OracleOLS", "Mr.ASH"))
+df$size = 0.5
+df$pred = df$pred * sqrt(1 - 0.5)
+df = df[order(df$fit),]
+df$size[73:80] = 1.2
+p1    = ggplot(df) + geom_line(aes(x = df, y = pred, color = fit), size = df$size) +
+  geom_point(aes(x = df, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = c(1,2,4,8,16,32,64,128),
+                     labels = c("t (df=1)","t (df=2)","t (df=4)","t (df=8)","Laplace",
+                                "Normal","Uniform","Constant")) +
+  labs(y = "predictior error (rmse / sigma)", x = "signal shape (h)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        axis.title.y = element_blank()) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(.7, .8, .9, 1.0)) +
+  coord_cartesian(ylim = c(0.7,1.05))
+fig_dummy_figure3 = p1
+fig_main = p1 + theme(legend.position = "none") 
+saveRDS(df, "../newresults/df_for_figure3_1.RDS")
+subtitle   = ggdraw() + draw_label("varying h (very sparse, s = 5)", fontface  = 'bold', size = 22)  
+fig3_1   = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+
+```{r plot3_2}
+res_df = readRDS("../results/new24.RDS")
+res_df2 = readRDS("../results/revision3_4.RDS")
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE")
+x_range      = 2^(c(1,2,3,4,5,6,7,8) - 1)
+df           = data.frame()
+for (i in 1:8) {
+res_df[[i]]       = res_df[[i]][1:220,]
+res_df[[i]]$fit   = rep(method_list, each = 20)
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_level)
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 11))),
+                                         df   = x_range[i],
+                                         fit  = method_list))
+df                = rbind(df, data.frame(pred = mean(res_df2[[i]]$pred[101:120]),
+                                         df   = x_range[i],
+                                         fit  = "SSLasso"))
+df                = rbind(df, data.frame(pred = tlasso9[i],
+                                         df   = x_range[i],
+                                         fit  = "TrimLasso"))
+df                = rbind(df, data.frame(pred = olsres9[i],
+                                         df   = x_range[i],
+                                         fit  = "OracleOLS"))
+}
+df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn","SSLasso","TrimLasso", "OracleOLS"),]
+df$fit = factor(df$fit, levels = c("E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE","SSLasso","TrimLasso", "OracleOLS", "Mr.ASH"))
+df$size = 0.5
+df$pred = df$pred * sqrt(1 - 0.5)
+df = df[order(df$fit),]
+df$size[73:80] = 1.2
+p1    = ggplot(df) + geom_line(aes(x = df, y = pred, color = fit), size = df$size) +
+  geom_point(aes(x = df, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = c(1,2,4,8,16,32,64,128),
+                     labels = c("t (df=1)","t (df=2)","t (df=4)","t (df=8)","Laplace",
+                                "Normal","Uniform","Constant")) +
+  labs(y = "predictior error (rmse / sigma)", x = "signal shape (h)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        axis.title.y = element_blank()) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(.7, .8, .9, 1.0)) +
+  coord_cartesian(ylim = c(0.7,1.05))
+fig_main = p1 + theme(legend.position = "none") 
+saveRDS(df, "../newresults/df_for_figure3_2.RDS")
+subtitle   = ggdraw() + draw_label("varying h (sparse, s = 20)", fontface  = 'bold', size = 22)  
+fig3_2   = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+
+```{r plot3_3}
+res_df = readRDS("../results/new22.RDS")
+res_df2 = readRDS("../results/revision3_2.RDS")
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE")
+x_range      = 2^(c(1,2,3,4,5,6,7,8) - 1)
+df           = data.frame()
+for (i in 1:8) {
+res_df[[i]]       = res_df[[i]][1:220,]
+res_df[[i]]$fit   = rep(method_list, each = 20)
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_level)
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 11))),
+                                         df   = x_range[i],
+                                         fit  = method_list))
+df                = rbind(df, data.frame(pred = mean(res_df2[[i]]$pred[101:120]),
+                                         df   = x_range[i],
+                                         fit  = "SSLasso"))
+df                = rbind(df, data.frame(pred = tlasso10[i],
+                                         df   = x_range[i],
+                                         fit  = "TrimLasso"))
+df                = rbind(df, data.frame(pred = olsres10[i],
+                                         df   = x_range[i],
+                                         fit  = "OracleOLS"))
+}
+df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn","SSLasso","TrimLasso", "OracleOLS"),]
+df$fit = factor(df$fit, levels = c("E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE","SSLasso","TrimLasso", "OracleOLS", "Mr.ASH"))
+df$size = 0.5
+df$pred = df$pred * sqrt(1 - 0.5)
+df = df[order(df$fit),]
+df$size[73:80] = 1.2
+p1    = ggplot(df) + geom_line(aes(x = df, y = pred, color = fit), size = df$size) +
+  geom_point(aes(x = df, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = c(1,2,4,8,16,32,64,128),
+                     labels = c("t (df=1)","t (df=2)","t (df=4)","t (df=8)","Laplace",
+                                "Normal","Uniform","Constant")) +
+  labs(y = "predictior error (rmse / sigma)", x = "signal shape (h)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        axis.title.y = element_blank()) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(.7, .8, .9, 1.0)) +
+  coord_cartesian(ylim = c(0.7,1.05))
+fig_main = p1 + theme(legend.position = "none") 
+saveRDS(df, "../newresults/df_for_figure3_3.RDS")
+subtitle   = ggdraw() + draw_label("varying h (half dense, s = 500)", fontface  = 'bold', size = 22)  
+fig3_3   = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+
+```{r plot3_4}
+res_df = readRDS("../results/new21.RDS")
+res_df2 = readRDS("../results/newrevision3_1.RDS")
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn")
+method_level = c("Mr.ASH","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE")
+x_range      = 2^(c(1,2,3,4,5,6,7,8) - 1)
+df           = data.frame()
+for (i in 1:8) {
+res_df[[i]]       = res_df[[i]][1:220,]
+res_df[[i]]$fit   = rep(method_list, each = 20)
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_level)
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 11))),
+                                         df   = x_range[i],
+                                         fit  = method_list))
+df                = rbind(df, data.frame(pred = mean(res_df2[[i]]$pred[21:40]),
+                                         df   = x_range[i],
+                                         fit  = "SSLasso"))
+df                = rbind(df, data.frame(pred = tlasso11[i],
+                                         df   = x_range[i],
+                                         fit  = "TrimLasso"))
+df                = rbind(df, data.frame(pred = olsres11[i],
+                                         df   = x_range[i],
+                                         fit  = "OracleOLS"))
+}
+df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn","SSLasso","TrimLasso", "OracleOLS"),]
+df$fit = factor(df$fit, levels = c("E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE","SSLasso","TrimLasso", "OracleOLS", "Mr.ASH"))
+df$size = 0.5
+df$pred = df$pred * sqrt(1 - 0.5)
+df = df[order(df$fit),]
+df$size[73:80] = 1.2
+p1    = ggplot(df) + geom_line(aes(x = df, y = pred, color = fit), size = df$size) +
+  geom_point(aes(x = df, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = c(1,2,4,8,16,32,64,128),
+                     labels = c("t (df=1)","t (df=2)","t (df=4)","t (df=8)","Laplace",
+                                "Normal","Uniform","Constant")) +
+  labs(y = "predictior error (rmse / sigma)", x = "signal shape (h)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        axis.title.y = element_blank()) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(.7, .8, .9, 1.0)) +
+  coord_cartesian(ylim = c(0.7,1.05))
+fig_main = p1 + theme(legend.position = "none") 
+saveRDS(df, "../newresults/df_for_figure3_4.RDS")
+subtitle   = ggdraw() + draw_label("Full dense, s = 1000", fontface  = 'bold', size = 22)  
+fig3_4   = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+```{r fig6_1, fig.height=11, fig.width=15}
+res_df       = readRDS("../results/scenario11.RDS")
+res_df2       = readRDS("../results/newrevision11.RDS")
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso",
+                 "Ridge","SCAD.2tuning","MCP.2tuning","SCAD","MCP","L0Learn","Mr.ASH.null")
+method_level = c("E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE","SCAD.2tuning","MCP.2tuning",
+                 "SSLasso","TrimLasso", "OracleOLS", "Mr.ASH.null", "Mr.ASH")
+df           = data.frame()
+p_range      = c(20,50,100,200,500,1000,2000,5000,10000,20000)
+for (i in 1:10) {
+res_df[[i]]$fit   = rep(method_list, each = 20)
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_list)
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 14))),
+                                         time2 = apply(matrix(res_df[[i]]$time, 20, 14), 2, median),
+                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 14))),
+                                         p    = p_range[i],
+                                         fit  = method_list))
+df                = rbind(df, data.frame(pred = mean(res_df2[[i]]$pred[61:80]),
+                                         time2 = median(res_df[[i]]$time[61:80]),
+                                         time = mean(res_df[[i]]$time[61:80]),
+                                         p    = p_range[i],
+                                         fit  = "SSLasso"))
+df                = rbind(df, data.frame(pred = tlasso17[i],
+                                         time2 = tmed17[i],
+                                         time = ttime17[i],
+                                         p    = p_range[i],
+                                         fit  = "TrimLasso"))
+df                = rbind(df, data.frame(pred = olsres17[i],
+                                         time2 = NA,
+                                         time = NA,
+                                         p    = p_range[i],
+                                         fit  = "OracleOLS"))
+}
+df$pred = df$pred * sqrt(1-0.5)
+df$fit = factor(df$fit, levels = method_level)
+df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP",
+                      "L0Learn","SSLasso","TrimLasso","OracleOLS"
+                      #,"Mr.ASH.null"
+                      ),]
+df = df[df$p %in% c(20,50,200,500,1000,2000,10000,20000),]
+df$size = 0.5
+df$size[73:80] = 1.2
+col          = gg_color_hue(13)[c(2,3,4,5,6,7,12,13,14,1)]
+shape        = c(17,24,25,9,3,11,8,15,33,19)
+df$lt = "solid"
+#df$lt[57:72] = "dashed"
+saveRDS(df, "../newresults/df_for_figure6_1.RDS")
+p1    = ggplot(df) + geom_line(aes(x = p, y = pred, color = fit), size = df$size, linetype = df$lt) +
+  geom_point(aes(x = p, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = c(20,50,200,500,1000,2000,10000,20000)) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of predictors (p)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.title.x = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        axis.title.y = element_blank()) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(.7,.8,.9,1)) +
+  coord_cartesian(ylim = c(.7,1))
+#fig_dummy_figure6 = p1
+fig_main = p1 + theme(legend.position = "none")
+suptitle   = ggdraw() + draw_label("Varying p", fontface  = 'bold.italic', size = 14) 
+subtitle   = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 20-20000, s = 20, pve = 0.5", fontface  = 'bold', size = 14) 
+fig6_1    = plot_grid(fig_main, ncol = 1, rel_heights = c(0.05,0.95))
+```
+
+```{r fig6_2, fig.height=11, fig.width=15}
+col          = gg_color_hue(13)[c(2,3,4,5,6,7,12,13,14,1)]
+shape        = c(17,24,25,9,3,11,8,15,33,19)
+df$size[36:40] = 1.2;
+p1    = ggplot() + geom_line(aes(x = df$p[df$p <= 500], y = df$time[df$p <= 500], color = df$fit[df$p <= 500]),
+                                 size = df$size[df$p <= 500], linetype = df$lt[df$p <= 500]) +
+  geom_point(aes(x = df$p[df$p <= 500], y = df$time[df$p <= 500], color = df$fit[df$p <= 500],
+                 shape = df$fit[df$p <= 500]), size = 2.5) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape)
+fig_main = p1 + geom_line(aes(x = df$p[df$p > 500], y = df$time[df$p > 500], color = df$fit[df$p > 500]),
+                              size = df$size[df$p > 500], linetype = df$lt[df$p > 500]) + 
+    geom_point(aes(x = df$p[df$p > 500], y = df$time[df$p > 500], color = df$fit[df$p > 500],
+                   shape = df$fit[df$p > 500]), size = 2.5) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = p_range) +
+  labs(y = "computation time (seconds)", x = "number of nonzero coefficients (s)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none",
+        axis.title.x = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        axis.title.y = element_blank()) +
+  scale_y_continuous(trans = "log10", breaks = c(0.01,0.1,1,10,100,1000)) +
+  coord_cartesian(ylim = c(0.05,3000))
+subtitle   = ggdraw() + draw_label("Computation Time (seconds)", fontface = 'bold', size = 14) 
+fig6_2    = plot_grid(fig_main, ncol = 1, rel_heights = c(0.05,0.95))
+```
+```{r fig_dummy}
+res_df       = readRDS("../results/scenario11.RDS")
+res_df2       = readRDS("../results/newrevision11.RDS")
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso",
+                 "Ridge","SCAD.2tuning","MCP.2tuning","SCAD","MCP","L0Learn","Mr.ASH.null")
+method_level = c("E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE","SCAD.2tuning","MCP.2tuning",
+                 "SSLasso","TrimLasso", "OracleOLS", "Mr.ASH.null", "Mr.ASH")
+df           = data.frame()
+p_range      = c(20,50,100,200,500,1000,2000,5000,10000,20000)
+for (i in 1:10) {
+res_df[[i]]$fit   = rep(method_list, each = 20)
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_list)
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 14))),
+                                         time2 = apply(matrix(res_df[[i]]$time, 20, 14), 2, median),
+                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 14))),
+                                         p    = p_range[i],
+                                         fit  = method_list))
+df                = rbind(df, data.frame(pred = mean(res_df2[[i]]$pred[61:80]),
+                                         time2 = median(res_df[[i]]$time[61:80]),
+                                         time = mean(res_df[[i]]$time[61:80]),
+                                         p    = p_range[i],
+                                         fit  = "SSLasso"))
+df                = rbind(df, data.frame(pred = tlasso17[i],
+                                         time2 = tmed17[i],
+                                         time = ttime17[i],
+                                         p    = p_range[i],
+                                         fit  = "TrimLasso"))
+df                = rbind(df, data.frame(pred = olsres17[i],
+                                         time2 = NA,
+                                         time = NA,
+                                         p    = p_range[i],
+                                         fit  = "OracleOLS"))
+}
+df$pred = df$pred * sqrt(1-0.5)
+df$fit = factor(df$fit, levels = method_level)
+df = df[df$fit %in% c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE",
+                      "E-NET","Lasso","Ridge","SCAD","MCP",
+                      "L0Learn","SSLasso","TrimLasso","OracleOLS"
+                      #,"Mr.ASH.null"
+                      ),]
+df = df[df$p %in% c(20,50,200,500,1000,2000,10000,20000),]
+df$size = 0.5
+df$size[73:80] = 1.2
+col          = gg_color_hue(13)[c(2,3,4,5,6,7,8,9,10,11,12,13,14,1)]
+shape        = c(17,24,25,9,3,11,4,5,7,8,8,15,33,19)
+df$lt = "solid"
+df$Method = df$fit
+saveRDS(df, "../newresults/df_for_figure6_dummy.RDS")
+fig_dummy_figure6 = ggplot(df) + geom_line(aes(x = p, y = pred, color = Method), size = df$size, linetype = df$lt) +
+  geom_point(aes(x = p, y = pred, color = Method, shape = Method), size = 2.5) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = c(20,50,200,500,1000,2000,10000,20000)) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of predictors (p)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.title.x = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        axis.title.y = element_blank()) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(.7,.8,.9,1)) +
+  coord_cartesian(ylim = c(.7,1))
+```
+
+```{r fig6_3, fig.height=11, fig.width=15}
+res_df       = readRDS("../results/scenario11.RDS")
+res_df2       = readRDS("../results/newrevision11.RDS")
+method_list  = c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso",
+                 "Ridge","SCAD.2tuning","MCP.2tuning","SCAD","MCP","L0Learn","Mr.ASH.null")
+method_level = c("E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE","SCAD.2tuning","MCP.2tuning",
+                 "SSLasso","TrimLasso", "OracleOLS", "Mr.ASH.null", "Mr.ASH")
+df           = data.frame()
+p_range      = c(20,50,100,200,500,1000,2000,5000,10000,20000)
+for (i in 1:10) {
+res_df[[i]]$fit   = rep(method_list, each = 20)
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_list)
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 14))),
+                                         time2 = apply(matrix(res_df[[i]]$time, 20, 14), 2, median),
+                                         time = c(colMeans(matrix(res_df[[i]]$time, 20, 14))),
+                                         p    = p_range[i],
+                                         fit  = method_list))
+df                = rbind(df, data.frame(pred = mean(res_df2[[i]]$pred[61:80]),
+                                         time2 = median(res_df[[i]]$time[61:80]),
+                                         time = mean(res_df[[i]]$time[61:80]),
+                                         p    = p_range[i],
+                                         fit  = "SSLasso"))
+df                = rbind(df, data.frame(pred = tlasso17[i],
+                                         time2 = tmed17[i],
+                                         time = ttime17[i],
+                                         p    = p_range[i],
+                                         fit  = "TrimLasso"))
+df                = rbind(df, data.frame(pred = olsres17[i],
+                                         time2 = NA,
+                                         time = NA,
+                                         p    = p_range[i],
+                                         fit  = "OracleOLS"))
+}
+df$pred = df$pred * sqrt(1-0.5)
+df$fit = factor(df$fit, levels = method_level)
+df = df[df$p %in% c(20,50,200,500,1000,2000,10000,20000),]
+df = df[df$fit %in% c("Mr.ASH","varbvs","BayesB","B-Lasso","SuSiE"),]
+df$size = 0.5
+df$size[33:40] = 1.2
+col   = gg_color_hue(13)[c(8:11,1)]
+df$lt = "solid"
+shape = c(19,17,24,25,9,3,11,4,5,7,8,10,1)[c(8:11,1)]
+saveRDS(df, "../newresults/df_for_figure6_3.RDS")
+p1    = ggplot(df) + geom_line(aes(x = p, y = pred, color = fit), size = df$size, linetype = df$lt) +
+  geom_point(aes(x = p, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = c(20,50,200,500,1000,2000,10000,20000)) +
+  labs(y = "predictior error (rmse / sigma)", x = "number of predictors (p)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.title.x = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        axis.title.y = element_blank()) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(.7,.8,.9,1.0)) +
+  coord_cartesian(ylim = c(.7,1))
+fig_main = p1 + theme(legend.position = "none")
+# suptitle   = ggdraw() + draw_label("Varying p", fontface  = 'bold', size = 14) 
+# subtitle   = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 20-20000, s = 20, pve = 0.5", fontface  = 'bold', size = 14) 
+fig6_3    = plot_grid(fig_main, ncol = 1, rel_heights = c(0.05,0.95))
+```
+
+```{r fig6_4, fig.height=11, fig.width=15}
+fig_main = ggplot(df) + geom_line(aes(x = p, y = time, color = fit),
+                              size = df$size) + 
+    geom_point(aes(x = p, y = time, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = p_range) +
+  labs(y = "computation time (seconds)", x = "number of nonzero coefficients (s)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "none",
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank()) +
+  scale_y_continuous(trans = "log10", breaks = c(0.01,0.1,1,10,100,1000), limits = c(0.05,3000)) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape)
+#subtitle   = ggdraw() + draw_label("Computation Time (seconds)", fontface = 'bold', size = 14) 
+fig6_4    = plot_grid(fig_main, ncol = 1, rel_heights = c(0.05,0.95))
+```
+
+```{r plot9_1}
+res_df = readRDS("../results/revision5_1.RDS")
+method_list  = c("Mr.ASH.vanilla","L0L1Learn", "L0L2Learn", "Horseshoe", "SSLasso",
+                 "varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "Mr.ASH.order", "Mr.ASH")
+method_level = c("Mr.ASH.vanilla","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn", "SSLasso", "L0L1Learn", "L0L2Learn", "Horseshoe",
+                 "varbvs","BayesB","B-Lasso","SuSiE", "Mr.ASH.order", "Mr.ASH")
+x_range      = 2^(c(1,2,3,4,5,6,7,8) - 1)
+df           = data.frame()
+for (i in 1:7) {
+res_df[[i]]$fit   = rep(method_list, each = 20)
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_level)
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 17))),
+                                         df   = x_range[i],
+                                         fit  = method_list))
+df                = rbind(df, data.frame(pred = tlasso18[i],
+                                         df   = x_range[i],
+                                         fit  = "TrimLasso"))
+df                = rbind(df, data.frame(pred = olsres18[i],
+                                         df   = x_range[i],
+                                         fit  = "OracleOLS"))
+}
+df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn","SSLasso","TrimLasso", "OracleOLS"),]
+df$fit = factor(df$fit, levels = c("E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE","SSLasso","TrimLasso", "OracleOLS", "Mr.ASH"))
+df$size = 0.5
+df$pred = df$pred * sqrt(1 - 0.5)
+df = df[order(df$fit),]
+df$size[63:70] = 1.2
+col          = gg_color_hue(13)[c(2,3,4,5,6,7,12,13,14,1)]
+shape        = c(17,24,25,9,3,11,8,15,33,19)
+p1    = ggplot(df) + geom_line(aes(x = df, y = pred, color = fit), size = df$size) +
+  geom_point(aes(x = df, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = c(1,2,4,8,16,32,64,128),
+                     labels = c("t (df=1)","t (df=2)","t (df=4)","t (df=8)","Laplace",
+                                "Normal","Uniform","Constant")) +
+  labs(y = "predictior error (rmse / sigma)", x = "noise distribution (e)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        axis.title.y = element_blank()) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(.7, .8, .9, 1.0)) +
+  coord_cartesian(ylim = c(0.7,1.05))
+fig_dummy_figure9 = p1
+fig_main = p1 + theme(legend.position = "none") 
+saveRDS(df, "../newresults/df_for_figure9_1.RDS")
+subtitle   = ggdraw() + draw_label("Sparse, s = 20, non-Gaussian noise", fontface  = 'bold', size = 22)  
+fig9_1   = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+
+```{r plot9_2}
+res_df = readRDS("../results/revision5_4.RDS")
+method_list  = c("Mr.ASH.vanilla","L0L1Learn", "L0L2Learn", "Horseshoe", "SSLasso",
+                 "varbvs","BayesB","B-Lasso","SuSiE","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn",
+                 "Mr.ASH.order", "Mr.ASH")
+method_level = c("Mr.ASH.vanilla","E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn", "SSLasso", "L0L1Learn", "L0L2Learn", "Horseshoe",
+                 "varbvs","BayesB","B-Lasso","SuSiE", "Mr.ASH.order", "Mr.ASH")
+x_range      = 2^(c(1,2,3,4,5,6,7,8) - 1)
+df           = data.frame()
+for (i in 1:7) {
+res_df[[i]]$fit   = rep(method_list, each = 20)
+res_df[[i]]$fit   = factor(res_df[[i]]$fit, levels = method_level)
+df                = rbind(df, data.frame(pred = c(colMeans(matrix(res_df[[i]]$pred, 20, 17))),
+                                         df   = x_range[i],
+                                         fit  = method_list))
+df                = rbind(df, data.frame(pred = tlasso19[i],
+                                         df   = x_range[i],
+                                         fit  = "TrimLasso"))
+df                = rbind(df, data.frame(pred = olsres19[i],
+                                         df   = x_range[i],
+                                         fit  = "OracleOLS"))
+}
+df = df[df$fit %in% c("Mr.ASH","E-NET","Lasso","Ridge","SCAD","MCP","L0Learn","SSLasso","TrimLasso", "OracleOLS"),]
+df$fit = factor(df$fit, levels = c("E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE","SSLasso","TrimLasso", "OracleOLS", "Mr.ASH"))
+df$size = 0.5
+df$pred = df$pred * sqrt(1 - 0.5)
+df = df[order(df$fit),]
+df$size[63:70] = 1.2
+p1    = ggplot(df) + geom_line(aes(x = df, y = pred, color = fit), size = df$size) +
+  geom_point(aes(x = df, y = pred, color = fit, shape = fit), size = 2.5) +
+  theme_cowplot(font_size = 22) +
+  scale_x_continuous(trans = "log10", breaks = c(1,2,4,8,16,32,64,128),
+                     labels = c("t (df=1)","t (df=2)","t (df=4)","t (df=8)","Laplace",
+                                "Normal","Uniform","Constant")) +
+  labs(y = "predictior error (rmse / sigma)", x = "noise distribution (e)") +
+  theme(axis.line = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        axis.title.y = element_blank()) +
+  scale_color_manual(values = col) +
+  scale_shape_manual(values = shape) +
+  scale_y_continuous(trans = "log10", breaks = c(.7, .8, .9, 1.0)) +
+  coord_cartesian(ylim = c(0.7,1.05))
+fig_dummy_figure3 = p1
+fig_main = p1 + theme(legend.position = "none") 
+saveRDS(df, "../newresults/df_for_figure9_4.RDS")
+subtitle   = ggdraw() + draw_label("Half dense, s = 500, non-Gaussian noise", fontface  = 'bold', size = 22)  
+fig9_2   = plot_grid(subtitle, fig_main, ncol = 1, rel_heights = c(0.08,0.92))
+```
+
+```{r figure2}
+figure1  = plot_grid(fig1_1, fig1_4, fig1_2, fig1_5, fig1_3, fig1_6, ncol = 2, rel_widths = c(0.5,0.5))
+#title    = ggdraw() + draw_label("Adaptation to Sparsity (Penalized Linear Regression)", fontface = 'bold', size = 22)
+legend   <- get_legend(fig_dummy_figure1 +
+                         theme_cowplot(font_size = 22) +
+                         theme(legend.box.margin = margin(0, 0, 0, 12),
+                               legend.key.size = unit(0.8, "cm")))
+yaxis    = ggdraw() + draw_label("prediction error (RMSE / RMSE_null)", size = 25, angle = 90)
+xaxis    = ggdraw() + draw_label("number of nonzero coefficients (s)", size = 25, angle = 0)
+figure1  = plot_grid(plot_grid(plot_grid(yaxis, plot_grid(figure1, xaxis,
+                                                          rel_heights = c(0.97,0.03), ncol = 1),
+                                         rel_widths = c(0.03,0.97), nrow = 1),
+                               ncol = 1, rel_heights = c(0.05,0.95)),
+                     legend, nrow = 1, rel_widths = c(0.9,0.1))
+ggsave("../revision_figure1_for_paper.pdf", figure1, width = 18, height = 22)
+```
+
+```{r figure3}
+figure3  = plot_grid(fig3_1, fig3_2, fig3_3, fig3_4, ncol = 3, rel_widths = c(0.5,0.5))
+#title    = ggdraw() + draw_label("Adaptation to Sparsity (Penalized Linear Regression)", fontface = 'bold', size = 22)
+legend   <- get_legend(fig_dummy_figure3 +
+                         theme_cowplot(font_size = 22) +
+                         theme(legend.box.margin = margin(0, 0, 0, 12),
+                               legend.key.size = unit(0.8, "cm")))
+yaxis    = ggdraw() + draw_label("prediction error (RMSE / RMSE_null)", size = 25, angle = 90)
+xaxis    = ggdraw() + draw_label("Signal shape (h)", size = 25, angle = 0)
+figure3  = plot_grid(plot_grid(plot_grid(yaxis, plot_grid(figure3, xaxis,
+                                                          rel_heights = c(0.97,0.03), ncol = 1),
+                                         rel_widths = c(0.03,0.97), nrow = 1),
+                               ncol = 1, rel_heights = c(0.05,0.95)),
+                     legend, nrow = 1, rel_widths = c(0.9,0.1))
+ggsave("../revision_figure3_for_paper.pdf", figure3, width = 18, height = 22)
+```
+
+```{r figure4}
+figure5  = plot_grid(fig9_1, fig9_2, ncol = 2, rel_widths = c(0.5,0.5))
+#title    = ggdraw() + draw_label("Adaptation to Sparsity (Penalized Linear Regression)", fontface = 'bold', size = 22)
+legend   <- get_legend(fig_dummy_figure4 +
+                         theme_cowplot(font_size = 22) +
+                         theme(legend.box.margin = margin(0, 0, 0, 12),
+                               legend.key.size = unit(0.8, "cm")))
+yaxis    = ggdraw() + draw_label("prediction error (RMSE / RMSE_null)", size = 25, angle = 90)
+xaxis    = ggdraw() + draw_label("Noise Distribution", size = 25, angle = 0)
+figure5  = plot_grid(plot_grid(plot_grid(yaxis, plot_grid(figure5, xaxis,
+                                                          rel_heights = c(0.97,0.03), ncol = 1),
+                                         rel_widths = c(0.03,0.97), nrow = 1),
+                               ncol = 1, rel_heights = c(0.05,0.95)),
+                     legend, nrow = 1, rel_widths = c(0.9,0.1))
+ggsave("../revision_figure5_for_paper.pdf", figure5, width = 18, height = 8)
+```
+
+```{r figure6}
+yaxis1   = ggdraw() + draw_label("prediction error (rmse / sigma)", size = 25, angle = 90)
+yaxis2   = ggdraw() + draw_label("computation time (seconds)", size = 25, angle = 90)
+blank1 = ggplot() + geom_blank() + theme_cowplot() + theme(axis.line = element_blank())
+figure6  = plot_grid(yaxis1, fig6_1, fig6_3,
+                     blank1, blank1, blank1, yaxis2, fig6_2, fig6_4, ncol = 3, rel_widths = c(0.03,0.5,0.5),
+                     rel_heights = c(0.5,0.05,0.5))
+# title    = ggdraw() + draw_label("Varying p (Scenario 11)", fontface = 'bold', size = 24)
+title  = ggdraw() + draw_label("Varying p", fontface  = 'bold.italic', size = 24) 
+legend   <- get_legend(fig_dummy_figure6 +
+                         theme_cowplot(font_size = 22) +
+                         theme(legend.box.margin = margin(0, 0, 0, 12),
+                               legend.key.size = unit(0.8, "cm")))
+xaxis    = ggdraw() + draw_label("number of predictors (p)", size = 25, angle = 0)
+figure6  = plot_grid(plot_grid(title, blank1, plot_grid(figure6, xaxis, rel_heights = c(0.97,0.03), nrow = 2),
+                               ncol = 1, rel_heights = c(0.05, 0.02, 0.95)),
+                     legend, nrow = 1, rel_widths = c(0.9,0.15))
+ggsave("../revision_figure6_for_paper.pdf", figure6, width = 18, height = 17)
+```
+
+
+
+
+### Group 1
+
+```{r fig13_1_df}
+method_level = c("Mr.ASH", "E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE", "SSLasso", "TrimLasso")
+res = list()
+res_df = readRDS("../results/new15.RDS")
+res_df2 = readRDS("../results/revision1_5.RDS")
+for (i in 1:7) {
+  res[[i]] = data.frame(pred = res_df[[i]]$pred[c(241:260, 21:220)], fit = res_df[[i]]$fit[c(241:260, 21:220)])
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = res_df2[[i]]$pred[61:80], fit = res_df2[[i]]$fit[61:80]))
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = trimmedlasso6[,i], fit = 'TrimLasso'))
+}
+saveRDS(res, "../newresults/result_for_corr095.RDS")
+
+res = list()
+res_df = readRDS("../results/new14.RDS")
+res_df2 = readRDS("../results/revision1_4.RDS")
+for (i in 1:7) {
+  res[[i]] = data.frame(pred = res_df[[i]]$pred[c(241:260, 21:220)], fit = res_df[[i]]$fit[c(241:260, 21:220)])
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = res_df2[[i]]$pred[61:80], fit = res_df2[[i]]$fit[61:80]))
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = trimmedlasso3[,i], fit = 'TrimLasso'))
+}
+saveRDS(res, "../newresults/result_for_corr050.RDS")
+
+res = list()
+res_df = readRDS("../results/scenario6.RDS")
+res_df2 = readRDS("../results/newrevision_geno.RDS")
+for (i in 1:5) {
+  res[[i]] = data.frame(pred = res_df[[i]]$pred[c(241:260, 21:220)], fit = res_df[[i]]$fit[c(241:260, 21:220)])
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = res_df2[[i]]$pred[21:40], fit = res_df2[[i]]$fit[21:40]))
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = trimmedlasso16[,i], fit = 'TrimLasso'))
+}
+saveRDS(res, "../newresults/result_for_genotype.RDS")
+```
+
+```{r fig13_1_prepare, eval = TRUE}
+df           = data.frame()
+res_df = readRDS("../newresults/result_for_corr095.RDS")
+for (i in 1:length(res_df)) {
+  temp       = res_df[[i]]
+  temp$rrmse = temp$pred / temp$pred[1:20]
+  temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 13), 1, min)
+  df         = rbind(df, temp)
+}
+
+res_df = readRDS("../newresults/result_for_corr050.RDS")
+for (i in 1:length(res_df)) {
+  temp       = res_df[[i]]
+  temp$rrmse = temp$pred / temp$pred[1:20]
+  temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 13), 1, min)
+  df         = rbind(df, temp)
+}
+res_df = readRDS("../newresults/result_for_genotype.RDS")
+for (i in 1:length(res_df)) {
+  temp       = res_df[[i]]
+  temp$rrmse = temp$pred / temp$pred[1:20]
+  temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 13), 1, min)
+  df         = rbind(df, temp)
+}
+print(unique(df$fit))
+df = df[df$fit != "sslasso", ]
+#print(unique(df$fit))
+df$fit[df$fit == "mr.ash.init"] = "Mr.ASH"
+df$fit[df$fit == "ridge"] = "Ridge"
+df$fit[df$fit == "enet"] = "E-NET"
+df$fit[df$fit == "lasso"] = "Lasso"
+df$fit[df$fit == "sslassocv"] = "SSLasso"
+df$fit[df$fit == "TrimLasso"] = "TrimLasso"
+df$fit[df$fit == "scad2"] = "SCAD"
+df$fit[df$fit == "mcp2"] = "MCP"
+df$fit[df$fit == "ridge"] = "Ridge"
+df$fit[df$fit == "bayesb"] = "BayesB"
+df$fit[df$fit == "susie"] = "SuSiE"
+df$fit[df$fit == "blasso"] = "B-Lasso"
+df$fit[df$fit == "l0learn"] = "L0Learn"
+df$fit     = factor(df$fit, levels = method_level)
+print(unique(df$fit))
+saveRDS(df, "../newresults/box_for_corr.RDS")
+```
+
+```{r fig13_1, fig.height=11, fig.width=15, fig.align = "center"}
+res_df   = readRDS("../newresults/box_for_corr.RDS")
+col          = gg_color_hue(13)[c(1,2,3,4,5,6,7,8,9,10,11,12,13)]
+shape        = c(19,17,24,25,9,3,11,4,5,7,8,8,15)
+baseline = mean(res_df$rpred[res_df$fit == "Mr.ASH"])
+fig_main = ggplot(res_df) +
+  stat_summary(aes(x = fit, y = rpred), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
+  stat_summary(aes(x = fit, y = rpred), colour = col, fun.y = mean, geom = "point") + 
+  geom_boxplot(alpha = 0.1, aes(x = fit, y = rpred, color = fit, fill = fit, lower = quantile(rpred, .25), 
+                                middle = mean(rpred), upper = quantile(rpred, .75)), outlier.alpha = 0, fatten = 0.9) +
+  scale_alpha_manual(values = 0.1) +
+  scale_fill_manual(values = col, guide = "none") +
+  scale_color_manual(values = col, guide = "none") +
+  labs(x           = "") + coord_cartesian(ylim = c(1,1.3)) + 
+  theme_cowplot(font_size = 20) + 
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = "none", axis.title.y = element_blank()) +
+  geom_hline(yintercept = baseline, color = col[1], linetype = "dashed")
+suptitle  = ggdraw() + draw_label("Group B (Correlated Design)", fontface  = 'bold.italic', size = 24)  
+# subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.9", fontface  = 'bold', size = 14) 
+fig13_1    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
+```
+
+```{r fig13_2_df}
+method_level = c("Mr.ASH", "E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE", "SSLasso", "TrimLasso")
+res = list()
+res_df = readRDS("../results/scenario1.RDS")
+res_df2 = readRDS("../results/newrevision1_2.RDS")
+for (i in 1:7) {
+  res[[i]] = data.frame(pred = res_df[[i]]$pred[c(241:260, 21:220)], fit = res_df[[i]]$fit[c(241:260, 21:220)])
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = res_df2[[i]]$pred[101:120], fit = res_df2[[i]]$fit[101:120]))
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = trimmedlasso1[,i], fit = 'TrimLasso'))
+}
+saveRDS(res, "../newresults/result_for_lowdim.RDS")
+
+res = list()
+res_df = readRDS("../results/new11.RDS")
+res_df2 = readRDS("../results/newrevision1_1.RDS")
+for (i in 1:7) {
+  res[[i]] = data.frame(pred = res_df[[i]]$pred[c(241:260, 21:220)], fit = res_df[[i]]$fit[c(241:260, 21:220)])
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = res_df2[[i]]$pred[101:120], fit = res_df2[[i]]$fit[101:120]))
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = trimmedlasso2[,i], fit = 'TrimLasso'))
+}
+saveRDS(res, "../newresults/result_for_middim.RDS")
+
+res = list()
+res_df = readRDS("../results/scenario2.RDS")
+res_df2 = readRDS("../results/newrevision1_5.RDS")
+for (i in 1:5) {
+  res[[i]] = data.frame(pred = res_df[[i]]$pred[c(241:260, 21:220)], fit = res_df[[i]]$fit[c(241:260, 21:220)])
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = res_df2[[i]]$pred[101:120], fit = res_df2[[i]]$fit[101:120]))
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = trimmedlasso6[,i], fit = 'TrimLasso'))
+}
+saveRDS(res, "../newresults/result_for_highdim.RDS")
+```
+
+```{r fig13_2_prepare, eval = TRUE}
+df           = data.frame()
+res_df = readRDS("../newresults/result_for_lowdim.RDS")
+for (i in 1:length(res_df)) {
+  temp       = res_df[[i]]
+  temp$rrmse = temp$pred / temp$pred[1:20]
+  temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 13), 1, min)
+  df         = rbind(df, temp)
+}
+df$fit = as.vector(df$fit)
+
+res_df = readRDS("../newresults/result_for_middim.RDS")
+for (i in 1:length(res_df)) {
+  temp       = res_df[[i]]
+  temp$rrmse = temp$pred / temp$pred[1:20]
+  temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 13), 1, min)
+  df         = rbind(df, temp)
+}
+
+res_df = readRDS("../newresults/result_for_highdim.RDS")
+for (i in 1:length(res_df)) {
+  temp       = res_df[[i]]
+  temp$rrmse = temp$pred / temp$pred[1:20]
+  temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 13), 1, min)
+  df         = rbind(df, temp)
+}
+print(unique(df$fit))
+df = df[df$fit != "sslasso", ]
+#print(unique(df$fit))
+df$fit[df$fit == "mr.ash.init"] = "Mr.ASH"
+df$fit[df$fit == "ridge"] = "Ridge"
+df$fit[df$fit == "enet"] = "E-NET"
+df$fit[df$fit == "lasso"] = "Lasso"
+df$fit[df$fit == "sslassocv"] = "SSLasso"
+df$fit[df$fit == "TrimLasso"] = "TrimLasso"
+df$fit[df$fit == "scad2"] = "SCAD"
+df$fit[df$fit == "mcp2"] = "MCP"
+df$fit[df$fit == "ridge"] = "Ridge"
+df$fit[df$fit == "bayesb"] = "BayesB"
+df$fit[df$fit == "susie"] = "SuSiE"
+df$fit[df$fit == "blasso"] = "B-Lasso"
+df$fit[df$fit == "l0learn"] = "L0Learn"
+df$fit     = factor(df$fit, levels = method_level)
+print(unique(df$fit))
+saveRDS(df, "../newresults/box_for_indep.RDS")
+```
+
+```{r fig13_2, fig.height=11, fig.width=15, fig.align = "center"}
+res_df   = readRDS("../newresults/box_for_indep.RDS")
+col          = gg_color_hue(13)[c(1,2,3,4,5,6,7,8,9,10,11,12,13)]
+shape        = c(19,17,24,25,9,3,11,4,5,7,8,8,15)
+baseline = mean(res_df$rpred[res_df$fit == "Mr.ASH"])
+fig_main = ggplot(res_df) +
+  stat_summary(aes(x = fit, y = rpred), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
+  stat_summary(aes(x = fit, y = rpred), colour = col, fun.y = mean, geom = "point") + 
+  geom_boxplot(alpha = 0.1, aes(x = fit, y = rpred, color = fit, fill = fit, lower = quantile(rpred, .25), 
+                                middle = mean(rpred), upper = quantile(rpred, .75)), outlier.alpha = 0, fatten = 0.9) +
+  scale_alpha_manual(values = 0.1) +
+  scale_fill_manual(values = col, guide = "none") +
+  scale_color_manual(values = col, guide = "none") +
+  labs(x           = "") + coord_cartesian(ylim = c(1,1.3)) + 
+  theme_cowplot(font_size = 20) + 
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = "none", axis.title.y = element_blank()) +
+  geom_hline(yintercept = baseline, color = col[1], linetype = "dashed")
+suptitle  = ggdraw() + draw_label("Group A (Indep Design)", fontface  = 'bold.italic', size = 24)  
+# subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.9", fontface  = 'bold', size = 14) 
+fig13_2    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
+```
+
+```{r fig13_3_df}
+method_level = c("Mr.ASH", "E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE", "SSLasso", "TrimLasso")
+res = list()
+res_df = readRDS("../results/realnew23.RDS")
+res_df2 = readRDS("../results/revision2_3.RDS")
+for (i in 1:7) {
+  res[[i]] = data.frame(pred = res_df[[i]]$pred[1:220], fit = res_df[[i]]$fit[1:220])
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = res_df2[[i]]$pred[61:80], fit = res_df2[[i]]$fit[61:80]))
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = trimmedlasso12[,i], fit = 'TrimLasso'))
+}
+saveRDS(res, "../newresults/result_for_pve_s5.RDS")
+
+res = list()
+res_df = readRDS("../results/realnew24.RDS")
+res_df2 = readRDS("../results/newrevision2_4.RDS")
+for (i in 1:7) {
+  res[[i]] = data.frame(pred = res_df[[i]]$pred[1:220], fit = res_df[[i]]$fit[1:220])
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = res_df2[[i]]$pred[21:40], fit = res_df2[[i]]$fit[21:40]))
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = trimmedlasso13[,i], fit = 'TrimLasso'))
+}
+saveRDS(res, "../newresults/result_for_pve_s20.RDS")
+
+res = list()
+res_df = readRDS("../results/realnew21.RDS")
+res_df2 = readRDS("../results/revision2_1.RDS")
+for (i in 1:5) {
+  res[[i]] = data.frame(pred = res_df[[i]]$pred[1:220], fit = res_df[[i]]$fit[1:220])
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = res_df2[[i]]$pred[61:80], fit = res_df2[[i]]$fit[61:80]))
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = trimmedlasso14[,i], fit = 'TrimLasso'))
+}
+saveRDS(res, "../newresults/result_for_pve_s500.RDS")
+
+res_df = readRDS("../results/realnew22.RDS")
+res_df2 = readRDS("../results/revision2_2.RDS")
+for (i in 1:5) {
+  res[[i]] = data.frame(pred = res_df[[i]]$pred[1:220], fit = res_df[[i]]$fit[1:220])
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = res_df2[[i]]$pred[61:80], fit = res_df2[[i]]$fit[61:80]))
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = trimmedlasso15[,i], fit = 'TrimLasso'))
+}
+saveRDS(res, "../newresults/result_for_pve_s1000.RDS")
+```
+
+```{r fig13_3_prepare, eval = TRUE}
+df           = data.frame()
+res_df = readRDS("../newresults/result_for_pve_s5.RDS")
+for (i in 1:length(res_df)) {
+  temp       = res_df[[i]]
+  temp$rrmse = temp$pred / temp$pred[1:20]
+  temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 13), 1, min)
+  df         = rbind(df, temp)
+}
+df$fit = as.vector(df$fit)
+
+res_df = readRDS("../newresults/result_for_pve_s20.RDS")
+for (i in 1:length(res_df)) {
+  temp       = res_df[[i]]
+  temp$rrmse = temp$pred / temp$pred[1:20]
+  temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 13), 1, min)
+  df         = rbind(df, temp)
+}
+
+res_df = readRDS("../newresults/result_for_pve_s500.RDS")
+for (i in 1:length(res_df)) {
+  temp       = res_df[[i]]
+  temp$rrmse = temp$pred / temp$pred[1:20]
+  temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 13), 1, min)
+  df         = rbind(df, temp)
+}
+
+res_df = readRDS("../newresults/result_for_pve_s1000.RDS")
+for (i in 1:length(res_df)) {
+  temp       = res_df[[i]]
+  temp$rrmse = temp$pred / temp$pred[1:20]
+  temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 13), 1, min)
+  df         = rbind(df, temp)
+}
+print(unique(df$fit))
+df = df[df$fit != "sslasso", ]
+#print(unique(df$fit))
+df$fit[df$fit == "mr.ash"] = "Mr.ASH"
+df$fit[df$fit == "ridge"] = "Ridge"
+df$fit[df$fit == "enet"] = "E-NET"
+df$fit[df$fit == "lasso"] = "Lasso"
+df$fit[df$fit == "sslassocv"] = "SSLasso"
+df$fit[df$fit == "TrimLasso"] = "TrimLasso"
+df$fit[df$fit == "scad2"] = "SCAD"
+df$fit[df$fit == "mcp2"] = "MCP"
+df$fit[df$fit == "ridge"] = "Ridge"
+df$fit[df$fit == "bayesb"] = "BayesB"
+df$fit[df$fit == "susie"] = "SuSiE"
+df$fit[df$fit == "blasso"] = "B-Lasso"
+df$fit[df$fit == "l0learn"] = "L0Learn"
+df$fit     = factor(df$fit, levels = method_level)
+print(unique(df$fit))
+saveRDS(df, "../newresults/box_for_pve.RDS")
+```
+```{r fig13_3, fig.height=11, fig.width=15, fig.align = "center"}
+res_df   = readRDS("../newresults/box_for_pve.RDS")
+col          = gg_color_hue(13)[c(1,2,3,4,5,6,7,8,9,10,11,12,13)]
+shape        = c(19,17,24,25,9,3,11,4,5,7,8,8,15)
+baseline = mean(res_df$rpred[res_df$fit == "Mr.ASH"])
+fig_main = ggplot(res_df) +
+  stat_summary(aes(x = fit, y = rpred), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
+  stat_summary(aes(x = fit, y = rpred), colour = col, fun.y = mean, geom = "point") + 
+  geom_boxplot(alpha = 0.1, aes(x = fit, y = rpred, color = fit, fill = fit, lower = quantile(rpred, .25), 
+                                middle = mean(rpred), upper = quantile(rpred, .75)), outlier.alpha = 0, fatten = 0.9) +
+  scale_alpha_manual(values = 0.1) +
+  scale_fill_manual(values = col, guide = "none") +
+  scale_color_manual(values = col, guide = "none") +
+  labs(x           = "") + coord_cartesian(ylim = c(1,1.3)) + 
+  theme_cowplot(font_size = 20) + 
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = "none", axis.title.y = element_blank()) +
+  geom_hline(yintercept = baseline, color = col[1], linetype = "dashed")
+suptitle  = ggdraw() + draw_label("Group C (signal strength, PVE)", fontface  = 'bold.italic', size = 24)  
+# subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.9", fontface  = 'bold', size = 14) 
+fig13_3    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
+```
+
+```{r fig13_4_df}
+method_level = c("Mr.ASH", "E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE", "SSLasso", "TrimLasso")
+res = list()
+res_df = readRDS("../results/new23.RDS")
+res_df2 = readRDS("../results/revision3_3.RDS")
+for (i in 1:7) {
+  res[[i]] = data.frame(pred = res_df[[i]]$pred[1:220], fit = res_df[[i]]$fit[1:220])
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = res_df2[[i]]$pred[101:120], fit = res_df2[[i]]$fit[101:120]))
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = trimmedlasso8[,i], fit = 'TrimLasso'))
+}
+saveRDS(res, "../newresults/result_for_h_s5.RDS")
+
+res = list()
+res_df = readRDS("../results/new24.RDS")
+res_df2 = readRDS("../results/revision3_4.RDS")
+for (i in 1:7) {
+  res[[i]] = data.frame(pred = res_df[[i]]$pred[1:220], fit = res_df[[i]]$fit[1:220])
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = res_df2[[i]]$pred[101:120], fit = res_df2[[i]]$fit[101:120]))
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = trimmedlasso9[,i], fit = 'TrimLasso'))
+}
+saveRDS(res, "../newresults/result_for_h_s20.RDS")
+
+res = list()
+res_df = readRDS("../results/new22.RDS")
+res_df2 = readRDS("../results/revision3_2.RDS")
+for (i in 1:5) {
+  res[[i]] = data.frame(pred = res_df[[i]]$pred[1:220], fit = res_df[[i]]$fit[1:220])
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = res_df2[[i]]$pred[101:120], fit = res_df2[[i]]$fit[101:120]))
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = trimmedlasso10[,i], fit = 'TrimLasso'))
+}
+saveRDS(res, "../newresults/result_for_h_s500.RDS")
+
+res_df = readRDS("../results/new21.RDS")
+res_df2 = readRDS("../results/newrevision3_1.RDS")
+for (i in 1:5) {
+  res[[i]] = data.frame(pred = res_df[[i]]$pred[1:220], fit = res_df[[i]]$fit[1:220])
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = res_df2[[i]]$pred[21:40], fit = res_df2[[i]]$fit[21:40]))
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = trimmedlasso11[,i], fit = 'TrimLasso'))
+}
+saveRDS(res, "../newresults/result_for_h_s1000.RDS")
+```
+
+```{r fig13_4_prepare, eval = TRUE}
+df           = data.frame()
+res_df = readRDS("../newresults/result_for_h_s5.RDS")
+for (i in 1:length(res_df)) {
+  temp       = res_df[[i]]
+  temp$rrmse = temp$pred / temp$pred[1:20]
+  temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 13), 1, min)
+  df         = rbind(df, temp)
+}
+df$fit = as.vector(df$fit)
+
+res_df = readRDS("../newresults/result_for_h_s20.RDS")
+for (i in 1:length(res_df)) {
+  temp       = res_df[[i]]
+  temp$rrmse = temp$pred / temp$pred[1:20]
+  temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 13), 1, min)
+  df         = rbind(df, temp)
+}
+
+res_df = readRDS("../newresults/result_for_h_s500.RDS")
+for (i in 1:length(res_df)) {
+  temp       = res_df[[i]]
+  temp$rrmse = temp$pred / temp$pred[1:20]
+  temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 13), 1, min)
+  df         = rbind(df, temp)
+}
+
+res_df = readRDS("../newresults/result_for_h_s1000.RDS")
+for (i in 1:length(res_df)) {
+  temp       = res_df[[i]]
+  temp$rrmse = temp$pred / temp$pred[1:20]
+  temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 13), 1, min)
+  df         = rbind(df, temp)
+}
+print(unique(df$fit))
+df = df[df$fit != "sslasso", ]
+#print(unique(df$fit))
+df$fit[df$fit == "mr.ash"] = "Mr.ASH"
+df$fit[df$fit == "ridge"] = "Ridge"
+df$fit[df$fit == "enet"] = "E-NET"
+df$fit[df$fit == "lasso"] = "Lasso"
+df$fit[df$fit == "sslassocv"] = "SSLasso"
+df$fit[df$fit == "TrimLasso"] = "TrimLasso"
+df$fit[df$fit == "scad2"] = "SCAD"
+df$fit[df$fit == "mcp2"] = "MCP"
+df$fit[df$fit == "ridge"] = "Ridge"
+df$fit[df$fit == "bayesb"] = "BayesB"
+df$fit[df$fit == "susie"] = "SuSiE"
+df$fit[df$fit == "blasso"] = "B-Lasso"
+df$fit[df$fit == "l0learn"] = "L0Learn"
+df$fit     = factor(df$fit, levels = method_level)
+print(unique(df$fit))
+saveRDS(df, "../newresults/box_for_h.RDS")
+```
+
+```{r fig13_4, fig.height=11, fig.width=15, fig.align = "center"}
+res_df   = readRDS("../newresults/box_for_h.RDS")
+col          = gg_color_hue(13)[c(1,2,3,4,5,6,7,8,9,10,11,12,13)]
+shape        = c(19,17,24,25,9,3,11,4,5,7,8,8,15)
+baseline = mean(res_df$rpred[res_df$fit == "Mr.ASH"])
+fig_main = ggplot(res_df) +
+  stat_summary(aes(x = fit, y = rpred), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
+  stat_summary(aes(x = fit, y = rpred), colour = col, fun.y = mean, geom = "point") + 
+  geom_boxplot(alpha = 0.1, aes(x = fit, y = rpred, color = fit, fill = fit, lower = quantile(rpred, .25), 
+                                middle = mean(rpred), upper = quantile(rpred, .75)), outlier.alpha = 0, fatten = 0.9) +
+  scale_alpha_manual(values = 0.1) +
+  scale_fill_manual(values = col, guide = "none") +
+  scale_color_manual(values = col, guide = "none") +
+  labs(x           = "") + coord_cartesian(ylim = c(1,1.3)) + 
+  theme_cowplot(font_size = 20) + 
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = "none", axis.title.y = element_blank()) +
+  geom_hline(yintercept = baseline, color = col[1], linetype = "dashed")
+suptitle  = ggdraw() + draw_label("Group D (signal shape, h)", fontface  = 'bold.italic', size = 24)  
+# subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.9", fontface  = 'bold', size = 14) 
+fig13_4    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
+```
+
+```{r fig13_5_df}
+res = list()
+res_df       = readRDS("../results/scenario11.RDS")
+res_df2       = readRDS("../results/newrevision11.RDS")
+for (i in 1:7) {
+  res[[i]] = data.frame(pred = res_df[[i]]$pred[1:260], fit = res_df[[i]]$fit[1:260])
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = res_df2[[i]]$pred[61:80], fit = res_df2[[i]]$fit[61:80]))
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = trimmedlasso17[,i], fit = 'TrimLasso'))
+}
+saveRDS(res, "../newresults/result_for_p.RDS")
+```
+
+```{r fig13_5_prepare, eval = TRUE}
+df           = data.frame()
+res_df = readRDS("../newresults/result_for_p.RDS")
+for (i in 1:length(res_df)) {
+  temp       = res_df[[i]]
+  temp$rrmse = temp$pred / temp$pred[1:20]
+  temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 15), 1, min)
+  df         = rbind(df, temp)
+}
+df$fit = as.vector(df$fit)
+
+print(unique(df$fit))
+df = df[df$fit != "scad", ]
+df = df[df$fit != "mcp", ]
+df$fit[df$fit == "mr.ash"] = "Mr.ASH"
+df$fit[df$fit == "ridge"] = "Ridge"
+df$fit[df$fit == "enet"] = "E-NET"
+df$fit[df$fit == "lasso"] = "Lasso"
+df$fit[df$fit == "sslassocv"] = "SSLasso"
+df$fit[df$fit == "TrimLasso"] = "TrimLasso"
+df$fit[df$fit == "scad2"] = "SCAD"
+df$fit[df$fit == "mcp2"] = "MCP"
+df$fit[df$fit == "ridge"] = "Ridge"
+df$fit[df$fit == "bayesb"] = "BayesB"
+df$fit[df$fit == "susie"] = "SuSiE"
+df$fit[df$fit == "blasso"] = "B-Lasso"
+df$fit[df$fit == "l0learn"] = "L0Learn"
+df$fit     = factor(df$fit, levels = method_level)
+print(unique(df$fit))
+saveRDS(df, "../newresults/box_for_p.RDS")
+```
+
+```{r fig13_5, fig.height=11, fig.width=15, fig.align = "center"}
+res_df   = readRDS("../newresults/box_for_p.RDS")
+col          = gg_color_hue(13)[c(1,2,3,4,5,6,7,8,9,10,11,12,13)]
+shape        = c(19,17,24,25,9,3,11,4,5,7,8,8,15)
+baseline = mean(res_df$rpred[res_df$fit == "Mr.ASH"])
+fig_main = ggplot(res_df) +
+  stat_summary(aes(x = fit, y = rpred), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
+  stat_summary(aes(x = fit, y = rpred), colour = col, fun.y = mean, geom = "point") + 
+  geom_boxplot(alpha = 0.1, aes(x = fit, y = rpred, color = fit, fill = fit, lower = quantile(rpred, .25), 
+                                middle = mean(rpred), upper = quantile(rpred, .75)), outlier.alpha = 0, fatten = 0.9) +
+  scale_alpha_manual(values = 0.1) +
+  scale_fill_manual(values = col, guide = "none") +
+  scale_color_manual(values = col, guide = "none") +
+  labs(x           = "") + coord_cartesian(ylim = c(1,1.3)) + 
+  theme_cowplot(font_size = 20) + 
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = "none", axis.title.y = element_blank()) +
+  geom_hline(yintercept = baseline, color = col[1], linetype = "dashed")
+suptitle  = ggdraw() + draw_label("Group E (small to large p)", fontface  = 'bold.italic', size = 24)  
+# subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.9", fontface  = 'bold', size = 14) 
+fig13_5    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
+```
+
+
+```{r fig13_6_df}
+method_level = c("Mr.ASH", "E-NET","Lasso","Ridge",
+                 "SCAD","MCP","L0Learn",
+                 "varbvs","BayesB","B-Lasso","SuSiE", "SSLasso", "TrimLasso")
+res = list()
+res_df = readRDS("../results/revision5_1.RDS")
+for (i in 1:7) {
+  res[[i]] = data.frame(pred = res_df[[i]]$pred[c(321:340,101:300,81:100)], fit = res_df[[i]]$fit[c(321:340,101:300,81:100)])
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = trimmedlasso18[,i], fit = 'TrimLasso'))
+}
+saveRDS(res, "../newresults/result_for_noise_s20.RDS")
+
+res = list()
+res_df = readRDS("../results/revision5_4.RDS")
+for (i in 1:7) {
+  res[[i]] = data.frame(pred = res_df[[i]]$pred[c(321:340,101:300,81:100)], fit = res_df[[i]]$fit[c(321:340,101:300,81:100)])
+  res[[i]] = rbind(res[[i]],
+                   data.frame(pred = trimmedlasso19[,i], fit = 'TrimLasso'))
+  res[[i]]$pred[res[[i]]$pred == 0.0] = 1.414
+}
+saveRDS(res, "../newresults/result_for_noise_s500.RDS")
+```
+
+```{r fig13_6_prepare, eval = TRUE}
+df           = data.frame()
+res_df = readRDS("../newresults/result_for_noise_s20.RDS")
+for (i in 1:length(res_df)) {
+  temp       = res_df[[i]]
+  temp$rrmse = temp$pred / temp$pred[1:20]
+  temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 13), 1, min)
+  df         = rbind(df, temp)
+}
+df$fit = as.vector(df$fit)
+
+res_df = readRDS("../newresults/result_for_noise_s500.RDS")
+for (i in 1:length(res_df)) {
+  temp       = res_df[[i]]
+  temp$rrmse = temp$pred / temp$pred[1:20]
+  temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 13), 1, min)
+  df         = rbind(df, temp)
+}
+print(unique(df$fit))
+df = df[df$fit != "sslasso", ]
+#print(unique(df$fit))
+df$fit[df$fit == "mr.ash.init"] = "Mr.ASH"
+df$fit[df$fit == "ridge"] = "Ridge"
+df$fit[df$fit == "enet"] = "E-NET"
+df$fit[df$fit == "lasso"] = "Lasso"
+df$fit[df$fit == "sslassocv"] = "SSLasso"
+df$fit[df$fit == "TrimLasso"] = "TrimLasso"
+df$fit[df$fit == "scad2"] = "SCAD"
+df$fit[df$fit == "mcp2"] = "MCP"
+df$fit[df$fit == "ridge"] = "Ridge"
+df$fit[df$fit == "bayesb"] = "BayesB"
+df$fit[df$fit == "susie"] = "SuSiE"
+df$fit[df$fit == "blasso"] = "B-Lasso"
+df$fit[df$fit == "l0learn"] = "L0Learn"
+df$fit     = factor(df$fit, levels = method_level)
+print(unique(df$fit))
+saveRDS(df, "../newresults/box_for_noise.RDS")
+```
+
+```{r fig13_6, fig.height=11, fig.width=15, fig.align = "center"}
+res_df   = readRDS("../newresults/box_for_noise.RDS")
+col          = gg_color_hue(13)[c(1,2,3,4,5,6,7,8,9,10,11,12,13)]
+shape        = c(19,17,24,25,9,3,11,4,5,7,8,8,15)
+baseline = mean(res_df$rpred[res_df$fit == "Mr.ASH"])
+fig_main = ggplot(res_df) +
+  stat_summary(aes(x = fit, y = rpred), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
+  stat_summary(aes(x = fit, y = rpred), colour = col, fun.y = mean, geom = "point") + 
+  geom_boxplot(alpha = 0.1, aes(x = fit, y = rpred, color = fit, fill = fit, lower = quantile(rpred, .25), 
+                                middle = mean(rpred), upper = quantile(rpred, .75)), outlier.alpha = 0, fatten = 0.9) +
+  scale_alpha_manual(values = 0.1) +
+  scale_fill_manual(values = col, guide = "none") +
+  scale_color_manual(values = col, guide = "none") +
+  labs(x           = "") + coord_cartesian(ylim = c(1,1.3)) + 
+  theme_cowplot(font_size = 20) + 
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = "none", axis.title.y = element_blank()) +
+  geom_hline(yintercept = baseline, color = col[1], linetype = "dashed")
+suptitle  = ggdraw() + draw_label("Group F (noise)", fontface  = 'bold.italic', size = 24)  
+# subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.9", fontface  = 'bold', size = 14) 
+fig13_6    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
+```
+
+```{r fig13_7_prepare, eval = TRUE}
+df           = data.frame()
+res_df = readRDS("../newresults/result_for_noise_s20.RDS")
+for (i in 1:length(res_df)) {
+  temp       = res_df[[i]]
+  temp$rrmse = temp$pred / temp$pred[1:20]
+  temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 13), 1, min)
+  df         = rbind(df, temp)
+  #print(temp$rpred)
+}
+df$fit = as.vector(df$fit)
+
+res_df = readRDS("../newresults/result_for_h_s20.RDS")
+for (i in 1:length(res_df)) {
+  temp       = res_df[[i]]
+  temp$rrmse = temp$pred / temp$pred[1:20]
+  temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 13), 1, min)
+  df         = rbind(df, temp)
+}
+
+res_df = readRDS("../newresults/result_for_pve_s20.RDS")
+for (i in 1:length(res_df)) {
+  temp       = res_df[[i]]
+  temp$rrmse = temp$pred / temp$pred[1:20]
+  temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 13), 1, min)
+  df         = rbind(df, temp)
+}
+
+res_df = readRDS("../newresults/result_for_p.RDS")
+for (i in 1:length(res_df)) {
+  temp       = res_df[[i]]
+  temp$rrmse = temp$pred / temp$pred[1:20]
+  temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 15), 1, min)
+  df         = rbind(df, temp)
+}
+
+res_df = readRDS("../newresults/result_for_middim.RDS")
+for (i in 1:length(res_df)) {
+  temp       = res_df[[i]]
+  temp$rrmse = temp$pred / temp$pred[1:20]
+  temp$rpred = temp$pred / apply(matrix(temp$pred, 20, 13), 1, min)
+  df         = rbind(df, temp)
+}
+
+print(unique(df$fit))
+df = df[df$fit != "sslasso", ]
+df = df[df$fit != "scad", ]
+df = df[df$fit != "mcp", ]
+df$fit[df$fit == "mr.ash"] = "Mr.ASH"
+df$fit[df$fit == "mr.ash.init"] = "Mr.ASH"
+df$fit[df$fit == "ridge"] = "Ridge"
+df$fit[df$fit == "enet"] = "E-NET"
+df$fit[df$fit == "lasso"] = "Lasso"
+df$fit[df$fit == "sslassocv"] = "SSLasso"
+df$fit[df$fit == "TrimLasso"] = "TrimLasso"
+df$fit[df$fit == "scad2"] = "SCAD"
+df$fit[df$fit == "mcp2"] = "MCP"
+df$fit[df$fit == "ridge"] = "Ridge"
+df$fit[df$fit == "bayesb"] = "BayesB"
+df$fit[df$fit == "susie"] = "SuSiE"
+df$fit[df$fit == "blasso"] = "B-Lasso"
+df$fit[df$fit == "l0learn"] = "L0Learn"
+df$fit     = factor(df$fit, levels = method_level)
+print(unique(df$fit))
+saveRDS(df, "../newresults/box_for_sparse20.RDS")
+```
+
+```{r fig13_6, fig.height=11, fig.width=15, fig.align = "center"}
+res_df   = readRDS("../newresults/box_for_sparse20.RDS")
+col          = gg_color_hue(13)[c(1,2,3,4,5,6,7,8,9,10,11,12,13)]
+shape        = c(19,17,24,25,9,3,11,4,5,7,8,8,15)
+baseline = mean(res_df$rpred[res_df$fit == "Mr.ASH"])
+fig_main = ggplot(res_df) +
+  stat_summary(aes(x = fit, y = rpred), fun.y = mean, colour = col, geom = "point", shape = 18, size = 3) + 
+  stat_summary(aes(x = fit, y = rpred), colour = col, fun.y = mean, geom = "point") + 
+  geom_boxplot(alpha = 0.1, aes(x = fit, y = rpred, color = fit, fill = fit, lower = quantile(rpred, .25), 
+                                middle = mean(rpred), upper = quantile(rpred, .75)), outlier.alpha = 0, fatten = 0.9) +
+  scale_alpha_manual(values = 0.1) +
+  scale_fill_manual(values = col, guide = "none") +
+  scale_color_manual(values = col, guide = "none") +
+  labs(x           = "") + coord_cartesian(ylim = c(1,1.3)) + 
+  theme_cowplot(font_size = 20) + 
+  theme(axis.line    = element_blank(),
+        axis.text.x  = element_text(angle = 45,hjust = 1),
+        legend.position = "none", axis.title.y = element_blank()) +
+  geom_hline(yintercept = baseline, color = col[1], linetype = "dashed")
+suptitle  = ggdraw() + draw_label("Group F (noise distribution, e)", fontface  = 'bold.italic', size = 24)  
+# subtitle  = ggdraw() + draw_label("Scenario: IndepGauss + PointNormal, n = 500, p = 200, s = 1-200, pve = 0.9", fontface  = 'bold', size = 14) 
+fig13_7    = plot_grid(suptitle, fig_main, ncol = 1, rel_heights = c(0.06, 0.95))
+```
+
+
+```{r figure2}
+figure1  = plot_grid(fig13_2, fig13_4, fig13_1, fig13_5, fig13_3, fig13_6, ncol = 2, rel_widths = c(0.5,0.5))
+#title    = ggdraw() + draw_label("Adaptation to Sparsity (Penalized Linear Regression)", fontface = 'bold', size = 22)
+legend   <- get_legend(fig_dummy_figure1 +
+                         theme_cowplot(font_size = 22) +
+                         theme(legend.box.margin = margin(0, 0, 0, 12),
+                               legend.key.size = unit(0.8, "cm")))
+yaxis    = ggdraw() + draw_label("Relative prediction error (RRMSE)", size = 25, angle = 90)
+xaxis    = ggdraw() + draw_label("Competitors", size = 25, angle = 0)
+figure1  = plot_grid(plot_grid(plot_grid(yaxis, plot_grid(figure1, xaxis,
+                                                          rel_heights = c(0.97,0.03), ncol = 1),
+                                         rel_widths = c(0.03,0.97), nrow = 1),
+                               ncol = 1, rel_heights = c(0.05,0.95)),
+                     legend, nrow = 1, rel_widths = c(0.9,0.1))
+ggsave("../revision_figure13_for_paper.pdf", figure1, width = 18, height = 22)
+```
